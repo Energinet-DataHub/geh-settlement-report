@@ -34,10 +34,4 @@
     <ProjectReference Include="..\..\Test.Core\Test.Core.csproj" />
     <ProjectReference Include="..\Calculations.Infrastructure\Calculations.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\..\..\databricks\calculation_engine\contracts\**">
-      <Link>DeltaTableContracts\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>
