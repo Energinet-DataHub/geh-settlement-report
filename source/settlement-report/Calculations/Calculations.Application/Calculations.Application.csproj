@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.Wholesale.Calculations.Application</AssemblyName>
+    <AssemblyName>Energinet.DataHub.SettlementReport.Calculations.Application</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Calculations.Application</RootNamespace>
   </PropertyGroup>
 

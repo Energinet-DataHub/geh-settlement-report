@@ -15,7 +15,7 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.Wholesale.Common.Interfaces</AssemblyName>
+    <AssemblyName>Energinet.DataHub.SettlementReport.Common.Interfaces</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Common.Interfaces</RootNamespace>
   </PropertyGroup>
   <ItemGroup>

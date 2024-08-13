@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.Wholesale.Calculations.IntegrationTests</AssemblyName>
+    <AssemblyName>Energinet.DataHub.SettlementReport.Calculations.IntegrationTests</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Calculations.IntegrationTests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>

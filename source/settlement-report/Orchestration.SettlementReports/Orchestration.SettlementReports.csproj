@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.Wholesale.Orchestration.SettlementReports</AssemblyName>
+    <AssemblyName>Energinet.DataHub.SettlementReport.Orchestration.SettlementReports</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Orchestration.SettlementReports</RootNamespace>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
