@@ -33,6 +33,6 @@ runs:
         # Create base directory
         mkdir -p '${{ inputs.output_path }}/source/settlement-report' ';'
         # Copy everything from source/settlement-report to the new directory
-        cp -a source/dotnet/. '${{ inputs.output_path }}/source/settlement-report'
+        cp -a source/settlement-report/. '${{ inputs.output_path }}/source/settlement-report'
         # Remove obj-directories from artifact
         find ${{ inputs.output_path }}/ -type d -name 'obj' -exec rm -rf {} +
