@@ -28,19 +28,6 @@ jobs:
     uses: ./.github/workflows/detect-changes.yml
 
   #
-  # CD Docker image
-  #
-
-  cd_docker:
-    needs: changes
-    if: ${{ needs.changes.outputs.docker == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/python-build-and-push-docker-image.yml@v13
-    with:
-      docker_changed: ${{ needs.changes.outputs.docker == 'true' }}
-      # 'docker_changed_in_commit' value is same as 'docker_changed' because we want to build and push docker image when docker changed
-      docker_changed_in_commit: ${{ needs.changes.outputs.docker == 'true' }}
-
-  #
   # CD .NET
   #
 
@@ -97,7 +84,6 @@ jobs:
       [
         dotnet_promote_prerelease,
         dispatch_deploment_event,
-        cd_docker
       ]
     if: |
       always() &&
