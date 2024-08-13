@@ -51,4 +51,3 @@ runs:
           --no-restore \
           --configuration Release \
           --output '${{ inputs.output_path }}\databasemigration'
-
