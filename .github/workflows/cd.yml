@@ -104,6 +104,6 @@ jobs:
       contains(needs.*.result, 'failure')
     uses: Energinet-DataHub/.github/.github/workflows/notify-team.yml@v13
     with:
-      team_name: Mandalorian
+      team_name: Raccoons
       subject: "Deployment dispatch failed: SettlementReport"
     secrets: inherit
