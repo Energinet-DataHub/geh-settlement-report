@@ -18,14 +18,14 @@ using Energinet.DataHub.SettlementReport.CalculationResults.Application.Settleme
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Fixtures;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
+using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<SettlementReportDownloadHandler>,
@@ -73,7 +73,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
 
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
-        var settlementReport = new CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+        var settlementReport = new SettlementReport.CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -103,7 +103,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport =
-            new CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+            new SettlementReport.CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -130,7 +130,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport =
-            new CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+            new SettlementReport.CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -159,7 +159,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
 
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
-        var settlementReport = new CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, true, requestId, _mockedSettlementReportRequest);
+        var settlementReport = new SettlementReport.CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, true, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();

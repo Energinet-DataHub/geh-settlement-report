@@ -20,7 +20,7 @@ using FluentAssertions.Execution;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.Calculations.IntegrationTests.Infrastructure.Persistence.ReceivedIntegrationEvent;
+namespace Energinet.DataHub.Wholesale.Calculations.IntegrationTests.Infrastructure.Persistence.ReceivedIntegrationEvent;
 
 public class ReceivedIntegrationEventTests : IClassFixture<WholesaleDatabaseFixture<DatabaseContext>>
 {

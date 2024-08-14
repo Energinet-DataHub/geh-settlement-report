@@ -18,16 +18,16 @@ using Energinet.DataHub.SettlementReport.CalculationResults.Application.Settleme
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2.Statements;
-using Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Fixtures;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
+using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Microsoft.Extensions.Options;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBase<SettlementReportFileRequestHandler>

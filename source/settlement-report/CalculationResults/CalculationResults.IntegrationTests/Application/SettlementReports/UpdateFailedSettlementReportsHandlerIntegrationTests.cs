@@ -24,7 +24,7 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
 
 public sealed class UpdateFailedSettlementReportsHandlerIntegrationTests : TestBase<UpdateFailedSettlementReportsHandler>,
     IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
@@ -56,7 +56,7 @@ public sealed class UpdateFailedSettlementReportsHandlerIntegrationTests : TestB
                 null));
 
         await using var dbContextArrange = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
-        await dbContextArrange.SettlementReports.AddAsync(new CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, settlementReportRequest));
+        await dbContextArrange.SettlementReports.AddAsync(new SettlementReport.CalculationResults.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, settlementReportRequest));
         await dbContextArrange.SaveChangesAsync();
 
         // Act

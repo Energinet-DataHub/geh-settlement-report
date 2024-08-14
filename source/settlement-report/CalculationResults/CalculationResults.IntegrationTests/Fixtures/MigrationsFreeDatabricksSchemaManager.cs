@@ -24,7 +24,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 
 public class MigrationsFreeDatabricksSchemaManager
 {

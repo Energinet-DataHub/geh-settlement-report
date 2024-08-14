@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SqlStatements.DeltaTableConstants;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 
 public class EnergyResultsTableSchemaDefinition
 {

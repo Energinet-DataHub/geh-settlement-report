@@ -20,7 +20,7 @@ using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Moq;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
 
 public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<SettlementReportRequestHandler>
 {

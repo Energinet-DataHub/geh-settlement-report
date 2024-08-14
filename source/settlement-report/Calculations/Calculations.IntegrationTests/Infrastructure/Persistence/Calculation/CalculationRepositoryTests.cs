@@ -24,7 +24,7 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.Calculations.IntegrationTests.Infrastructure.Persistence.Calculation;
+namespace Energinet.DataHub.Wholesale.Calculations.IntegrationTests.Infrastructure.Persistence.Calculation;
 
 public class CalculationRepositoryTests : IClassFixture<WholesaleDatabaseFixture<DatabaseContext>>
 {
@@ -203,7 +203,7 @@ public class CalculationRepositoryTests : IClassFixture<WholesaleDatabaseFixture
         await using var writeContext = _databaseManager.CreateDbContext();
 
         var period = Periods.January_EuropeCopenhagen_Instant;
-        var calculation = new Application.Model.Calculations.Calculation(
+        var calculation = new SettlementReport.Calculations.Application.Model.Calculations.Calculation(
             SystemClock.Instance.GetCurrentInstant(),
             CalculationType.BalanceFixing,
             new List<GridAreaCode> { new("004") },
@@ -260,15 +260,15 @@ public class CalculationRepositoryTests : IClassFixture<WholesaleDatabaseFixture
         actual.Should().Contain(calculation);
     }
 
-    private static Application.Model.Calculations.Calculation CreateCalculation(List<GridAreaCode> someGridAreasIds)
+    private static SettlementReport.Calculations.Application.Model.Calculations.Calculation CreateCalculation(List<GridAreaCode> someGridAreasIds)
     {
         return CreateCalculation(CalculationType.BalanceFixing, someGridAreasIds);
     }
 
-    private static Application.Model.Calculations.Calculation CreateCalculation(CalculationType calculationType, List<GridAreaCode> someGridAreasIds)
+    private static SettlementReport.Calculations.Application.Model.Calculations.Calculation CreateCalculation(CalculationType calculationType, List<GridAreaCode> someGridAreasIds)
     {
         var period = Periods.January_EuropeCopenhagen_Instant;
-        return new Application.Model.Calculations.Calculation(
+        return new SettlementReport.Calculations.Application.Model.Calculations.Calculation(
             SystemClock.Instance.GetCurrentInstant(),
             calculationType,
             someGridAreasIds,

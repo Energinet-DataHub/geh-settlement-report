@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.CalculationResults.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
@@ -22,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
 
 public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
 {

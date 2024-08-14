@@ -23,7 +23,7 @@ using NodaTime;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.Calculations.IntegrationTests.Infrastructure.Persistence.GridArea;
+namespace Energinet.DataHub.Wholesale.Calculations.IntegrationTests.Infrastructure.Persistence.GridArea;
 
 public class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDatabaseFixture<DatabaseContext>>
 {

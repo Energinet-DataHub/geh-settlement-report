@@ -23,7 +23,7 @@ using Moq;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Generators;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Generators;
 
 public sealed class MeteringPointTimeSeriesFileGeneratorTests
 {

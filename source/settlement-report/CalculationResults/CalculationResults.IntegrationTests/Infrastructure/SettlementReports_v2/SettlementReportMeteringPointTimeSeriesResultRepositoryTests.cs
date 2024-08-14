@@ -17,13 +17,13 @@ using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2.Statements;
-using Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Fixtures;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.CalculationResults.Model.EnergyResults;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
+using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
+namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : TestBase<SettlementReportMeteringPointTimeSeriesResultRepository>
