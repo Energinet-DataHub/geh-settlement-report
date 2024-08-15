@@ -14,8 +14,8 @@
 
 using Azure.Identity;
 using Azure.Storage.Files.DataLake;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks.DataLake;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -47,7 +47,6 @@ public static class DataLakeExtensions
         // Health checks
         services.AddHealthChecks()
             .AddDataLakeHealthCheck(
-                sp => sp.GetRequiredService<IOptions<DataLakeOptions>>().Value,
                 name: "DataLake");
 
         return services;

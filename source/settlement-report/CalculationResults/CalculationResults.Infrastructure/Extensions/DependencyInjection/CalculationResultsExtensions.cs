@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persi
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
@@ -33,22 +34,6 @@ namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.E
 /// </summary>
 public static class CalculationResultsExtensions
 {
-    /// <summary>
-    /// Dependencies for retrieving calculation results; excluding dependencies used for Settlement Reports.
-    /// </summary>
-    public static IServiceCollection AddCalculationResultsModule(this IServiceCollection services, IConfiguration configuration)
-    {
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddDatabricksSqlStatementForApplication(configuration);
-        services.AddDataLakeClientForApplication();
-
-        // Used by sql statements (queries)
-        services.AddOptions<DeltaTableOptions>().Bind(configuration);
-
-        return services;
-    }
-
     public static IServiceCollection AddCalculationResultsV2Module(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);

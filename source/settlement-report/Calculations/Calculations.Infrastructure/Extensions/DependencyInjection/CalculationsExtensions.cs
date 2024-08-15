@@ -14,13 +14,11 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Calculations.Application;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Calculations;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.CalculationState;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.GridArea;
 using Energinet.DataHub.SettlementReport.Calculations.Interfaces;
 using Energinet.DataHub.SettlementReport.Calculations.Interfaces.GridArea;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
@@ -34,22 +32,6 @@ namespace Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Extensi
 /// </summary>
 public static class CalculationsExtensions
 {
-    /// <summary>
-    /// Dependencies solely needed for the orchestration of calculations.
-    /// </summary>
-    public static IServiceCollection AddCalculationsOrchestrationModule(this IServiceCollection services, IConfiguration configuration)
-    {
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddDatabricksJobsForApplication(configuration);
-
-        services.AddSingleton(new CalculationStateMapper());
-
-        services.AddScoped<IDatabricksCalculatorJobSelector, DatabricksCalculatorJobSelector>();
-
-        return services;
-    }
-
     /// <summary>
     /// Dependencies needed for retrieving and updating information about calculations.
     /// </summary>

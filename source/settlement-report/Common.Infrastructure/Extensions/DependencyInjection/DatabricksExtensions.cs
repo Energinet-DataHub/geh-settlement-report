@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Databricks.Jobs.Diagnostics.HealthChecks;
-using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
@@ -27,22 +25,6 @@ namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.De
 /// </summary>
 public static class DatabricksExtensions
 {
-    /// <summary>
-    /// Register DatabricksJobs services commonly used by DH3 applications.
-    /// </summary>
-    public static IServiceCollection AddDatabricksJobsForApplication(this IServiceCollection services, IConfiguration configuration)
-    {
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddDatabricksJobs(configuration);
-
-        // Health checks
-        services.AddHealthChecks()
-            .AddDatabricksJobsApiHealthCheck(name: "DatabricksJobsApi");
-
-        return services;
-    }
-
     /// <summary>
     /// Register DatabricksSqlStatement services commonly used by DH3 applications.
     /// </summary>

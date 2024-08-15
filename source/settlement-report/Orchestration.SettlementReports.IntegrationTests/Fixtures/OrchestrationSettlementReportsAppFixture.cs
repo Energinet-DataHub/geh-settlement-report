@@ -24,7 +24,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.IntegrationTests.DurableTask;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;

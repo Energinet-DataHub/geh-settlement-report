@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Azure.Storage.Files.DataLake;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NodaTime;
 
@@ -22,12 +22,10 @@ namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks.
 public class DataLakeHealthRegistration : IHealthCheck
 {
     private readonly DataLakeFileSystemClient _dataLakeFileSystemClient;
-    private readonly DataLakeOptions _options;
 
-    public DataLakeHealthRegistration(DataLakeFileSystemClient dataLakeFileSystemClient, IClock clock, DataLakeOptions options)
+    public DataLakeHealthRegistration(DataLakeFileSystemClient dataLakeFileSystemClient)
     {
         _dataLakeFileSystemClient = dataLakeFileSystemClient;
-        _options = options;
     }
 
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken)
