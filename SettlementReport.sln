@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMigration", "source
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Core", "source\settlement-report\Test.Core\Test.Core.csproj", "{F16F641E-9989-4BD9-97D8-2135DD52B803}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration.SettlementReports.IntegrationTests", "source\settlement-report\Orchestration.SettlementReports.IntegrationTests\Orchestration.SettlementReports.IntegrationTests.csproj", "{63FCEA68-F792-4860-88AD-7EF163AD667F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{F16F641E-9989-4BD9-97D8-2135DD52B803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F16F641E-9989-4BD9-97D8-2135DD52B803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F16F641E-9989-4BD9-97D8-2135DD52B803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63FCEA68-F792-4860-88AD-7EF163AD667F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63FCEA68-F792-4860-88AD-7EF163AD667F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63FCEA68-F792-4860-88AD-7EF163AD667F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63FCEA68-F792-4860-88AD-7EF163AD667F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8A8252D2-968E-4097-8D84-5E1A4287AB23} = {9805FFFF-9C74-4E1F-9FE8-0423C9469E33}
@@ -130,5 +136,6 @@ Global
 		{A119215C-4161-4BDC-8E7C-0DA6DD655079} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 		{EB86F2BA-AC67-4A51-BDD7-E391CDFDF265} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 		{F16F641E-9989-4BD9-97D8-2135DD52B803} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
+		{63FCEA68-F792-4860-88AD-7EF163AD667F} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 	EndGlobalSection
 EndGlobal

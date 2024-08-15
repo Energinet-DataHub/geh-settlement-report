@@ -27,6 +27,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Publish Orchestration SettlementReports IntegrationTests
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\settlement-report\Orchestration.SettlementReports.IntegrationTests\Orchestrations.IntegrationTests.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '.\source\settlement-report\Orchestration.SettlementReports.IntegrationTests\bin\Release\net8.0'
+
     - name: Copy all directories and files in source/settlement-report except the obj-directories
       shell: bash
       run: |
