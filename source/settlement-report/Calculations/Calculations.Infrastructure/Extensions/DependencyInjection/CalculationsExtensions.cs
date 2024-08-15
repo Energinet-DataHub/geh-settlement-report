@@ -14,11 +14,9 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Calculations.Application;
-using Energinet.DataHub.SettlementReport.Calculations.Application.Model.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.CalculationState;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.GridArea;
 using Energinet.DataHub.SettlementReport.Calculations.Interfaces;
 using Energinet.DataHub.SettlementReport.Calculations.Interfaces.GridArea;
@@ -46,10 +44,8 @@ public static class CalculationsExtensions
         services.AddDatabricksJobsForApplication(configuration);
 
         services.AddSingleton(new CalculationStateMapper());
-        services.AddScoped<ICalculationEngineClient, CalculationEngineClient>();
 
         services.AddScoped<IDatabricksCalculatorJobSelector, DatabricksCalculatorJobSelector>();
-        services.AddScoped<ICalculationParametersFactory, DatabricksCalculationParametersFactory>();
 
         return services;
     }
@@ -61,9 +57,6 @@ public static class CalculationsExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddScoped<ICalculationsClient, CalculationsClient>();
-        services.AddScoped<ICalculationFactory, CalculationFactory>();
-        services.AddScoped<ICalculationRepository, CalculationRepository>();
         services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
 
         services.AddScoped<IDatabaseContext, DatabaseContext>();
@@ -84,9 +77,6 @@ public static class CalculationsExtensions
             {
                 builder.AddDbContextCheck<DatabaseContext>(name: key);
             });
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<ICalculationDtoMapper, CalculationDtoMapper>();
 
         services.AddScoped<IGridAreaOwnershipClient, GridAreaOwnershipClient>();
 

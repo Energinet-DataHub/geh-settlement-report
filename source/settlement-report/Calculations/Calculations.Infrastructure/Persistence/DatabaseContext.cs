@@ -15,7 +15,6 @@
 using Energinet.DataHub.SettlementReport.Calculations.Application.Model.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.GridArea;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.ReceivedIntegrationEvent;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
@@ -48,7 +47,6 @@ public class DatabaseContext : DbContext, IDatabaseContext
 
         modelBuilder.ApplyConfiguration(new CalculationEntityConfiguration());
         modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new ReceivedIntegrationEventEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }

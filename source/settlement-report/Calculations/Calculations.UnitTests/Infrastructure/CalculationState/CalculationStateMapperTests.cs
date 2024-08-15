@@ -23,10 +23,10 @@ namespace Energinet.DataHub.SettlementReport.Calculations.UnitTests.Infrastructu
 public class CalculationStateMapperTests
 {
     [Theory]
-    [InlineAutoMoqData(SettlementReport.Calculations.Application.Model.CalculationState.Pending, CalculationOrchestrationState.Scheduled)]
-    [InlineAutoMoqData(SettlementReport.Calculations.Application.Model.CalculationState.Running, CalculationOrchestrationState.Calculating)]
-    [InlineAutoMoqData(SettlementReport.Calculations.Application.Model.CalculationState.Completed, CalculationOrchestrationState.Calculated)]
-    [InlineAutoMoqData(SettlementReport.Calculations.Application.Model.CalculationState.Failed, CalculationOrchestrationState.CalculationFailed)]
+    [InlineAutoMoqData(Application.Model.CalculationState.Pending, CalculationOrchestrationState.Scheduled)]
+    [InlineAutoMoqData(Application.Model.CalculationState.Running, CalculationOrchestrationState.Calculating)]
+    [InlineAutoMoqData(Application.Model.CalculationState.Completed, CalculationOrchestrationState.Calculated)]
+    [InlineAutoMoqData(Application.Model.CalculationState.Failed, CalculationOrchestrationState.CalculationFailed)]
     public void MapState_CalledWithACalculationStateItCanMap_ExpectedCalculationOrchestrationState(SettlementReport.Calculations.Application.Model.CalculationState calculationState, CalculationOrchestrationState expectedCalculationOrchestrationState)
     {
         // Act
@@ -37,7 +37,7 @@ public class CalculationStateMapperTests
     }
 
     [Theory]
-    [InlineAutoMoqData(SettlementReport.Calculations.Application.Model.CalculationState.Canceled)]
+    [InlineAutoMoqData(Application.Model.CalculationState.Canceled)]
     [InlineAutoMoqData((SettlementReport.Calculations.Application.Model.CalculationState)99)]
     public void MapState_CalledWithAUnexpectedCalculationStateItCanNotMap_ThrowsArgumentOutOfRangeException(SettlementReport.Calculations.Application.Model.CalculationState unexpectedCalculationState)
     {
