@@ -92,6 +92,8 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         var port = 8100;
         var appHostSettings = CreateAppHostSettings(ref port);
 
+        await EnsureSettlementReportStorageContainerExistsAsync();
+
         // Create and start host
         AppHostManager = new FunctionAppHostManager(appHostSettings, TestLogger);
         StartHost(AppHostManager);
@@ -225,6 +227,17 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
             // Rethrow
             throw;
         }
+    }
+
+    private async Task EnsureSettlementReportStorageContainerExistsAsync()
+    {
+        // Uses BlobStorageConnectionString instead of Uri and DefaultAzureCredential for faster test execution
+        // (new DefaultAzureCredential() takes >30 seconds to check credentials)
+        var blobClient = new BlobServiceClient(AzuriteManager.BlobStorageConnectionString);
+        var blobContainerClient = blobClient.GetBlobContainerClient("settlement-report-container");
+        var containerExists = await blobContainerClient.ExistsAsync();
+        if (!containerExists)
+            await blobContainerClient.CreateAsync();
     }
 
     private static string GetBuildConfiguration()
