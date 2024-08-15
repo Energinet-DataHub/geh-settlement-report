@@ -31,7 +31,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\Orchestration.SettlementReports.IntegrationTests\Orchestrations.IntegrationTests.csproj' \
+          '.\source\settlement-report\Orchestration.SettlementReports.IntegrationTests\Orchestration.SettlementReports.IntegrationTests.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
