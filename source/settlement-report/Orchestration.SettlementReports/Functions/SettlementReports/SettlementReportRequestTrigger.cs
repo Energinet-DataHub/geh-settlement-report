@@ -16,8 +16,8 @@ using System.Net;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Calculations.Interfaces;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
+
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;
@@ -29,16 +29,13 @@ namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Fun
 internal sealed class SettlementReportRequestTrigger
 {
     private readonly IUserContext<FrontendUser> _userContext;
-    private readonly IGridAreaOwnershipClient _gridAreaOwnershipClient;
     private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
 
     public SettlementReportRequestTrigger(
         IUserContext<FrontendUser> userContext,
-        IGridAreaOwnershipClient gridAreaOwnershipClient,
         ISettlementReportInitializeHandler settlementReportInitializeHandler)
     {
         _userContext = userContext;
-        _gridAreaOwnershipClient = gridAreaOwnershipClient;
         _settlementReportInitializeHandler = settlementReportInitializeHandler;
     }
 
@@ -61,7 +58,7 @@ internal sealed class SettlementReportRequestTrigger
             };
         }
 
-        if (!await IsValidAsync(settlementReportRequest).ConfigureAwait(false))
+        if (!IsValid(settlementReportRequest))
         {
             return req.CreateResponse(HttpStatusCode.Forbidden);
         }
@@ -111,7 +108,7 @@ internal sealed class SettlementReportRequestTrigger
         return response;
     }
 
-    private async Task<bool> IsValidAsync(SettlementReportRequestDto req)
+    private bool IsValid(SettlementReportRequestDto req)
     {
         if (_userContext.CurrentUser.MultiTenancy)
         {
@@ -127,11 +124,7 @@ internal sealed class SettlementReportRequestTrigger
                 return false;
             }
 
-            var actorsGridAreas = await _gridAreaOwnershipClient
-                .GetOwnedByAsync(_userContext.CurrentUser.Actor.ActorNumber)
-                .ConfigureAwait(false);
-
-            return req.Filter.GridAreas.All(x => actorsGridAreas.Contains(x.Key));
+            return req.Filter.GridAreas.All(x => _userContext.CurrentUser.Actor.GridAreas.Contains(x.Key));
         }
 
         if (marketRole == FrontendActorMarketRole.EnergySupplier)

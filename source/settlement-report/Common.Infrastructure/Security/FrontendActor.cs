@@ -17,10 +17,5 @@ namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 public sealed record FrontendActor(
     Guid ActorId,
     string ActorNumber,
-    FrontendActorMarketRole MarketRole)
-{
-    public bool HasMarketRole(FrontendActorMarketRole marketRole)
-    {
-        return MarketRole == marketRole;
-    }
-}
+    FrontendActorMarketRole MarketRole,
+    IEnumerable<string> GridAreas);

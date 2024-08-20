@@ -13,14 +13,9 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Calculations.Application;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.GridArea;
-using Energinet.DataHub.SettlementReport.Calculations.Interfaces;
-using Energinet.DataHub.SettlementReport.Calculations.Interfaces.GridArea;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,8 +33,6 @@ public static class CalculationsExtensions
     public static IServiceCollection AddCalculationsModule(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
-
-        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
 
         services.AddScoped<IDatabaseContext, DatabaseContext>();
         services.AddDbContext<DatabaseContext>(
@@ -59,8 +52,6 @@ public static class CalculationsExtensions
             {
                 builder.AddDbContextCheck<DatabaseContext>(name: key);
             });
-
-        services.AddScoped<IGridAreaOwnershipClient, GridAreaOwnershipClient>();
 
         return services;
     }

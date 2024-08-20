@@ -22,6 +22,7 @@ public sealed class FrontendUserProvider : IUserProvider<FrontendUser>
 {
     private const string ActorNumberClaim = "actornumber";
     private const string MarketRolesClaim = "marketroles";
+    private const string GridAreasClaim = "gridareas";
 
     public Task<FrontendUser?> ProvideUserAsync(
         Guid userId,
@@ -30,7 +31,7 @@ public sealed class FrontendUserProvider : IUserProvider<FrontendUser>
         IEnumerable<Claim> claims)
     {
         var enumeratedClaims = claims.ToList();
-        var frontendActor = new FrontendActor(actorId, GetActorNumber(enumeratedClaims), GetMarketRole(enumeratedClaims));
+        var frontendActor = new FrontendActor(actorId, GetActorNumber(enumeratedClaims), GetMarketRole(enumeratedClaims), GetGridAreas(enumeratedClaims));
         var frontendUser = new FrontendUser(userId, multiTenancy, frontendActor);
 
         return Task.FromResult<FrontendUser?>(frontendUser);
@@ -51,5 +52,12 @@ public sealed class FrontendUserProvider : IUserProvider<FrontendUser>
             "DataHubAdministrator" => FrontendActorMarketRole.DataHubAdministrator,
             _ => FrontendActorMarketRole.Other,
         };
+    }
+
+    private static IEnumerable<string> GetGridAreas(IEnumerable<Claim> claims)
+    {
+        return
+            claims.SingleOrDefault(claim => claim.Type == GridAreasClaim)?.Value.Split(",", StringSplitOptions.RemoveEmptyEntries)
+            ?? Enumerable.Empty<string>();
     }
 }

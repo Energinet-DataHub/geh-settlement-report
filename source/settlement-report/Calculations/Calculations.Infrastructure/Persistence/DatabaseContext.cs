@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.SettlementReport.Calculations.Application.Model.Calculations;
 using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.Calculations;
-using Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence.GridArea;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.SettlementReport.Calculations.Infrastructure.Persistence;
@@ -35,10 +34,6 @@ public class DatabaseContext : DbContext, IDatabaseContext
 
     public virtual DbSet<Calculation> Calculations { get; private set; } = null!;
 
-    public virtual DbSet<Interfaces.GridArea.GridAreaOwner> GridAreaOwners { get; private set; } = null!;
-
-    public virtual DbSet<Application.IntegrationEvents.ReceivedIntegrationEvent> ReceivedIntegrationEvents { get; private set; } = null!;
-
     public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,7 +41,6 @@ public class DatabaseContext : DbContext, IDatabaseContext
         modelBuilder.HasDefaultSchema(Schema);
 
         modelBuilder.ApplyConfiguration(new CalculationEntityConfiguration());
-        modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
