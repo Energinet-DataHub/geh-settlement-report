@@ -23,8 +23,10 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Extensions.Options;
+using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.IntegrationTests.DurableTask;
+using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using WireMock.Server;
 using Xunit.Abstractions;
@@ -45,6 +47,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         IntegrationTestConfiguration = new IntegrationTestConfiguration();
 
         AzuriteManager = new AzuriteManager(useOAuth: true);
+        DatabaseManager = new WholesaleDatabaseManager<SettlementReportDatabaseContext>();
 
         DurableTaskManager = new DurableTaskManager(
             "AzureWebJobsStorage",
@@ -66,6 +69,8 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
     [NotNull]
     public IDurableClient? DurableClient { get; private set; }
 
+    public WholesaleDatabaseManager<SettlementReportDatabaseContext> DatabaseManager { get; }
+
     private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
     private AzuriteManager AzuriteManager { get; }
@@ -79,6 +84,9 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         // Storage emulator
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             AzuriteManager.StartAzurite();
+
+        // Database
+        await DatabaseManager.CreateDatabaseAsync();
 
         // Prepare host settings
         var port = 8100;
@@ -94,7 +102,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         DurableClient = DurableTaskManager.CreateClient(taskHubName: TaskHubName);
     }
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         AppHostManager?.Dispose();
         MockServer.Dispose();
@@ -103,7 +111,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             AzuriteManager.Dispose();
 
-        return Task.CompletedTask;
+        await DatabaseManager.DeleteDatabaseAsync();
     }
 
     public void EnsureAppHostUsesMockedDatabricksJobs()
@@ -163,6 +171,11 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         appHostSettings.ProcessEnvironmentVariables.Add(
             "OrchestrationsTaskHubName",
             TaskHubName);
+
+        // Database
+        appHostSettings.ProcessEnvironmentVariables.Add(
+            $"{ConnectionStringsOptions.ConnectionStrings}__{nameof(ConnectionStringsOptions.DB_CONNECTION_STRING)}",
+            DatabaseManager.ConnectionString);
 
         // Databricks
         // => Notice we reconfigure this setting in "EnsureAppHostUsesActualDatabricksJobs" and "EnsureAppHostUsesMockedDatabricksJobs"
