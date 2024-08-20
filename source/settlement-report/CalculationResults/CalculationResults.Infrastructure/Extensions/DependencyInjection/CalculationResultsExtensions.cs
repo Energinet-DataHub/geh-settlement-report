@@ -81,7 +81,7 @@ public static class CalculationResultsExtensions
 
         // Database Health check
         services.TryAddHealthChecks(
-            registrationKey: HealthCheckNames.WholesaleDatabase,
+            registrationKey: HealthCheckNames.SettlementReportDatabase,
             (key, builder) =>
             {
                 builder.AddDbContextCheck<SettlementReportDatabaseContext>(name: key);

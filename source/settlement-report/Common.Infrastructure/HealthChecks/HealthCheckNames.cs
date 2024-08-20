@@ -19,5 +19,5 @@ namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 /// </summary>
 public static class HealthCheckNames
 {
-    public const string WholesaleDatabase = "WholesaleDatabase";
+    public const string SettlementReportDatabase = "SettlementReportDatabase";
 }

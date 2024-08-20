@@ -22,7 +22,7 @@ internal static class Program
         // If you are migrating to SQL Server use connection string "Server=localhost;..."
         var connectionString =
             args.FirstOrDefault()
-            ?? "Server=localhost;Database=wholesale;Trusted_Connection=True;Encrypt=No;";
+            ?? "Server=localhost;Database=settlementreport;Trusted_Connection=True;Encrypt=No;";
 
         Console.WriteLine($"Performing upgrade on {connectionString}");
         var result = Upgrader.DatabaseUpgrade(connectionString);
