@@ -30,8 +30,6 @@ jobs:
       fail-fast: false
       matrix:
         tests_filter_expression:
-          - name: Calculations
-            paths: \source\settlement-report\Calculations\Calculations.UnitTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.Calculations.UnitTests.dll
           - name: Calculation Results
             paths: \source\settlement-report\CalculationResults\CalculationResults.UnitTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.CalculationResults.UnitTests.dll
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v14
@@ -51,11 +49,6 @@ jobs:
             paths: \source\settlement-report\Orchestration.SettlementReports.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.IntegrationTests.dll
             filter: empty # Means skip
             use_azure_functions_tools: true
-            contentroot_variable_name: empty # Means skip
-          - name: Calculations
-            paths: \source\settlement-report\Calculations\Calculations.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.Wholesale.Calculations.IntegrationTests.dll
-            filter: empty # Means skip
-            use_azure_functions_tools: false
             contentroot_variable_name: empty # Means skip
           - name: Calculation Results
             paths: \source\settlement-report\CalculationResults\CalculationResults.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.dll
