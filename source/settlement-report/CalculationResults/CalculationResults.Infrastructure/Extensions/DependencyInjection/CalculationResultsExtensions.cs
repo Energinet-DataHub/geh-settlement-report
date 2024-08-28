@@ -39,7 +39,6 @@ public static class CalculationResultsExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         services.AddDatabricksSqlStatementForApplication(configuration);
-        services.AddDataLakeClientForApplication();
 
         // Settlement Reports
         services.AddScoped<ISettlementReportRequestHandler, SettlementReportRequestHandler>();
