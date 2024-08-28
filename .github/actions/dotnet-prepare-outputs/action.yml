@@ -50,4 +50,4 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '${{ inputs.output_path }}\migration\databasemigration'
+          --output '${{ inputs.output_path }}\databasemigration'
