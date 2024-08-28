@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel.DataAnnotations;
+
 namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 
 public class DeltaTableOptions
@@ -27,37 +29,27 @@ public class DeltaTableOptions
     public string BasisDataSchemaName { get; set; } = "basis_data";
 
     /// <summary>
+    /// The source where the different databricks views are located, consisting of the catalog and schema name.
+    /// </summary>
+    public string SettlementReportViewsSource => $"{DatabricksCatalogName}.{SettlementReportSchemaName}";
+
+    /// <summary>
+    /// Name of the catalog in which the databricks views are located.
+    /// Should point at the unity catalog when running in Azure, and use hive_metastore to be able to populate testsdata when running tests
+    /// </summary>
+    [Required]
+    public string DatabricksCatalogName { get; set; } = null!;
+
+    /// <summary>
     /// Name of the schema/database under which the settlement report views are associated.
     /// </summary>
-    public string SettlementReportSchemaName { get; set; } = "settlement_report";
+    public string SettlementReportSchemaName { get; set; } = "wholesale_settlement_reports";
 
-    /// <summary>
-    /// Name of the schema/database to which the calculation result views belong.
-    /// </summary>
-    public string WholesaleCalculationResultsSchemaName { get; set; } = "wholesale_calculation_results";
+    public string WHOLESALE_RESULTS_V1_VIEW_NAME { get; set; } = "amounts_per_charge_v1";
 
-    /// <summary>
-    /// Name of the energy results delta table.
-    /// </summary>
-    public string ENERGY_RESULTS_TABLE_NAME { get; set; } = "energy_results";
+    public string ENERGY_RESULTS_POINTS_PER_GA_V1_VIEW_NAME { get; set; } = "energy_v1";
 
-    /// <summary>
-    /// Name of the wholesale results delta table.
-    /// </summary>
-    public string WHOLESALE_RESULTS_TABLE_NAME { get; set; } = "wholesale_results";
-
-    /// <summary>
-    /// Name of the wholesale results delta table.
-    /// </summary>
-    public string TOTAL_MONTHLY_AMOUNTS_TABLE_NAME { get; set; } = "total_monthly_amounts";
-
-    public string CURRENT_BALANCE_FIXING_CALCULATION_VERSION_VIEW_NAME { get; set; } = "current_balance_fixing_calculation_version_v1";
-
-    public string WHOLESALE_RESULTS_V1_VIEW_NAME { get; set; } = "wholesale_results_v1";
-
-    public string ENERGY_RESULTS_POINTS_PER_GA_V1_VIEW_NAME { get; set; } = "energy_result_points_per_ga_v1";
-
-    public string ENERGY_RESULTS_POINTS_PER_ES_GA_V1_VIEW_NAME { get; set; } = "energy_result_points_per_es_ga_v1";
+    public string ENERGY_RESULTS_POINTS_PER_ES_GA_V1_VIEW_NAME { get; set; } = "energy_per_es_v1";
 
     public string ENERGY_RESULTS_METERING_POINT_TIME_SERIES_V1_VIEW_NAME { get; set; } = "metering_point_time_series_v1";
 
@@ -68,10 +60,6 @@ public class DeltaTableOptions
     public string MONTHLY_AMOUNTS_V1_VIEW_NAME { get; set; } = "monthly_amounts_v1";
 
     public string CHARGE_PRICES_V1_VIEW_NAME { get; set; } = "charge_prices_v1";
-
-    public string CALCULATIONS_TABLE_NAME { get; set; } = "calculations";
-
-    public string AMOUNTS_PER_CHARGE_V1_VIEW_NAME { get; set; } = "amounts_per_charge_v1";
 
     public string MONTHLY_AMOUNTS_PER_CHARGE_V1_VIEW_NAME { get; set; } = "monthly_amounts_per_charge_v1";
 

@@ -15,7 +15,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Formats;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Experimental;
 
@@ -25,9 +27,12 @@ public sealed class DatabricksSqlQueryExecutor
     private readonly DatabricksSqlQueryBuilder _sqlQueryBuilder;
     private readonly DatabricksSqlRowHydrator _sqlRowHydrator;
 
-    public DatabricksSqlQueryExecutor(DbContext dbContext, DatabricksSqlWarehouseQueryExecutor databricksSqlWarehouseQueryExecutor)
+    public DatabricksSqlQueryExecutor(
+        DbContext dbContext,
+        DatabricksSqlWarehouseQueryExecutor databricksSqlWarehouseQueryExecutor,
+        IOptions<DeltaTableOptions> options)
     {
-        _sqlQueryBuilder = new DatabricksSqlQueryBuilder(dbContext);
+        _sqlQueryBuilder = new DatabricksSqlQueryBuilder(dbContext, options);
         _sqlRowHydrator = new DatabricksSqlRowHydrator();
         _databricksSqlWarehouseQueryExecutor = databricksSqlWarehouseQueryExecutor;
     }

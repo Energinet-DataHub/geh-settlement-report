@@ -27,7 +27,7 @@ public sealed class SettlementReportDatabricksContext : DatabricksContextBase, I
     public SettlementReportDatabricksContext(
         IOptions<DeltaTableOptions> deltaTableOptions,
         DatabricksSqlWarehouseQueryExecutor sqlWarehouseQueryExecutor)
-        : base(sqlWarehouseQueryExecutor)
+        : base(sqlWarehouseQueryExecutor, deltaTableOptions)
     {
         _deltaTableOptions = deltaTableOptions;
     }
@@ -52,7 +52,7 @@ public sealed class SettlementReportDatabricksContext : DatabricksContextBase, I
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(_deltaTableOptions.Value.SettlementReportSchemaName);
+        modelBuilder.HasDefaultSchema(_deltaTableOptions.Value.SettlementReportViewsSource);
         modelBuilder.ApplyConfiguration(new SettlementReportLatestBalanceFixingCalculationVersionViewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SettlementReportWholesaleViewEntityConfiguration());
         modelBuilder.ApplyConfiguration(new SettlementReportEnergyResultPointsPerGridAreaViewEntityConfiguration());
