@@ -19,6 +19,7 @@ using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SqlSt
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.CalculationResults.Model.WholesaleResults;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Extensions;
 
@@ -65,7 +66,7 @@ public sealed class SettlementReportMonthlyAmountRepository : ISettlementReportM
                 row.GridAreaCode,
                 row.EnergySupplierId,
                 row.Time,
-                QuantityUnitMapper.FromDeltaTableValue(row.QuantityUnit),
+                string.IsNullOrWhiteSpace(row.QuantityUnit) ? QuantityUnit.Kwh : QuantityUnitMapper.FromDeltaTableValue(row.QuantityUnit),
                 row.Amount,
                 row.ChargeType is null ? null : ChargeTypeMapper.FromDeltaTableValue(row.ChargeType),
                 row.ChargeCode,
