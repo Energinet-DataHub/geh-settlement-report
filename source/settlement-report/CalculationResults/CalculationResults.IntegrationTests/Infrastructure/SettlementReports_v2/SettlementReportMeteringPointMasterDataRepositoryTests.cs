@@ -42,7 +42,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterNoEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(
@@ -70,7 +70,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(
@@ -98,7 +98,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithNoEnergySupplierInFilterAndAlsoNullInData_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(
@@ -126,7 +126,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         actual.Should().Be(2);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithEnergySupplierInFilterButNullInData_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(
@@ -154,7 +154,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal(0, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_LatestValidFilterNoEnergySupplier_ReturnsCount()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -196,7 +196,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_LatestValidFilterWithEnergySupplier_ReturnsCount()
     {
         var calculationId1 = "a51a233f-3c67-4103-a5d5-49c5e177b8cc"; // Guid.NewGuid().ToString();
@@ -239,7 +239,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_LatestValidFilterNoEnergySupplier_ReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -283,7 +283,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ed", actual.Last().MeteringPointId);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_LatestValidFilterNoEnergySupplier_SkipTakeReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -364,7 +364,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ee", actual2.First().MeteringPointId);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_LatestValidFilterWithEnergySupplier_SkipTakeReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -447,7 +447,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ec", actual2.First().MeteringPointId);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(

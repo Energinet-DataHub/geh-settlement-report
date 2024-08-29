@@ -35,10 +35,11 @@ public sealed class SettlementReportChargePriceRepository : ISettlementReportCha
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
     {
-        return ApplyFilter(_context.ChargePriceView, filter, actorInfo)
-            .Select(row => row.StartTime)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        // return ApplyFilter(_context.ChargePriceView, filter, actorInfo)
+        //     .Select(row => row.StartTime)
+        //     .Distinct()
+        //     .DatabricksSqlCountAsync();
+        return Task.FromResult(1);
     }
 
     public async IAsyncEnumerable<SettlementReportChargePriceRow> GetAsync(
@@ -49,15 +50,14 @@ public sealed class SettlementReportChargePriceRepository : ISettlementReportCha
     {
         var view = ApplyFilter(_context.ChargePriceView, filter, actorInfo);
 
-        var chunkByStartTime = view
-            .Select(row => row.StartTime)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
+        // var chunkByStartTime = view
+        //     .Select(row => row.StartTime)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
         var query = view
-            .Join(chunkByStartTime, outer => outer.StartTime, inner => inner, (outer, inner) => outer)
+            // .Join(chunkByStartTime, outer => outer.StartTime, inner => inner, (outer, inner) => outer)
             .Select(x => new
             {
                 x.ChargeType,

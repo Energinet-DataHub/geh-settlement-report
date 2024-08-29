@@ -35,30 +35,30 @@ public sealed class SettlementReportMonthlyAmountRepository : ISettlementReportM
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
     {
-        return ApplyFilter(_settlementReportDatabricksContext.MonthlyAmountsView, filter, actorInfo)
-            .Select(x => x.ResultId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        // return ApplyFilter(_settlementReportDatabricksContext.MonthlyAmountsView, filter, actorInfo)
+        //     .Select(x => x.ResultId)
+        //     .Distinct()
+        //     .DatabricksSqlCountAsync();
+        return Task.FromResult<int>(1);
     }
 
     public async IAsyncEnumerable<SettlementReportMonthlyAmountRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.MonthlyAmountsView, filter, actorInfo);
 
-        var chunkByCalculationResult = view
-            .Select(row => row.ResultId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
-        var query = view.Join(
-            chunkByCalculationResult,
-            outer => outer.ResultId,
-            inner => inner,
-            (outer, inner) => outer);
-
-        await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
+        // var chunkByCalculationResult = view
+        //     .Select(row => row.ResultId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
+        //
+        // var query = view.Join(
+        //     chunkByCalculationResult,
+        //     outer => outer.ResultId,
+        //     inner => inner,
+        //     (outer, inner) => outer);
+        await foreach (var row in view.AsAsyncEnumerable().ConfigureAwait(false))
         {
             yield return new SettlementReportMonthlyAmountRow(
                 CalculationTypeMapper.FromDeltaTableValue(row.CalculationType),

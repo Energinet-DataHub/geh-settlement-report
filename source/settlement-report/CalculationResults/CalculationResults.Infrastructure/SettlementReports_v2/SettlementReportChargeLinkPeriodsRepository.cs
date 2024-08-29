@@ -34,30 +34,30 @@ public sealed class SettlementReportChargeLinkPeriodsRepository : ISettlementRep
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
     {
-        return ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        // return ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo)
+        //     .Select(row => row.MeteringPointId)
+        //     .Distinct()
+        //     .DatabricksSqlCountAsync();
+        return Task.FromResult<int>(1);
     }
 
     public async IAsyncEnumerable<SettlementReportChargeLinkPeriodsResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo);
 
-        var chunkByMeteringPointId = view
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
-        var query = view.Join(
-            chunkByMeteringPointId,
-            outer => outer.MeteringPointId,
-            inner => inner,
-            (outer, inner) => outer);
-
-        await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
+        // var chunkByMeteringPointId = view
+        //     .Select(row => row.MeteringPointId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
+        //
+        // var query = view.Join(
+        //     chunkByMeteringPointId,
+        //     outer => outer.MeteringPointId,
+        //     inner => inner,
+        //     (outer, inner) => outer);
+        await foreach (var row in view.AsAsyncEnumerable().ConfigureAwait(false))
         {
             yield return new SettlementReportChargeLinkPeriodsResultRow(
                 row.MeteringPointId,

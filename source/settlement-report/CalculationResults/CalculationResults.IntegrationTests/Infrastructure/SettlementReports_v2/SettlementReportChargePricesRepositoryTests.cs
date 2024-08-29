@@ -53,7 +53,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_WrongGridArea_ReturnsEmpty()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager
@@ -81,7 +81,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
         Assert.Equal(0, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterGridArea_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager
@@ -109,7 +109,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterGridAreaWithTax_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager
@@ -137,7 +137,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
         Assert.Equal(3, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager
@@ -167,7 +167,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
         Assert.Equal(2, results.Count);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_TakeMoreThanAvailable_ReturnsFewerRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager

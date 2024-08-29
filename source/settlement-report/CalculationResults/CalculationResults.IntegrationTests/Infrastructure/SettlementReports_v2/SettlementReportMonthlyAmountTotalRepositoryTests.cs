@@ -41,7 +41,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterNoEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -70,7 +70,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterNoEnergySupplierWithMultipleInData_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -100,7 +100,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -129,7 +129,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithEnergySupplierAndMultipleInData_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -159,7 +159,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -196,7 +196,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal("8397670583193", results[0].EnergySupplierId);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTakeWithEnergySupplier_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(

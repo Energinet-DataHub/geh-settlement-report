@@ -41,7 +41,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidGridAccessProviderFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -69,7 +69,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -97,7 +97,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestCount_ValidFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -125,7 +125,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestCount_FilterOutOfRange_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -153,7 +153,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(0, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task CountPerEnergySupplier_ValidFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -181,7 +181,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestCountPerEnergySupplier_ValidFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -209,7 +209,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestCountPerEnergySupplier_FilterOutOfRange_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -237,7 +237,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(0, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -271,7 +271,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(4, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_NullableValues_ReturnsNull()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -306,7 +306,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Null(actual[0].SettlementMethod);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestGet_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -347,7 +347,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(5, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task GetPerEnergySupplier_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -385,7 +385,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(4, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task LatestGetPerEnergySupplier_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(

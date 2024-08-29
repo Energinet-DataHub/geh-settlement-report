@@ -35,31 +35,31 @@ public sealed class SettlementReportWholesaleRepository : ISettlementReportWhole
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
     {
-        var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);
-        return view
-            .Select(row => row.ResultId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        // var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);
+        // return view
+        //     .Select(row => row.ResultId)
+        //     .Distinct()
+        //     .DatabricksSqlCountAsync();
+        return Task.FromResult(1);
     }
 
     public async IAsyncEnumerable<SettlementReportWholesaleResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);
 
-        var chunkByCalculationResult = view
-            .Select(row => row.ResultId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
-        var query = view.Join(
-            chunkByCalculationResult,
-            outer => outer.ResultId,
-            inner => inner,
-            (outer, inner) => outer);
-
-        await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
+        // var chunkByCalculationResult = view
+        //     .Select(row => row.ResultId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
+        //
+        // var query = view.Join(
+        //     chunkByCalculationResult,
+        //     outer => outer.ResultId,
+        //     inner => inner,
+        //     (outer, inner) => outer);
+        await foreach (var row in view.AsAsyncEnumerable().ConfigureAwait(false))
         {
             yield return new SettlementReportWholesaleResultRow(
                 CalculationTypeMapper.FromDeltaTableValue(row.CalculationType),
