@@ -49,9 +49,6 @@ public sealed class SettlementReportWholesaleViewEntity
     [Column("quantity_unit")]
     public string QuantityUnit { get; set; } = null!;
 
-    [Column("currency")]
-    public string Currency { get; set; } = null!;
-
     [Column("quantity", TypeName = "decimal(18,3)")]
     public decimal? Quantity { get; set; }
 
