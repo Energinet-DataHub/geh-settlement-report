@@ -206,10 +206,10 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             "METERINGPOINTID,TYPEOFMP,CHARGETYPE,CHARGEOWNER,CHARGEID,CHARGEOCCURRENCES,PERIODSTART,PERIODEND",
             fileLines[0]);
         Assert.Equal(
-            "\"15cba911-b91e-4786-bed4-f0d28418a9e2\",E17,D03,\"6392825108998\",40000,46,2022-01-02T02:00:00Z,2022-01-03T02:00:00Z",
+            "\"15cba911-b91e-4786-bed4-f0d28418a9eb\",E17,D03,\"6392825108998\",40000,46,2022-01-02T02:00:00Z,2022-01-03T02:00:00Z",
             fileLines[1]);
         Assert.Equal(
-            "\"15cba911-b91e-4786-bed4-f0d28418a9eb\",E17,D03,\"6392825108998\",40000,46,2022-01-02T02:00:00Z,2022-01-03T02:00:00Z",
+            "\"15cba911-b91e-4786-bed4-f0d28418a9e2\",E17,D03,\"6392825108998\",40000,46,2022-01-02T02:00:00Z,2022-01-03T02:00:00Z",
             fileLines[2]);
     }
 
