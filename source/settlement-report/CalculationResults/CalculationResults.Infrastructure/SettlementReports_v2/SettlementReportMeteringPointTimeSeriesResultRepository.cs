@@ -38,18 +38,19 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution)
     {
-        if (filter.CalculationType == CalculationType.BalanceFixing)
-        {
-            return CountLatestAsync(filter, maximumCalculationVersion, resolution);
-        }
+        //if (filter.CalculationType == CalculationType.BalanceFixing)
+        //{
+        //    return CountLatestAsync(filter, maximumCalculationVersion, resolution);
+        //}
 
-        var (_, calculationId) = filter.GridAreas.Single();
+        //var (_, calculationId) = filter.GridAreas.Single();
 
-        return ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution)
-            .Where(row => row.CalculationId == calculationId!.Id)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        //return ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution)
+        //    .Where(row => row.CalculationId == calculationId!.Id)
+        //    .Select(row => row.MeteringPointId)
+        //    .Distinct()
+        //    .DatabricksSqlCountAsync();
+        return Task.FromResult(1);
     }
 
     public async IAsyncEnumerable<SettlementReportMeteringPointTimeSeriesResultRow> GetAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution, int skip, int take)
