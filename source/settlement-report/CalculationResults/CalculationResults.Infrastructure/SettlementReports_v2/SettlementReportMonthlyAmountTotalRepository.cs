@@ -66,7 +66,7 @@ public sealed class SettlementReportMonthlyAmountTotalRepository : ISettlementRe
                 row.GridAreaCode,
                 row.EnergySupplierId,
                 row.Time,
-                string.IsNullOrWhiteSpace(row.QuantityUnit) ? QuantityUnit.Kwh : QuantityUnitMapper.FromDeltaTableValue(row.QuantityUnit),
+                row.QuantityUnit is null ? null : QuantityUnitMapper.FromDeltaTableValue(row.QuantityUnit),
                 row.Amount,
                 row.ChargeType is null ? null : ChargeTypeMapper.FromDeltaTableValue(row.ChargeType),
                 row.ChargeCode,

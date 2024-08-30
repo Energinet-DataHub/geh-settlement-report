@@ -83,6 +83,7 @@ public sealed class MonthlyAmountFileGenerator : CsvFileGeneratorBase<Settlement
                 .Index(6)
                 .Convert(row => row.Value.QuantityUnit switch
                 {
+                    null => string.Empty,
                     QuantityUnit.Kwh => "KWH",
                     QuantityUnit.Pieces => "PCS",
                     _ => throw new ArgumentOutOfRangeException(nameof(row.Value.QuantityUnit)),
