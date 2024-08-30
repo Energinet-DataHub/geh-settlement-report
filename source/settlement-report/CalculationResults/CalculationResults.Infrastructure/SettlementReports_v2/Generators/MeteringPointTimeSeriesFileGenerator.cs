@@ -80,37 +80,47 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
                 await csvHelper.NextRecordAsync().ConfigureAwait(false);
             }
 
-            await foreach (var record in _dataSource.GetAsync(filter, maximumCalculationVersion, _resolution, fileInfo.ChunkOffset * ChunkSize, ChunkSize).ConfigureAwait(false))
+            var rowsCount = 0;
+            var loopCount = 0;
+            do
             {
-                csvHelper.WriteField(record.MeteringPointId, shouldQuote: true);
-                csvHelper.WriteField(record.MeteringPointType switch
+                rowsCount = 0;
+                await foreach (var record in _dataSource.GetAsync(filter, maximumCalculationVersion, _resolution, loopCount * ChunkSize, ChunkSize).ConfigureAwait(false))
                 {
-                    MeteringPointType.Consumption => "E17",
-                    MeteringPointType.Production => "E18",
-                    MeteringPointType.Exchange => "E20",
-                    MeteringPointType.VeProduction => "D01",
-                    MeteringPointType.NetProduction => "D05",
-                    MeteringPointType.SupplyToGrid => "D06",
-                    MeteringPointType.ConsumptionFromGrid => "D07",
-                    MeteringPointType.WholesaleServicesInformation => "D08",
-                    MeteringPointType.OwnProduction => "D09",
-                    MeteringPointType.NetFromGrid => "D10",
-                    MeteringPointType.NetToGrid => "D11",
-                    MeteringPointType.TotalConsumption => "D12",
-                    MeteringPointType.ElectricalHeating => "D14",
-                    MeteringPointType.NetConsumption => "D15",
-                    MeteringPointType.EffectSettlement => "D19",
-                    _ => throw new ArgumentOutOfRangeException(nameof(record.MeteringPointType)),
-                });
-                csvHelper.WriteField(record.StartDateTime);
+                    csvHelper.WriteField(record.MeteringPointId, shouldQuote: true);
+                    csvHelper.WriteField(record.MeteringPointType switch
+                    {
+                        MeteringPointType.Consumption => "E17",
+                        MeteringPointType.Production => "E18",
+                        MeteringPointType.Exchange => "E20",
+                        MeteringPointType.VeProduction => "D01",
+                        MeteringPointType.NetProduction => "D05",
+                        MeteringPointType.SupplyToGrid => "D06",
+                        MeteringPointType.ConsumptionFromGrid => "D07",
+                        MeteringPointType.WholesaleServicesInformation => "D08",
+                        MeteringPointType.OwnProduction => "D09",
+                        MeteringPointType.NetFromGrid => "D10",
+                        MeteringPointType.NetToGrid => "D11",
+                        MeteringPointType.TotalConsumption => "D12",
+                        MeteringPointType.ElectricalHeating => "D14",
+                        MeteringPointType.NetConsumption => "D15",
+                        MeteringPointType.EffectSettlement => "D19",
+                        _ => throw new ArgumentOutOfRangeException(nameof(record.MeteringPointType)),
+                    });
+                    csvHelper.WriteField(record.StartDateTime);
 
-                for (var i = 0; i < expectedQuantities; ++i)
-                {
-                    csvHelper.WriteField<decimal?>(record.Quantities.Count > i ? record.Quantities[i].Quantity : null);
+                    for (var i = 0; i < expectedQuantities; ++i)
+                    {
+                        csvHelper.WriteField<decimal?>(record.Quantities.Count > i ? record.Quantities[i].Quantity : null);
+                    }
+
+                    await csvHelper.NextRecordAsync().ConfigureAwait(false);
+                    rowsCount++;
                 }
 
-                await csvHelper.NextRecordAsync().ConfigureAwait(false);
+                loopCount++;
             }
+            while (rowsCount >= ChunkSize);
         }
     }
 }

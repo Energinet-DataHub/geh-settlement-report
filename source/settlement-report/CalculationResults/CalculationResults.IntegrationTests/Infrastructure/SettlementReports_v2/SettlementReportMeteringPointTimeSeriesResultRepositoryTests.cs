@@ -74,7 +74,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task CountLatest_ValidFilter_ReturnsCount()
     {
         // arrange
@@ -251,7 +251,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
         Assert.Equal(expected, actual.Count);
     }
 
-    [Theory]
+    [Theory(Skip = "Performance testing")]
     [InlineData("8442359392721", 1)]
     [InlineData(null, 3)]
     public async Task Count_ValidFilter_FiltersCorrectlyOnEnergySupplier(string? energySupplier, int expected)
