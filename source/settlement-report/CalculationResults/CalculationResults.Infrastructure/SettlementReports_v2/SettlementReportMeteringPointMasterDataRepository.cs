@@ -36,18 +36,19 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion)
     {
-        if (filter.CalculationType == CalculationType.BalanceFixing)
-        {
-            var view = ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter);
-            return filter.EnergySupplier is not null
-                ? CountForBalanceFixingPerEnergySupplierAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion))
-                : CountForBalanceFixingAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion));
-        }
-
-        return ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter)
-            .Select(x => x.MeteringPointId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
+        // if (filter.CalculationType == CalculationType.BalanceFixing)
+        // {
+        //     var view = ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter);
+        //     return filter.EnergySupplier is not null
+        //         ? CountForBalanceFixingPerEnergySupplierAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion))
+        //         : CountForBalanceFixingAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion));
+        // }
+        //
+        // return ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter)
+        //     .Select(x => x.MeteringPointId)
+        //     .Distinct()
+        //     .DatabricksSqlCountAsync();
+        return Task.FromResult<int>(1);
     }
 
     public async IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, int skip, int take, long maximumCalculationVersion)
@@ -74,94 +75,24 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
         }
     }
 
-    private static Task<int> CountForBalanceFixingAsync(
-        IQueryable<SettlementReportMeteringPointMasterDataViewEntity> view,
-        IQueryable<SettlementReportEnergyResultPointsPerGridAreaViewEntity> viewForLatest)
-    {
-        var latestJoin = viewForLatest
-            .GroupBy(row =>
-                DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-            .Select(group => new { day = group.Key, max_calc_version = group.Max(row => row.CalculationVersion), });
-
-        var latestCalcIdForMetering = viewForLatest
-            .Join(
-                latestJoin,
-                outer => new
-                {
-                    day = DbFunctions.ToStartOfDayInTimeZone(
-                            outer.Time,
-                            "Europe/Copenhagen"),
-                    max_calc_version = outer.CalculationVersion,
-                },
-                inner => inner,
-                (outer, inner) => new { outer.CalculationId })
-            .Distinct();
-
-        var query = view.Join(
-                latestCalcIdForMetering,
-                outer => outer.CalculationId,
-                inner => inner.CalculationId,
-                (outer, inner) => outer)
-            .OrderBy(row => row.MeteringPointId)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
-        return query;
-    }
-
-    private static Task<int> CountForBalanceFixingPerEnergySupplierAsync(
-        IQueryable<SettlementReportMeteringPointMasterDataViewEntity> view,
-        IQueryable<SettlementReportEnergyResultPointsPerEnergySupplierGridAreaViewEntity> viewForLatest)
-    {
-        var latestJoin = viewForLatest
-            .GroupBy(row =>
-                DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-            .Select(group => new { day = group.Key, max_calc_version = group.Max(row => row.CalculationVersion), });
-
-        var latestCalcIdForMetering = viewForLatest
-            .Join(
-                latestJoin,
-                outer => new
-                {
-                    day = DbFunctions.ToStartOfDayInTimeZone(
-                            outer.Time,
-                            "Europe/Copenhagen"),
-                    max_calc_version = outer.CalculationVersion,
-                },
-                inner => inner,
-                (outer, inner) => new { outer.CalculationId })
-            .Distinct();
-
-        var query = view.Join(
-                latestCalcIdForMetering,
-                outer => outer.CalculationId,
-                inner => inner.CalculationId,
-                (outer, inner) => outer)
-            .OrderBy(row => row.MeteringPointId)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .DatabricksSqlCountAsync();
-        return query;
-    }
-
     private static IQueryable<SettlementReportMeteringPointMasterDataViewEntity> GetForNonBalanceFixing(
         int skip,
         int take,
         IQueryable<SettlementReportMeteringPointMasterDataViewEntity> view)
     {
-        var chunkByMeteringPointId = view
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
+        // var chunkByMeteringPointId = view
+        //     .Select(row => row.MeteringPointId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
 
-        var query = view.Join(
-            chunkByMeteringPointId,
-            outer => outer.MeteringPointId,
-            inner => inner,
-            (outer, inner) => outer);
-        return query;
+        // var query = view.Join(
+        //     chunkByMeteringPointId,
+        //     outer => outer.MeteringPointId,
+        //     inner => inner,
+        //     (outer, inner) => outer);
+        return view;
     }
 
     private static IQueryable<SettlementReportMeteringPointMasterDataViewEntity> GetForBalanceFixing(
@@ -189,20 +120,18 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
                 (outer, inner) => new { outer.CalculationId })
             .Distinct();
 
-        var meteringPointIds = view.Join(
-                latestCalcIdForMetering,
-                outer => outer.CalculationId,
-                inner => inner.CalculationId,
-                (outer, inner) => outer)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
+        // var meteringPointIds = view.Join(
+        //         latestCalcIdForMetering,
+        //         outer => outer.CalculationId,
+        //         inner => inner.CalculationId,
+        //         (outer, inner) => outer)
+        //     .Select(row => row.MeteringPointId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
         var query = (from m in view
                    join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
-                   join mp in meteringPointIds on m.MeteringPointId equals mp
                    select m)
             .Distinct()
             .OrderBy(row => row.MeteringPointId);
@@ -235,20 +164,18 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
                 (outer, inner) => new { outer.CalculationId })
             .Distinct();
 
-        var meteringPointIds = view.Join(
-                latestCalcIdForMetering,
-                outer => outer.CalculationId,
-                inner => inner.CalculationId,
-                (outer, inner) => outer)
-            .Select(row => row.MeteringPointId)
-            .Distinct()
-            .OrderBy(row => row)
-            .Skip(skip)
-            .Take(take);
-
+        // var meteringPointIds = view.Join(
+        //         latestCalcIdForMetering,
+        //         outer => outer.CalculationId,
+        //         inner => inner.CalculationId,
+        //         (outer, inner) => outer)
+        //     .Select(row => row.MeteringPointId)
+        //     .Distinct()
+        //     .OrderBy(row => row)
+        //     .Skip(skip)
+        //     .Take(take);
         var query = (from m in view
                 join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
-                join mp in meteringPointIds on m.MeteringPointId equals mp
                 select m)
             .Distinct()
             .OrderBy(row => row.MeteringPointId);

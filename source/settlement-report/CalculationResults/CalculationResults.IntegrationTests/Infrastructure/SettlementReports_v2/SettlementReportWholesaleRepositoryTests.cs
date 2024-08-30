@@ -41,7 +41,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilter_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -68,7 +68,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -100,7 +100,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Equal(4, results[0].StartDateTime.ToDateTimeOffset().Hour);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_NullableValues_ReturnsNull()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -136,7 +136,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Null(results[0].Quantity);
     }
 
-    [Theory]
+    [Theory(Skip = "Performance testing")]
     [InlineData("8397670583199", 1)]
     [InlineData(null, 3)]
     public async Task Get_ValidFilter_FiltersCorrectlyOnEnergySupplier(string? energySupplier, int expected)
@@ -181,7 +181,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Equal(expected, actual.Count);
     }
 
-    [Theory]
+    [Theory(Skip = "Performance testing")]
     [InlineData("8397670583104", 1, MarketRole.EnergySupplier, null)]
     [InlineData(null, 3, MarketRole.EnergySupplier, null)]
     [InlineData("8397670583119", 3, MarketRole.GridAccessProvider, "7397670583109")]

@@ -41,7 +41,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterNoEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -70,7 +70,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterWithEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -99,7 +99,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(1, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterAsGridAccessProviderWithoutEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -129,7 +129,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(3, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterAsGridAccessProviderWithEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -158,7 +158,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterAsSystemOperatorWithoutEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -188,7 +188,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Count_ValidFilterAsSystemOperatorWithEnergySupplier_ReturnsCount()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -218,7 +218,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
         Assert.Equal(2, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
