@@ -25,7 +25,7 @@ public sealed record SettlementReportMonthlyAmountRow
         string gridArea,
         string energySupplierId,
         Instant startDateTime,
-        QuantityUnit quantityUnit,
+        QuantityUnit? quantityUnit,
         decimal? amount,
         ChargeType? chargeType,
         string? chargeCode,
@@ -69,7 +69,7 @@ public sealed record SettlementReportMonthlyAmountRow
 
     public Resolution Resolution => Resolution.Month;
 
-    public QuantityUnit QuantityUnit { get; }
+    public QuantityUnit? QuantityUnit { get; }
 
     public Currency Currency => Currency.DKK;
 
