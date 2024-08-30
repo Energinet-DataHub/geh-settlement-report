@@ -38,7 +38,7 @@ public sealed class SettlementReportMonthlyAmountsViewEntity
     public Instant Time { get; set; }
 
     [Column("quantity_unit")]
-    public string QuantityUnit { get; set; } = null!;
+    public string? QuantityUnit { get; set; }
 
     [Column("amount", TypeName = "decimal(18,6)")]
     public decimal? Amount { get; set; }
