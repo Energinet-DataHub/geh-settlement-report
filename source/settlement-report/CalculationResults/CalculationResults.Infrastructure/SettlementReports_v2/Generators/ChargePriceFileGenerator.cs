@@ -70,8 +70,8 @@ public sealed class ChargePriceFileGenerator : ISettlementReportFileGenerator
         const int energyPriceFieldCount = 25;
 
         csvHelper.WriteField("CHARGETYPE");
-        csvHelper.WriteField("CHARGETYPEID");
-        csvHelper.WriteField("CHARGETYPEOWNER");
+        csvHelper.WriteField("CHARGEID");
+        csvHelper.WriteField("CHARGEOWNER");
         csvHelper.WriteField("RESOLUTIONDURATION");
         csvHelper.WriteField("TAXINDICATOR");
         csvHelper.WriteField("STARTDATETIME");
