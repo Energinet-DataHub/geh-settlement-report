@@ -25,7 +25,6 @@ namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.E
 public sealed class DatabricksSqlQueryExecutor
 {
     private readonly DatabricksSqlWarehouseQueryExecutor _databricksSqlWarehouseQueryExecutor;
-    private readonly ILogger<DatabricksSqlQueryExecutor> _logger;
     private readonly DatabricksSqlQueryBuilder _sqlQueryBuilder;
     private readonly DatabricksSqlRowHydrator _sqlRowHydrator;
 
@@ -33,12 +32,11 @@ public sealed class DatabricksSqlQueryExecutor
         DbContext dbContext,
         DatabricksSqlWarehouseQueryExecutor databricksSqlWarehouseQueryExecutor,
         IOptions<DeltaTableOptions> options,
-        ILogger<DatabricksSqlQueryExecutor> logger)
+        ILoggerFactory loggerFactory)
     {
         _sqlQueryBuilder = new DatabricksSqlQueryBuilder(dbContext, options);
-        _sqlRowHydrator = new DatabricksSqlRowHydrator();
+        _sqlRowHydrator = new DatabricksSqlRowHydrator(loggerFactory);
         _databricksSqlWarehouseQueryExecutor = databricksSqlWarehouseQueryExecutor;
-        _logger = logger;
     }
 
     public async Task<int> CountAsync(DatabricksSqlQueryable query, CancellationToken cancellationToken = default)
@@ -66,7 +64,7 @@ public sealed class DatabricksSqlQueryExecutor
     private IAsyncEnumerable<TElement> ExecuteCoreAsync<TElement>(DatabricksStatement databricksStatement, CancellationToken cancellationToken = default)
     {
         var rows = _databricksSqlWarehouseQueryExecutor.ExecuteStatementParallelAsync(databricksStatement, Format.ApacheArrow, cancellationToken);
-        return _sqlRowHydrator.HydrateAsync<TElement>(rows, _logger, cancellationToken);
+        return _sqlRowHydrator.HydrateAsync<TElement>(rows, cancellationToken);
     }
 
     private sealed class CountResult

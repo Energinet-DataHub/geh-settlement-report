@@ -16,6 +16,7 @@ using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Experimental;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Persistence.Databricks;
@@ -26,8 +27,9 @@ public sealed class SettlementReportDatabricksContext : DatabricksContextBase, I
 
     public SettlementReportDatabricksContext(
         IOptions<DeltaTableOptions> deltaTableOptions,
-        DatabricksSqlWarehouseQueryExecutor sqlWarehouseQueryExecutor)
-        : base(sqlWarehouseQueryExecutor, deltaTableOptions)
+        DatabricksSqlWarehouseQueryExecutor sqlWarehouseQueryExecutor,
+        ILoggerFactory loggerFactory)
+        : base(sqlWarehouseQueryExecutor, deltaTableOptions, loggerFactory)
     {
         _deltaTableOptions = deltaTableOptions;
     }

@@ -21,6 +21,8 @@ using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.Settlemen
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
@@ -32,6 +34,10 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
 
     public SettlementReportMeteringPointMasterDataRepositoryTests(MigrationsFreeDatabricksSqlStatementApiFixture databricksSqlStatementApiFixture)
     {
+        var mockedLogging = new Mock<ILogger>();
+
+        var mockedLoggerFactory = new Mock<ILoggerFactory>();
+        mockedLoggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(mockedLogging.Object);
         _databricksSqlStatementApiFixture = databricksSqlStatementApiFixture;
 
         _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.SettlementReportSchemaName =
@@ -39,7 +45,8 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
 
         Fixture.Inject<ISettlementReportDatabricksContext>(new SettlementReportDatabricksContext(
             _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions,
-            _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
+            _databricksSqlStatementApiFixture.GetDatabricksExecutor(),
+            mockedLoggerFactory.Object));
     }
 
     [Fact(Skip = "Performance testing")]

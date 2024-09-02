@@ -40,9 +40,15 @@ public sealed class DatabricksSqlRowHydrator
         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
     }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
 
+    private readonly ILogger<DatabricksSqlRowHydrator> _logger;
+
+    public DatabricksSqlRowHydrator(ILoggerFactory loggerFactory)
+    {
+        _logger = loggerFactory.CreateLogger<DatabricksSqlRowHydrator>();
+    }
+
     public async IAsyncEnumerable<TElement> HydrateAsync<TElement>(
         IAsyncEnumerable<dynamic> rows,
-        ILogger<DatabricksSqlQueryExecutor> logger,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var propertyMap = _typeInfoCache.GetOrAdd(typeof(TElement), CreateTypeInfoCache);
@@ -54,7 +60,7 @@ public sealed class DatabricksSqlRowHydrator
             rowCounter++;
         }
 
-        logger.LogInformation("Hydration for {RowCounter} rows took: {ElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
+        _logger.LogInformation("Hydration for {RowCounter} rows took: {ElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
     }
 
     private TElement Hydrate<TElement>(ExpandoObject expandoObject, IReadOnlyDictionary<string, (PropertyInfo Property, TypeConverter Converter)> propertyMap, Stopwatch sw)

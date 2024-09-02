@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Experimental;
@@ -31,10 +32,11 @@ public abstract class DatabricksContextBase : IDisposable
 
     protected DatabricksContextBase(
         DatabricksSqlWarehouseQueryExecutor databricksSqlWarehouseQueryExecutor,
-        IOptions<DeltaTableOptions> options)
+        IOptions<DeltaTableOptions> options,
+        ILoggerFactory loggerFactory)
     {
         _dbContext = new DbContextCore(OnModelCreating);
-        _executor = new DatabricksSqlQueryExecutor(_dbContext, databricksSqlWarehouseQueryExecutor, options);
+        _executor = new DatabricksSqlQueryExecutor(_dbContext, databricksSqlWarehouseQueryExecutor, options, loggerFactory);
     }
 
     public void Dispose()
