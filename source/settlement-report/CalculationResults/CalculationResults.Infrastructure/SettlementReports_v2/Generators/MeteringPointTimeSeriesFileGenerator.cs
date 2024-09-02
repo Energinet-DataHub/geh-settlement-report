@@ -108,10 +108,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
                 rowsCount++;
             }
 
-            if (rowsCount >= ChunkSize)
-            {
-                fileInfo.IsPartial = true;
-            }
+            fileInfo.IsPartial = rowsCount >= ChunkSize;
         }
     }
 }

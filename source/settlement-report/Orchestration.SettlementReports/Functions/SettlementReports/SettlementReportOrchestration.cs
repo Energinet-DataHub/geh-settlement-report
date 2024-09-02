@@ -62,22 +62,24 @@ internal sealed class SettlementReportOrchestration
 
         foreach (var scatterChunk in orderedResults)
         {
-            while (true)
-            {
-                var fileRequest = await context
-                    .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                        nameof(GenerateSettlementReportFileActivity),
-                        new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
-                        dataSourceExceptionHandler);
+            var fileRequest = await context
+                .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                    nameof(GenerateSettlementReportFileActivity),
+                    new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
+                    dataSourceExceptionHandler);
 
-                generatedFiles.Add(fileRequest);
-                if (!fileRequest.FileInfo.IsPartial)
-                { break; }
-                scatterChunk.PartialFileInfo = scatterChunk.PartialFileInfo with { FileOffset = 2 };
+            generatedFiles.Add(fileRequest);
+            while (fileRequest.FileInfo.IsPartial)
+            {
+                var nextSettlementReportFileRequest = scatterChunk with
+                {
+                    PartialFileInfo = scatterChunk.PartialFileInfo with { FileOffset = scatterChunk.PartialFileInfo.FileOffset + 1 },
+                };
+
                 fileRequest = await context
                     .CallActivityAsync<GeneratedSettlementReportFileDto>(
                         nameof(GenerateSettlementReportFileActivity),
-                        new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
+                        new GenerateSettlementReportFileInput(nextSettlementReportFileRequest, settlementReportRequest.ActorInfo),
                         dataSourceExceptionHandler);
 
                 generatedFiles.Add(fileRequest);
