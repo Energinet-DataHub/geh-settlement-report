@@ -60,7 +60,7 @@ public sealed class DatabricksSqlRowHydrator
             rowCounter++;
         }
 
-        _logger.LogTrace("Hydration for {RowCounter} rows took: {SwElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
+        _logger.LogError("Hydration for {RowCounter} rows took: {SwElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
     }
 
     private TElement Hydrate<TElement>(ExpandoObject expandoObject, IReadOnlyDictionary<string, (PropertyInfo Property, TypeConverter Converter)> propertyMap, Stopwatch sw)
