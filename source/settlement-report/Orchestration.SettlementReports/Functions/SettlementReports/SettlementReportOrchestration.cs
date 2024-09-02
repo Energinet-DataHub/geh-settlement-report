@@ -56,38 +56,39 @@ internal sealed class SettlementReportOrchestration
         context.SetCustomStatus(new OrchestrateSettlementReportMetadata { OrchestrationProgress = 10 });
 
         var generatedFiles = new List<GeneratedSettlementReportFileDto>();
-        var orderedResults = scatterResults
+        var settlementReportFileRequests = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ToList();
 
-        foreach (var scatterChunk in orderedResults)
+        for (var i = 0; i < settlementReportFileRequests.Count; i++)
         {
-            var fileRequest = await context
+            var fileRequest = settlementReportFileRequests[i];
+            var reportFile = await context
                 .CallActivityAsync<GeneratedSettlementReportFileDto>(
                     nameof(GenerateSettlementReportFileActivity),
-                    new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
+                    new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
                     dataSourceExceptionHandler);
 
-            generatedFiles.Add(fileRequest);
-            while (fileRequest.FileInfo.IsPartial)
+            generatedFiles.Add(reportFile);
+            while (reportFile.FileInfo.IsPartial)
             {
-                var nextSettlementReportFileRequest = scatterChunk with
+                var nextSettlementReportFileRequest = fileRequest with
                 {
-                    PartialFileInfo = scatterChunk.PartialFileInfo with { FileOffset = scatterChunk.PartialFileInfo.FileOffset + 1 },
+                    PartialFileInfo = fileRequest.PartialFileInfo with { FileOffset = fileRequest.PartialFileInfo.FileOffset + 1 },
                 };
 
-                fileRequest = await context
+                reportFile = await context
                     .CallActivityAsync<GeneratedSettlementReportFileDto>(
                         nameof(GenerateSettlementReportFileActivity),
                         new GenerateSettlementReportFileInput(nextSettlementReportFileRequest, settlementReportRequest.ActorInfo),
                         dataSourceExceptionHandler);
 
-                generatedFiles.Add(fileRequest);
+                generatedFiles.Add(reportFile);
             }
 
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
-                OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                OrchestrationProgress = (80.0 * (i + 1) / settlementReportFileRequests.Count) + 10,
             });
         }
 

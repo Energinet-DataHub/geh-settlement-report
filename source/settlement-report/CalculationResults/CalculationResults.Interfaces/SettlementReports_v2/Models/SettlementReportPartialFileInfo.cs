@@ -32,5 +32,5 @@ public sealed record SettlementReportPartialFileInfo
 
     public int FileOffset { get; init; }
 
-    public bool IsPartial { get; set; }
+    public bool IsPartial { get; set; } = false;
 }

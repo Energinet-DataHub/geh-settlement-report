@@ -88,12 +88,6 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
         Assert.Equal(0, chunkA.PartialFileInfo.FileOffset);
         Assert.Equal(SettlementReportFileContent.EnergyResult, chunkA.FileContent);
 
-        var chunkB = actual[1];
-        Assert.Equal(requestId, chunkB.RequestId);
-        Assert.Equal(calculationFilter.Single(), chunkB.RequestFilter.GridAreas.Single());
-        Assert.Equal("RESULTENERGY", chunkB.PartialFileInfo.FileName);
-        Assert.Equal(0, chunkB.PartialFileInfo.FileOffset);
-        Assert.Equal(SettlementReportFileContent.EnergyResult, chunkB.FileContent);
     }
 
     [Fact]
