@@ -37,7 +37,7 @@ public sealed class SettlementReportFileRequestHandler : ISettlementReportFileRe
         var fileGenerator = _fileGeneratorFactory.Create(fileRequest.FileContent);
 
         var resultingFileName = GenerateFilename(fileRequest) + fileGenerator.FileExtension;
-        var storageFileName = $"{fileRequest.PartialFileInfo.FileName}_{fileRequest.PartialFileInfo.FileOffset}_{fileRequest.PartialFileInfo.ChunkOffset}{fileGenerator.FileExtension}";
+        var storageFileName = $"{fileRequest.PartialFileInfo.FileName}_{fileRequest.PartialFileInfo.FileOffset}{fileGenerator.FileExtension}";
 
         var writeStream = await _fileRepository
             .OpenForWritingAsync(fileRequest.RequestId, storageFileName)

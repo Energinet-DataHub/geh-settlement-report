@@ -34,12 +34,6 @@ public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportF
 
     public string FileExtension => ".csv";
 
-    public async Task<int> CountChunksAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        var count = await CountAsync(filter, actorInfo, maximumCalculationVersion).ConfigureAwait(false);
-        return (int)Math.Ceiling(count / (double)_chunkSize);
-    }
-
     public async Task WriteAsync(
         SettlementReportRequestFilterDto filter,
         SettlementReportRequestedByActor actorInfo,
@@ -49,7 +43,7 @@ public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportF
     {
         bool IncludeHeader()
         {
-            return fileInfo is { FileOffset: 0, ChunkOffset: 0 };
+            return fileInfo is { FileOffset: 0 };
         }
 
         bool IsHeaderRow(ShouldQuoteArgs args)
@@ -78,7 +72,7 @@ public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportF
                 await csvHelper.NextRecordAsync().ConfigureAwait(false);
             }
 
-            var dataSourceEnumerable = GetAsync(filter, actorInfo, maximumCalculationVersion, fileInfo.ChunkOffset * _chunkSize, _chunkSize);
+            var dataSourceEnumerable = GetAsync(filter, actorInfo, maximumCalculationVersion, 2 * _chunkSize, _chunkSize);
 
             await foreach (var record in dataSourceEnumerable.ConfigureAwait(false))
             {
@@ -87,8 +81,6 @@ public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportF
             }
         }
     }
-
-    protected abstract Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion);
 
     protected abstract IAsyncEnumerable<TRow> GetAsync(
         SettlementReportRequestFilterDto filter,

@@ -33,11 +33,6 @@ public sealed class EnergyResultFileGenerator : CsvFileGeneratorBase<SettlementR
         _dataSource = dataSource;
     }
 
-    protected override Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        return _dataSource.CountAsync(filter, actorInfo, maximumCalculationVersion);
-    }
-
     protected override IAsyncEnumerable<SettlementReportEnergyResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion, int skipChunks, int takeChunks)
     {
         return _dataSource.GetAsync(filter, actorInfo, maximumCalculationVersion, skipChunks, takeChunks);
