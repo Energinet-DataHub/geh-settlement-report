@@ -31,4 +31,6 @@ public sealed record SettlementReportPartialFileInfo
     public bool PreventLargeTextFiles { get; init; }
 
     public int FileOffset { get; init; }
+
+    public bool IsPartial { get; set; }
 }

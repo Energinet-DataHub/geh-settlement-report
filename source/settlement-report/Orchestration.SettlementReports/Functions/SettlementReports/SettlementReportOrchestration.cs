@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using Azure;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Exceptions;
 using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
@@ -59,15 +60,28 @@ internal sealed class SettlementReportOrchestration
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ToList();
 
-        foreach (var scatterChunk in orderedResults.Chunk(3))
+        foreach (var scatterChunk in orderedResults)
         {
-            var fileRequestTasks = scatterChunk.Select(fileRequest => context
-                .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                    nameof(GenerateSettlementReportFileActivity),
-                    new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                    dataSourceExceptionHandler));
+            while (true)
+            {
+                var fileRequest = await context
+                    .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                        nameof(GenerateSettlementReportFileActivity),
+                        new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
+                        dataSourceExceptionHandler);
 
-            generatedFiles.AddRange(await Task.WhenAll(fileRequestTasks));
+                generatedFiles.Add(fileRequest);
+                if (!fileRequest.FileInfo.IsPartial)
+                { break; }
+                scatterChunk.PartialFileInfo = scatterChunk.PartialFileInfo with { FileOffset = 2 };
+                fileRequest = await context
+                    .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                        nameof(GenerateSettlementReportFileActivity),
+                        new GenerateSettlementReportFileInput(scatterChunk, settlementReportRequest.ActorInfo),
+                        dataSourceExceptionHandler);
+
+                generatedFiles.Add(fileRequest);
+            }
 
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
