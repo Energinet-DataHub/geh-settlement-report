@@ -15,12 +15,15 @@
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 
@@ -37,20 +40,27 @@ public sealed class DatabricksSqlRowHydrator
         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
     }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
 
-    public async IAsyncEnumerable<TElement> HydrateAsync<TElement>(IAsyncEnumerable<dynamic> rows, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<TElement> HydrateAsync<TElement>(
+        IAsyncEnumerable<dynamic> rows,
+        ILogger<DatabricksSqlQueryExecutor> logger,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var propertyMap = _typeInfoCache.GetOrAdd(typeof(TElement), CreateTypeInfoCache);
-
+        var sw = new Stopwatch();
+        var rowCounter = 0;
         await foreach (ExpandoObject row in rows.ConfigureAwait(false).WithCancellation(cancellationToken))
         {
-            yield return Hydrate<TElement>(row, propertyMap);
+            yield return Hydrate<TElement>(row, propertyMap, sw);
+            rowCounter++;
         }
+
+        logger.LogInformation("Hydration for {RowCounter} rows took: {ElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
     }
 
-    private TElement Hydrate<TElement>(ExpandoObject expandoObject, IReadOnlyDictionary<string, (PropertyInfo Property, TypeConverter Converter)> propertyMap)
+    private TElement Hydrate<TElement>(ExpandoObject expandoObject, IReadOnlyDictionary<string, (PropertyInfo Property, TypeConverter Converter)> propertyMap, Stopwatch sw)
     {
         var instance = Activator.CreateInstance<TElement>();
-
+        sw.Start();
         foreach (var property in expandoObject)
         {
             if (propertyMap.TryGetValue(property.Key, out var prop) && property.Value != null)
@@ -70,6 +80,7 @@ public sealed class DatabricksSqlRowHydrator
             }
         }
 
+        sw.Stop();
         return instance;
     }
 

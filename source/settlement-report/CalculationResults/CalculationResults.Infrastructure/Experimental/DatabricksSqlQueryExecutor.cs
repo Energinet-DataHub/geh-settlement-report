@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Formats;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Experimental;
@@ -24,17 +25,20 @@ namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.E
 public sealed class DatabricksSqlQueryExecutor
 {
     private readonly DatabricksSqlWarehouseQueryExecutor _databricksSqlWarehouseQueryExecutor;
+    private readonly ILogger<DatabricksSqlQueryExecutor> _logger;
     private readonly DatabricksSqlQueryBuilder _sqlQueryBuilder;
     private readonly DatabricksSqlRowHydrator _sqlRowHydrator;
 
     public DatabricksSqlQueryExecutor(
         DbContext dbContext,
         DatabricksSqlWarehouseQueryExecutor databricksSqlWarehouseQueryExecutor,
-        IOptions<DeltaTableOptions> options)
+        IOptions<DeltaTableOptions> options,
+        ILogger<DatabricksSqlQueryExecutor> logger)
     {
         _sqlQueryBuilder = new DatabricksSqlQueryBuilder(dbContext, options);
         _sqlRowHydrator = new DatabricksSqlRowHydrator();
         _databricksSqlWarehouseQueryExecutor = databricksSqlWarehouseQueryExecutor;
+        _logger = logger;
     }
 
     public async Task<int> CountAsync(DatabricksSqlQueryable query, CancellationToken cancellationToken = default)
@@ -61,8 +65,8 @@ public sealed class DatabricksSqlQueryExecutor
 
     private IAsyncEnumerable<TElement> ExecuteCoreAsync<TElement>(DatabricksStatement databricksStatement, CancellationToken cancellationToken = default)
     {
-        var rows = _databricksSqlWarehouseQueryExecutor.ExecuteStatementParallelAsync(databricksStatement, Format.JsonArray, cancellationToken);
-        return _sqlRowHydrator.HydrateAsync<TElement>(rows, cancellationToken);
+        var rows = _databricksSqlWarehouseQueryExecutor.ExecuteStatementParallelAsync(databricksStatement, Format.ApacheArrow, cancellationToken);
+        return _sqlRowHydrator.HydrateAsync<TElement>(rows, _logger, cancellationToken);
     }
 
     private sealed class CountResult
