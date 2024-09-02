@@ -32,11 +32,6 @@ public sealed class MonthlyAmountTotalFileGenerator : CsvFileGeneratorBase<Settl
         _dataSource = dataSource;
     }
 
-    protected override Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        return _dataSource.CountAsync(filter, actorInfo);
-    }
-
     protected override IAsyncEnumerable<SettlementReportMonthlyAmountRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion, int skipChunks, int takeChunks)
     {
         return _dataSource.GetAsync(filter, actorInfo, skipChunks, takeChunks);

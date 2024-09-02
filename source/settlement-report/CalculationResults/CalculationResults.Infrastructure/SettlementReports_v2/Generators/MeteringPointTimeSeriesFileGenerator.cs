@@ -37,12 +37,6 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
 
     public string FileExtension => ".csv";
 
-    public async Task<int> CountChunksAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        var count = await _dataSource.CountAsync(filter, maximumCalculationVersion, _resolution).ConfigureAwait(false);
-        return (int)Math.Ceiling(count / (double)ChunkSize);
-    }
-
     public async Task WriteAsync(
         SettlementReportRequestFilterDto filter,
         SettlementReportRequestedByActor actorInfo,
@@ -66,7 +60,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
                     Formats = ["0.000"],
                 });
 
-            if (fileInfo is { FileOffset: 0, ChunkOffset: 0 })
+            if (fileInfo is { FileOffset: 0 })
             {
                 csvHelper.WriteField("METERINGPOINTID");
                 csvHelper.WriteField("TYPEOFMP");

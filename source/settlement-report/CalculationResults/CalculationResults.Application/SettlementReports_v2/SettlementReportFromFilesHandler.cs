@@ -67,8 +67,7 @@ public sealed class SettlementReportFromFilesHandler : ISettlementReportFromFile
         await using (entryStream.ConfigureAwait(false))
         {
             foreach (var chunk in chunks
-                         .OrderBy(c => c.FileInfo.FileOffset)
-                         .ThenBy(c => c.FileInfo.ChunkOffset))
+                         .OrderBy(c => c.FileInfo.FileOffset))
             {
                 var readStream = await _fileRepository
                     .OpenForReadingAsync(chunk.RequestId, chunk.StorageFileName)
@@ -87,8 +86,7 @@ public sealed class SettlementReportFromFilesHandler : ISettlementReportFromFile
         var sizeLimitedEntry = new SizeLimitedEntry(archive, entryName);
 
         foreach (var chunk in chunks
-                     .OrderBy(c => c.FileInfo.FileOffset)
-                     .ThenBy(c => c.FileInfo.ChunkOffset))
+                     .OrderBy(c => c.FileInfo.FileOffset))
         {
             var readStream = await _fileRepository
                 .OpenForReadingAsync(chunk.RequestId, chunk.StorageFileName)

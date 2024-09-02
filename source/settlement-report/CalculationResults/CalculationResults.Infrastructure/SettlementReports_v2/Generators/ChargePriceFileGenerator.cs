@@ -35,12 +35,6 @@ public sealed class ChargePriceFileGenerator : ISettlementReportFileGenerator
 
     public string FileExtension => ".csv";
 
-    public async Task<int> CountChunksAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        var count = await _dataSource.CountAsync(filter, actorInfo).ConfigureAwait(false);
-        return (int)Math.Ceiling(count / (double)ChunkSize);
-    }
-
     public async Task WriteAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, SettlementReportPartialFileInfo fileInfo, long maximumCalculationVersion, StreamWriter destination)
     {
         var csvHelper = new CsvWriter(destination, new CultureInfo(filter.CsvFormatLocale ?? "en-US"));
@@ -53,12 +47,12 @@ public sealed class ChargePriceFileGenerator : ISettlementReportFileGenerator
                     Formats = ["0.000000"],
                 });
 
-            if (fileInfo is { FileOffset: 0, ChunkOffset: 0 })
+            if (fileInfo is { FileOffset: 0 })
             {
                 await WriteHeaderAsync(csvHelper).ConfigureAwait(false);
             }
 
-            await foreach (var record in _dataSource.GetAsync(filter, actorInfo, fileInfo.ChunkOffset, ChunkSize).ConfigureAwait(false))
+            await foreach (var record in _dataSource.GetAsync(filter, actorInfo, 2, ChunkSize).ConfigureAwait(false))
             {
                 await WriteRecordAsync(csvHelper, record).ConfigureAwait(false);
             }

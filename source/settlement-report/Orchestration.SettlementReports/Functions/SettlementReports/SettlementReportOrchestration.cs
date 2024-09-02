@@ -57,7 +57,6 @@ internal sealed class SettlementReportOrchestration
         var generatedFiles = new List<GeneratedSettlementReportFileDto>();
         var orderedResults = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
-            .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
         foreach (var scatterChunk in orderedResults.Chunk(3))

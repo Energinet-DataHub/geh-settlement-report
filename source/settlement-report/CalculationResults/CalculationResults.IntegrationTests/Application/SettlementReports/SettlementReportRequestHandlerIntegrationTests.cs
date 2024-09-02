@@ -32,13 +32,6 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
             .ReturnsAsync(1);
 
         var mockedGenerator = new Mock<ISettlementReportFileGenerator>();
-        mockedGenerator
-            .Setup(generator => generator.CountChunksAsync(It.IsAny<SettlementReportRequestFilterDto>(), It.IsAny<SettlementReportRequestedByActor>(), 1))
-            .ReturnsAsync(1);
-
-        mockedGenerator
-            .Setup(generator => generator.CountChunksAsync(It.IsAny<SettlementReportRequestFilterDto>(), It.IsAny<SettlementReportRequestedByActor>(), long.MaxValue))
-            .ReturnsAsync(1);
 
         var mockedFactory = new Mock<ISettlementReportFileGeneratorFactory>();
         mockedFactory
@@ -76,9 +69,6 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
             .ReturnsAsync(1);
 
         var mockedGenerator = new Mock<ISettlementReportFileGenerator>();
-        mockedGenerator
-            .Setup(generator => generator.CountChunksAsync(It.IsAny<SettlementReportRequestFilterDto>(), It.IsAny<SettlementReportRequestedByActor>(), 1))
-            .ReturnsAsync(2);
 
         var mockedFactory = new Mock<ISettlementReportFileGeneratorFactory>();
         mockedFactory
@@ -96,7 +86,6 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
         Assert.Equal(calculationFilter.Single(), chunkA.RequestFilter.GridAreas.Single());
         Assert.Equal("RESULTENERGY", chunkA.PartialFileInfo.FileName);
         Assert.Equal(0, chunkA.PartialFileInfo.FileOffset);
-        Assert.Equal(0, chunkA.PartialFileInfo.ChunkOffset);
         Assert.Equal(SettlementReportFileContent.EnergyResult, chunkA.FileContent);
 
         var chunkB = actual[1];
@@ -104,7 +93,6 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
         Assert.Equal(calculationFilter.Single(), chunkB.RequestFilter.GridAreas.Single());
         Assert.Equal("RESULTENERGY", chunkB.PartialFileInfo.FileName);
         Assert.Equal(0, chunkB.PartialFileInfo.FileOffset);
-        Assert.Equal(1, chunkB.PartialFileInfo.ChunkOffset);
         Assert.Equal(SettlementReportFileContent.EnergyResult, chunkB.FileContent);
     }
 

@@ -34,11 +34,6 @@ public sealed class ChargeLinkPeriodsFileGenerator : CsvFileGeneratorBase<Settle
         _dataSource = dataSource;
     }
 
-    protected override Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        return _dataSource.CountAsync(filter, actorInfo);
-    }
-
     protected override IAsyncEnumerable<SettlementReportChargeLinkPeriodsResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion, int skipChunks, int takeChunks)
     {
         return _dataSource.GetAsync(filter, actorInfo, skipChunks, takeChunks);

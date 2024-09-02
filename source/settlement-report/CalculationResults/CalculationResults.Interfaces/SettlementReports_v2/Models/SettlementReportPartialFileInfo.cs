@@ -21,7 +21,6 @@ public sealed record SettlementReportPartialFileInfo
         FileName = fileName;
         PreventLargeTextFiles = preventLargeTextFiles;
         FileOffset = 0;
-        ChunkOffset = 0;
     }
 
     public string FileName { get; init; }
@@ -32,6 +31,4 @@ public sealed record SettlementReportPartialFileInfo
     public bool PreventLargeTextFiles { get; init; }
 
     public int FileOffset { get; init; }
-
-    public int ChunkOffset { get; init; }
 }

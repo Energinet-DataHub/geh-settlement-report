@@ -99,9 +99,9 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
 
         var maxCalculationVersion = await GetLatestCalculationVersionAsync(reportRequest.Filter.CalculationType).ConfigureAwait(false);
 
-        var tasks = filesInReport
+        var filesToRequest = filesInReport
             .Select(file =>
-                ScatterFileAsync(
+                ScatterFile(
                     requestId,
                     reportRequest,
                     actorInfo,
@@ -110,11 +110,10 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
                     file.SplitReportPerGridArea,
                     maxCalculationVersion));
 
-        var filesToRequest = await Task.WhenAll(tasks).ConfigureAwait(false);
         return filesToRequest.SelectMany(files => files);
     }
 
-    private async Task<IReadOnlyCollection<SettlementReportFileRequestDto>> ScatterFileAsync(
+    private IReadOnlyCollection<SettlementReportFileRequestDto> ScatterFile(
         SettlementReportRequestId requestId,
         SettlementReportRequestDto reportRequest,
         SettlementReportRequestedByActor actorInfo,
@@ -142,7 +141,7 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
 
         var filesToRequest = new List<SettlementReportFileRequestDto>();
 
-        await foreach (var splitFileRequest in SplitFileRequestPerGridAreaAsync(fileRequest, actorInfo, splitReportPerGridArea).ConfigureAwait(false))
+        foreach (var splitFileRequest in SplitFileRequestPerGridArea(fileRequest, actorInfo, splitReportPerGridArea))
         {
             filesToRequest.Add(splitFileRequest);
         }
@@ -150,7 +149,7 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
         return filesToRequest;
     }
 
-    private async IAsyncEnumerable<SettlementReportFileRequestDto> SplitFileRequestPerGridAreaAsync(
+    private IEnumerable<SettlementReportFileRequestDto> SplitFileRequestPerGridArea(
         SettlementReportFileRequestDto fileRequest,
         SettlementReportRequestedByActor actorInfo,
         bool splitReportPerGridArea)
@@ -175,37 +174,7 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
                 RequestFilter = fileRequest.RequestFilter with { GridAreas = new Dictionary<string, CalculationId?> { { gridAreaCode, calculationId } } },
             };
 
-            // Split the single grid area request into further chunks.
-            await foreach (var splitFileRequest in SplitFileRequestIntoChunksAsync(requestForSingleGridArea, actorInfo).ConfigureAwait(false))
-            {
-                yield return splitFileRequest;
-
-                partialFileInfo = splitFileRequest.PartialFileInfo with
-                {
-                    FileOffset = splitFileRequest.PartialFileInfo.FileOffset + 1,
-                    ChunkOffset = 0,
-                };
-            }
-        }
-    }
-
-    private async IAsyncEnumerable<SettlementReportFileRequestDto> SplitFileRequestIntoChunksAsync(
-        SettlementReportFileRequestDto fileRequest,
-        SettlementReportRequestedByActor actorInfo)
-    {
-        var partialFileInfo = fileRequest.PartialFileInfo;
-
-        var fileGenerator = _fileGeneratorFactory.Create(fileRequest.FileContent);
-        var chunks = await fileGenerator
-            .CountChunksAsync(fileRequest.RequestFilter, actorInfo, fileRequest.MaximumCalculationVersion)
-            .ConfigureAwait(false);
-
-        for (var i = 0; i < chunks; i++)
-        {
-            yield return fileRequest with
-            {
-                PartialFileInfo = partialFileInfo with { ChunkOffset = partialFileInfo.ChunkOffset + i },
-            };
+            yield return requestForSingleGridArea;
         }
     }
 

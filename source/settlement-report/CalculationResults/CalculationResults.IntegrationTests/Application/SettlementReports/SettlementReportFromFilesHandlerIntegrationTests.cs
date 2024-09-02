@@ -119,9 +119,9 @@ public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<
         var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
         var inputFiles = new GeneratedSettlementReportFileDto[]
         {
-            new(requestId, new("target_file.csv", true) { ChunkOffset = 0 }, "fileA_0.csv"),
-            new(requestId, new("target_file.csv", true) { ChunkOffset = 1 }, "fileA_1.csv"),
-            new(requestId, new("target_file.csv", true) { ChunkOffset = 2 }, "fileA_2.csv"),
+            new(requestId, new("target_file.csv", true), "fileA_0.csv"),
+            new(requestId, new("target_file.csv", true), "fileA_1.csv"),
+            new(requestId, new("target_file.csv", true), "fileA_2.csv"),
         };
 
         await Task.WhenAll(inputFiles.Select(file => MakeTestFileAsync(file, true)));
