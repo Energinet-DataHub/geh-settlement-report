@@ -54,13 +54,14 @@ public sealed class DatabricksSqlRowHydrator
         var propertyMap = _typeInfoCache.GetOrAdd(typeof(TElement), CreateTypeInfoCache);
         var sw = new Stopwatch();
         var rowCounter = 0;
+        _logger.LogError("Starting Hydration for {Type}", typeof(TElement).Name);
         await foreach (ExpandoObject row in rows.ConfigureAwait(false).WithCancellation(cancellationToken))
         {
             yield return Hydrate<TElement>(row, propertyMap, sw);
             rowCounter++;
         }
 
-        _logger.LogError("Hydration for {RowCounter} rows took: {SwElapsedMilliseconds}ms", rowCounter, sw.ElapsedMilliseconds);
+        _logger.LogError("Hydration of {Type} with {RowCounter} rows took: {SwElapsedMilliseconds}ms", typeof(TElement).Name, rowCounter, sw.ElapsedMilliseconds);
     }
 
     private TElement Hydrate<TElement>(ExpandoObject expandoObject, IReadOnlyDictionary<string, (PropertyInfo Property, TypeConverter Converter)> propertyMap, Stopwatch sw)
