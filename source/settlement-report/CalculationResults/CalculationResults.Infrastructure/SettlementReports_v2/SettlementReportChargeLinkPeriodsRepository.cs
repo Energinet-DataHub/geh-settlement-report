@@ -32,15 +32,6 @@ public sealed class SettlementReportChargeLinkPeriodsRepository : ISettlementRep
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
-    {
-        // return ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo)
-        //     .Select(row => row.MeteringPointId)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult<int>(1);
-    }
-
     public async IAsyncEnumerable<SettlementReportChargeLinkPeriodsResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo);

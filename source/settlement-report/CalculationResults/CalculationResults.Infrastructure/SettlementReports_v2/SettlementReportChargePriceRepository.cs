@@ -33,15 +33,6 @@ public sealed class SettlementReportChargePriceRepository : ISettlementReportCha
         _context = context;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
-    {
-        // return ApplyFilter(_context.ChargePriceView, filter, actorInfo)
-        //     .Select(row => row.StartTime)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult(1);
-    }
-
     public async IAsyncEnumerable<SettlementReportChargePriceRow> GetAsync(
         SettlementReportRequestFilterDto filter,
         SettlementReportRequestedByActor actorInfo,

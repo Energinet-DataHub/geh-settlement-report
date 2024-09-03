@@ -26,7 +26,7 @@ public sealed class MonthlyAmountTotalFileGenerator : CsvFileGeneratorBase<Settl
 
     public MonthlyAmountTotalFileGenerator(ISettlementReportMonthlyAmountTotalRepository dataSource)
         : base(
-            int.MaxValue, //250,
+            int.MaxValue, // no limit
             quotedColumns: [2, 3, 11])
     {
         _dataSource = dataSource;

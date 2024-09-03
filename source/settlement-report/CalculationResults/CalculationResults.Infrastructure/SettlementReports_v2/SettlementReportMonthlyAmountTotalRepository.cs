@@ -34,15 +34,6 @@ public sealed class SettlementReportMonthlyAmountTotalRepository : ISettlementRe
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
-    {
-        // return ApplyFilter(_settlementReportDatabricksContext.MonthlyAmountsView, filter, actorInfo)
-        //     .Select(x => x.ResultId)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult<int>(1);
-    }
-
     public async IAsyncEnumerable<SettlementReportMonthlyAmountRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.MonthlyAmountsView, filter, actorInfo);

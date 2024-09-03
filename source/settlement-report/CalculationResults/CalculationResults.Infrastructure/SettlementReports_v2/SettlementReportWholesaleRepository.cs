@@ -33,16 +33,6 @@ public sealed class SettlementReportWholesaleRepository : ISettlementReportWhole
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
-    {
-        // var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);
-        // return view
-        //     .Select(row => row.ResultId)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult(1);
-    }
-
     public async IAsyncEnumerable<SettlementReportWholesaleResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);

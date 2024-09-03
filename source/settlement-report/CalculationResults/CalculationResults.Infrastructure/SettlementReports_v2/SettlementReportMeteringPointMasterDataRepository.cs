@@ -34,23 +34,6 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion)
-    {
-        // if (filter.CalculationType == CalculationType.BalanceFixing)
-        // {
-        //     var view = ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter);
-        //     return filter.EnergySupplier is not null
-        //         ? CountForBalanceFixingPerEnergySupplierAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion))
-        //         : CountForBalanceFixingAsync(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion));
-        // }
-        //
-        // return ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter)
-        //     .Select(x => x.MeteringPointId)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult<int>(1);
-    }
-
     public async IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, int skip, int take, long maximumCalculationVersion)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter);

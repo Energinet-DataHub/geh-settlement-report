@@ -27,7 +27,7 @@ public sealed class EnergyResultFileGenerator : CsvFileGeneratorBase<SettlementR
 
     public EnergyResultFileGenerator(ISettlementReportEnergyResultRepository dataSource)
         : base(
-            int.MaxValue, //350, // Up to 31 * 24 * 4 rows in each chunk for a month, 1.041.600 rows per chunk in total.
+            int.MaxValue, // no limit
             quotedColumns: [0, 7])
     {
         _dataSource = dataSource;

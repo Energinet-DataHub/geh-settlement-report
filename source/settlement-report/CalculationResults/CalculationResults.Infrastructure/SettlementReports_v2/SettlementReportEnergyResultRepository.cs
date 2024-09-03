@@ -35,39 +35,6 @@ public sealed class SettlementReportEnergyResultRepository : ISettlementReportEn
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
-    {
-        // if (actorInfo.MarketRole == MarketRole.GridAccessProvider)
-        // {
-        //     if (filter.CalculationType == CalculationType.BalanceFixing)
-        //     {
-        //         return ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion)
-        //             .Select(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-        //             .Distinct()
-        //             .DatabricksSqlCountAsync();
-        //     }
-        //
-        //     return ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion)
-        //         .Select(row => row.ResultId)
-        //         .Distinct()
-        //         .DatabricksSqlCountAsync();
-        // }
-        //
-        // if (filter.CalculationType == CalculationType.BalanceFixing)
-        // {
-        //     return ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion)
-        //         .Select(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-        //         .Distinct()
-        //         .DatabricksSqlCountAsync();
-        // }
-        //
-        // return ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion)
-        //     .Select(row => row.ResultId)
-        //     .Distinct()
-        //     .DatabricksSqlCountAsync();
-        return Task.FromResult<int>(1);
-    }
-
     public IAsyncEnumerable<SettlementReportEnergyResultRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion, int skip, int take)
     {
         return actorInfo.MarketRole == MarketRole.GridAccessProvider

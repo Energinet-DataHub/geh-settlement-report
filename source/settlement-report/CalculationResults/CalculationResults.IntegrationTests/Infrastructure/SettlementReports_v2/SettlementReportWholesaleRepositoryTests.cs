@@ -42,33 +42,6 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
     }
 
     [Fact(Skip = "Performance testing")]
-    public async Task Count_ValidFilter_ReturnsCount()
-    {
-        await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
-            _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.WHOLESALE_RESULTS_V1_VIEW_NAME,
-            [
-                ["'f8af5e30-3c65-439e-8fd0-1da0c40a26d3'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9eb'", "'403'", "'8397670583196'", "'2024-01-02T02:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", "'6392825108998'", "0"],
-            ]);
-
-        var actual = await Sut.CountAsync(
-            new SettlementReportRequestFilterDto(
-                new Dictionary<string, CalculationId?>
-                {
-                    {
-                        "403", new CalculationId(Guid.Parse("f8af5e30-3c65-439e-8fd0-1da0c40a26d3"))
-                    },
-                },
-                DateTimeOffset.Parse("2024-01-01T02:00:00.000+00:00"),
-                DateTimeOffset.Parse("2024-01-03T02:00:00.000+00:00"),
-                CalculationType.WholesaleFixing,
-                null,
-                "da-DK"),
-            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null));
-
-        Assert.Equal(1, actual);
-    }
-
-    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -179,75 +152,5 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
 
         // assert
         Assert.Equal(expected, actual.Count);
-    }
-
-    [Theory(Skip = "Performance testing")]
-    [InlineData("8397670583104", 1, MarketRole.EnergySupplier, null)]
-    [InlineData(null, 3, MarketRole.EnergySupplier, null)]
-    [InlineData("8397670583119", 3, MarketRole.GridAccessProvider, "7397670583109")]
-    [InlineData(null, 3, MarketRole.GridAccessProvider, "7397670583119")]
-    [InlineData("8397670583129", 2, MarketRole.SystemOperator, "7397670583129")]
-    [InlineData(null, 1, MarketRole.SystemOperator, "7397670583139")]
-    public async Task Count_ValidFilter_FiltersCorrectlyOnEnergySupplier(string? energySupplier, int expected, MarketRole marketRole, string? chargeOwner)
-    {
-        var calculationId = Guid.NewGuid();
-        // arrange
-        await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
-            _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.WHOLESALE_RESULTS_V1_VIEW_NAME,
-            [
-                [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9eb'", "'406'", "'8397670583101'", "'2024-01-02T02:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", "'6392825108998'", "0"],
-                [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ea'", "'406'", "'8397670583102'", "'2024-01-02T03:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", "'6392825108998'", "0"],
-                [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ec'", "'406'", "'8397670583103'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", "'6392825108998'", "0"],
-            ]);
-
-        if (energySupplier is not null)
-        {
-            await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
-                _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.WHOLESALE_RESULTS_V1_VIEW_NAME,
-                [
-                    [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ec'", "'406'", "'8397670583104'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", "'6392825108998'", "0"],
-                ]);
-        }
-
-        if (marketRole is MarketRole.SystemOperator or MarketRole.GridAccessProvider)
-        {
-            await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
-                _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.WHOLESALE_RESULTS_V1_VIEW_NAME,
-                [
-                    [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ed'", "'406'", "'8397670583105'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "0"],
-                    [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ee'", "'406'", "'8397670583106'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "1"],
-                    [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9ef'", "'406'", "'8397670583107'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "1"],
-                ]);
-
-            if (energySupplier is not null)
-            {
-                await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
-                    _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions.Value.WHOLESALE_RESULTS_V1_VIEW_NAME,
-                    [
-                        [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9cc'", "'406'", $"'{energySupplier}'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "0"],
-                        [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9dc'", "'406'", $"'{energySupplier}'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "1"],
-                        [$"'{calculationId}'", "'wholesale_fixing'", "'15cba911-b91e-4786-bed4-f0d28418a9fc'", "'406'", $"'{energySupplier}'", "'2024-01-02T04:00:00.000+00:00'", "'PT1H'", "'consumption'", "'flex'", "'kWh'", "'DKK'", "46.543", "0.712345", "32.123456", "'tariff'", "'40000'", $"'{chargeOwner}'", "0"],
-                    ]);
-            }
-        }
-
-        // act
-        var actual = await Sut.CountAsync(
-            new SettlementReportRequestFilterDto(
-                new Dictionary<string, CalculationId?>
-                {
-                    {
-                        "406", new CalculationId(calculationId)
-                    },
-                },
-                DateTimeOffset.Parse("2024-01-01T00:00:00.000+00:00"),
-                DateTimeOffset.Parse("2024-01-04T00:00:00.000+00:00"),
-                CalculationType.WholesaleFixing,
-                energySupplier,
-                "da-DK"),
-            new SettlementReportRequestedByActor(marketRole, marketRole is MarketRole.SystemOperator or MarketRole.GridAccessProvider ? chargeOwner : null));
-
-        // assert
-        Assert.Equal(expected, actual);
     }
 }

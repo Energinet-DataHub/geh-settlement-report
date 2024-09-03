@@ -24,7 +24,7 @@ namespace Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.S
 
 public sealed class ChargePriceFileGenerator : ISettlementReportFileGenerator
 {
-    private const int ChunkSize = int.MaxValue; //1;
+    private const int ChunkSize = int.MaxValue; // no limit
 
     private readonly ISettlementReportChargePriceRepository _dataSource;
 
