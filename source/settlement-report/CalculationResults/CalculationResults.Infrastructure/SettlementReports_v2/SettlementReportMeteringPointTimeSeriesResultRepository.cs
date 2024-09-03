@@ -103,6 +103,7 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
                 MeteringPointTypeMapper.FromDeltaTableValueNonNull(row.MeteringPointType),
                 row.StartOfDay,
                 row.Quantities
+                    .OrderBy(x => x.Time)
                     .Select(quant => new SettlementReportMeteringPointTimeSeriesResultQuantity(quant.Time, quant.Quantity))
                     .ToList());
         }
