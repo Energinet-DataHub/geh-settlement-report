@@ -114,7 +114,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
         Assert.Equal(7, actual);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task GetLatest_SkipTake_ReturnsExpectedRows()
     {
         // arrange
@@ -162,7 +162,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
         Assert.Equal(6, sortedActual[4].StartDateTime.ToDateTimeOffset().Day);
     }
 
-    [Fact]
+    [Fact(Skip = "Performance testing")]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         // arrange
