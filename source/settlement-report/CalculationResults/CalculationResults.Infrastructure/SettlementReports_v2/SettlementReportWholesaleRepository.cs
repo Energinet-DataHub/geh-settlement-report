@@ -37,19 +37,19 @@ public sealed class SettlementReportWholesaleRepository : ISettlementReportWhole
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.WholesaleView, filter, actorInfo);
 
-        // var chunkByCalculationResult = view
-        //     .Select(row => row.ResultId)
-        //     .Distinct()
-        //     .OrderBy(row => row)
-        //     .Skip(skip)
-        //     .Take(take);
-        //
-        // var query = view.Join(
-        //     chunkByCalculationResult,
-        //     outer => outer.ResultId,
-        //     inner => inner,
-        //     (outer, inner) => outer);
-        await foreach (var row in view.AsAsyncEnumerable().ConfigureAwait(false))
+        var chunkByCalculationResult = view
+            .Select(row => row.ResultId)
+            .Distinct()
+            .OrderBy(row => row)
+            .Skip(skip)
+            .Take(take);
+
+        var query = view.Join(
+            chunkByCalculationResult,
+            outer => outer.ResultId,
+            inner => inner,
+            (outer, inner) => outer);
+        await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
         {
             yield return new SettlementReportWholesaleResultRow(
                 CalculationTypeMapper.FromDeltaTableValue(row.CalculationType),

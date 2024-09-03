@@ -50,42 +50,42 @@ public sealed class SettlementReportEnergyResultRepository : ISettlementReportEn
 
         if (filter.CalculationType == CalculationType.BalanceFixing)
         {
-            // var chunkByDate = filteredView
-            //     .GroupBy(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-            //     .Select(group => new
-            //     {
-            //         max_calc_version = group.Max(row => row.CalculationVersion),
-            //         start_of_day = group.Key,
-            //     })
-            //     .OrderBy(row => row.start_of_day)
-            //     .Skip(skip)
-            //     .Take(take);
+            var chunkByDate = filteredView
+                .GroupBy(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
+                .Select(group => new
+                {
+                    max_calc_version = group.Max(row => row.CalculationVersion),
+                    start_of_day = group.Key,
+                })
+                .OrderBy(row => row.start_of_day)
+                .Skip(skip)
+                .Take(take);
             rows = filteredView
-                // .Join(
-                //     chunkByDate,
-                //     outer => new
-                //     {
-                //         max_calc_version = outer.CalculationVersion,
-                //         start_of_day = DbFunctions.ToStartOfDayInTimeZone(outer.Time, "Europe/Copenhagen"),
-                //     },
-                //     inner => inner,
-                //     (outer, inner) => outer)
+                 .Join(
+                     chunkByDate,
+                     outer => new
+                     {
+                         max_calc_version = outer.CalculationVersion,
+                         start_of_day = DbFunctions.ToStartOfDayInTimeZone(outer.Time, "Europe/Copenhagen"),
+                     },
+                     inner => inner,
+                     (outer, inner) => outer)
                 .AsAsyncEnumerable();
         }
         else
         {
-            // var chunkByResultId = filteredView
-            //     .Select(row => row.ResultId)
-            //     .Distinct()
-            //     .OrderBy(resultId => resultId)
-            //     .Skip(skip)
-            //     .Take(take);
+            var chunkByResultId = filteredView
+                .Select(row => row.ResultId)
+                .Distinct()
+                .OrderBy(resultId => resultId)
+                .Skip(skip)
+                .Take(take);
             rows = filteredView
-                // .Join(
-                //     chunkByResultId,
-                //     outer => outer.ResultId,
-                //     inner => inner,
-                //     (outer, inner) => outer)
+                 .Join(
+                     chunkByResultId,
+                     outer => outer.ResultId,
+                     inner => inner,
+                     (outer, inner) => outer)
                 .AsAsyncEnumerable();
         }
 
@@ -111,42 +111,42 @@ public sealed class SettlementReportEnergyResultRepository : ISettlementReportEn
 
         if (filter.CalculationType == CalculationType.BalanceFixing)
         {
-            // var chunkByDate = filteredView
-            //     .GroupBy(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
-            //     .Select(group => new
-            //     {
-            //         max_calc_version = group.Max(row => row.CalculationVersion),
-            //         start_of_day = group.Key,
-            //     })
-            //     .OrderBy(row => row.start_of_day)
-            //     .Skip(skip)
-            //     .Take(take);
+            var chunkByDate = filteredView
+                .GroupBy(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
+                .Select(group => new
+                {
+                    max_calc_version = group.Max(row => row.CalculationVersion),
+                    start_of_day = group.Key,
+                })
+                .OrderBy(row => row.start_of_day)
+                .Skip(skip)
+                .Take(take);
             rows = filteredView
-                // .Join(
-                //     chunkByDate,
-                //     outer => new
-                //     {
-                //         max_calc_version = outer.CalculationVersion,
-                //         start_of_day = DbFunctions.ToStartOfDayInTimeZone(outer.Time, "Europe/Copenhagen"),
-                //     },
-                //     inner => inner,
-                //     (outer, inner) => outer)
+                 .Join(
+                     chunkByDate,
+                     outer => new
+                     {
+                         max_calc_version = outer.CalculationVersion,
+                         start_of_day = DbFunctions.ToStartOfDayInTimeZone(outer.Time, "Europe/Copenhagen"),
+                     },
+                     inner => inner,
+                     (outer, inner) => outer)
                 .AsAsyncEnumerable();
         }
         else
         {
-            // var chunkByResultId = filteredView
-            //     .Select(row => row.ResultId)
-            //     .Distinct()
-            //     .OrderBy(resultId => resultId)
-            //     .Skip(skip)
-            //     .Take(take);
+            var chunkByResultId = filteredView
+                .Select(row => row.ResultId)
+                .Distinct()
+                .OrderBy(resultId => resultId)
+                .Skip(skip)
+                .Take(take);
             rows = filteredView
-                // .Join(
-                //     chunkByResultId,
-                //     outer => outer.ResultId,
-                //     inner => inner,
-                //     (outer, inner) => outer)
+                 .Join(
+                     chunkByResultId,
+                     outer => outer.ResultId,
+                     inner => inner,
+                     (outer, inner) => outer)
                 .AsAsyncEnumerable();
         }
 

@@ -41,14 +41,14 @@ public sealed class SettlementReportChargePriceRepository : ISettlementReportCha
     {
         var view = ApplyFilter(_context.ChargePriceView, filter, actorInfo);
 
-        // var chunkByStartTime = view
-        //     .Select(row => row.StartTime)
-        //     .Distinct()
-        //     .OrderBy(row => row)
-        //     .Skip(skip)
-        //     .Take(take);
+        var chunkByStartTime = view
+            .Select(row => row.StartTime)
+            .Distinct()
+            .OrderBy(row => row)
+            .Skip(skip)
+            .Take(take);
         var query = view
-            // .Join(chunkByStartTime, outer => outer.StartTime, inner => inner, (outer, inner) => outer)
+            .Join(chunkByStartTime, outer => outer.StartTime, inner => inner, (outer, inner) => outer)
             .Select(x => new
             {
                 x.ChargeType,

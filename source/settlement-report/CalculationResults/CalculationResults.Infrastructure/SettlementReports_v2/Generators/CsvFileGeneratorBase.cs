@@ -72,13 +72,17 @@ public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportF
                 await csvHelper.NextRecordAsync().ConfigureAwait(false);
             }
 
-            var dataSourceEnumerable = GetAsync(filter, actorInfo, maximumCalculationVersion, 2 * _chunkSize, _chunkSize);
+            var dataSourceEnumerable = GetAsync(filter, actorInfo, maximumCalculationVersion, fileInfo.FileOffset * _chunkSize, _chunkSize);
 
+            var rowsCount = 0;
             await foreach (var record in dataSourceEnumerable.ConfigureAwait(false))
             {
                 csvHelper.WriteRecord(record);
                 await csvHelper.NextRecordAsync().ConfigureAwait(false);
+                rowsCount++;
             }
+
+            fileInfo.IsPartial = rowsCount >= _chunkSize;
         }
     }
 

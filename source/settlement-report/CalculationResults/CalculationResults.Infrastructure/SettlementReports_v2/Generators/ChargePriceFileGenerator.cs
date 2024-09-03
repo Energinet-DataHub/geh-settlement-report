@@ -52,10 +52,14 @@ public sealed class ChargePriceFileGenerator : ISettlementReportFileGenerator
                 await WriteHeaderAsync(csvHelper).ConfigureAwait(false);
             }
 
-            await foreach (var record in _dataSource.GetAsync(filter, actorInfo, 2, ChunkSize).ConfigureAwait(false))
+            var rowsCount = 0;
+            await foreach (var record in _dataSource.GetAsync(filter, actorInfo, fileInfo.FileOffset * ChunkSize, ChunkSize).ConfigureAwait(false))
             {
                 await WriteRecordAsync(csvHelper, record).ConfigureAwait(false);
+                rowsCount++;
             }
+
+            fileInfo.IsPartial = rowsCount >= ChunkSize;
         }
     }
 

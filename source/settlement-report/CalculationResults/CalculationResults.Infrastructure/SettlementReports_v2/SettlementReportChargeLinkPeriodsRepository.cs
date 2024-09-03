@@ -36,19 +36,19 @@ public sealed class SettlementReportChargeLinkPeriodsRepository : ISettlementRep
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.ChargeLinkPeriodsView, filter, actorInfo);
 
-        // var chunkByMeteringPointId = view
-        //     .Select(row => row.MeteringPointId)
-        //     .Distinct()
-        //     .OrderBy(row => row)
-        //     .Skip(skip)
-        //     .Take(take);
-        //
-        // var query = view.Join(
-        //     chunkByMeteringPointId,
-        //     outer => outer.MeteringPointId,
-        //     inner => inner,
-        //     (outer, inner) => outer);
-        await foreach (var row in view.AsAsyncEnumerable().ConfigureAwait(false))
+        var chunkByMeteringPointId = view
+            .Select(row => row.MeteringPointId)
+            .Distinct()
+            .OrderBy(row => row)
+            .Skip(skip)
+            .Take(take);
+
+        var query = view.Join(
+            chunkByMeteringPointId,
+            outer => outer.MeteringPointId,
+            inner => inner,
+            (outer, inner) => outer);
+        await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
         {
             yield return new SettlementReportChargeLinkPeriodsResultRow(
                 row.MeteringPointId,
