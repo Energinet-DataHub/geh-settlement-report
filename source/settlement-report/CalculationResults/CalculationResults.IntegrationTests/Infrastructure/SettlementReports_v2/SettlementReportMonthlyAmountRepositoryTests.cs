@@ -41,7 +41,7 @@ public class SettlementReportMonthlyAmountRepositoryTests : TestBase<SettlementR
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(

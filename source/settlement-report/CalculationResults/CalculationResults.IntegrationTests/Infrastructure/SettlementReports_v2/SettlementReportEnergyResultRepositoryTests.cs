@@ -41,7 +41,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -75,7 +75,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(4, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_NullableValues_ReturnsNull()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -110,7 +110,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Null(actual[0].SettlementMethod);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task LatestGet_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultViewColumns>(
@@ -151,7 +151,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(5, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task GetPerEnergySupplier_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(
@@ -189,7 +189,7 @@ public class SettlementReportEnergyResultRepositoryTests : TestBase<SettlementRe
         Assert.Equal(4, actual[0].Time.ToDateTimeOffset().Hour);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task LatestGetPerEnergySupplier_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportEnergyResultPerEnergySupplierViewColumns>(

@@ -42,7 +42,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_LatestValidFilterNoEnergySupplier_ReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -86,7 +86,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ed", actual.Last().MeteringPointId);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_LatestValidFilterNoEnergySupplier_SkipTakeReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -151,7 +151,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ee", actual2.First().MeteringPointId);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_LatestValidFilterWithEnergySupplier_SkipTakeReturnsCorrectRows()
     {
         var calculationId1 = Guid.NewGuid().ToString();
@@ -218,7 +218,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
         Assert.Equal("15cba911-b91e-4782-bed4-f0d2841829ec", actual2.First().MeteringPointId);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMeteringPointMasterDataViewColumns>(

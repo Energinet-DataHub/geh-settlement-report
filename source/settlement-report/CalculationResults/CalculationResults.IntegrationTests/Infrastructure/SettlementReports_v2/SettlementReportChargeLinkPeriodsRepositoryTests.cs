@@ -42,7 +42,7 @@ public class SettlementReportChargeLinkPeriodsRepositoryTests : TestBase<Settlem
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Theory(Skip = "Performance testing")]
+    [Theory]
     [InlineData("f8af5e30-3c65-439e-8fd0-1da0c40a26d3", "2024-01-01T00:00:00.000+00:00", "2024-01-04T00:00:00.000+00:00", 1, new[] { "15cba911-b91e-4786-bed4-f0d28418a9eb" })]
     [InlineData("f8af5e30-3c65-439e-8fd0-2da0c40a26d3", "2024-01-01T00:00:00.000+00:00", "2024-02-04T00:00:00.000+00:00", 2, new[] { "15cba911-b91e-4786-bed4-f0d28418a9eb", "16cba911-b91e-4786-bed4-f0d28418a9ec" })]
     [InlineData("f8af5e30-3c65-439e-8fd0-3da0c40a26d3", "2024-01-01T00:00:00.000+00:00", "2024-03-04T00:00:00.000+00:00", 3, new[] { "15cba911-b91e-4786-bed4-f0d28418a9eb", "16cba911-b91e-4786-bed4-f0d28418a9ec", "17cba911-b91e-4786-bed4-f0d28418a9ed" })]
@@ -81,7 +81,7 @@ public class SettlementReportChargeLinkPeriodsRepositoryTests : TestBase<Settlem
         expectedMeteringPointIds.Should().Equal(results.Select(x => x.MeteringPointId).ToList());
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportChargeLinkPeriodsViewColumns>(

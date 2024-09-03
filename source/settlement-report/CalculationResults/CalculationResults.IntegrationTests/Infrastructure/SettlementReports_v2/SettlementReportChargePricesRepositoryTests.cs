@@ -53,7 +53,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager
@@ -83,7 +83,7 @@ public class SettlementReportChargePricesRepositoryTests : TestBase<SettlementRe
         Assert.Equal(2, results.Count);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_TakeMoreThanAvailable_ReturnsFewerRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager

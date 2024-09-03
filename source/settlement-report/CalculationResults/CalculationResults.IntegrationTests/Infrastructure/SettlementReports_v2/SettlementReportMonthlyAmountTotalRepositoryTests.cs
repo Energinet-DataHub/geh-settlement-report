@@ -41,7 +41,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(
@@ -78,7 +78,7 @@ public class SettlementReportMonthlyAmountTotalRepositoryTests : TestBase<Settle
         Assert.Equal("8397670583193", results[0].EnergySupplierId);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTakeWithEnergySupplier_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportMonthlyAmountViewColumns>(

@@ -41,7 +41,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
             _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_SkipTake_ReturnsExpectedRows()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -73,7 +73,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Equal(4, results[0].StartDateTime.ToDateTimeOffset().Hour);
     }
 
-    [Fact(Skip = "Performance testing")]
+    [Fact]
     public async Task Get_NullableValues_ReturnsNull()
     {
         await _databricksSqlStatementApiFixture.DatabricksSchemaManager.InsertAsync<SettlementReportWholesaleViewColumns>(
@@ -109,7 +109,7 @@ public class SettlementReportWholesaleRepositoryTests : TestBase<SettlementRepor
         Assert.Null(results[0].Quantity);
     }
 
-    [Theory(Skip = "Performance testing")]
+    [Theory]
     [InlineData("8397670583199", 1)]
     [InlineData(null, 3)]
     public async Task Get_ValidFilter_FiltersCorrectlyOnEnergySupplier(string? energySupplier, int expected)
