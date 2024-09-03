@@ -68,16 +68,14 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
             var (_, calculationId) = filter.GridAreas.Single();
             view = view.Where(row => row.CalculationId == calculationId!.Id);
 
-            var chunkByMeteringPointId = view
-                .Select(row => row.MeteringPointId)
-                .Distinct()
-                .OrderBy(row => row)
-                .Skip(skip)
-                .Take(take);
-
+            //var chunkByMeteringPointId = view
+            //    .Select(row => row.MeteringPointId)
+            //    .Distinct()
+            //    .OrderBy(row => row)
+            //    .Skip(skip)
+            //    .Take(take);
             var query =
                 from row in view
-                join meteringPointId in chunkByMeteringPointId on row.MeteringPointId equals meteringPointId
                 group row by new
                 {
                     row.MeteringPointId,
@@ -165,19 +163,15 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
                 row.MeteringPointId,
             };
 
-        var chunkByDailyMeteringPoints = dailyMeteringPoints
-            .Distinct()
-            .OrderBy(row => row.start_of_day)
-            .ThenBy(row => row.CalculationId)
-            .ThenBy(row => row.MeteringPointId)
-            .Skip(skip)
-            .Take(take);
-
+        //var chunkByDailyMeteringPoints = dailyMeteringPoints
+        //    .Distinct()
+        //    .OrderBy(row => row.start_of_day)
+        //    .ThenBy(row => row.CalculationId)
+        //    .ThenBy(row => row.MeteringPointId)
+        //    .Skip(skip)
+        //    .Take(take);
         var query =
             from row in view
-            join dailyMeteringPointIds in chunkByDailyMeteringPoints on
-                new { start_of_day = DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"), row.CalculationId, row.MeteringPointId }
-                equals dailyMeteringPointIds
             group row by new
             {
                 row.MeteringPointId,
