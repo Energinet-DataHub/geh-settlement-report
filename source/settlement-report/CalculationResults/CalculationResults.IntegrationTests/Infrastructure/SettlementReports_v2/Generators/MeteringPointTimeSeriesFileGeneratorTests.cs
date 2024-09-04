@@ -139,4 +139,56 @@ public sealed class MeteringPointTimeSeriesFileGeneratorTests
         Assert.StartsWith("METERINGPOINTID;", actualRows[0]);
         Assert.StartsWith("\"1\";", actualRows[1]);
     }
+
+    [Theory]
+    [InlineData(64_000, false)]
+    [InlineData(65_000, true)]
+    [InlineData(66_000, true)]
+    public async Task Write_ReturnPartialInfo_AccordingToNumberOfRows(int returnCount, bool shouldBePartial)
+    {
+        // arrange
+        var numberOfQuantities = 24;
+
+        var partialFileInfo = new SettlementReportPartialFileInfo("test", false);
+
+        var dataSourceMock = new Mock<ISettlementReportMeteringPointTimeSeriesResultRepository>();
+
+        dataSourceMock
+            .Setup(x => x.GetAsync(It.IsAny<SettlementReportRequestFilterDto>(), It.IsAny<long>(), It.IsAny<Resolution>(), It.IsAny<int>(), It.IsAny<int>()))
+            .Returns(
+              Enumerable.Range(0, returnCount).Select(x => new SettlementReportMeteringPointTimeSeriesResultRow(
+                        "1",
+                        MeteringPointType.Consumption,
+                        DateTimeOffset.Now.ToInstant(),
+                        Enumerable.Range(0, numberOfQuantities).Select(x => new SettlementReportMeteringPointTimeSeriesResultQuantity(DateTimeOffset.Now.ToInstant(), 10.1m + x)).ToList()))
+              .ToAsyncEnumerable())
+            ;
+
+        var sut = new MeteringPointTimeSeriesFileGenerator(dataSourceMock.Object, Resolution.Hour);
+
+        // act
+        await using var ms = new MemoryStream();
+        await using var wr = new StreamWriter(ms);
+
+        await sut.WriteAsync(
+            new SettlementReportRequestFilterDto(
+                new Dictionary<string, CalculationId?>
+                {
+                    {
+                        "404", new CalculationId(Guid.NewGuid())
+                    },
+                },
+                DateTimeOffset.Now,
+                DateTimeOffset.Now,
+                CalculationType.WholesaleFixing,
+                null,
+                "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.GridAccessProvider, null),
+            partialFileInfo,
+            1,
+            wr);
+
+        // assert
+        Assert.True(partialFileInfo.IsPartial == shouldBePartial);
+    }
 }
