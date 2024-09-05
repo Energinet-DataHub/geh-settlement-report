@@ -18,4 +18,8 @@
         <PackageReference Include="NodaTime" Version="3.1.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -18,8 +18,9 @@ using Asp.Versioning;
 using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 
-const string subsystemName = "mark-part";
+const string subsystemName = TelemetryConstants.SubsystemName;
 
 var builder = WebApplication.CreateBuilder(args);
 
