@@ -15,9 +15,9 @@
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
+using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
@@ -39,7 +39,7 @@ var host = new HostBuilder()
         services.AddNodaTimeForApplication();
 
         // Modules
-        services.AddCalculationResultsV2Module(context.Configuration);
+        services.AddSettlementReportsV2Module(context.Configuration);
     })
     .ConfigureLogging((hostingContext, logging) =>
     {

@@ -1,4 +1,4 @@
-// Copyright 2020 Energinet DataHub A/S
+﻿// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -45,13 +45,6 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseSwaggerForWebApp();
 app.UseHttpsRedirection();
-// app.UseCommonExceptionHandling(exceptionBuilder =>
-// {
-//     exceptionBuilder.Use(new FluentValidationExceptionHandler("market_participant"));
-//     exceptionBuilder.Use(new NotFoundValidationExceptionHandler("market_participant"));
-//     exceptionBuilder.Use(new DataValidationExceptionHandler("market_participant"));
-//     exceptionBuilder.Use(new FallbackExceptionHandler("market_participant"));
-// });
 app.UseLoggingScope();
 app.UseAuthentication();
 app.UseAuthorization();

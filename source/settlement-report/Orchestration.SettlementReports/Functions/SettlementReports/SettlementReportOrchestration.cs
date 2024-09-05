@@ -14,7 +14,7 @@
 
 using Azure;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Exceptions;
-using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Activities;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;

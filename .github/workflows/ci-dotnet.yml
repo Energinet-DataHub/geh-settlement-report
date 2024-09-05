@@ -30,8 +30,8 @@ jobs:
       fail-fast: false
       matrix:
         tests_filter_expression:
-          - name: Calculation Results
-            paths: \source\settlement-report\CalculationResults\CalculationResults.UnitTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.CalculationResults.UnitTests.dll
+          - name: SettlementReport Results
+            paths: \source\settlement-report\SettlementReports.UnitTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.UnitTests.dll
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v14
     with:
       download_attempt_limit: 30
@@ -50,8 +50,8 @@ jobs:
             filter: empty # Means skip
             use_azure_functions_tools: true
             contentroot_variable_name: empty # Means skip
-          - name: Calculation Results
-            paths: \source\settlement-report\CalculationResults\CalculationResults.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.dll
+          - name: SettlementReport Results
+            paths: \source\settlement-report\SettlementReports.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.SettlementReports.IntegrationTests.dll
             filter: empty # Means skip
             use_azure_functions_tools: true
             contentroot_variable_name: empty # Means skip
