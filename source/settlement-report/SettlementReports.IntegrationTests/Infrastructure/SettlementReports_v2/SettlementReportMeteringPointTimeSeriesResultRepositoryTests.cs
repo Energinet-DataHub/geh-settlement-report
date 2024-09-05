@@ -203,7 +203,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
 
     [Theory]
     [InlineData("8442359392717", 1)]
-    [InlineData(null, 3)]
+    [InlineData(null, 4)]
     public async Task Get_ValidFilter_FiltersCorrectlyOnEnergySupplier(string? energySupplier, int expected)
     {
         // arrange
