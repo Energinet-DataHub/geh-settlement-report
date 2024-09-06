@@ -17,9 +17,12 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
+using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
+using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
+using SettlementReports.WebAPI.Extensions.DependencyInjection;
 
 const string subsystemName = TelemetryConstants.SubsystemName;
 
@@ -38,6 +41,8 @@ builder.Services
     .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), subsystemName)
     .AddJwtBearerAuthenticationForWebApp(builder.Configuration)
     .AddUserAuthenticationForWebApp<FrontendUser, FrontendUserProvider>()
+    .AddDatabricksJobs(builder.Configuration)
+    .AddSettlementReportApiModule(builder.Configuration)
     .AddPermissionAuthorizationForWebApp();
 
 var app = builder.Build();

@@ -22,6 +22,6 @@ public interface IRequestSettlemenReportJobHandler
     /// Request a settlement report job
     /// </summary>
     /// <param name="command"></param>
-    /// <returns>A <see cref="Task{Guid}"/> representing the job id of the requested settlement report.</returns>
-    Task<Guid> HandleAsync(RequestSettlementReportJobCommand command);
+    /// <returns>A long value representing the job id of the requested settlement report.</returns>
+    Task<long> HandleAsync(RequestSettlementReportJobCommand command);
 }

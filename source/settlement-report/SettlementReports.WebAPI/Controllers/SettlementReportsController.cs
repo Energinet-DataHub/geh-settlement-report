@@ -19,7 +19,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Energinet.DataHub.ImbalancePrices.Hosts.WebApi.Controllers;
+namespace SettlementReports.WebAPI.Controllers;
 
 [ApiController]
 [Route("settlement-reports")]

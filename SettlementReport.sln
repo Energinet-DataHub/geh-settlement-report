@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Core", "source\settlem
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration.SettlementReports.IntegrationTests", "source\settlement-report\Orchestration.SettlementReports.IntegrationTests\Orchestration.SettlementReports.IntegrationTests.csproj", "{63FCEA68-F792-4860-88AD-7EF163AD667F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlmentReports.WebAPI", "source\settlement-report\SettlmentReports.WebAPI\SettlmentReports.WebAPI.csproj", "{016FF5AF-759C-4A11-ABA1-723C6F925953}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.WebAPI", "source\settlement-report\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj", "{016FF5AF-759C-4A11-ABA1-723C6F925953}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Application", "source\settlement-report\SettlementReports.Application\SettlementReports.Application.csproj", "{90B61921-AF88-4010-AFB8-08FAA3EBF173}"
 EndProject

@@ -1,4 +1,4 @@
-// Copyright 2020 Energinet DataHub A/S
+﻿// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,4 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Commands;
 
-public class RequestSettlementReportJobCommand
-{
-    private readonly SettlementReportRequestDto _request;
-
-    public RequestSettlementReportJobCommand(SettlementReportRequestDto request)
-    {
-        _request = request;
-    }
-}
+public record RequestSettlementReportJobCommand(SettlementReportRequestDto Request);
