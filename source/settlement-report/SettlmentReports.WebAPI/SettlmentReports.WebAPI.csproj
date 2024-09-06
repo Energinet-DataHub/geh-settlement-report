@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
     </ItemGroup>
 
 </Project>

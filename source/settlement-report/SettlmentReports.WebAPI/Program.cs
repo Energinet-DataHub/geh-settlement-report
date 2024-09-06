@@ -18,6 +18,7 @@ using Asp.Versioning;
 using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 
 const string subsystemName = TelemetryConstants.SubsystemName;
@@ -34,7 +35,10 @@ builder.Services
 
 builder.Services
     .AddApiVersioningForWebApp(new ApiVersion(1, 0))
-    .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), subsystemName);
+    .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), subsystemName)
+    .AddJwtBearerAuthenticationForWebApp(builder.Configuration)
+    .AddUserAuthenticationForWebApp<FrontendUser, FrontendUserProvider>()
+    .AddPermissionAuthorizationForWebApp();
 
 var app = builder.Build();
 
