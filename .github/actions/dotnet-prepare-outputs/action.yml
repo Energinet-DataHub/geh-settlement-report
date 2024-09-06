@@ -42,6 +42,16 @@ runs:
           --configuration Release \
           --output '${{ inputs.output_path }}\functions\orchestration-settlement-reports'
 
+    - name: Publish Web API
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\settlement-report\SettlmentReports.WebAPI\SettlmentReports.WebAPI.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.output_path }}\functions\webapi'
+
     - name: Publish Database Migration
       shell: bash
       run: |

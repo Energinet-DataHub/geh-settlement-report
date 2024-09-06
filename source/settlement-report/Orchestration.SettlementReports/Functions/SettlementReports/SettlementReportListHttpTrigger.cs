@@ -14,9 +14,9 @@
 
 using System.Net;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.CalculationResults.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;

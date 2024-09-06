@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orchestration.SettlementReports\Orchestration.SettlementReports.csproj" />
+    <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
     <ProjectReference Include="..\Test.Core\Test.Core.csproj" />
   </ItemGroup>
 

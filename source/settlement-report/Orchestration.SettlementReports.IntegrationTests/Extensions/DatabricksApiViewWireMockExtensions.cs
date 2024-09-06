@@ -14,8 +14,8 @@
 
 using System.Net;
 using System.Text;
-using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SettlementReports_v2.Statements;
-using Energinet.DataHub.SettlementReport.CalculationResults.Infrastructure.SqlStatements.DeltaTableConstants;
+using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Statements;
+using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
 using Microsoft.Net.Http.Headers;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
