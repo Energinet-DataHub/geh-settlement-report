@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.SettlementReport.Infrastructure.Commands;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.Azure.Databricks.Client.Models;
 
@@ -31,8 +32,13 @@ public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobH
 
     public async Task<long> HandleAsync(RequestSettlementReportJobCommand command)
     {
+        var job = await GetSettlementReportsJobAsync(command.Request.Filter.CalculationType == CalculationType.BalanceFixing
+            ? DatabricksJobNames.BalanceFixing
+            : DatabricksJobNames.Wholesale)
+            .ConfigureAwait(false);
+
         var parameters = CreateParameters(command.Request);
-        return await _jobsApiClient.Jobs.RunNow(1, parameters).ConfigureAwait(false);
+        return await _jobsApiClient.Jobs.RunNow(job.JobId, parameters).ConfigureAwait(false);
     }
 
     private RunParameters CreateParameters(SettlementReportRequestDto request)
@@ -50,10 +56,10 @@ public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobH
         return RunParameters.CreatePythonParams(jobParameters);
     }
 
-    private async Task<Job> GetSettlementReportsJobAsync()
+    private async Task<Job> GetSettlementReportsJobAsync(string jobName)
     {
         var calculatorJob = await _jobsApiClient.Jobs
-            .ListPageable(name: "CalculatorJob")
+            .ListPageable(name: jobName)
             .SingleAsync()
             .ConfigureAwait(false);
 
