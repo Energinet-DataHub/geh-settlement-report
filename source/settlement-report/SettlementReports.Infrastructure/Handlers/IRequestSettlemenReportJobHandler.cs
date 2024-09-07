@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.Commands;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Handlers;
 
@@ -22,6 +22,9 @@ public interface IRequestSettlemenReportJobHandler
     /// Request a settlement report job
     /// </summary>
     /// <param name="command"></param>
+    /// <param name="userId"></param>
+    /// <param name="actorId"></param>
+    /// <param name="isFas"></param>
     /// <returns>A long value representing the job id of the requested settlement report.</returns>
-    Task<long> HandleAsync(RequestSettlementReportJobCommand command);
+    Task<long> HandleAsync(SettlementReportRequestDto command, Guid userId, Guid actorId, bool isFas);
 }

@@ -14,6 +14,9 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Commands;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 
-public record RequestSettlementReportJobCommand(SettlementReportRequestDto Request);
+public interface IDatabricksJobsHelper
+{
+    Task<long> RunSettlementReportsJobAsync(SettlementReportRequestDto request);
+}

@@ -24,4 +24,11 @@ public interface ISettlementReportInitializeHandler
         bool hideReport,
         SettlementReportRequestId requestId,
         SettlementReportRequestDto request);
+
+    Task InitializeFromJobAsync(
+        Guid userId,
+        Guid actorId,
+        bool hideReport,
+        long jobId,
+        SettlementReportRequestDto request);
 }

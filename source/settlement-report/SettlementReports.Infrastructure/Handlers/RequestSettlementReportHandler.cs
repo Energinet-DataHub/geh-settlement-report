@@ -12,57 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
-using Energinet.DataHub.SettlementReport.Infrastructure.Commands;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Microsoft.Azure.Databricks.Client.Models;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Handlers;
 
 public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobHandler
 {
-    private readonly IJobsApiClient _jobsApiClient;
+    private readonly IDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
 
-    public RequestSettlementReportHandler(IJobsApiClient jobsApiClient)
+    public RequestSettlementReportHandler(
+        IDatabricksJobsHelper jobHelper,
+        ISettlementReportInitializeHandler settlementReportInitializeHandler)
     {
-        _jobsApiClient = jobsApiClient;
+        _jobHelper = jobHelper;
+        _settlementReportInitializeHandler = settlementReportInitializeHandler;
     }
 
-    public async Task<long> HandleAsync(RequestSettlementReportJobCommand command)
+    public async Task<long> HandleAsync(SettlementReportRequestDto request, Guid userId, Guid actorId, bool isFas)
     {
-        var job = await GetSettlementReportsJobAsync(command.Request.Filter.CalculationType == CalculationType.BalanceFixing
-            ? DatabricksJobNames.BalanceFixing
-            : DatabricksJobNames.Wholesale)
+        var jobId = await _jobHelper.RunSettlementReportsJobAsync(request).ConfigureAwait(false);
+        await _settlementReportInitializeHandler
+            .InitializeFromJobAsync(
+                userId,
+                actorId,
+                isFas,
+                jobId,
+                request)
             .ConfigureAwait(false);
 
-        var parameters = CreateParameters(command.Request);
-        return await _jobsApiClient.Jobs.RunNow(job.JobId, parameters).ConfigureAwait(false);
-    }
-
-    private RunParameters CreateParameters(SettlementReportRequestDto request)
-    {
-        var gridAreas = string.Join(", ", request.Filter.GridAreas.Select(c => c.Key));
-
-        var jobParameters = new List<string>
-        {
-            $"--grid-areas=[{gridAreas}]",
-            $"--period-start-datetime={request.Filter.PeriodStart}",
-            $"--period-end-datetime={request.Filter.PeriodEnd}",
-            $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
-        };
-
-        return RunParameters.CreatePythonParams(jobParameters);
-    }
-
-    private async Task<Job> GetSettlementReportsJobAsync(string jobName)
-    {
-        var calculatorJob = await _jobsApiClient.Jobs
-            .ListPageable(name: jobName)
-            .SingleAsync()
-            .ConfigureAwait(false);
-
-        return await _jobsApiClient.Jobs.Get(calculatorJob.JobId).ConfigureAwait(false);
+        return jobId;
     }
 }
