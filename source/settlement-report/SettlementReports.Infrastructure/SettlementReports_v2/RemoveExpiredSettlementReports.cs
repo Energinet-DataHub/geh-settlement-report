@@ -46,9 +46,18 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
 
             if (settlementReport.BlobFileName != null)
             {
-                await _settlementReportFileRepository
-                    .DeleteAsync(new SettlementReportRequestId(settlementReport.RequestId), settlementReport.BlobFileName)
-                    .ConfigureAwait(false);
+                if (settlementReport.RequestId is not null)
+                {
+                    await _settlementReportFileRepository
+                        .DeleteAsync(new SettlementReportRequestId(settlementReport.RequestId), settlementReport.BlobFileName)
+                        .ConfigureAwait(false);
+                }
+                else if (settlementReport.JobId is not null)
+                {
+                    await _settlementReportFileRepository
+                        .DeleteAsync(new JobRunId(settlementReport.JobId.GetValueOrDefault()), settlementReport.BlobFileName)
+                        .ConfigureAwait(false);
+                }
             }
 
             await _settlementReportRepository

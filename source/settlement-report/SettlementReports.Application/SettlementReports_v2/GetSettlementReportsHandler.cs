@@ -55,7 +55,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
     private static RequestedSettlementReportDto Map(SettlementReport report)
     {
         return new RequestedSettlementReportDto(
-            new SettlementReportRequestId(report.RequestId),
+            report.RequestId is not null ? new SettlementReportRequestId(report.RequestId) : null,
             report.CalculationType,
             report.PeriodStart.ToDateTimeOffset(),
             report.PeriodEnd.ToDateTimeOffset(),
@@ -63,6 +63,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
             report.GridAreaCount,
             0,
             report.ActorId,
-            report.ContainsBasisData);
+            report.ContainsBasisData,
+            report.JobId is not null ? new JobRunId(report.JobId.Value) : null);
     }
 }

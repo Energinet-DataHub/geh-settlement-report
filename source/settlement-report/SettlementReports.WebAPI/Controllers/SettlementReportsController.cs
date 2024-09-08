@@ -91,9 +91,10 @@ public class SettlementReportsController
     [HttpGet]
     [Route("status/{jobId:long}")]
     [Authorize]
-    public async Task<string> RequestSettlementReport(long jobId)
+    public async Task<JobRunStatus> RequestSettlementReport(long jobId)
     {
-        return await Task.FromResult("running").ConfigureAwait(false);
+        var jobRunId = new JobRunId(jobId);
+        return await Task.FromResult(JobRunStatus.Running).ConfigureAwait(false);
     }
 
     private bool IsValid(SettlementReportRequestDto req)

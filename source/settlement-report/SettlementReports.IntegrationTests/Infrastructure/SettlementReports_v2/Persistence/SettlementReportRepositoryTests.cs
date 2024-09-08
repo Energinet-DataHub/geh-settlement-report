@@ -135,7 +135,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var repository = new SettlementReportRepository(context);
 
         // act
-        var actual = await repository.GetAsync(expectedRequest.RequestId);
+        var actual = await repository.GetAsync(expectedRequest.RequestId!);
 
         // assert
         Assert.NotNull(actual);

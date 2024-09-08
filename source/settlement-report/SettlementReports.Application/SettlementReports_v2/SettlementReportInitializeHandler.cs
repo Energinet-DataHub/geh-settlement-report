@@ -38,7 +38,7 @@ public sealed class SettlementReportInitializeHandler : ISettlementReportInitial
         return _repository.AddOrUpdateAsync(settlementReport);
     }
 
-    public Task InitializeFromJobAsync(Guid userId, Guid actorId, bool hideReport, long jobId, SettlementReportRequestDto request)
+    public Task InitializeFromJobAsync(Guid userId, Guid actorId, bool hideReport, JobRunId jobId, SettlementReportRequestDto request)
     {
         var settlementReport = new SettlementReport(SystemClock.Instance, userId, actorId, hideReport, new SettlementReportRequestId(jobId.ToString()), request);
         return _repository.AddOrUpdateAsync(settlementReport);

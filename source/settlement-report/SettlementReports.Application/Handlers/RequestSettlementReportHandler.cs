@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Helpers;
+using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
@@ -31,18 +31,18 @@ public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobH
         _settlementReportInitializeHandler = settlementReportInitializeHandler;
     }
 
-    public async Task<long> HandleAsync(SettlementReportRequestDto request, Guid userId, Guid actorId, bool isFas)
+    public async Task<JobRunId> HandleAsync(SettlementReportRequestDto request, Guid userId, Guid actorId, bool isFas)
     {
-        var jobId = await _jobHelper.RunSettlementReportsJobAsync(request).ConfigureAwait(false);
+        var runId = await _jobHelper.RunSettlementReportsJobAsync(request).ConfigureAwait(false);
         await _settlementReportInitializeHandler
             .InitializeFromJobAsync(
                 userId,
                 actorId,
                 isFas,
-                jobId,
+                runId,
                 request)
             .ConfigureAwait(false);
 
-        return jobId;
+        return runId;
     }
 }

@@ -25,6 +25,6 @@ public interface IRequestSettlemenReportJobHandler
     /// <param name="userId"></param>
     /// <param name="actorId"></param>
     /// <param name="isFas"></param>
-    /// <returns>A long value representing the job id of the requested settlement report.</returns>
-    Task<long> HandleAsync(SettlementReportRequestDto command, Guid userId, Guid actorId, bool isFas);
+    /// <returns>A JobRunId value representing the run id of the requested settlement report.</returns>
+    Task<JobRunId> HandleAsync(SettlementReportRequestDto command, Guid userId, Guid actorId, bool isFas);
 }

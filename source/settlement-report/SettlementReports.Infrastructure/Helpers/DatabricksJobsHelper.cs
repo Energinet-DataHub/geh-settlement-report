@@ -14,8 +14,8 @@
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
-using Energinet.DataHub.SettlementReport.Application.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.Azure.Databricks.Client.Models;
@@ -31,10 +31,16 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         _jobsApiClient = jobsApiClient;
     }
 
-    public async Task<long> RunSettlementReportsJobAsync(SettlementReportRequestDto request)
+    public async Task<JobRunId> RunSettlementReportsJobAsync(SettlementReportRequestDto request)
     {
         var job = await GetSettlementReportsJobAsync(GetJobName(request.Filter.CalculationType)).ConfigureAwait(false);
-        return await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request)).ConfigureAwait(false);
+        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request)).ConfigureAwait(false));
+    }
+
+    public async Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId)
+    {
+        var jobRun = await _jobsApiClient.Jobs.RunsGet(runId, false).ConfigureAwait(false);
+        return ConvertJobStatus(jobRun.Item1);
     }
 
     private string GetJobName(CalculationType calculationType)
@@ -53,12 +59,12 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
     private async Task<Job> GetSettlementReportsJobAsync(string jobName)
     {
-        var calculatorJob = await _jobsApiClient.Jobs
+        var settlementJob = await _jobsApiClient.Jobs
             .ListPageable(name: jobName)
             .SingleAsync()
             .ConfigureAwait(false);
 
-        return await _jobsApiClient.Jobs.Get(calculatorJob.JobId).ConfigureAwait(false);
+        return await _jobsApiClient.Jobs.Get(settlementJob.JobId).ConfigureAwait(false);
     }
 
     private RunParameters CreateParameters(SettlementReportRequestDto request)
@@ -74,5 +80,27 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         };
 
         return RunParameters.CreatePythonParams(jobParameters);
+    }
+
+    private static JobRunStatus ConvertJobStatus(Run jobRun)
+    {
+        if (jobRun.State == null)
+        {
+            return JobRunStatus.Queued;
+        }
+
+        if (jobRun.State.ResultState == RunResultState.SUCCESS || jobRun.IsCompleted)
+        {
+            return JobRunStatus.Completed;
+        }
+
+        return jobRun.State.LifeCycleState switch
+        {
+            RunLifeCycleState.RUNNING => JobRunStatus.Running,
+            RunLifeCycleState.QUEUED or RunLifeCycleState.PENDING => JobRunStatus.Queued,
+            RunLifeCycleState.TERMINATED => JobRunStatus.Canceled,
+            RunLifeCycleState.INTERNAL_ERROR => JobRunStatus.Failed,
+            _ => JobRunStatus.Queued,
+        };
     }
 }

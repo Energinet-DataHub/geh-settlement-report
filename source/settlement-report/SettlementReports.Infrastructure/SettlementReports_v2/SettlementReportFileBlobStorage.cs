@@ -34,6 +34,12 @@ public sealed class SettlementReportFileBlobStorage : ISettlementReportFileRepos
         return blobClient.OpenReadAsync();
     }
 
+    // TODO: Impelement this method when we know the blob storage for job reports
+    public Task DeleteAsync(JobRunId reportRequestId, string fileName)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task DownloadAsync(SettlementReportRequestId reportRequestId, string fileName, Stream downloadStream)
     {
         var blobName = GetBlobName(reportRequestId, fileName);

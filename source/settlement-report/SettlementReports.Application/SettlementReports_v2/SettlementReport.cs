@@ -23,7 +23,7 @@ public sealed class SettlementReport
 {
     public int Id { get; init; }
 
-    public string RequestId { get; init; } = null!;
+    public string? RequestId { get; init; }
 
     public Guid UserId { get; init; }
 
@@ -47,6 +47,8 @@ public sealed class SettlementReport
 
     public string? BlobFileName { get; private set; }
 
+    public long? JobId { get; init; }
+
     public SettlementReport(
         IClock clock,
         Guid userId,
@@ -56,6 +58,27 @@ public sealed class SettlementReport
         SettlementReportRequestDto request)
     {
         RequestId = requestId.Id;
+        UserId = userId;
+        ActorId = actorId;
+        IsHiddenFromActor = hideReport;
+        CreatedDateTime = clock.GetCurrentInstant();
+        Status = SettlementReportStatus.InProgress;
+        CalculationType = request.Filter.CalculationType;
+        ContainsBasisData = request.IncludeBasisData;
+        PeriodStart = request.Filter.PeriodStart.ToInstant();
+        PeriodEnd = request.Filter.PeriodEnd.ToInstant();
+        GridAreaCount = request.Filter.GridAreas.Count;
+    }
+
+    public SettlementReport(
+        IClock clock,
+        Guid userId,
+        Guid actorId,
+        bool hideReport,
+        JobRunId jobRunId,
+        SettlementReportRequestDto request)
+    {
+        JobId = jobRunId.Id;
         UserId = userId;
         ActorId = actorId;
         IsHiddenFromActor = hideReport;

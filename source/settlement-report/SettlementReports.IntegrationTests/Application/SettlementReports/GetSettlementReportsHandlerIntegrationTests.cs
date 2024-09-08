@@ -127,12 +127,12 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId2.ToString(), item.RequestId.Id);
+                Assert.Equal(requestId2.ToString(), item.RequestId!.Id);
             },
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId3.ToString(), item.RequestId.Id);
+                Assert.Equal(requestId3.ToString(), item.RequestId!.Id);
             });
     }
 

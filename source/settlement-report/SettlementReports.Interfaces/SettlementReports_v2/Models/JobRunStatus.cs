@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-
-public interface IDatabricksJobsHelper
+public enum JobRunStatus
 {
-    Task<JobRunId> RunSettlementReportsJobAsync(SettlementReportRequestDto request);
+    Queued,
+    Running,
+    Completed,
+    Failed,
+    Canceled,
 }
