@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
@@ -27,11 +28,11 @@ namespace SettlementReports.WebAPI.Controllers;
 public class SettlementReportsController
     : ControllerBase
 {
-    private readonly IRequestSettlemenReportJobHandler _requestSettlementReportJobHandler;
+    private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
     public SettlementReportsController(
-        IRequestSettlemenReportJobHandler requestSettlementReportJobHandler,
+        IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
         IUserContext<FrontendUser> userContext)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
@@ -40,7 +41,7 @@ public class SettlementReportsController
 
     [HttpPost]
     [Route("RequestSettlementReport")]
-    [Authorize]
+    [Authorize(Roles = "settlement-reports:manage")]
     public async Task<ActionResult> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
         if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
@@ -79,19 +80,22 @@ public class SettlementReportsController
             ? _userContext.CurrentUser.Actor.ActorNumber
             : null;
 
-        var result = await _requestSettlementReportJobHandler.HandleAsync(
+        var requestCommand = new RequestSettlementReportCommand(
             settlementReportRequest,
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
-            _userContext.CurrentUser.MultiTenancy).ConfigureAwait(false);
+            _userContext.CurrentUser.MultiTenancy,
+            chargeOwnerId);
+
+        var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
         return Ok(result);
     }
 
     [HttpGet]
     [Route("status/{jobId:long}")]
-    [Authorize]
-    public async Task<JobRunStatus> RequestSettlementReport(long jobId)
+    [Authorize(Roles = "settlement-reports:manage")]
+    public async Task<JobRunStatus> GetSettlementReportStatus(long jobId)
     {
         var jobRunId = new JobRunId(jobId);
         return await Task.FromResult(JobRunStatus.Running).ConfigureAwait(false);

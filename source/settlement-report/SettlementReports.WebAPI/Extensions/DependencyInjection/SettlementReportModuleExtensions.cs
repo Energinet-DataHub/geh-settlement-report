@@ -28,9 +28,10 @@ public static class SettlementReportModuleExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         // handlers
-        services.AddScoped<IRequestSettlemenReportJobHandler, RequestSettlementReportHandler>();
-
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
+
+        // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(
             options => options.UseSqlServer(
                 configuration
@@ -41,8 +42,6 @@ public static class SettlementReportModuleExtensions
                     o.UseNodaTime();
                     o.EnableRetryOnFailure();
                 }));
-
-        // Database Health check
         services.TryAddHealthChecks(
             registrationKey: HealthCheckNames.SettlementReportDatabase,
             (key, builder) =>

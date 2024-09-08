@@ -14,17 +14,11 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.Commands;
 
-public interface IRequestSettlemenReportJobHandler
-{
-    /// <summary>
-    /// Request a settlement report job
-    /// </summary>
-    /// <param name="command"></param>
-    /// <param name="userId"></param>
-    /// <param name="actorId"></param>
-    /// <param name="isFas"></param>
-    /// <returns>A JobRunId value representing the run id of the requested settlement report.</returns>
-    Task<JobRunId> HandleAsync(SettlementReportRequestDto command, Guid userId, Guid actorId, bool isFas);
-}
+public sealed record RequestSettlementReportCommand(
+    SettlementReportRequestDto RequestDto,
+    Guid UserId,
+    Guid ActorId,
+    bool IsFas,
+    string? ChargeOwnerId);

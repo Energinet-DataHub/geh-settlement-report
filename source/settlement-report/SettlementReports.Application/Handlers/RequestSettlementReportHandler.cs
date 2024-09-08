@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
-public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobHandler
+public sealed class RequestSettlementReportHandler : IRequestSettlementReportJobHandler
 {
     private readonly IDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
@@ -31,16 +32,16 @@ public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobH
         _settlementReportInitializeHandler = settlementReportInitializeHandler;
     }
 
-    public async Task<JobRunId> HandleAsync(SettlementReportRequestDto request, Guid userId, Guid actorId, bool isFas)
+    public async Task<JobRunId> HandleAsync(RequestSettlementReportCommand request)
     {
-        var runId = await _jobHelper.RunSettlementReportsJobAsync(request).ConfigureAwait(false);
+        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto).ConfigureAwait(false);
         await _settlementReportInitializeHandler
             .InitializeFromJobAsync(
-                userId,
-                actorId,
-                isFas,
+                request.UserId,
+                request.ActorId,
+                request.IsFas,
                 runId,
-                request)
+                request.RequestDto)
             .ConfigureAwait(false);
 
         return runId;
