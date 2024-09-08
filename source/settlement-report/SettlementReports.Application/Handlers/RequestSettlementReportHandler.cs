@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
+using Energinet.DataHub.SettlementReport.Application.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
 public sealed class RequestSettlementReportHandler : IRequestSettlemenReportJobHandler
 {

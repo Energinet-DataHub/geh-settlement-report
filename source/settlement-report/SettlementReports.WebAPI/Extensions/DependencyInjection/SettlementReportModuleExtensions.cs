@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
+using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
-using Energinet.DataHub.SettlementReport.Infrastructure.Handlers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

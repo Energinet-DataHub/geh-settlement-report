@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -23,21 +24,32 @@ namespace SettlementReports.WebAPI.Controllers;
 
 [ApiController]
 [Route("settlement-reports")]
-public class SettlementReportsController(IUserContext<FrontendUser> userContext)
+public class SettlementReportsController
     : ControllerBase
 {
+    private readonly IRequestSettlemenReportJobHandler _requestSettlementReportJobHandler;
+    private readonly IUserContext<FrontendUser> _userContext;
+
+    public SettlementReportsController(
+        IRequestSettlemenReportJobHandler requestSettlementReportJobHandler,
+        IUserContext<FrontendUser> userContext)
+    {
+        _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
+        _userContext = userContext;
+    }
+
     [HttpPost]
     [Route("RequestSettlementReport")]
     [Authorize]
     public async Task<ActionResult> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
-        if (userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
+        if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
         {
             settlementReportRequest = settlementReportRequest with
             {
                 Filter = settlementReportRequest.Filter with
                 {
-                    EnergySupplier = userContext.CurrentUser.Actor.ActorNumber,
+                    EnergySupplier = _userContext.CurrentUser.Actor.ActorNumber,
                 },
             };
         }
@@ -50,36 +62,48 @@ public class SettlementReportsController(IUserContext<FrontendUser> userContext)
         if (settlementReportRequest.Filter.CalculationType != CalculationType.BalanceFixing)
         {
             if (settlementReportRequest.Filter.GridAreas.Any(kv => kv.Value is null))
-              return BadRequest();
+                return BadRequest();
         }
 
-        var marketRole = userContext.CurrentUser.Actor.MarketRole switch
+        var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
         {
             FrontendActorMarketRole.Other => MarketRole.Other,
             FrontendActorMarketRole.GridAccessProvider => MarketRole.GridAccessProvider,
             FrontendActorMarketRole.EnergySupplier => MarketRole.EnergySupplier,
             FrontendActorMarketRole.SystemOperator => MarketRole.SystemOperator,
             FrontendActorMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
-            _ => throw new ArgumentOutOfRangeException(nameof(userContext.CurrentUser.Actor.MarketRole)),
+            _ => throw new ArgumentOutOfRangeException(nameof(_userContext.CurrentUser.Actor.MarketRole)),
         };
 
         var chargeOwnerId = marketRole is MarketRole.GridAccessProvider or MarketRole.SystemOperator
-            ? userContext.CurrentUser.Actor.ActorNumber
+            ? _userContext.CurrentUser.Actor.ActorNumber
             : null;
 
-        var result = await Task.FromResult(1).ConfigureAwait(false);
+        var result = await _requestSettlementReportJobHandler.HandleAsync(
+            settlementReportRequest,
+            _userContext.CurrentUser.UserId,
+            _userContext.CurrentUser.Actor.ActorId,
+            _userContext.CurrentUser.MultiTenancy).ConfigureAwait(false);
 
         return Ok(result);
     }
 
+    [HttpGet]
+    [Route("status/{jobId:long}")]
+    [Authorize]
+    public async Task<string> RequestSettlementReport(long jobId)
+    {
+        return await Task.FromResult("running").ConfigureAwait(false);
+    }
+
     private bool IsValid(SettlementReportRequestDto req)
     {
-        if (userContext.CurrentUser.MultiTenancy)
+        if (_userContext.CurrentUser.MultiTenancy)
         {
             return true;
         }
 
-        var marketRole = userContext.CurrentUser.Actor.MarketRole;
+        var marketRole = _userContext.CurrentUser.Actor.MarketRole;
 
         if (marketRole == FrontendActorMarketRole.GridAccessProvider)
         {
@@ -88,12 +112,12 @@ public class SettlementReportsController(IUserContext<FrontendUser> userContext)
                 return false;
             }
 
-            return req.Filter.GridAreas.All(x => userContext.CurrentUser.Actor.GridAreas.Contains(x.Key));
+            return req.Filter.GridAreas.All(x => _userContext.CurrentUser.Actor.GridAreas.Contains(x.Key));
         }
 
         if (marketRole == FrontendActorMarketRole.EnergySupplier)
         {
-            return req.Filter.EnergySupplier == userContext.CurrentUser.Actor.ActorNumber;
+            return req.Filter.EnergySupplier == _userContext.CurrentUser.Actor.ActorNumber;
         }
 
         if (marketRole == FrontendActorMarketRole.SystemOperator &&
