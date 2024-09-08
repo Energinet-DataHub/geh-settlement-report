@@ -46,7 +46,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\SettlementReports.WebAPI\SettlmentReports.WebAPI.csproj' \
+          '.\source\settlement-report\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
