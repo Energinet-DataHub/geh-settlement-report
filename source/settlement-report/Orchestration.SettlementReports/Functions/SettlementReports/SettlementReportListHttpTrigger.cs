@@ -81,7 +81,7 @@ internal sealed class SettlementReportListHttpTrigger
         {
             var updatedReport = settlementReport;
 
-            if (settlementReport.Status == SettlementReportStatus.InProgress)
+            if (settlementReport.Status == SettlementReportStatus.InProgress && settlementReport.RequestId != null)
             {
                 var instanceInfo = await durableTaskClient
                     .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)

@@ -22,7 +22,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CalculationResults\CalculationResults.Infrastructure\CalculationResults.Infrastructure.csproj" />
     <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
     <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
