@@ -19,4 +19,6 @@ namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 public interface IDatabricksJobsHelper
 {
     Task<JobRunId> RunSettlementReportsJobAsync(SettlementReportRequestDto request);
+
+    Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId);
 }

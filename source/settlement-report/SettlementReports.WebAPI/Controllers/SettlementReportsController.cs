@@ -29,20 +29,23 @@ public class SettlementReportsController
     : ControllerBase
 {
     private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
+    private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
     public SettlementReportsController(
         IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
-        IUserContext<FrontendUser> userContext)
+        IUserContext<FrontendUser> userContext,
+        IListSettlementReportJobsHandler listSettlementReportJobsHandler)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
         _userContext = userContext;
+        _listSettlementReportJobsHandler = listSettlementReportJobsHandler;
     }
 
     [HttpPost]
     [Route("RequestSettlementReport")]
     [Authorize(Roles = "settlement-reports:manage")]
-    public async Task<ActionResult> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
+    public async Task<ActionResult<long>> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
         if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
         {
@@ -89,16 +92,15 @@ public class SettlementReportsController
 
         var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
-        return Ok(result);
+        return Ok(result.Id);
     }
 
     [HttpGet]
-    [Route("status/{jobId:long}")]
-    [Authorize(Roles = "settlement-reports:manage")]
-    public async Task<JobRunStatus> GetSettlementReportStatus(long jobId)
+    [Route("list")]
+    [AllowAnonymous]
+    public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
-        var jobRunId = new JobRunId(jobId);
-        return await Task.FromResult(JobRunStatus.Running).ConfigureAwait(false);
+        return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
     }
 
     private bool IsValid(SettlementReportRequestDto req)
