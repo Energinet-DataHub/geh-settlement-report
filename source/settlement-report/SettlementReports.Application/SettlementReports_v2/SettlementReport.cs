@@ -47,6 +47,8 @@ public sealed class SettlementReport
 
     public string? BlobFileName { get; private set; }
 
+    public Instant? EndedDateTime { get; set; }
+
     public SettlementReport(
         IClock clock,
         Guid userId,
@@ -74,10 +76,11 @@ public sealed class SettlementReport
     {
     }
 
-    public void MarkAsCompleted(GeneratedSettlementReportDto generatedSettlementReport)
+    public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
     {
         Status = SettlementReportStatus.Completed;
         BlobFileName = generatedSettlementReport.ReportFileName;
+        EndedDateTime = clock.GetCurrentInstant();
     }
 
     public void MarkAsFailed()
