@@ -74,7 +74,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport = new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
-        settlementReport.MarkAsCompleted(generatedSettlementReport);
+        settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         await dbContext.SettlementReports.AddAsync(settlementReport);
@@ -104,7 +104,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var actorId = Guid.NewGuid();
         var settlementReport =
             new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
-        settlementReport.MarkAsCompleted(generatedSettlementReport);
+        settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         await dbContext.SettlementReports.AddAsync(settlementReport);
@@ -131,7 +131,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var actorId = Guid.NewGuid();
         var settlementReport =
             new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
-        settlementReport.MarkAsCompleted(generatedSettlementReport);
+        settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         await dbContext.SettlementReports.AddAsync(settlementReport);
@@ -160,7 +160,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport = new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, true, requestId, _mockedSettlementReportRequest);
-        settlementReport.MarkAsCompleted(generatedSettlementReport);
+        settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         await dbContext.SettlementReports.AddAsync(settlementReport);

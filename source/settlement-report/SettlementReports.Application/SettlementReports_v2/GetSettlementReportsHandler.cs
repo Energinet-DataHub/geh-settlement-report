@@ -63,6 +63,8 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
             report.GridAreaCount,
             0,
             report.ActorId,
-            report.ContainsBasisData);
+            report.ContainsBasisData,
+            report.CreatedDateTime.ToDateTimeOffset(),
+            report.EndedDateTime?.ToDateTimeOffset());
     }
 }

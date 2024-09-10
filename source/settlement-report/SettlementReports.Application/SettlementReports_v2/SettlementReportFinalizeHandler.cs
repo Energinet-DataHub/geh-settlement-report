@@ -14,20 +14,24 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public sealed class SettlementReportFinalizeHandler : ISettlementReportFinalizeHandler
 {
+    private readonly IClock _clock;
     private readonly ISettlementReportFileRepository _fileRepository;
     private readonly ISettlementReportRepository _repository;
 
     public SettlementReportFinalizeHandler(
         ISettlementReportFileRepository fileRepository,
-        ISettlementReportRepository repository)
+        ISettlementReportRepository repository,
+        IClock clock)
     {
         _fileRepository = fileRepository;
         _repository = repository;
+        _clock = clock;
     }
 
     public async Task FinalizeAsync(GeneratedSettlementReportDto generatedReport)
@@ -43,7 +47,7 @@ public sealed class SettlementReportFinalizeHandler : ISettlementReportFinalizeH
             .GetAsync(generatedReport.RequestId.Id)
             .ConfigureAwait(false);
 
-        request.MarkAsCompleted(generatedReport);
+        request.MarkAsCompleted(_clock, generatedReport);
 
         await _repository
             .AddOrUpdateAsync(request)
