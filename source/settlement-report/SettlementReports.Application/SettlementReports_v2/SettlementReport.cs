@@ -31,6 +31,8 @@ public sealed class SettlementReport
 
     public Instant CreatedDateTime { get; init; }
 
+    public Instant? EndedDateTime { get; private set; }
+
     public CalculationType CalculationType { get; init; }
 
     public bool ContainsBasisData { get; init; }
@@ -46,8 +48,6 @@ public sealed class SettlementReport
     public SettlementReportStatus Status { get; private set; }
 
     public string? BlobFileName { get; private set; }
-
-    public Instant? EndedDateTime { get; set; }
 
     public SettlementReport(
         IClock clock,
