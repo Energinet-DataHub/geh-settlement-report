@@ -23,6 +23,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
 using Xunit;
 
@@ -48,6 +49,8 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
             null,
             null));
 
+    private readonly Instant _instant = Instant.FromUtc(2021, 1, 1, 0, 0);
+
     public SettlementReportFinalizeHandlerIntegrationTests(
         WholesaleDatabaseFixture<SettlementReportDatabaseContext> wholesaleDatabaseFixture,
         SettlementReportFileBlobStorageFixture settlementReportFileBlobStorageFixture)
@@ -59,6 +62,13 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
         Fixture.Inject<ISettlementReportFileRepository>(new SettlementReportFileBlobStorage(blobContainerClient));
+
+        var clockMock = new Mock<IClock>();
+        clockMock
+            .Setup(clock => clock.GetCurrentInstant())
+            .Returns(_instant);
+
+        Fixture.Inject<IClock>(clockMock.Object);
     }
 
     [Fact]
@@ -117,6 +127,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
         await using var dbContextAct = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         var completedRequest = await dbContextAct.SettlementReports.SingleAsync(r => r.RequestId == requestId.Id);
         Assert.Equal(SettlementReportStatus.Completed, completedRequest.Status);
+        Assert.Equal(_instant, completedRequest.EndedDateTime);
     }
 
     private Task MakeTestFileAsync(GeneratedSettlementReportFileDto file)

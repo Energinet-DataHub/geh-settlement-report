@@ -194,7 +194,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             "TestFile.csv",
             []);
 
-        report.MarkAsCompleted(generatedSettlementReportDto);
+        report.MarkAsCompleted(clockMock.Object, generatedSettlementReportDto);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         await dbContext.SettlementReports.AddAsync(report);
