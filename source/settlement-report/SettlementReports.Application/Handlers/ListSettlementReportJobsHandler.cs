@@ -51,7 +51,8 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         {
             if (settlementReportDto.Status != SettlementReportStatus.Completed)
             {
-                var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id).ConfigureAwait(false);
+                var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id)
+                    .ConfigureAwait(false);
                 if (jobStatus == JobRunStatus.Completed)
                 {
                     await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
@@ -63,8 +64,9 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             {
                 results.Add(settlementReportDto);
             }
+        }
 
-            return results;
+        return results;
     }
 
     private async Task MarkAsCompletedAsync(RequestedSettlementReportDto settlementReportDto)
