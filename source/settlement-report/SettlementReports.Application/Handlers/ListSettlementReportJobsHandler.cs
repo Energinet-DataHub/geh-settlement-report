@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
@@ -22,13 +24,19 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
 {
     private readonly IDatabricksJobsHelper _jobHelper;
     private readonly IGetSettlementReportsHandler _getSettlementReportsHandler;
+    private readonly ISettlementReportRepository _repository;
+    private readonly IClock _clock;
 
     public ListSettlementReportJobsHandler(
         IDatabricksJobsHelper jobHelper,
-        IGetSettlementReportsHandler getSettlementReportsHandler)
+        IGetSettlementReportsHandler getSettlementReportsHandler,
+        ISettlementReportRepository repository,
+        IClock clock)
     {
         _jobHelper = jobHelper;
         _getSettlementReportsHandler = getSettlementReportsHandler;
+        _repository = repository;
+        _clock = clock;
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> HandleAsync()
@@ -36,16 +44,37 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         var settlementReports = (await _getSettlementReportsHandler
             .GetAsync()
             .ConfigureAwait(false))
-            .Where(x => x.JobId is not null).ToList();
+            .Where(x => x.JobId is not null && x.Status != SettlementReportStatus.Completed).ToList();
 
         var results = new List<RequestedSettlementReportDto>();
         foreach (var settlementReportDto in settlementReports)
         {
             var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id).ConfigureAwait(false);
+            if (jobStatus == JobRunStatus.Completed)
+            {
+                await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+            }
+
             results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
         }
 
         return results;
+    }
+
+    private async Task MarkAsCompletedAsync(RequestedSettlementReportDto settlementReportDto)
+    {
+        ArgumentNullException.ThrowIfNull(settlementReportDto);
+        ArgumentNullException.ThrowIfNull(settlementReportDto.JobId);
+
+        var request = await _repository
+            .GetAsync(settlementReportDto.JobId.Id)
+            .ConfigureAwait(false);
+
+        request.MarkAsCompleted(_clock, settlementReportDto.JobId);
+
+        await _repository
+            .AddOrUpdateAsync(request)
+            .ConfigureAwait(false);
     }
 
     private SettlementReportStatus MapFromJobStatus(JobRunStatus status)

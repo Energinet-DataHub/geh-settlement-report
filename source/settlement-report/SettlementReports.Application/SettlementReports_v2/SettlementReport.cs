@@ -106,6 +106,13 @@ public sealed class SettlementReport
         EndedDateTime = clock.GetCurrentInstant();
     }
 
+    public void MarkAsCompleted(IClock clock, JobRunId jobRunId)
+    {
+        Status = SettlementReportStatus.Completed;
+        BlobFileName = jobRunId.Id.ToString();
+        EndedDateTime = clock.GetCurrentInstant();
+    }
+
     public void MarkAsFailed()
     {
         Status = SettlementReportStatus.Failed;
