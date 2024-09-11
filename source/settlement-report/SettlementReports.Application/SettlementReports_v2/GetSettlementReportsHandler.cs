@@ -64,6 +64,8 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
             0,
             report.ActorId,
             report.ContainsBasisData,
-            report.JobId is not null ? new JobRunId(report.JobId.Value) : null);
+            report.JobId is not null ? new JobRunId(report.JobId.Value) : null,
+            report.CreatedDateTime.ToDateTimeOffset(),
+            report.EndedDateTime?.ToDateTimeOffset());
     }
 }

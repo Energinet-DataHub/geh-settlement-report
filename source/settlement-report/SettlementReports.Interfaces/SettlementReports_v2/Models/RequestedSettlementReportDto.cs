@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -27,4 +26,6 @@ public sealed record RequestedSettlementReportDto(
     double Progress,
     Guid RequestedByActorId,
     bool ContainsBasisData,
-    JobRunId? JobId);
+    JobRunId? JobId,
+    DateTimeOffset CreatedDateTime,
+    DateTimeOffset? EndedDateTime);

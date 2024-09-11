@@ -31,6 +31,8 @@ public sealed class SettlementReport
 
     public Instant CreatedDateTime { get; init; }
 
+    public Instant? EndedDateTime { get; private set; }
+
     public CalculationType CalculationType { get; init; }
 
     public bool ContainsBasisData { get; init; }
@@ -97,10 +99,11 @@ public sealed class SettlementReport
     {
     }
 
-    public void MarkAsCompleted(GeneratedSettlementReportDto generatedSettlementReport)
+    public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
     {
         Status = SettlementReportStatus.Completed;
         BlobFileName = generatedSettlementReport.ReportFileName;
+        EndedDateTime = clock.GetCurrentInstant();
     }
 
     public void MarkAsFailed()
