@@ -24,15 +24,18 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
     private readonly IClock _clock;
     private readonly ISettlementReportRepository _settlementReportRepository;
     private readonly ISettlementReportFileRepository _settlementReportFileRepository;
+    private readonly ISettlementReportJobsFileRepository _settlementReportJobFileRepository;
 
     public RemoveExpiredSettlementReports(
         IClock clock,
         ISettlementReportRepository settlementReportRepository,
-        ISettlementReportFileRepository settlementReportFileRepository)
+        ISettlementReportFileRepository settlementReportFileRepository,
+        ISettlementReportJobsFileRepository settlementReportJobFileRepository)
     {
         _clock = clock;
         _settlementReportRepository = settlementReportRepository;
         _settlementReportFileRepository = settlementReportFileRepository;
+        _settlementReportJobFileRepository = settlementReportJobFileRepository;
     }
 
     public async Task RemoveExpiredAsync(IList<Application.SettlementReports_v2.SettlementReport> settlementReports)
@@ -54,7 +57,7 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
                 }
                 else if (settlementReport.JobId is not null)
                 {
-                    await _settlementReportFileRepository
+                    await _settlementReportJobFileRepository
                         .DeleteAsync(new JobRunId(settlementReport.JobId.GetValueOrDefault()), settlementReport.BlobFileName)
                         .ConfigureAwait(false);
                 }

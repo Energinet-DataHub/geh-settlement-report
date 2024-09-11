@@ -59,10 +59,12 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
         Fixture.Inject<ISettlementReportRepository>(new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()));
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
+        var blobContainerClientJobs = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<IRemoveExpiredSettlementReports>(new RemoveExpiredSettlementReports(
             SystemClock.Instance,
             new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()),
-            new SettlementReportFileBlobStorage(blobContainerClient)));
+            new SettlementReportFileBlobStorage(blobContainerClient),
+            new SettlementReportJobsFileBlobStorage(blobContainerClientJobs)));
     }
 
     [Fact]

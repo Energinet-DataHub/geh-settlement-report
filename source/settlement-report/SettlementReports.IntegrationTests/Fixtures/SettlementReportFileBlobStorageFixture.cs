@@ -48,4 +48,11 @@ public sealed class SettlementReportFileBlobStorageFixture : IAsyncLifetime
         blobContainerClient.CreateIfNotExists();
         return blobContainerClient;
     }
+
+    public BlobContainerClient CreateBlobContainerClientForJobs()
+    {
+        var blobContainerClient = new BlobContainerClient(AzuriteManager.FullConnectionString, "settlement-report-container-jobs");
+        blobContainerClient.CreateIfNotExists();
+        return blobContainerClient;
+    }
 }
