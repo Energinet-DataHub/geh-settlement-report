@@ -44,15 +44,18 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         var settlementReports = (await _getSettlementReportsHandler
             .GetAsync()
             .ConfigureAwait(false))
-            .Where(x => x.JobId is not null && x.Status != SettlementReportStatus.Completed).ToList();
+            .Where(x => x.JobId is not null).ToList();
 
         var results = new List<RequestedSettlementReportDto>();
         foreach (var settlementReportDto in settlementReports)
         {
-            var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id).ConfigureAwait(false);
-            if (jobStatus == JobRunStatus.Completed)
+            if (settlementReportDto.Status != SettlementReportStatus.Completed)
             {
-                await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+                var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id).ConfigureAwait(false);
+                if (jobStatus == JobRunStatus.Completed)
+                {
+                    await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+                }
             }
 
             results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
