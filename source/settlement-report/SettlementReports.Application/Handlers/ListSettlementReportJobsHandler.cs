@@ -56,12 +56,15 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
                 {
                     await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
                 }
+
+                results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
+            }
+            else
+            {
+                results.Add(settlementReportDto);
             }
 
-            results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
-        }
-
-        return results;
+            return results;
     }
 
     private async Task MarkAsCompletedAsync(RequestedSettlementReportDto settlementReportDto)
