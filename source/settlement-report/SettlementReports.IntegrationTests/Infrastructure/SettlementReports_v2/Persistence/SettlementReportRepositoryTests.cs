@@ -267,6 +267,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             expectedRequest.ActorId,
             true,
             new JobRunId(Random.Shared.NextInt64()),
+            new SettlementReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
         await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
@@ -274,6 +275,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             expectedRequest.ActorId,
             true,
             new JobRunId(Random.Shared.NextInt64()),
+            new SettlementReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
 
         await using var context = _databaseManager.CreateDbContext();
@@ -348,6 +350,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             false,
             new JobRunId(Random.Shared.NextInt64()),
+            new SettlementReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         if (createReport != null)

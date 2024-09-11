@@ -23,7 +23,7 @@ public sealed class SettlementReport
 {
     public int Id { get; init; }
 
-    public string? RequestId { get; init; }
+    public string RequestId { get; init; } = null!;
 
     public Guid UserId { get; init; }
 
@@ -78,8 +78,10 @@ public sealed class SettlementReport
         Guid actorId,
         bool hideReport,
         JobRunId jobRunId,
+        SettlementReportRequestId requestId,
         SettlementReportRequestDto request)
     {
+        RequestId = requestId.Id;
         JobId = jobRunId.Id;
         UserId = userId;
         ActorId = actorId;

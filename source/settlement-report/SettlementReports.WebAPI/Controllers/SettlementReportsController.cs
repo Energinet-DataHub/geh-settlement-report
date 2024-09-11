@@ -88,7 +88,8 @@ public class SettlementReportsController
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
             _userContext.CurrentUser.MultiTenancy,
-            chargeOwnerId);
+            chargeOwnerId,
+            marketRole);
 
         var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

@@ -77,7 +77,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
     private static RequestedSettlementReportDto Map(SettlementReport report)
     {
         return new RequestedSettlementReportDto(
-            report.RequestId is not null ? new SettlementReportRequestId(report.RequestId) : null,
+            new SettlementReportRequestId(report.RequestId),
             report.CalculationType,
             report.PeriodStart.ToDateTimeOffset(),
             report.PeriodEnd.ToDateTimeOffset(),

@@ -31,10 +31,13 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         _jobsApiClient = jobsApiClient;
     }
 
-    public async Task<JobRunId> RunSettlementReportsJobAsync(SettlementReportRequestDto request)
+    public async Task<JobRunId> RunSettlementReportsJobAsync(
+        SettlementReportRequestDto request,
+        MarketRole marketRole,
+        SettlementReportRequestId reportId)
     {
         var job = await GetSettlementReportsJobAsync(GetJobName(request.Filter.CalculationType)).ConfigureAwait(false);
-        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request)).ConfigureAwait(false));
+        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportId)).ConfigureAwait(false));
     }
 
     public async Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId)
@@ -67,19 +70,47 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         return await _jobsApiClient.Jobs.Get(settlementJob.JobId).ConfigureAwait(false);
     }
 
-    private RunParameters CreateParameters(SettlementReportRequestDto request)
+    private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, SettlementReportRequestId reportId)
     {
-        var gridAreas = string.Join(", ", request.Filter.GridAreas.Select(c => c.Key));
+        var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"\"{c.Key}\", \"{c.Value}\""))}}}";
 
         var jobParameters = new List<string>
         {
-            $"--grid-areas=[{gridAreas}]",
-            $"--period-start-datetime={request.Filter.PeriodStart}",
-            $"--period-end-datetime={request.Filter.PeriodEnd}",
+            $"--report-id={reportId}",
             $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
+            $"--calculation-id-by-grid-area={gridAreas}",
+            $"--period-start={request.Filter.PeriodStart}",
+            $"--period-end={request.Filter.PeriodEnd}",
+            $"--market-role={MapMarketRole(marketRole)}",
         };
+        if (request.Filter.EnergySupplier != null)
+        {
+            jobParameters.Add($"--energy-supplier-id={request.Filter.EnergySupplier}");
+        }
+
+        if (request.SplitReportPerGridArea)
+        {
+            jobParameters.Add("--split-report-by-grid-area");
+        }
+
+        if (request.PreventLargeTextFiles)
+        {
+            jobParameters.Add("--prevent-large-text-files");
+        }
 
         return RunParameters.CreatePythonParams(jobParameters);
+    }
+
+    private static string MapMarketRole(MarketRole marketRole)
+    {
+        return marketRole switch
+        {
+            MarketRole.EnergySupplier => "energy_supplier",
+            MarketRole.DataHubAdministrator => "datahub_administrator",
+            MarketRole.GridAccessProvider => "grid_access_provider",
+            MarketRole.SystemOperator => "system_operator",
+            _ => throw new ArgumentOutOfRangeException(nameof(marketRole), marketRole, $"Market role \"{marketRole}\" not supported in report generation"),
+        };
     }
 
     private static JobRunStatus ConvertJobStatus(Run jobRun)
