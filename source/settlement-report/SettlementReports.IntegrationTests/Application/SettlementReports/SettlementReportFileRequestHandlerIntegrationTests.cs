@@ -95,7 +95,9 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             settlementReportMonthlyAmountTotalRepository));
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
+        var blobContainerJobsClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<ISettlementReportFileRepository>(new SettlementReportFileBlobStorage(blobContainerClient));
+        Fixture.Inject<ISettlementReportJobsFileRepository>(new SettlementReportJobsFileBlobStorage(blobContainerJobsClient));
     }
 
     [Fact]

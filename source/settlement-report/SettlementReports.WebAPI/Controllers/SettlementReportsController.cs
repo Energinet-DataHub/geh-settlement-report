@@ -100,7 +100,10 @@ public class SettlementReportsController
     [AllowAnonymous]
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
-        return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+        if (_userContext.CurrentUser.MultiTenancy)
+            await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+
+        return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     private bool IsValid(SettlementReportRequestDto req)

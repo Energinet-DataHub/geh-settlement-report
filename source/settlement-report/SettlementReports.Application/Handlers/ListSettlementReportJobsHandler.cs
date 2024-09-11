@@ -41,11 +41,18 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> HandleAsync()
     {
-        var settlementReports = (await _getSettlementReportsHandler
-            .GetAsync()
-            .ConfigureAwait(false))
-            .Where(x => x.JobId is not null).ToList();
+        var settlementReports = await _getSettlementReportsHandler.GetForJobsAsync().ConfigureAwait(false);
+        return await GetSettlementReportsAsync(settlementReports).ConfigureAwait(false);
+    }
 
+    public async Task<IEnumerable<RequestedSettlementReportDto>> HandleAsync(Guid actorId)
+    {
+        var settlementReports = await _getSettlementReportsHandler.GetForJobsAsync(actorId).ConfigureAwait(false);
+        return await GetSettlementReportsAsync(settlementReports).ConfigureAwait(false);
+    }
+
+    private async Task<IEnumerable<RequestedSettlementReportDto>> GetSettlementReportsAsync(IEnumerable<RequestedSettlementReportDto> settlementReports)
+    {
         var results = new List<RequestedSettlementReportDto>();
         foreach (var settlementReportDto in settlementReports)
         {

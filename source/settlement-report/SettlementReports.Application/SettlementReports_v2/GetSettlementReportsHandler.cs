@@ -52,6 +52,28 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
         return settlementReports.Select(Map);
     }
 
+    public async Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync()
+    {
+        var settlementReports = (await _settlementReportRepository
+                .GetForJobsAsync()
+                .ConfigureAwait(false))
+            .ToList();
+
+        await _removeExpiredSettlementReports.RemoveExpiredAsync(settlementReports).ConfigureAwait(false);
+        return settlementReports.Select(Map);
+    }
+
+    public async Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync(Guid actorId)
+    {
+        var settlementReports = (await _settlementReportRepository
+                .GetForJobsAsync(actorId)
+                .ConfigureAwait(false))
+            .ToList();
+
+        await _removeExpiredSettlementReports.RemoveExpiredAsync(settlementReports).ConfigureAwait(false);
+        return settlementReports.Select(Map);
+    }
+
     private static RequestedSettlementReportDto Map(SettlementReport report)
     {
         return new RequestedSettlementReportDto(
