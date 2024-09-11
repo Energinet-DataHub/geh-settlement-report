@@ -14,9 +14,12 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
+using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Microsoft.EntityFrameworkCore;
 
 namespace SettlementReports.WebAPI.Extensions.DependencyInjection;
@@ -27,9 +30,11 @@ public static class SettlementReportModuleExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        // handlers
+        // general services
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
+        services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
+        services.AddSettlementReportBlobStorage();
 
         // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(
