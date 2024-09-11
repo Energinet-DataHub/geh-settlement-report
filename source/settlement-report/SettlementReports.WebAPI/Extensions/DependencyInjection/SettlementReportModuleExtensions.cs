@@ -20,6 +20,8 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 
 namespace SettlementReports.WebAPI.Extensions.DependencyInjection;
@@ -34,6 +36,8 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
+        services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
+        services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
         services.AddSettlementReportBlobStorage();
 
         // Database Health check
@@ -47,6 +51,7 @@ public static class SettlementReportModuleExtensions
                     o.UseNodaTime();
                     o.EnableRetryOnFailure();
                 }));
+
         services.TryAddHealthChecks(
             registrationKey: HealthCheckNames.SettlementReportDatabase,
             (key, builder) =>
