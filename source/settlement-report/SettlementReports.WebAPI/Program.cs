@@ -58,8 +58,8 @@ app.UseHttpsRedirection();
 app.UseLoggingScope();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseUserMiddlewareForWebApp<FrontendUser>();
 app.MapControllers().RequireAuthorization();
-
 app.MapLiveHealthChecks();
 app.MapReadyHealthChecks();
 
