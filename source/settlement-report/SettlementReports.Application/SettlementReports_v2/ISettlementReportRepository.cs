@@ -25,4 +25,10 @@ public interface ISettlementReportRepository
     Task<IEnumerable<SettlementReport>> GetAsync();
 
     Task<IEnumerable<SettlementReport>> GetAsync(Guid actorId);
+
+    Task<SettlementReport> GetAsync(long jobId);
+
+    Task<IEnumerable<SettlementReport>> GetForJobsAsync();
+
+    Task<IEnumerable<SettlementReport>> GetForJobsAsync(Guid actorId);
 }

@@ -12,23 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-
-public interface ISettlementReportInitializeHandler
-{
-    Task InitializeAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        SettlementReportRequestId requestId,
-        SettlementReportRequestDto request);
-
-    Task InitializeFromJobAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        JobRunId jobId,
-        SettlementReportRequestDto request);
-}
+public sealed record JobRunId(long Id);

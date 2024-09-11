@@ -57,7 +57,9 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         Fixture.Inject<ISettlementReportRepository>(new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()));
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
+        var blobContainerJobsClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<ISettlementReportFileRepository>(new SettlementReportFileBlobStorage(blobContainerClient));
+        Fixture.Inject<ISettlementReportJobsFileRepository>(new SettlementReportJobsFileBlobStorage(blobContainerJobsClient));
     }
 
     [Fact]

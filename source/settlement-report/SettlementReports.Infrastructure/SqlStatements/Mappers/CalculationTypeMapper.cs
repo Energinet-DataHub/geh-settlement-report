@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;

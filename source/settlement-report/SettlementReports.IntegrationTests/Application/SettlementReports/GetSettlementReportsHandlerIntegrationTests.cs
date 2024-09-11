@@ -59,10 +59,12 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
         Fixture.Inject<ISettlementReportRepository>(new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()));
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
+        var blobContainerClientJobs = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<IRemoveExpiredSettlementReports>(new RemoveExpiredSettlementReports(
             SystemClock.Instance,
             new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()),
-            new SettlementReportFileBlobStorage(blobContainerClient)));
+            new SettlementReportFileBlobStorage(blobContainerClient),
+            new SettlementReportJobsFileBlobStorage(blobContainerClientJobs)));
     }
 
     [Fact]
@@ -127,12 +129,12 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId2.ToString(), item.RequestId.Id);
+                Assert.Equal(requestId2.ToString(), item.RequestId!.Id);
             },
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId3.ToString(), item.RequestId.Id);
+                Assert.Equal(requestId3.ToString(), item.RequestId!.Id);
             });
     }
 

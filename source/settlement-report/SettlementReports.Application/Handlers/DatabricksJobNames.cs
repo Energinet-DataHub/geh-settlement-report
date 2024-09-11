@@ -12,23 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-
-public interface ISettlementReportInitializeHandler
+public static class DatabricksJobNames
 {
-    Task InitializeAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        SettlementReportRequestId requestId,
-        SettlementReportRequestDto request);
-
-    Task InitializeFromJobAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        JobRunId jobId,
-        SettlementReportRequestDto request);
+    // TODO: This is a placeholder for the actual job names
+    public const string BalanceFixing = "SettlementReportJob"; // "SettlementReportJob-balance-fixing";
+    public const string Wholesale = "SettlementReportJob"; // "SettlementReportJob-wholesale";
 }

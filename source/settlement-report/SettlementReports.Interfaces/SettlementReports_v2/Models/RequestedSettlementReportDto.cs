@@ -17,7 +17,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 public sealed record RequestedSettlementReportDto(
-    SettlementReportRequestId RequestId,
+    SettlementReportRequestId? RequestId,
     CalculationType CalculationType,
     DateTimeOffset PeriodStart,
     DateTimeOffset PeriodEnd,
@@ -26,5 +26,6 @@ public sealed record RequestedSettlementReportDto(
     double Progress,
     Guid RequestedByActorId,
     bool ContainsBasisData,
+    JobRunId? JobId,
     DateTimeOffset CreatedDateTime,
     DateTimeOffset? EndedDateTime);

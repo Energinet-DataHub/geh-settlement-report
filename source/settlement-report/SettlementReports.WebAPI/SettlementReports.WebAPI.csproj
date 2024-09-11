@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>SettlementReports.WebAPI</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +21,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
+      <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
     </ItemGroup>
 
 </Project>

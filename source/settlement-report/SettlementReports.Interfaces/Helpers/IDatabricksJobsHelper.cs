@@ -14,21 +14,11 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 
-public interface ISettlementReportInitializeHandler
+public interface IDatabricksJobsHelper
 {
-    Task InitializeAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        SettlementReportRequestId requestId,
-        SettlementReportRequestDto request);
+    Task<JobRunId> RunSettlementReportsJobAsync(SettlementReportRequestDto request);
 
-    Task InitializeFromJobAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        JobRunId jobId,
-        SettlementReportRequestDto request);
+    Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId);
 }

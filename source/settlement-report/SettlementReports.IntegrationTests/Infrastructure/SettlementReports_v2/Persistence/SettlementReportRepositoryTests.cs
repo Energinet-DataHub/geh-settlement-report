@@ -135,7 +135,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var repository = new SettlementReportRepository(context);
 
         // act
-        var actual = await repository.GetAsync(expectedRequest.RequestId);
+        var actual = await repository.GetAsync(expectedRequest.RequestId!);
 
         // assert
         Assert.NotNull(actual);
@@ -150,6 +150,8 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         [
             await PrepareNewRequestAsync(),
             await PrepareNewRequestAsync(),
+            await PrepareNewRequestForJobAsync(),
+            await PrepareNewRequestForJobAsync(),
         ];
 
         await using var context = _databaseManager.CreateDbContext();
@@ -159,7 +161,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var actual = (await repository.GetAsync()).ToList();
 
         // assert
-        foreach (var request in preparedRequests)
+        foreach (var request in preparedRequests.Where(x => x.JobId == null))
         {
             Assert.Contains(actual, x => x.Id == request.Id);
         }
@@ -193,7 +195,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
-            Guid.NewGuid(),
+            expectedRequest.ActorId,
             true,
             new SettlementReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
@@ -203,6 +205,82 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
 
         // Act
         var actual = (await repository.GetAsync(expectedRequest.ActorId)).ToList();
+
+        // Assert
+        Assert.Single(actual);
+        Assert.Equal(expectedRequest.Id, actual[0].Id);
+    }
+
+    [Fact]
+    public async Task GetAsync_RequestsExists_ReturnsRequestsOnlyForJobs()
+    {
+        // arrange
+        IEnumerable<SettlementReport.Application.SettlementReports_v2.SettlementReport> preparedRequests =
+        [
+            await PrepareNewRequestAsync(),
+            await PrepareNewRequestAsync(),
+            await PrepareNewRequestForJobAsync(),
+            await PrepareNewRequestForJobAsync(),
+        ];
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new SettlementReportRepository(context);
+
+        // act
+        var actual = (await repository.GetForJobsAsync()).ToList();
+
+        // assert
+        foreach (var request in preparedRequests.Where(x => x.JobId != null))
+        {
+            Assert.Contains(actual, x => x.Id == request.Id);
+        }
+    }
+
+    [Fact]
+    public async Task GetAsync_ActorIdMatches_ReturnsRequestsForJobs()
+    {
+        // arrange
+        await PrepareNewRequestForJobAsync();
+        await PrepareNewRequestForJobAsync();
+
+        var expectedRequest = await PrepareNewRequestForJobAsync();
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new SettlementReportRepository(context);
+
+        // act
+        var actual = (await repository.GetForJobsAsync(expectedRequest.ActorId)).ToList();
+
+        // assert
+        Assert.Single(actual);
+        Assert.Equal(expectedRequest.Id, actual[0].Id);
+    }
+
+    [Fact]
+    public async Task GetAsync_HiddenReport_ReturnsRequestsForJobs()
+    {
+        // Arrange
+        var expectedRequest = await PrepareNewRequestForJobAsync();
+        await PrepareNewRequestForJobAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            SystemClock.Instance,
+            Guid.NewGuid(),
+            expectedRequest.ActorId,
+            true,
+            new JobRunId(Random.Shared.NextInt64()),
+            new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
+        await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            SystemClock.Instance,
+            Guid.NewGuid(),
+            expectedRequest.ActorId,
+            true,
+            new JobRunId(Random.Shared.NextInt64()),
+            new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new SettlementReportRepository(context);
+
+        // Act
+        var actual = (await repository.GetForJobsAsync(expectedRequest.ActorId)).ToList();
 
         // Assert
         Assert.Single(actual);
@@ -234,6 +312,42 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             false,
             new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
+
+        if (createReport != null)
+        {
+            settlementReportRequest = createReport(requestFilterDto);
+        }
+
+        await setupRepository.AddOrUpdateAsync(settlementReportRequest);
+        return settlementReportRequest;
+    }
+
+    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestForJobAsync(Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
+    {
+        await using var setupContext = _databaseManager.CreateDbContext();
+        var setupRepository = new SettlementReportRepository(setupContext);
+
+        var calculationFilter = new Dictionary<string, CalculationId?>
+        {
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+        };
+
+        var requestFilterDto = new SettlementReportRequestFilterDto(
+            calculationFilter,
+            new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero),
+            CalculationType.BalanceFixing,
+            null,
+            null);
+
+        var settlementReportRequest = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            SystemClock.Instance,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            false,
+            new JobRunId(Random.Shared.NextInt64()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         if (createReport != null)

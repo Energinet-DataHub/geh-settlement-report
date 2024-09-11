@@ -14,21 +14,11 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
-public interface ISettlementReportInitializeHandler
+public interface ISettlementReportJobsFileRepository
 {
-    Task InitializeAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        SettlementReportRequestId requestId,
-        SettlementReportRequestDto request);
+    Task DownloadAsync(JobRunId jobRunId, string fileName, Stream downloadStream);
 
-    Task InitializeFromJobAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        JobRunId jobId,
-        SettlementReportRequestDto request);
+    Task DeleteAsync(JobRunId reportRequestId, string fileName);
 }

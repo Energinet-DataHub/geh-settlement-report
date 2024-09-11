@@ -34,7 +34,9 @@ public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<
         _settlementReportFileBlobStorageFixture = settlementReportFileBlobStorageFixture;
 
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
+        var blobContainerJobsClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<ISettlementReportFileRepository>(new SettlementReportFileBlobStorage(blobContainerClient));
+        Fixture.Inject<ISettlementReportJobsFileRepository>(new SettlementReportJobsFileBlobStorage(blobContainerJobsClient));
     }
 
     [Fact]
