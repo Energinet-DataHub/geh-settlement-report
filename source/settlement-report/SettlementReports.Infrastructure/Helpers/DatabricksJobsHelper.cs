@@ -89,9 +89,14 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             return JobRunStatus.Queued;
         }
 
-        if (jobRun.State.ResultState == RunResultState.SUCCESS || jobRun.IsCompleted)
+        if (jobRun.State.ResultState == RunResultState.SUCCESS && jobRun.IsCompleted)
         {
             return JobRunStatus.Completed;
+        }
+
+        if (jobRun.State.ResultState is RunResultState.FAILED or RunResultState.TIMEDOUT or RunResultState.CANCELED or RunResultState.UPSTREAM_FAILED or RunResultState.UPSTREAM_CANCELED)
+        {
+            return JobRunStatus.Failed;
         }
 
         return jobRun.State.LifeCycleState switch
