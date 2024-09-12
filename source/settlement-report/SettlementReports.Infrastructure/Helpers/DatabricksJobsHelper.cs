@@ -19,6 +19,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.Azure.Databricks.Client.Models;
+using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 
@@ -79,8 +80,8 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--report-id={reportId}",
             $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
             $"--calculation-id-by-grid-area={gridAreas}",
-            $"--period-start={request.Filter.PeriodStart}",
-            $"--period-end={request.Filter.PeriodEnd}",
+            $"--period-start={request.Filter.PeriodStart.ToInstant()}",
+            $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--market-role={MapMarketRole(marketRole)}",
         };
         if (request.Filter.EnergySupplier != null)
