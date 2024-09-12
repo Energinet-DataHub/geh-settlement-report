@@ -42,6 +42,8 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
         services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
+        services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddSettlementReportBlobStorage();
 
         // Database Health check
