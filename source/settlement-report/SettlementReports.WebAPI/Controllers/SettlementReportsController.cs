@@ -98,7 +98,7 @@ public class SettlementReportsController
 
     [HttpGet]
     [Route("list")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
         if (_userContext.CurrentUser.MultiTenancy)
