@@ -248,6 +248,68 @@ public class SettlementReportOrchestrationTests : IAsyncLifetime
                 generatingReport.Status is SettlementReportStatus.InProgress or SettlementReportStatus.Completed);
     }
 
+    /// <summary>
+    /// Verifies that listing the reports returns a correct status.
+    /// </summary>
+    [Fact]
+    public async Task MockExternalDependencies_WhenCallingListReportsFunctionEndpoint_RequestFiltersAreValid()
+    {
+        // Arrange
+        var gridAreas = new Dictionary<string, CalculationId?>
+                {
+                    { "042", new CalculationId(Guid.NewGuid()) },
+                    { "420", new CalculationId(Guid.NewGuid()) },
+                };
+        var splitReportPerGridArea = true;
+        var includeMonthlyAmount = false;
+        var settlementReportRequest = new SettlementReportRequestDto(
+            splitReportPerGridArea,
+            false,
+            false,
+            includeMonthlyAmount,
+            new SettlementReportRequestFilterDto(
+                gridAreas,
+                DateTimeOffset.UtcNow,
+                DateTimeOffset.UtcNow,
+                CalculationType.BalanceFixing,
+                null,
+                null));
+
+        // => Databricks SQL Statement API
+        Fixture.MockServer.MockEnergyResultsViewResponse(settlementReportRequest.Filter.GridAreas.First().Value!.Id);
+
+        // Act A: Start generating report.
+        using var requestReport = new HttpRequestMessage(HttpMethod.Post, "api/RequestSettlementReport");
+        requestReport.Headers.Add("Authorization", $"Bearer {CreateFakeInternalToken()}");
+        requestReport.Content = new StringContent(
+            JsonConvert.SerializeObject(settlementReportRequest),
+            Encoding.UTF8,
+            "application/json");
+
+        var reportResponse = await Fixture.AppHostManager.HttpClient.SendAsync(requestReport);
+        Assert.Equal(HttpStatusCode.OK, reportResponse.StatusCode);
+
+        var reportHttpResponse = await reportResponse.Content.ReadFromJsonAsync<SettlementReportHttpResponse>();
+        Assert.NotNull(reportHttpResponse);
+
+        // Act B: Request report status.
+        using var requestList = new HttpRequestMessage(HttpMethod.Get, "api/ListSettlementReports");
+        requestList.Headers.Add("Authorization", $"Bearer {CreateFakeInternalToken()}");
+
+        var listResponse = await Fixture.AppHostManager.HttpClient.SendAsync(requestList);
+        Assert.Equal(HttpStatusCode.OK, listResponse.StatusCode);
+
+        // Assert
+        var listHttpResponse = await listResponse.Content.ReadFromJsonAsync<RequestedSettlementReportDto[]>();
+        Assert.NotNull(listHttpResponse);
+        Assert.Single(listHttpResponse);
+        var report = listHttpResponse.Single();
+        Assert.Equal(splitReportPerGridArea, report.SplitReportPerGridArea);
+        Assert.Equal(includeMonthlyAmount, report.IncludeMonthlyAmount);
+        Assert.Equal(gridAreas, report.GridAreas);
+        Assert.Equal(gridAreas.Count, report.GridAreaCount);
+    }
+
     private async Task<bool> IsReportPresentAsync(SettlementReportRequestId id)
     {
         // Read from Fixture, unzip and return contents

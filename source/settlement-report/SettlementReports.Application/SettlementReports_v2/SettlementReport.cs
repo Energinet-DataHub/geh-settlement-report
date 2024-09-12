@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using NodaTime;
@@ -45,6 +46,12 @@ public sealed class SettlementReport
 
     public int GridAreaCount { get; init; }
 
+    public bool SplitReportPerGridArea { get; init; }
+
+    public bool IncludeMonthlyAmount { get; init; }
+
+    public string GridAreas { get; init; } = null!;
+
     public SettlementReportStatus Status { get; private set; }
 
     public string? BlobFileName { get; private set; }
@@ -70,6 +77,9 @@ public sealed class SettlementReport
         PeriodStart = request.Filter.PeriodStart.ToInstant();
         PeriodEnd = request.Filter.PeriodEnd.ToInstant();
         GridAreaCount = request.Filter.GridAreas.Count;
+        SplitReportPerGridArea = request.SplitReportPerGridArea;
+        IncludeMonthlyAmount = request.IncludeMonthlyAmount;
+        GridAreas = JsonSerializer.Serialize(request.Filter.GridAreas);
     }
 
     public SettlementReport(
@@ -91,6 +101,9 @@ public sealed class SettlementReport
         PeriodStart = request.Filter.PeriodStart.ToInstant();
         PeriodEnd = request.Filter.PeriodEnd.ToInstant();
         GridAreaCount = request.Filter.GridAreas.Count;
+        SplitReportPerGridArea = request.SplitReportPerGridArea;
+        IncludeMonthlyAmount = request.IncludeMonthlyAmount;
+        GridAreas = JsonSerializer.Serialize(request.Filter.GridAreas);
     }
 
     // EF Core Constructor.
