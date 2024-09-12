@@ -28,7 +28,7 @@ public sealed record RequestedSettlementReportDto(
     bool ContainsBasisData,
     bool SplitReportPerGridArea,
     bool IncludeMonthlyAmount,
-    IReadOnlyDictionary<string, CalculationId?>? GridAreas,
+    IReadOnlyDictionary<string, CalculationId?> GridAreas,
     JobRunId? JobId,
     DateTimeOffset CreatedDateTime,
     DateTimeOffset? EndedDateTime);
