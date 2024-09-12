@@ -102,7 +102,7 @@ public class SettlementReportsController
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
         if (_userContext.CurrentUser.MultiTenancy)
-            await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+            return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
 
         return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
