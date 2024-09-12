@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
@@ -86,6 +87,9 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
             0,
             report.ActorId,
             report.ContainsBasisData,
+            report.SplitReportPerGridArea,
+            report.IncludeMonthlyAmount,
+            JsonSerializer.Deserialize<Dictionary<string, CalculationId?>>(report.GridAreas),
             report.JobId is not null ? new JobRunId(report.JobId.Value) : null,
             report.CreatedDateTime.ToDateTimeOffset(),
             report.EndedDateTime?.ToDateTimeOffset());
