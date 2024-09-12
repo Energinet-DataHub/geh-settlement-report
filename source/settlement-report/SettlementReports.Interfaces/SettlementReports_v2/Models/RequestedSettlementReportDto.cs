@@ -26,6 +26,9 @@ public sealed record RequestedSettlementReportDto(
     double Progress,
     Guid RequestedByActorId,
     bool ContainsBasisData,
+    bool SplitReportPerGridArea,
+    bool IncludeMonthlyAmount,
+    IReadOnlyDictionary<string, CalculationId?> GridAreas,
     JobRunId? JobId,
     DateTimeOffset CreatedDateTime,
     DateTimeOffset? EndedDateTime);
