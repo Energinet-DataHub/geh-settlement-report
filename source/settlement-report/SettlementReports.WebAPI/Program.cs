@@ -35,7 +35,6 @@ builder.Services.AddHealthChecksForWebApp();
 builder.Services
     .AddControllers();
 
-
 builder.Services
     .AddApiVersioningForWebApp(new ApiVersion(1, 0))
     .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), subsystemName)
