@@ -33,8 +33,8 @@ builder.Services.AddApplicationInsightsForWebApp(subsystemName);
 builder.Services.AddHealthChecksForWebApp();
 
 builder.Services
-    .AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddControllers();
+
 
 builder.Services
     .AddApiVersioningForWebApp(new ApiVersion(1, 0))
