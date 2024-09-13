@@ -44,6 +44,7 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
+        services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddSettlementReportBlobStorage();
 
         // Database Health check

@@ -14,11 +14,9 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
-public interface ISettlementReportJobsFileRepository
+public interface ISettlementReportJobsDownloadHandler
 {
-    Task DownloadAsync(string blobFileName, Stream downloadStream);
-
-    Task DeleteAsync(string blobFileName);
+    Task DownloadReportAsync(SettlementReportRequestId requestId, Func<Stream> outputStreamProvider, Guid actorId, bool isMultitenancy);
 }

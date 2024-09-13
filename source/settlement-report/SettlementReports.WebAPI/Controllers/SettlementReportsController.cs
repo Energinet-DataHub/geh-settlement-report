@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net;
+using System.Net.Mime;
+using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
@@ -30,16 +33,19 @@ public class SettlementReportsController
 {
     private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
     private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
+    private readonly ISettlementReportJobsDownloadHandler _downloadHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
     public SettlementReportsController(
         IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
         IUserContext<FrontendUser> userContext,
-        IListSettlementReportJobsHandler listSettlementReportJobsHandler)
+        IListSettlementReportJobsHandler listSettlementReportJobsHandler,
+        ISettlementReportJobsDownloadHandler downloadHandler)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
         _userContext = userContext;
         _listSettlementReportJobsHandler = listSettlementReportJobsHandler;
+        _downloadHandler = downloadHandler;
     }
 
     [HttpPost]
@@ -105,6 +111,32 @@ public class SettlementReportsController
             return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
 
         return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+    }
+
+    [HttpGet]
+    [Route("download")]
+    [Authorize]
+    [Produces("application/octet-stream")]
+    [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+    public async Task<ActionResult> DownloadFileAsync(SettlementReportRequestId requestId)
+    {
+        try
+        {
+            var stream = new MemoryStream();
+            await _downloadHandler
+                .DownloadReportAsync(
+                    requestId,
+                    () => stream,
+                    _userContext.CurrentUser.Actor.ActorId,
+                    _userContext.CurrentUser.MultiTenancy)
+                .ConfigureAwait(false);
+
+            return File(stream.GetBuffer(), MediaTypeNames.Application.Zip);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
+        {
+            return NotFound();
+        }
     }
 
     private bool IsValid(SettlementReportRequestDto req)
