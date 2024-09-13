@@ -77,6 +77,11 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
 
     private static RequestedSettlementReportDto Map(SettlementReport report)
     {
+        var gridAreas = string.IsNullOrEmpty(report.GridAreas)
+            ? new Dictionary<string, CalculationId?>()
+            : JsonSerializer.Deserialize<Dictionary<string, CalculationId?>>(report.GridAreas) ??
+              new Dictionary<string, CalculationId?>();
+
         return new RequestedSettlementReportDto(
             report.RequestId is not null ? new SettlementReportRequestId(report.RequestId) : null,
             report.CalculationType,
@@ -89,7 +94,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
             report.ContainsBasisData,
             report.SplitReportPerGridArea,
             report.IncludeMonthlyAmount,
-            JsonSerializer.Deserialize<Dictionary<string, CalculationId?>>(report.GridAreas) ?? new Dictionary<string, CalculationId?>(),
+            gridAreas,
             report.JobId is not null ? new JobRunId(report.JobId.Value) : null,
             report.CreatedDateTime.ToDateTimeOffset(),
             report.EndedDateTime?.ToDateTimeOffset());
