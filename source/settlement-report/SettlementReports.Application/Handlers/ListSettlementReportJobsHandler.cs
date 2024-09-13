@@ -60,9 +60,14 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             {
                 var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id)
                     .ConfigureAwait(false);
-                if (jobStatus == JobRunStatus.Completed)
+                switch (jobStatus)
                 {
-                    await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+                    case JobRunStatus.Completed:
+                        await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+                        break;
+                    case JobRunStatus.Canceled or JobRunStatus.Failed:
+                        await MarkAsFailedAsync(settlementReportDto).ConfigureAwait(false);
+                        break;
                 }
 
                 results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
@@ -86,6 +91,22 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             .ConfigureAwait(false);
 
         request.MarkAsCompleted(_clock, settlementReportDto.RequestId);
+
+        await _repository
+            .AddOrUpdateAsync(request)
+            .ConfigureAwait(false);
+    }
+
+    private async Task MarkAsFailedAsync(RequestedSettlementReportDto settlementReportDto)
+    {
+        ArgumentNullException.ThrowIfNull(settlementReportDto);
+        ArgumentNullException.ThrowIfNull(settlementReportDto.JobId);
+
+        var request = await _repository
+            .GetAsync(settlementReportDto.JobId.Id)
+            .ConfigureAwait(false);
+
+        request.MarkAsFailed();
 
         await _repository
             .AddOrUpdateAsync(request)
