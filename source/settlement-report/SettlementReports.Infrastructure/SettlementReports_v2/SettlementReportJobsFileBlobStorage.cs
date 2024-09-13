@@ -33,15 +33,8 @@ public sealed class SettlementReportJobsFileBlobStorage : ISettlementReportJobsF
         await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
     }
 
-    public Task DeleteAsync(string fileName)
-    {
-        var blobName = GetBlobName(fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.DeleteIfExistsAsync();
-    }
-
     private static string GetBlobName(string fileName)
     {
-        return string.Join('/', "settlement-reports", "reports", fileName);
+        return string.Join('/', "reports", fileName);
     }
 }

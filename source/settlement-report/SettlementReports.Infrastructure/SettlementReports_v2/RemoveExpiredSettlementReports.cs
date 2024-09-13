@@ -47,22 +47,14 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
             if (!IsExpired(settlementReport))
                 continue;
 
-            if (settlementReport.BlobFileName != null)
+            // Delete the blob file if it exists and the job id is null, because on the shared blob storage we use retention to clean-up
+            if (settlementReport is { BlobFileName: not null, JobId: null })
             {
-                if (settlementReport.JobId is not null)
-                {
-                    await _settlementReportJobFileRepository
-                        .DeleteAsync(settlementReport.BlobFileName)
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    await _settlementReportFileRepository
-                        .DeleteAsync(
-                            new SettlementReportRequestId(settlementReport.RequestId),
-                            settlementReport.BlobFileName)
-                        .ConfigureAwait(false);
-                }
+                await _settlementReportFileRepository
+                    .DeleteAsync(
+                        new SettlementReportRequestId(settlementReport.RequestId),
+                        settlementReport.BlobFileName)
+                    .ConfigureAwait(false);
             }
 
             await _settlementReportRepository
