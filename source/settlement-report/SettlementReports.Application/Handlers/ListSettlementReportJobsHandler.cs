@@ -85,7 +85,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             .GetAsync(settlementReportDto.JobId.Id)
             .ConfigureAwait(false);
 
-        request.MarkAsCompleted(_clock, settlementReportDto.JobId);
+        request.MarkAsCompleted(_clock, settlementReportDto.RequestId);
 
         await _repository
             .AddOrUpdateAsync(request)

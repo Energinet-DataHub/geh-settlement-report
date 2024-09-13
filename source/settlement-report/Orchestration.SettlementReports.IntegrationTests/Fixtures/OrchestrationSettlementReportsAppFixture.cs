@@ -206,6 +206,13 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
             $"{SettlementReportStorageOptions.SectionName}__{nameof(SettlementReportStorageOptions.StorageAccountUri)}",
             AzuriteManager.BlobStorageServiceUri + "/");
 
+        appHostSettings.ProcessEnvironmentVariables.Add(
+            $"{SettlementReportStorageOptions.SectionName}__{nameof(SettlementReportStorageOptions.StorageContainerForJobsName)}",
+            "settlement-report-container-jobs");
+        appHostSettings.ProcessEnvironmentVariables.Add(
+            $"{SettlementReportStorageOptions.SectionName}__{nameof(SettlementReportStorageOptions.StorageAccountForJobsUri)}",
+            AzuriteManager.BlobStorageServiceUri + "/");
+
         return appHostSettings;
     }
 
