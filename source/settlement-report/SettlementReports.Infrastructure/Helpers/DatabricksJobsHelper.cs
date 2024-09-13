@@ -73,7 +73,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
     private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, SettlementReportRequestId reportId)
     {
-        var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"{c.Key}: {c.Value}"))}}}";
+        var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"\"{c.Key}\": \"{(c.Value is null ? string.Empty : c.Value?.Id)}\""))}}}";
 
         var jobParameters = new List<string>
         {
