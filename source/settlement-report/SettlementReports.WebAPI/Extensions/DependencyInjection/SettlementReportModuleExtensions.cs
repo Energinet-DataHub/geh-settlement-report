@@ -18,9 +18,11 @@ using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
+using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +40,10 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
         services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
+        services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
+        services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
+        services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddSettlementReportBlobStorage();
 
         // Database Health check

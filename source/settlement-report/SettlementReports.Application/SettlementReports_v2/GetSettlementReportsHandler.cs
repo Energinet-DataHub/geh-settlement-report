@@ -83,7 +83,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
               new Dictionary<string, CalculationId?>();
 
         return new RequestedSettlementReportDto(
-            report.RequestId is not null ? new SettlementReportRequestId(report.RequestId) : null,
+            new SettlementReportRequestId(report.RequestId),
             report.CalculationType,
             report.PeriodStart.ToDateTimeOffset(),
             report.PeriodEnd.ToDateTimeOffset(),

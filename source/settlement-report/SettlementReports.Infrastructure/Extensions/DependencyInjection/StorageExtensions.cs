@@ -67,24 +67,4 @@ public static class StorageExtensions
 
         return services;
     }
-
-    public static IServiceCollection AddSettlementReportBlobStorageForJobs(this IServiceCollection services)
-    {
-        services
-            .AddOptions<SettlementReportStorageOptions>()
-            .BindConfiguration(SettlementReportStorageOptions.SectionName)
-            .ValidateDataAnnotations();
-
-        services.AddScoped<ISettlementReportJobsFileRepository, SettlementReportJobsFileBlobStorage>(serviceProvider =>
-        {
-            var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
-
-            var blobContainerUri = new Uri(blobSettings.StorageAccountUri, blobSettings.StorageContainerName);
-            var blobContainerClient = new BlobContainerClient(blobContainerUri, new DefaultAzureCredential());
-
-            return new SettlementReportJobsFileBlobStorage(blobContainerClient);
-        });
-
-        return services;
-    }
 }

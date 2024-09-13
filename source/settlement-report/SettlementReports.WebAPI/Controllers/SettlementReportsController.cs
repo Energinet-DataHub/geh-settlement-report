@@ -88,7 +88,8 @@ public class SettlementReportsController
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
             _userContext.CurrentUser.MultiTenancy,
-            chargeOwnerId);
+            chargeOwnerId,
+            marketRole);
 
         var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -97,11 +98,11 @@ public class SettlementReportsController
 
     [HttpGet]
     [Route("list")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
         if (_userContext.CurrentUser.MultiTenancy)
-            await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+            return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
 
         return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }

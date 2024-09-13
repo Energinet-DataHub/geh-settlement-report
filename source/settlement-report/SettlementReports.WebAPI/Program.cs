@@ -15,13 +15,13 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
-using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using SettlementReports.WebAPI.Extensions.DependencyInjection;
 
 const string subsystemName = TelemetryConstants.SubsystemName;
@@ -33,8 +33,7 @@ builder.Services.AddApplicationInsightsForWebApp(subsystemName);
 builder.Services.AddHealthChecksForWebApp();
 
 builder.Services
-    .AddControllers()
-    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+    .AddControllers();
 
 builder.Services
     .AddApiVersioningForWebApp(new ApiVersion(1, 0))
@@ -43,6 +42,7 @@ builder.Services
     .AddUserAuthenticationForWebApp<FrontendUser, FrontendUserProvider>()
     .AddDatabricksJobs(builder.Configuration)
     .AddSettlementReportApiModule(builder.Configuration)
+    .AddNodaTimeForApplication()
     .AddPermissionAuthorizationForWebApp();
 
 var app = builder.Build();

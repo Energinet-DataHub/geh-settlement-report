@@ -30,5 +30,6 @@ public interface ISettlementReportInitializeHandler
         Guid actorId,
         bool hideReport,
         JobRunId jobId,
+        SettlementReportRequestId requestId,
         SettlementReportRequestDto request);
 }
