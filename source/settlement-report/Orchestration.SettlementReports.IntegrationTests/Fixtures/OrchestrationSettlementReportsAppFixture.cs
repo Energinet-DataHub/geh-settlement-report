@@ -14,6 +14,7 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Runtime.InteropServices;
 using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.Databricks.Jobs.Configuration;
@@ -28,6 +29,8 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.IntegrationTests.DurableTask;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
 using WireMock.Server;
 using Xunit.Abstractions;
 
@@ -93,6 +96,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         var appHostSettings = CreateAppHostSettings(ref port);
 
         await EnsureSettlementReportStorageContainerExistsAsync();
+        EnsureRevisionLogRespondsWithSuccess();
 
         // Create and start host
         AppHostManager = new FunctionAppHostManager(appHostSettings, TestLogger);
@@ -122,6 +126,22 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
                 nameof(DatabricksJobsOptions.WorkspaceUrl), MockServer.Url!
             },
         });
+    }
+
+    public void EnsureRevisionLogRespondsWithSuccess()
+    {
+        var requestRevision = Request
+            .Create()
+            .WithPath("/revision-log")
+            .UsingPost();
+
+        var response = Response
+            .Create()
+            .WithStatusCode(HttpStatusCode.OK);
+
+        MockServer
+            .Given(requestRevision)
+            .RespondWith(response);
     }
 
     public BlobContainerClient CreateBlobContainerClient()
@@ -216,7 +236,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         // Revision log
         appHostSettings.ProcessEnvironmentVariables.Add(
             $"RevisionLogOptions:ApiAddress",
-            "revision-log-url");
+            MockServer.Url! + "/revision-log");
 
         return appHostSettings;
     }

@@ -15,7 +15,6 @@
 using System.Net;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.RevisionLog.Integration;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;

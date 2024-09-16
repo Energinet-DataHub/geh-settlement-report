@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;

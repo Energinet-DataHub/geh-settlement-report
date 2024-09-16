@@ -24,7 +24,6 @@ using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functio
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.DurableTask.Client;
-using Newtonsoft.Json;
 using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports;
