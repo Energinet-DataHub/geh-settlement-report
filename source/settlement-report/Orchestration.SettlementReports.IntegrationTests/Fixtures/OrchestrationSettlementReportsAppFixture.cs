@@ -213,6 +213,11 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
             $"{SettlementReportStorageOptions.SectionName}__{nameof(SettlementReportStorageOptions.StorageAccountForJobsUri)}",
             AzuriteManager.BlobStorageServiceUri + "/");
 
+        // Revision log
+        appHostSettings.ProcessEnvironmentVariables.Add(
+            $"RevisionLogOptions:ApiAddress",
+            "revision-log-url");
+
         return appHostSettings;
     }
 
