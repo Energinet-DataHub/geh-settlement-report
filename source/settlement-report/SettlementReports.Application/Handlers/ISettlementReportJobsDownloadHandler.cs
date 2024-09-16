@@ -12,23 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.ComponentModel.DataAnnotations;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Extensions.Options;
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
-public class SettlementReportStorageOptions
+public interface ISettlementReportJobsDownloadHandler
 {
-    public const string SectionName = "SettlementReportStorage";
-
-    [Required]
-    public Uri StorageAccountUri { get; set; } = null!;
-
-    [Required]
-    public string StorageContainerName { get; set; } = string.Empty;
-
-    [Required]
-    public Uri StorageAccountForJobsUri { get; set; } = null!;
-
-    [Required]
-    public string StorageContainerForJobsName { get; set; } = string.Empty;
+    Task DownloadReportAsync(SettlementReportRequestId requestId, Func<Stream> outputStreamProvider, Guid actorId, bool isMultitenancy);
 }

@@ -14,7 +14,6 @@
 
 using Azure.Storage.Blobs;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 
@@ -27,20 +26,15 @@ public sealed class SettlementReportJobsFileBlobStorage : ISettlementReportJobsF
         _blobContainerClient = blobContainerClient;
     }
 
-    public async Task DownloadAsync(JobRunId jobRunId, string fileName, Stream downloadStream)
+    public async Task DownloadAsync(string fileName, Stream downloadStream)
     {
-        var blobName = GetBlobName(jobRunId, fileName);
+        var blobName = GetBlobName(fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
     }
 
-    public Task DeleteAsync(JobRunId reportRequestId, string fileName)
+    private static string GetBlobName(string fileName)
     {
-        return Task.CompletedTask;
-    }
-
-    private static string GetBlobName(JobRunId jobRunId, string fileName)
-    {
-        return string.Join('/', "settlement-reports", "reports", jobRunId.Id, fileName);
+        return string.Join('/', "reports", fileName);
     }
 }
