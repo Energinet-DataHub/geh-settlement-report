@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
 using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
@@ -51,6 +51,7 @@ public class SettlementReportsController
     [HttpPost]
     [Route("RequestSettlementReport")]
     [Authorize(Roles = "settlement-reports:manage")]
+    [EnableRevision(activityName: "RequestSettlementReportAPI", entityType: typeof(SettlementReportRequestDto))]
     public async Task<ActionResult<long>> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
         if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
@@ -105,6 +106,7 @@ public class SettlementReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
+    [EnableRevision(activityName: "ListSettlementReportsAPI", entityType: typeof(RequestedSettlementReportDto))]
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
     {
         if (_userContext.CurrentUser.MultiTenancy)
@@ -118,6 +120,7 @@ public class SettlementReportsController
     [Authorize]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+    [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
     public async Task<ActionResult> DownloadFileAsync(SettlementReportRequestId requestId)
     {
         try
