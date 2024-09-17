@@ -55,6 +55,8 @@ internal sealed class SettlementReportListHttpTrigger
     {
         await _revisionLogClient.LogAsync(
                 new RevisionLogEntry(
+                    actorId: _userContext.CurrentUser.Actor.ActorId,
+                    userId: _userContext.CurrentUser.UserId,
                     logId: Guid.NewGuid(),
                     systemId: SubsystemInformation.Id,
                     occurredOn: SystemClock.Instance.GetCurrentInstant(),
