@@ -107,7 +107,7 @@ public sealed class DatabricksSqlQueryBuilder
         var translated = TranslateTransactToAnsi(sqlStatement);
         var logString = $"Translated SQL: {translated}" + Environment.NewLine + string.Join(Environment.NewLine, sqlParams.Select(x => $"Parameter Name: {x.Key} | Value: {x.Value}"));
         _logger ??= _context.GetService<ILoggerFactory>().CreateLogger<DatabricksSqlQueryBuilder>();
-        _logger.LogDebug(logString);
+        _logger.LogError(logString);
         return translated;
     }
 
