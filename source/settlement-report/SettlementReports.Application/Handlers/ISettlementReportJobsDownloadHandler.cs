@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-public static class TelemetryConstants
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+
+public interface ISettlementReportJobsDownloadHandler
 {
-    public const string SubsystemName = "settlement-report";
+    Task DownloadReportAsync(SettlementReportRequestId requestId, Func<Stream> outputStreamProvider, Guid actorId, bool isMultitenancy);
 }

@@ -17,7 +17,6 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTable
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Factories;
 

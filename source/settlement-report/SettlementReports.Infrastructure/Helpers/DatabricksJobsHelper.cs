@@ -77,7 +77,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         var jobParameters = new List<string>
         {
-            $"--report-id={reportId}",
+            $"--report-id={reportId.Id}",
             $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
             $"--calculation-id-by-grid-area={gridAreas}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",

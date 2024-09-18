@@ -14,7 +14,9 @@
 
 using System.Net;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.RevisionLog.Integration;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -22,6 +24,7 @@ using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functio
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.DurableTask.Client;
+using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports;
 
@@ -29,13 +32,16 @@ internal sealed class SettlementReportRequestTrigger
 {
     private readonly IUserContext<FrontendUser> _userContext;
     private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
+    private readonly IRevisionLogClient _revisionLogClient;
 
     public SettlementReportRequestTrigger(
         IUserContext<FrontendUser> userContext,
-        ISettlementReportInitializeHandler settlementReportInitializeHandler)
+        ISettlementReportInitializeHandler settlementReportInitializeHandler,
+        IRevisionLogClient revisionLogClient)
     {
         _userContext = userContext;
         _settlementReportInitializeHandler = settlementReportInitializeHandler;
+        _revisionLogClient = revisionLogClient;
     }
 
     [Function(nameof(RequestSettlementReport))]
@@ -46,6 +52,18 @@ internal sealed class SettlementReportRequestTrigger
         [DurableClient] DurableTaskClient client,
         FunctionContext executionContext)
     {
+        await _revisionLogClient.LogAsync(
+                new RevisionLogEntry(
+                    actorId: _userContext.CurrentUser.Actor.ActorId,
+                    userId: _userContext.CurrentUser.UserId,
+                    logId: Guid.NewGuid(),
+                    systemId: SubsystemInformation.Id,
+                    occurredOn: SystemClock.Instance.GetCurrentInstant(),
+                    activity: "RequestSettlementReport",
+                    origin: nameof(SettlementReportRequestTrigger),
+                    payload: System.Text.Json.JsonSerializer.Serialize(settlementReportRequest)))
+            .ConfigureAwait(false);
+
         if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
         {
             settlementReportRequest = settlementReportRequest with

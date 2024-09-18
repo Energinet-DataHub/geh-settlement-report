@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 
-public interface ISettlementReportJobsFileRepository
+public static class SubsystemInformation
 {
-    Task DownloadAsync(string blobFileName, Stream downloadStream);
+    public static readonly Guid Id = Guid.Parse("293d2893-fbf0-4f61-8595-6becb6e0206b");
+    public static readonly string SubsystemName = "settlement-report";
 }

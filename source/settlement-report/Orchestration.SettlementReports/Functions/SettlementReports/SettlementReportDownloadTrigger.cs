@@ -15,11 +15,14 @@
 using System.Net;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.RevisionLog.Integration;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports;
 
@@ -27,11 +30,16 @@ internal sealed class SettlementReportDownloadTrigger
 {
     private readonly IUserContext<FrontendUser> _userContext;
     private readonly ISettlementReportDownloadHandler _settlementReportDownloadHandler;
+    private readonly IRevisionLogClient _revisionLogClient;
 
-    public SettlementReportDownloadTrigger(IUserContext<FrontendUser> userContext, ISettlementReportDownloadHandler settlementReportDownloadHandler)
+    public SettlementReportDownloadTrigger(
+        IUserContext<FrontendUser> userContext,
+        ISettlementReportDownloadHandler settlementReportDownloadHandler,
+        IRevisionLogClient revisionLogClient)
     {
         _userContext = userContext;
         _settlementReportDownloadHandler = settlementReportDownloadHandler;
+        _revisionLogClient = revisionLogClient;
     }
 
     [Function(nameof(SettlementReportDownload))]
@@ -43,6 +51,18 @@ internal sealed class SettlementReportDownloadTrigger
     {
         try
         {
+            await _revisionLogClient.LogAsync(
+                    new RevisionLogEntry(
+                        actorId: _userContext.CurrentUser.Actor.ActorId,
+                        userId: _userContext.CurrentUser.UserId,
+                        logId: Guid.NewGuid(),
+                        systemId: SubsystemInformation.Id,
+                        occurredOn: SystemClock.Instance.GetCurrentInstant(),
+                        activity: "SettlementReportDownload",
+                        origin: nameof(SettlementReportDownloadTrigger),
+                        payload: settlementReportRequestId.Id))
+                .ConfigureAwait(false);
+
             await _settlementReportDownloadHandler
                 .DownloadReportAsync(
                     settlementReportRequestId,

@@ -25,4 +25,10 @@ public class SettlementReportStorageOptions
 
     [Required]
     public string StorageContainerName { get; set; } = string.Empty;
+
+    [Required]
+    public Uri StorageAccountForJobsUri { get; set; } = null!;
+
+    [Required]
+    public string StorageContainerForJobsName { get; set; } = string.Empty;
 }
