@@ -29,13 +29,13 @@ public sealed class DatabricksSqlQueryBuilder
 {
     private readonly DbContext _context;
     private readonly IOptions<DeltaTableOptions> _options;
-    private readonly ILogger<DatabricksSqlQueryBuilder> _logger;
+    private ILogger<DatabricksSqlQueryBuilder>? _logger;
 
     public DatabricksSqlQueryBuilder(DbContext context, IOptions<DeltaTableOptions> options)
     {
         _context = context;
         _options = options;
-        _logger = _context.GetService<ILoggerFactory>().CreateLogger<DatabricksSqlQueryBuilder>();
+        _logger = null!;
     }
 
     public DatabricksStatement Build(DatabricksSqlQueryable query)
@@ -106,7 +106,8 @@ public sealed class DatabricksSqlQueryBuilder
         sqlParameters = sqlParams;
         var translated = TranslateTransactToAnsi(sqlStatement);
         var logString = $"Translated SQL: {translated}" + Environment.NewLine + string.Join(Environment.NewLine, sqlParams.Select(x => $"Parameter Name: {x.Key} | Value: {x.Value}"));
-        _logger.LogError(logString);
+        _logger ??= _context.GetService<ILoggerFactory>().CreateLogger<DatabricksSqlQueryBuilder>();
+        _logger.LogDebug(logString);
         return translated;
     }
 
