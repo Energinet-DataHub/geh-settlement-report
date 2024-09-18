@@ -80,14 +80,20 @@ internal sealed class SettlementReportListHttpTrigger
         foreach (var settlementReport in settlementReports)
         {
             var updatedReport = settlementReport;
-
-            if (settlementReport.Status == SettlementReportStatus.InProgress && settlementReport.RequestId != null)
+            if (settlementReport.RequestId != null)
             {
                 var instanceInfo = await durableTaskClient
                     .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
                     .ConfigureAwait(false);
 
-                if (instanceInfo == null || instanceInfo.RuntimeStatus
+                if (instanceInfo == null)
+                {
+                    // If the orchestration instance is not found, we assume it is running on the other orchestration,
+                    // either the heavy or the light one
+                    continue;
+                }
+
+                if (instanceInfo.RuntimeStatus
                         is not OrchestrationRuntimeStatus.Running
                         and not OrchestrationRuntimeStatus.Pending
                         and not OrchestrationRuntimeStatus.Suspended)
@@ -106,9 +112,9 @@ internal sealed class SettlementReportListHttpTrigger
                         updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
                     }
                 }
-            }
 
-            finalSettlementReports.Add(updatedReport);
+                finalSettlementReports.Add(updatedReport);
+            }
         }
 
         return finalSettlementReports;
