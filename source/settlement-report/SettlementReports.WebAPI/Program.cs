@@ -13,23 +13,23 @@
 // limitations under the License.
 
 using System.Reflection;
-using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
+using Energinet.DataHub.RevisionLog.Integration.Extensions.DependencyInjection;
+using Energinet.DataHub.RevisionLog.Integration.WebApi;
+using Energinet.DataHub.RevisionLog.Integration.WebApi.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using SettlementReports.WebAPI.Extensions.DependencyInjection;
 
-const string subsystemName = TelemetryConstants.SubsystemName;
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpLoggingScope(subsystemName);
-builder.Services.AddApplicationInsightsForWebApp(subsystemName);
+builder.Services.AddHttpLoggingScope(SubsystemInformation.SubsystemName);
+builder.Services.AddApplicationInsightsForWebApp(SubsystemInformation.SubsystemName);
 builder.Services.AddHealthChecksForWebApp();
 
 builder.Services
@@ -37,13 +37,15 @@ builder.Services
 
 builder.Services
     .AddApiVersioningForWebApp(new ApiVersion(1, 0))
-    .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), subsystemName)
+    .AddSwaggerForWebApp(Assembly.GetExecutingAssembly(), SubsystemInformation.SubsystemName)
     .AddJwtBearerAuthenticationForWebApp(builder.Configuration)
     .AddUserAuthenticationForWebApp<FrontendUser, FrontendUserProvider>()
     .AddDatabricksJobs(builder.Configuration)
     .AddSettlementReportApiModule(builder.Configuration)
     .AddNodaTimeForApplication()
-    .AddPermissionAuthorizationForWebApp();
+    .AddPermissionAuthorizationForWebApp()
+    .AddRevisionLogIntegrationModule(builder.Configuration)
+    .AddRevisionLogIntegrationWebApiModule<DefaultRevisionLogEntryHandler>(SubsystemInformation.Id);
 
 var app = builder.Build();
 
@@ -62,5 +64,6 @@ app.UseUserMiddlewareForWebApp<FrontendUser>();
 app.MapControllers().RequireAuthorization();
 app.MapLiveHealthChecks();
 app.MapReadyHealthChecks();
+app.UseRevisionLogIntegrationWebApiModule();
 
 app.Run();

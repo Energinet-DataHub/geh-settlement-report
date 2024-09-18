@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.DependencyInjection;
+using Energinet.DataHub.RevisionLog.Integration.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ var host = new HostBuilder()
     .ConfigureServices((context, services) =>
     {
         // Common
-        services.AddApplicationInsightsForIsolatedWorker(TelemetryConstants.SubsystemName);
+        services.AddApplicationInsightsForIsolatedWorker(SubsystemInformation.SubsystemName);
         services.AddHealthChecksForIsolatedWorker();
 
         // Http => Authentication
@@ -37,6 +38,9 @@ var host = new HostBuilder()
 
         // Shared by modules
         services.AddNodaTimeForApplication();
+
+        // revision log
+        services.AddRevisionLogIntegrationModule(context.Configuration);
 
         // Modules
         services.AddSettlementReportsV2Module(context.Configuration);
