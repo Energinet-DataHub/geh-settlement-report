@@ -39,7 +39,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
 
     public async Task<int> CountChunksAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
     {
-        var count = await _dataSource.CountAsync(filter, maximumCalculationVersion, _resolution).ConfigureAwait(false);
+        var count = await _dataSource.CountAsync(filter, actorInfo, maximumCalculationVersion, _resolution).ConfigureAwait(false);
         return (int)Math.Ceiling(count / (double)ChunkSize);
     }
 
@@ -85,7 +85,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
             do
             {
                 rowsCount = 0;
-                await foreach (var record in _dataSource.GetAsync(filter, maximumCalculationVersion, _resolution, loopCount * ChunkSize, ChunkSize).ConfigureAwait(false))
+                await foreach (var record in _dataSource.GetAsync(filter, actorInfo, maximumCalculationVersion, _resolution, loopCount * ChunkSize, ChunkSize).ConfigureAwait(false))
                 {
                     csvHelper.WriteField(record.MeteringPointId, shouldQuote: true);
                     csvHelper.WriteField(record.MeteringPointType switch

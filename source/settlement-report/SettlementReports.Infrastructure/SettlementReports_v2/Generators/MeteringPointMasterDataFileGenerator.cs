@@ -34,12 +34,12 @@ public sealed class MeteringPointMasterDataFileGenerator : CsvFileGeneratorBase<
 
     protected override Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
     {
-        return _dataSource.CountAsync(filter, maximumCalculationVersion);
+        return _dataSource.CountAsync(filter, actorInfo, maximumCalculationVersion);
     }
 
     protected override IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion, int skipChunks, int takeChunks)
     {
-        return _dataSource.GetAsync(filter, skipChunks, takeChunks, maximumCalculationVersion);
+        return _dataSource.GetAsync(filter, actorInfo, skipChunks, takeChunks, maximumCalculationVersion);
     }
 
     protected override void RegisterClassMap(CsvWriter csvHelper, SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)

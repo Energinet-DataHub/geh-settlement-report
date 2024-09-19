@@ -67,6 +67,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.WholesaleFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter);
 
@@ -107,6 +108,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter);
 
@@ -145,6 +147,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter,
             skip: 2,
@@ -191,6 +194,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.WholesaleFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter,
             skip: 2,
@@ -242,6 +246,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.WholesaleFixing,
                 energySupplier,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter,
             skip: 0,
@@ -292,6 +297,7 @@ public class SettlementReportMeteringPointTimeSeriesResultRepositoryTests : Test
                 CalculationType.WholesaleFixing,
                 energySupplier,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             Resolution.Quarter);
 
