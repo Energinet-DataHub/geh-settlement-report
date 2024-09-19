@@ -98,23 +98,23 @@ internal sealed class SettlementReportListHttpTrigger
         foreach (var settlementReport in settlementReports)
         {
             var updatedReport = settlementReport;
-            if (settlementReport.JobId == null)
+
+            var instanceInfo = await durableTaskClient
+                .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
+                .ConfigureAwait(false);
+
+            if (instanceInfo == null)
             {
-                var instanceInfo = await durableTaskClient
-                    .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
-                    .ConfigureAwait(false);
+                // If the orchestration instance is not found, we assume it is running on the other orchestration,
+                // either the heavy or the light one
+                continue;
+            }
 
-                if (instanceInfo == null)
-                {
-                    // If the orchestration instance is not found, we assume it is running on the other orchestration,
-                    // either the heavy or the light one
-                    continue;
-                }
-
+            if (settlementReport.Status == SettlementReportStatus.InProgress)
+            {
                 if (instanceInfo.RuntimeStatus
-                        is not OrchestrationRuntimeStatus.Running
-                        and not OrchestrationRuntimeStatus.Pending
-                        and not OrchestrationRuntimeStatus.Suspended)
+                    is OrchestrationRuntimeStatus.Terminated
+                    or OrchestrationRuntimeStatus.Failed)
                 {
                     await _updateFailedSettlementReportsHandler
                         .UpdateFailedReportAsync(settlementReport.RequestId)
@@ -130,9 +130,9 @@ internal sealed class SettlementReportListHttpTrigger
                         updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
                     }
                 }
-
-                finalSettlementReports.Add(updatedReport);
             }
+
+            finalSettlementReports.Add(updatedReport);
         }
 
         return finalSettlementReports;
