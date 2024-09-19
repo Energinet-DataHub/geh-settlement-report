@@ -60,7 +60,7 @@ internal sealed class SettlementReportOrchestration
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        foreach (var scatterChunk in orderedResults.Chunk(3))
+        foreach (var scatterChunk in orderedResults.Chunk(10))
         {
             var fileRequestTasks = scatterChunk.Select(fileRequest => context
                 .CallActivityAsync<GeneratedSettlementReportFileDto>(
