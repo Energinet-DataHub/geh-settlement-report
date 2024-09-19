@@ -61,7 +61,7 @@ public sealed class DatabricksSqlQueryExecutor
 
     private IAsyncEnumerable<TElement> ExecuteCoreAsync<TElement>(DatabricksStatement databricksStatement, CancellationToken cancellationToken = default)
     {
-        var rows = _databricksSqlWarehouseQueryExecutor.ExecuteStatementAsync(databricksStatement, QueryOptions.WithFormat(Format.JsonArray).WithParallelDownload(), cancellationToken);
+        var rows = _databricksSqlWarehouseQueryExecutor.ExecuteStatementAsync(databricksStatement, QueryOptions.WithFormat(Format.JsonArray), cancellationToken);
         return _sqlRowHydrator.HydrateAsync<TElement>(rows, cancellationToken);
     }
 
