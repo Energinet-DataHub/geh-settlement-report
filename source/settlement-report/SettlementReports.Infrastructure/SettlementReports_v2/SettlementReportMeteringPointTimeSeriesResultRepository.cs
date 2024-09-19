@@ -37,7 +37,18 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution)
     {
-        return Task.FromResult(1);
+        if (filter.CalculationType == CalculationType.BalanceFixing)
+        {
+            return CountLatestAsync(filter, maximumCalculationVersion, resolution);
+        }
+
+        var (_, calculationId) = filter.GridAreas.Single();
+
+        return ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution)
+            .Where(row => row.CalculationId == calculationId!.Id)
+            .Select(row => row.MeteringPointId)
+            .Distinct()
+            .DatabricksSqlCountAsync();
     }
 
     public async IAsyncEnumerable<SettlementReportMeteringPointTimeSeriesResultRow> GetAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution, int skip, int take)
@@ -151,6 +162,37 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
             };
 
         return query.AsAsyncEnumerable();
+    }
+
+    private Task<int> CountLatestAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution)
+    {
+        var view = ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution);
+
+        var dailyCalculationVersion = view
+            .Where(row => row.CalculationVersion <= maximumCalculationVersion)
+            .GroupBy(row => DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"))
+            .Select(group => new
+            {
+                start_of_day = group.Key,
+                max_calc_version = group.Max(row => row.CalculationVersion),
+            });
+
+        var dailyMeteringPoints =
+            from row in view
+            join calculationVersion in dailyCalculationVersion on
+                new { start_of_day = DbFunctions.ToStartOfDayInTimeZone(row.Time, "Europe/Copenhagen"), max_calc_version = row.CalculationVersion }
+                equals
+                new { calculationVersion.start_of_day, calculationVersion.max_calc_version }
+            select new
+            {
+                calculationVersion.start_of_day,
+                row.CalculationId,
+                row.MeteringPointId,
+            };
+
+        return dailyMeteringPoints
+            .Distinct()
+            .DatabricksSqlCountAsync();
     }
 
     private static IQueryable<SettlementReportMeteringPointTimeSeriesEntity> ApplyFilter(
