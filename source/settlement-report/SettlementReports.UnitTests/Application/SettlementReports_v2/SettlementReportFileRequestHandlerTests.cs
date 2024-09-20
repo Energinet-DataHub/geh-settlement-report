@@ -27,11 +27,11 @@ public class SettlementReportFileRequestHandlerTests
     private readonly Instant _startDate = Instant.FromUtc(2022, 1, 1, 0, 0, 0);
     private readonly Instant _endDate = Instant.FromUtc(2022, 1, 31, 0, 0, 0);
     private readonly string _fileName = "FILENAME";
-    private readonly string _energySupplier = "EnergySupplier";
+    private readonly string _glnNumber = "123456789";
     private readonly SettlementReportRequestId _requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
 
     [Fact]
-    public async Task RequestFile_EnergySupplier_ShouldAppearInFilename()
+    public async Task RequestFile_ForEnergySupplier_GLNShouldAppearInFilename()
     {
         // Arrange
         await using var memoryStream = new MemoryStream();
@@ -49,7 +49,7 @@ public class SettlementReportFileRequestHandlerTests
             _startDate.ToDateTimeOffset(),
             _endDate.ToDateTimeOffset(),
             CalculationType.WholesaleFixing,
-            _energySupplier,
+            _glnNumber,
             null);
 
         var fileRequest = new SettlementReportFileRequestDto(
@@ -69,8 +69,53 @@ public class SettlementReportFileRequestHandlerTests
 
         // Assert
         Assert.Contains(_fileName, resultedFileName);
-        Assert.Contains(_energySupplier, resultedFileName);
+        Assert.Contains(_glnNumber, resultedFileName);
         Assert.Contains("DDQ", resultedFileName);
+        Assert.Contains($"{_startDate:dd-MM-yyyy}", resultedFileName);
+        Assert.Contains($"{_endDate:dd-MM-yyyy}", resultedFileName);
+    }
+
+    [Fact]
+    public async Task RequestFile_ForGridAccessProvider_GLNShouldAppearInFilename()
+    {
+        // Arrange
+        await using var memoryStream = new MemoryStream();
+        var settlementReportFileGenerator = new Mock<ISettlementReportFileGenerator>();
+        var settlementReportFileGeneratorFactory = new Mock<ISettlementReportFileGeneratorFactory>();
+        var settlementReportFileRepository = new Mock<ISettlementReportFileRepository>();
+
+        settlementReportFileGeneratorFactory.Setup(x => x.Create(It.IsAny<SettlementReportFileContent>()))
+            .Returns(settlementReportFileGenerator.Object);
+        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<SettlementReportRequestId>(), It.IsAny<string>()))
+            .ReturnsAsync(memoryStream);
+
+        var filter = new SettlementReportRequestFilterDto(
+            _gridAreaCodes,
+            _startDate.ToDateTimeOffset(),
+            _endDate.ToDateTimeOffset(),
+            CalculationType.WholesaleFixing,
+            null,
+            null);
+
+        var fileRequest = new SettlementReportFileRequestDto(
+            _requestId,
+            SettlementReportFileContent.ChargePrice,
+            new SettlementReportPartialFileInfo(_fileName, true),
+            filter,
+            1);
+
+        var sut = new SettlementReportFileRequestHandler(
+            settlementReportFileGeneratorFactory.Object,
+            settlementReportFileRepository.Object);
+
+        // Act
+        var resultGeneratedSettlementReportFile = await sut.RequestFileAsync(fileRequest, new SettlementReportRequestedByActor(MarketRole.GridAccessProvider, _glnNumber));
+        var resultedFileName = resultGeneratedSettlementReportFile.FileInfo.FileName;
+
+        // Assert
+        Assert.Contains(_fileName, resultedFileName);
+        Assert.Contains(_glnNumber, resultedFileName);
+        Assert.Contains("DDM", resultedFileName);
         Assert.Contains($"{_startDate:dd-MM-yyyy}", resultedFileName);
         Assert.Contains($"{_endDate:dd-MM-yyyy}", resultedFileName);
     }
