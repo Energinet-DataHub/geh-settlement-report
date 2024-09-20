@@ -64,7 +64,7 @@ public class SettlementReportFileRequestHandlerTests
             settlementReportFileRepository.Object);
 
         // Act
-        var resultGeneratedSettlementReportFile = await sut.RequestFileAsync(fileRequest, new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null));
+        var resultGeneratedSettlementReportFile = await sut.RequestFileAsync(fileRequest, new SettlementReportRequestedByActor(MarketRole.EnergySupplier, null));
         var resultedFileName = resultGeneratedSettlementReportFile.FileInfo.FileName;
 
         // Assert
@@ -112,7 +112,7 @@ public class SettlementReportFileRequestHandlerTests
             settlementReportFileRepository.Object);
 
         // Act
-        var resultGeneratedSettlementReportFile = await sut.RequestFileAsync(fileRequest, new SettlementReportRequestedByActor(MarketRole.SystemOperator, null));
+        var resultGeneratedSettlementReportFile = await sut.RequestFileAsync(fileRequest, new SettlementReportRequestedByActor(MarketRole.EnergySupplier, null));
         var resultedFileName = resultGeneratedSettlementReportFile.FileInfo.FileName;
 
         // Assert

@@ -73,10 +73,14 @@ public sealed class SettlementReportFileRequestHandler : ISettlementReportFileRe
         {
             filename += $"_{actorInfo.ChargeOwnerId}";
         }
+        else if (actorInfo.MarketRole == MarketRole.EnergySupplier && !string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
+        {
+            filename += $"_{fileRequest.RequestFilter.EnergySupplier}";
+        }
 
         if (!string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
         {
-            filename += $"_{fileRequest.RequestFilter.EnergySupplier}_DDQ";
+            filename += $"_DDQ";
         }
         else
         {
