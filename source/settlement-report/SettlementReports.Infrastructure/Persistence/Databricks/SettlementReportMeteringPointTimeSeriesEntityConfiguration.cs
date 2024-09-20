@@ -21,7 +21,7 @@ public sealed class SettlementReportMeteringPointTimeSeriesEntityConfiguration :
 {
     public void Configure(EntityTypeBuilder<SettlementReportMeteringPointTimeSeriesEntity> builder)
     {
-        builder.ToTable("metering_point_time_series_v2");
+        builder.ToTable("metering_point_time_series_v4");
         builder.HasNoKey();
     }
 }
