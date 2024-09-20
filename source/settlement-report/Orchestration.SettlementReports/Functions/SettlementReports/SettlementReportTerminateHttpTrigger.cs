@@ -47,7 +47,7 @@ internal sealed class SettlementReportTerminateHttpTrigger
 
     [Function(nameof(TerminateSettlementReport))]
     public async Task<HttpResponseData> TerminateSettlementReport(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get")]
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
         HttpRequestData req,
         [FromBody] SettlementReportRequestId settlementReportRequestId,
         [DurableClient] DurableTaskClient client,
@@ -62,7 +62,7 @@ internal sealed class SettlementReportTerminateHttpTrigger
                     occurredOn: SystemClock.Instance.GetCurrentInstant(),
                     activity: "TerminateSettlementReport",
                     origin: nameof(SettlementReportTerminateHttpTrigger),
-                    payload: string.Empty))
+                    payload: settlementReportRequestId.Id))
             .ConfigureAwait(false);
 
         var settlementReport = (await _getSettlementReportsHandler.GetAsync().ConfigureAwait(false)).FirstOrDefault(x => x.RequestId == settlementReportRequestId);
