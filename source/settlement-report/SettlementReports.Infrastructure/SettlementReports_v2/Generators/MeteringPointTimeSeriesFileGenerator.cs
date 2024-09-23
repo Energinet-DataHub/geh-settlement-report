@@ -77,7 +77,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
                 await csvHelper.NextRecordAsync().ConfigureAwait(false);
             }
 
-            await foreach (var record in _dataSource.GetAsync(filter, maximumCalculationVersion, _resolution, fileInfo.ChunkOffset * ChunkSize, ChunkSize).ConfigureAwait(false))
+            await foreach (var record in _dataSource.GetAsync(filter, actorInfo, maximumCalculationVersion, _resolution, fileInfo.ChunkOffset * ChunkSize, ChunkSize).ConfigureAwait(false))
             {
                 csvHelper.WriteField(record.MeteringPointId, shouldQuote: true);
                 csvHelper.WriteField(record.MeteringPointType switch
