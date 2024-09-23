@@ -4,13 +4,9 @@
     <RootNamespace>Energinet.DataHub.SettlementReport.Application</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="11.1.1" />
+    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="11.2.4" />
     <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.5.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.10.48">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
