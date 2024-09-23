@@ -97,7 +97,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("--prevent-large-text-files", request.PreventLargeTextFiles.ToString());
+            jobParameters.Add("prevent-large-text-files", request.PreventLargeTextFiles.ToString());
         }
 
         return RunParameters.CreateJobParams(jobParameters);
