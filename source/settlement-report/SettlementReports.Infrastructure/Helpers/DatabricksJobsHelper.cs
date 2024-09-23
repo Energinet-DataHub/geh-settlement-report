@@ -75,31 +75,33 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
     {
         var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"\"{c.Key}\": \"{(c.Value is null ? string.Empty : c.Value?.Id)}\""))}}}";
 
-        var jobParameters = new List<string>
+        var jobParameters = new Dictionary<string, string>()
         {
-            $"--report-id={reportId.Id}",
-            $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
-            $"--calculation-id-by-grid-area={gridAreas}",
-            $"--period-start={request.Filter.PeriodStart.ToInstant()}",
-            $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
-            $"--market-role={MapMarketRole(marketRole)}",
+            { "report-id", reportId.Id },
+            { "calculation-type", CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType) },
+            { "calculation-id-by-grid-area", gridAreas },
+            { "period-start", request.Filter.PeriodStart.ToInstant().ToString() },
+            { "period-end", request.Filter.PeriodEnd.ToInstant().ToString() },
+            { "market-role", MapMarketRole(marketRole) },
+            { "split-report-by-grid-area", request.SplitReportPerGridArea.ToString() },
+            { "prevent-large-text-files", request.PreventLargeTextFiles.ToString() },
         };
         if (request.Filter.EnergySupplier != null)
         {
-            jobParameters.Add($"--energy-supplier-id={request.Filter.EnergySupplier}");
+            jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier ?? string.Empty);
         }
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("--split-report-by-grid-area");
+            jobParameters.Add("split-report-by-grid-area",  request.SplitReportPerGridArea.ToString());
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("--prevent-large-text-files");
+            jobParameters.Add("--prevent-large-text-files", request.PreventLargeTextFiles.ToString());
         }
 
-        return RunParameters.CreatePythonParams(jobParameters);
+        return RunParameters.CreateJobParams(jobParameters);
     }
 
     private static string MapMarketRole(MarketRole marketRole)
