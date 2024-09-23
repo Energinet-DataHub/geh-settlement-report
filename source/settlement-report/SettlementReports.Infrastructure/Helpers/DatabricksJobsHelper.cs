@@ -87,17 +87,17 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         if (request.Filter.EnergySupplier != null)
         {
-            jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier ?? string.Empty);
+            jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier);
         }
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("split-report-by-grid-area",  request.SplitReportPerGridArea.ToString());
+            jobParameters.Add("split-report-by-grid-area",  string.Empty);
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("prevent-large-text-files", request.PreventLargeTextFiles.ToString());
+            jobParameters.Add("prevent-large-text-files", string.Empty);
         }
 
         return RunParameters.CreateJobParams(jobParameters);
