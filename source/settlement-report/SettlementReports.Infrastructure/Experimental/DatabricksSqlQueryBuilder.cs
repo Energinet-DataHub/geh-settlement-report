@@ -20,6 +20,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
@@ -28,11 +29,16 @@ public sealed class DatabricksSqlQueryBuilder
 {
     private readonly DbContext _context;
     private readonly IOptions<DeltaTableOptions> _options;
+    private readonly ILogger<DatabricksSqlQueryBuilder> _logger;
 
-    public DatabricksSqlQueryBuilder(DbContext context, IOptions<DeltaTableOptions> options)
+    public DatabricksSqlQueryBuilder(
+        DbContext context,
+        IOptions<DeltaTableOptions> options,
+        ILoggerFactory loggerFactory)
     {
         _context = context;
         _options = options;
+        _logger = loggerFactory.CreateLogger<DatabricksSqlQueryBuilder>();
     }
 
     public DatabricksStatement Build(DatabricksSqlQueryable query)
@@ -101,7 +107,10 @@ public sealed class DatabricksSqlQueryBuilder
         }
 
         sqlParameters = sqlParams;
-        return TranslateTransactToAnsi(sqlStatement);
+        var translated = TranslateTransactToAnsi(sqlStatement);
+        var logString = $"Translated SQL: {translated}" + Environment.NewLine + string.Join(Environment.NewLine, sqlParams.Select(x => $"Parameter Name: {x.Key} | Value: {x.Value}"));
+        _logger.LogInformation(logString);
+        return translated;
     }
 
     private string TranslateTransactToAnsi(StringBuilder transactSqlQuery)

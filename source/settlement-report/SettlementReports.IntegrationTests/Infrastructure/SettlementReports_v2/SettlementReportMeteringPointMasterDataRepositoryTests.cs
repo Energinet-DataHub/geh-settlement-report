@@ -21,7 +21,6 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using FluentAssertions;
-using Moq;
 using Xunit;
 
 namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
@@ -40,7 +39,8 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
 
         Fixture.Inject<ISettlementReportDatabricksContext>(new SettlementReportDatabricksContext(
             _databricksSqlStatementApiFixture.DatabricksSchemaManager.DeltaTableOptions,
-            _databricksSqlStatementApiFixture.GetDatabricksExecutor()));
+            _databricksSqlStatementApiFixture.GetDatabricksExecutor(),
+            NullLoggerFactory.Instance));
     }
 
     [Fact(Skip = "Performance testing")]
