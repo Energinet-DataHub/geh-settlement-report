@@ -77,27 +77,27 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         var jobParameters = new Dictionary<string, string>()
         {
-            { "--report-id", reportId.Id },
-            { "--calculation-type", CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType) },
-            { "--calculation-id-by-grid-area", gridAreas },
-            { "--period-start", request.Filter.PeriodStart.ToInstant().ToString() },
-            { "--period-end", request.Filter.PeriodEnd.ToInstant().ToString() },
-            { "--market-role", MapMarketRole(marketRole) },
+            { "report-id", reportId.Id },
+            { "calculation-type", CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType) },
+            { "calculation-id-by-grid-area", gridAreas },
+            { "period-start", request.Filter.PeriodStart.ToInstant().ToString() },
+            { "period-end", request.Filter.PeriodEnd.ToInstant().ToString() },
+            { "market-role", MapMarketRole(marketRole) },
         };
 
         if (request.Filter.EnergySupplier != null)
         {
-            jobParameters.Add("--energy-supplier-id", request.Filter.EnergySupplier);
+            jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier);
         }
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("--split-report-by-grid-area",  "True");
+            jobParameters.Add("split-report-by-grid-area",  "x");
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("--prevent-large-text-files", "True");
+            jobParameters.Add("prevent-large-text-files", "x");
         }
 
         return RunParameters.CreateJobParams(jobParameters);
