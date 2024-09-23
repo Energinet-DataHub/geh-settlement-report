@@ -61,7 +61,7 @@ internal sealed class SettlementReportOrchestration
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        foreach (var fileRequest in orderedResults.AsParallel().WithDegreeOfParallelism(5))
+        await Parallel.ForEachAsync(orderedResults, new ParallelOptions { MaxDegreeOfParallelism = 5 }, async (fileRequest, token) =>
         {
             var result = await context
                 .CallActivityAsync<GeneratedSettlementReportFileDto>(
@@ -75,7 +75,7 @@ internal sealed class SettlementReportOrchestration
             {
                 OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
             });
-        }
+        });
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
             nameof(GatherSettlementReportFilesActivity),
