@@ -27,6 +27,8 @@ namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Fun
 
 internal sealed class SettlementReportOrchestration
 {
+    private const int MaxQueuedItems = 5;
+
     [Function(nameof(OrchestrateSettlementReport))]
     public async Task<string> OrchestrateSettlementReport(
          [OrchestrationTrigger] TaskOrchestrationContext context,
@@ -55,27 +57,39 @@ internal sealed class SettlementReportOrchestration
 
         context.SetCustomStatus(new OrchestrateSettlementReportMetadata { OrchestrationProgress = 10 });
 
-        var generatedFiles = new ConcurrentBag<GeneratedSettlementReportFileDto>();
+        var generatedFiles = new List<GeneratedSettlementReportFileDto>();
         var orderedResults = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        await Parallel.ForEachAsync(orderedResults, new ParallelOptions { MaxDegreeOfParallelism = 5 }, async (fileRequest, token) =>
+        var processingQueue = new ConcurrentQueue<SettlementReportFileRequestDto>(orderedResults);
+        var tasks = new List<Task<GeneratedSettlementReportFileDto>>();
+
+        while (processingQueue.Count > 0)
         {
-            var result = await context
-                .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                    nameof(GenerateSettlementReportFileActivity),
-                    new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                    dataSourceExceptionHandler);
+            while (tasks.Count < MaxQueuedItems && processingQueue.TryDequeue(out var item))
+            {
+                var fileRequestTask = context
+                    .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                        nameof(GenerateSettlementReportFileActivity),
+                        new GenerateSettlementReportFileInput(item, settlementReportRequest.ActorInfo),
+                        dataSourceExceptionHandler);
 
-            generatedFiles.Add(result);
+                tasks.Add(fileRequestTask);
+            }
 
+            var completedTask = await Task.WhenAny(tasks);
+            tasks.Remove(completedTask);
+            generatedFiles.Add(await completedTask);
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
                 OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
             });
-        });
+            tasks.Remove(completedTask);
+        }
+
+        await Task.WhenAll(tasks);
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
             nameof(GatherSettlementReportFilesActivity),
