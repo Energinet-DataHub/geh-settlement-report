@@ -36,7 +36,7 @@ public sealed class SettlementReportFileRequestHandler : ISettlementReportFileRe
     {
         var fileGenerator = _fileGeneratorFactory.Create(fileRequest.FileContent);
 
-        var resultingFileName = GenerateFilename(fileRequest) + fileGenerator.FileExtension;
+        var resultingFileName = GenerateFilename(fileRequest, actorInfo) + fileGenerator.FileExtension;
         var storageFileName = $"{fileRequest.PartialFileInfo.FileName}_{fileRequest.PartialFileInfo.FileOffset}_{fileRequest.PartialFileInfo.ChunkOffset}{fileGenerator.FileExtension}";
 
         var writeStream = await _fileRepository
@@ -65,13 +65,22 @@ public sealed class SettlementReportFileRequestHandler : ISettlementReportFileRe
             storageFileName);
     }
 
-    private static string GenerateFilename(SettlementReportFileRequestDto fileRequest)
+    private static string GenerateFilename(SettlementReportFileRequestDto fileRequest, SettlementReportRequestedByActor actorInfo)
     {
         var filename = $"{fileRequest.PartialFileInfo.FileName}";
 
+        if (actorInfo.MarketRole == MarketRole.GridAccessProvider && !string.IsNullOrWhiteSpace(actorInfo.ChargeOwnerId))
+        {
+            filename += $"_{actorInfo.ChargeOwnerId}";
+        }
+        else if (actorInfo.MarketRole == MarketRole.EnergySupplier && !string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
+        {
+            filename += $"_{fileRequest.RequestFilter.EnergySupplier}";
+        }
+
         if (!string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
         {
-            filename += $"_{fileRequest.RequestFilter.EnergySupplier}_DDQ";
+            filename += $"_DDQ";
         }
         else
         {

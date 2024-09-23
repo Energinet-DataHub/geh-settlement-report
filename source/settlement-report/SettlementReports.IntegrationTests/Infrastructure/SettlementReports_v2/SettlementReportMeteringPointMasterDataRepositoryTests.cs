@@ -21,9 +21,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Xunit;
 
 namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
@@ -69,6 +67,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.WholesaleFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         Assert.Equal(2, actual);
@@ -97,6 +96,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.WholesaleFixing,
                 "8597670583196",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         Assert.Equal(1, actual);
@@ -125,6 +125,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.WholesaleFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         actual.Should().Be(2);
@@ -153,6 +154,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.WholesaleFixing,
                 "8397670583196",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         Assert.Equal(0, actual);
@@ -195,6 +197,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         Assert.Equal(2, actual);
@@ -238,6 +241,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 "8297670583197",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         Assert.Equal(2, actual);
@@ -278,6 +282,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             0,
             5,
             int.MaxValue).ToListAsync();
@@ -325,6 +330,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         var actual = await Sut.GetAsync(
@@ -340,6 +346,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             1,
             int.MaxValue).ToListAsync();
@@ -357,6 +364,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             2,
             1,
             int.MaxValue).ToListAsync();
@@ -408,6 +416,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 "8297670583196",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
         var actual = await Sut.GetAsync(
@@ -423,6 +432,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 "8297670583196",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             0,
             1,
             int.MaxValue).ToListAsync();
@@ -440,6 +450,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.BalanceFixing,
                 "8297670583196",
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             1,
             1,
             int.MaxValue).ToListAsync();
@@ -475,6 +486,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
                 CalculationType.WholesaleFixing,
                 null,
                 "da-DK"),
+            new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             skip: 2,
             take: 1,
             int.MaxValue).ToListAsync();

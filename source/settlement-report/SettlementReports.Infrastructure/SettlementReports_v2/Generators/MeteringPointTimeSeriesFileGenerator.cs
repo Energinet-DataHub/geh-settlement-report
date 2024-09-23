@@ -39,7 +39,7 @@ public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFile
 
     public async Task<int> CountChunksAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
     {
-        var count = await _dataSource.CountAsync(filter, maximumCalculationVersion, _resolution).ConfigureAwait(false);
+        var count = await _dataSource.CountAsync(filter, actorInfo, maximumCalculationVersion, _resolution).ConfigureAwait(false);
         return (int)Math.Ceiling(count / (double)ChunkSize);
     }
 
