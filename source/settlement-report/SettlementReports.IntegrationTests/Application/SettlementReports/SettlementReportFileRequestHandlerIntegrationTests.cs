@@ -22,6 +22,8 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Sta
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using NodaTime;
@@ -58,7 +60,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
         Fixture.Inject(mockedOptions);
 
         var sqlWarehouseQueryExecutor = _databricksSqlStatementApiFixture.GetDatabricksExecutor();
-        var databricksContext = new SettlementReportDatabricksContext(mockedOptions.Object, sqlWarehouseQueryExecutor);
+        var databricksContext = new SettlementReportDatabricksContext(mockedOptions.Object, sqlWarehouseQueryExecutor, NullLoggerFactory.Instance);
 
         var settlementReportDataRepository = new SettlementReportEnergyResultRepository(databricksContext);
         var settlementReportWholesaleRepository = new SettlementReportWholesaleRepository(databricksContext);
@@ -66,23 +68,28 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
 
         var settlementReportMeteringPointMasterDataRepository = new SettlementReportMeteringPointMasterDataRepository(new SettlementReportDatabricksContext(
             mockedOptions.Object,
-            sqlWarehouseQueryExecutor));
+            sqlWarehouseQueryExecutor,
+            NullLoggerFactory.Instance));
 
         var settlementReportMeteringPointTimeSeriesResultRepository = new SettlementReportMeteringPointTimeSeriesResultRepository(new SettlementReportDatabricksContext(
             mockedOptions.Object,
-            sqlWarehouseQueryExecutor));
+            sqlWarehouseQueryExecutor,
+            NullLoggerFactory.Instance));
 
         var settlementReportMonthlyAmountRepository = new SettlementReportMonthlyAmountRepository(new SettlementReportDatabricksContext(
             mockedOptions.Object,
-            sqlWarehouseQueryExecutor));
+            sqlWarehouseQueryExecutor,
+            NullLoggerFactory.Instance));
 
         var settlementReportChargePriceRepository = new SettlementReportChargePriceRepository(new SettlementReportDatabricksContext(
             mockedOptions.Object,
-            sqlWarehouseQueryExecutor));
+            sqlWarehouseQueryExecutor,
+            NullLoggerFactory.Instance));
 
         var settlementReportMonthlyAmountTotalRepository = new SettlementReportMonthlyAmountTotalRepository(new SettlementReportDatabricksContext(
             mockedOptions.Object,
-            sqlWarehouseQueryExecutor));
+            sqlWarehouseQueryExecutor,
+            NullLoggerFactory.Instance));
 
         Fixture.Inject<ISettlementReportFileGeneratorFactory>(new SettlementReportFileGeneratorFactory(
             settlementReportDataRepository,
