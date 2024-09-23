@@ -92,15 +92,15 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("split-report-by-grid-area",  null!);
+            jobParameters.Add("split-report-by-grid-area",  "true");
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("prevent-large-text-files", null!);
+            jobParameters.Add("prevent-large-text-files", "true");
         }
 
-        return RunParameters.CreateJobParams(jobParameters);
+        return RunParameters.CreatePythonNamedParams(jobParameters);
     }
 
     private static string MapMarketRole(MarketRole marketRole)
