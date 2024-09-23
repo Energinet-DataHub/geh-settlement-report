@@ -19,10 +19,15 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public interface ISettlementReportMeteringPointTimeSeriesResultRepository
 {
-    Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution);
+    Task<int> CountAsync(
+        SettlementReportRequestFilterDto filter,
+        SettlementReportRequestedByActor actorInfo,
+        long maximumCalculationVersion,
+        Resolution resolution);
 
     IAsyncEnumerable<SettlementReportMeteringPointTimeSeriesResultRow> GetAsync(
         SettlementReportRequestFilterDto filter,
+        SettlementReportRequestedByActor actorInfo,
         long maximumCalculationVersion,
         Resolution resolution,
         int skip,

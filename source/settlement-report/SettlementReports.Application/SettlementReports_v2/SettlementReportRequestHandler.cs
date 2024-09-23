@@ -53,6 +53,11 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
             _ => throw new InvalidOperationException($"Cannot generate report for calculation type {reportRequest.Filter.CalculationType}."),
         };
 
+        if (actorInfo.MarketRole == MarketRole.SystemOperator)
+        {
+            filesInReport = [.. filesInReport.Where(file => file.Content != SettlementReportFileContent.EnergyResult)];
+        }
+
         if (reportRequest.IncludeBasisData)
         {
             filesInReport =

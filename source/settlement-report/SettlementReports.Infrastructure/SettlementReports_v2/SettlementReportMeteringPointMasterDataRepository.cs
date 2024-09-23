@@ -32,28 +32,37 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion)
+    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
     {
         return Task.FromResult<int>(1);
     }
 
-    public async IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, int skip, int take, long maximumCalculationVersion)
+    public async IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take, long maximumCalculationVersion)
     {
         var view = ApplyFilter(_settlementReportDatabricksContext.SettlementReportMeteringPointMasterDataView, filter);
         var query = filter.CalculationType == CalculationType.BalanceFixing
             ? filter.EnergySupplier is not null
-                ? GetForBalanceFixingPerEnergySupplier(skip, take, view,  ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion))
+                ? GetForBalanceFixingPerEnergySupplier(skip, take, view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerEnergySupplierGridAreaView, filter, maximumCalculationVersion))
                 : GetForBalanceFixing(view, ApplyFilter(_settlementReportDatabricksContext.EnergyResultPointsPerGridAreaView, filter, maximumCalculationVersion))
-            : GetForNonBalanceFixing(view);
+            : GetForNonBalanceFixing(view, actorInfo);
 
         await foreach (var row in query.AsAsyncEnumerable().ConfigureAwait(false))
         {
+            var rowGridAreaFromCode = row.GridAreaFromCode;
+            var rowGridAreaToCode = row.GridAreaToCode;
+
+            if (actorInfo.MarketRole == MarketRole.SystemOperator)
+            {
+                rowGridAreaFromCode = null;
+                rowGridAreaToCode = null;
+            }
+
             yield return new SettlementReportMeteringPointMasterDataRow(
                 row.MeteringPointId,
                 MeteringPointTypeMapper.FromDeltaTableValue(row.MeteringPointType),
                 row.GridAreaCode,
-                row.GridAreaFromCode,
-                row.GridAreaToCode,
+                rowGridAreaFromCode,
+                rowGridAreaToCode,
                 SettlementMethodMapper.FromDeltaTableValue(row.SettlementMethod),
                 row.EnergySupplierId,
                 row.FromDate,
@@ -61,8 +70,18 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
         }
     }
 
-    private static IQueryable<SettlementReportMeteringPointMasterDataViewEntity> GetForNonBalanceFixing(IQueryable<SettlementReportMeteringPointMasterDataViewEntity> view)
+    private IQueryable<SettlementReportMeteringPointMasterDataViewEntity> GetForNonBalanceFixing(IQueryable<SettlementReportMeteringPointMasterDataViewEntity> view, SettlementReportRequestedByActor actorInfo)
     {
+        if (actorInfo.MarketRole == MarketRole.SystemOperator)
+        {
+            var systemOperatorMeteringPoints = GetSystemOperatorMeteringPoints(actorInfo);
+            view = view.Join(
+                systemOperatorMeteringPoints,
+                outer => outer.MeteringPointId,
+                inner => inner,
+                (outer, _) => outer);
+        }
+
         return view;
     }
 
@@ -90,8 +109,8 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
             .Distinct();
 
         var query = (from m in view
-                   join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
-                   select m)
+                     join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
+                     select m)
             .Distinct()
             .OrderBy(row => row.MeteringPointId);
 
@@ -124,8 +143,8 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
             .Distinct();
 
         var query = (from m in view
-                join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
-                select m)
+                     join l in latestCalcIdForMetering on m.CalculationId equals l.CalculationId
+                     select m)
             .Distinct()
             .OrderBy(row => row.MeteringPointId);
 
@@ -194,5 +213,14 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
         }
 
         return source;
+    }
+
+    private IQueryable<string> GetSystemOperatorMeteringPoints(SettlementReportRequestedByActor actorInfo)
+    {
+        return _settlementReportDatabricksContext
+            .ChargeLinkPeriodsView
+            .Where(row => row.IsTax == false && row.ChargeOwnerId == actorInfo.ChargeOwnerId)
+            .Select(row => row.MeteringPointId)
+            .Distinct();
     }
 }
