@@ -18,7 +18,7 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public interface ISettlementReportMeteringPointMasterDataRepository
 {
-    Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion);
+    Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion);
 
-    IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, int skip, int take, long maximumCalculationVersion);
+    IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take, long maximumCalculationVersion);
 }

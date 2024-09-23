@@ -64,6 +64,7 @@ app.UseUserMiddlewareForWebApp<FrontendUser>();
 app.MapControllers().RequireAuthorization();
 app.MapLiveHealthChecks();
 app.MapReadyHealthChecks();
+app.MapStatusHealthChecks();
 app.UseRevisionLogIntegrationWebApiModule();
 
 app.Run();

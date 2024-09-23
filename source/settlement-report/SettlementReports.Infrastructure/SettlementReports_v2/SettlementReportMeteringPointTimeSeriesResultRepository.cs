@@ -35,12 +35,22 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
         _settlementReportDatabricksContext = settlementReportDatabricksContext;
     }
 
-    public Task<int> CountAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution)
+    public Task<int> CountAsync(
+        SettlementReportRequestFilterDto filter,
+        SettlementReportRequestedByActor actorInfo,
+        long maximumCalculationVersion,
+        Resolution resolution)
     {
         return Task.FromResult(1);
     }
 
-    public async IAsyncEnumerable<SettlementReportMeteringPointTimeSeriesResultRow> GetAsync(SettlementReportRequestFilterDto filter, long maximumCalculationVersion, Resolution resolution, int skip, int take)
+    public async IAsyncEnumerable<SettlementReportMeteringPointTimeSeriesResultRow> GetAsync(
+        SettlementReportRequestFilterDto filter,
+        SettlementReportRequestedByActor actorInfo,
+        long maximumCalculationVersion,
+        Resolution resolution,
+        int skip,
+        int take)
     {
         IAsyncEnumerable<AggregatedByDay> rows;
 
@@ -51,6 +61,16 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
         else
         {
             var view = ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution);
+
+            if (actorInfo.MarketRole == MarketRole.SystemOperator)
+            {
+                var systemOperatorMeteringPoints = GetSystemOperatorMeteringPoints(actorInfo);
+                view = view.Join(
+                    systemOperatorMeteringPoints,
+                    outer => outer.MeteringPointId,
+                    inner => inner,
+                    (outer, _) => outer);
+            }
 
             var (_, calculationId) = filter.GridAreas.Single();
             view = view.Where(row => row.CalculationId == calculationId!.Id);
@@ -180,6 +200,15 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
         }
 
         return source;
+    }
+
+    private IQueryable<string> GetSystemOperatorMeteringPoints(SettlementReportRequestedByActor actorInfo)
+    {
+        return _settlementReportDatabricksContext
+            .ChargeLinkPeriodsView
+            .Where(row => row.IsTax == false && row.ChargeOwnerId == actorInfo.ChargeOwnerId)
+            .Select(row => row.MeteringPointId)
+            .Distinct();
     }
 
     private sealed class AggregatedByDay
