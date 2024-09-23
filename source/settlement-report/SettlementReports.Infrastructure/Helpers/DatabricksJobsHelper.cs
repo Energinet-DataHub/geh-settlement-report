@@ -83,9 +83,8 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             { "period-start", request.Filter.PeriodStart.ToInstant().ToString() },
             { "period-end", request.Filter.PeriodEnd.ToInstant().ToString() },
             { "market-role", MapMarketRole(marketRole) },
-            { "split-report-by-grid-area", request.SplitReportPerGridArea.ToString() },
-            { "prevent-large-text-files", request.PreventLargeTextFiles.ToString() },
         };
+
         if (request.Filter.EnergySupplier != null)
         {
             jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier ?? string.Empty);
