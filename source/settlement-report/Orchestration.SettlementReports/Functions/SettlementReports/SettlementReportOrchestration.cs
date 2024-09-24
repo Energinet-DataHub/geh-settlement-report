@@ -57,7 +57,7 @@ internal sealed class SettlementReportOrchestration
 
         context.SetCustomStatus(new OrchestrateSettlementReportMetadata { OrchestrationProgress = 10 });
 
-        var generatedFiles = new List<GeneratedSettlementReportFileDto>();
+        var generatedFiles = new ConcurrentBag<GeneratedSettlementReportFileDto>();
         var orderedResults = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
@@ -67,7 +67,16 @@ internal sealed class SettlementReportOrchestration
             .CallActivityAsync<GeneratedSettlementReportFileDto>(
                 nameof(GenerateSettlementReportFileActivity),
                 new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                dataSourceExceptionHandler));
+                dataSourceExceptionHandler).ContinueWith(
+                async x =>
+                {
+                    generatedFiles.Add(await x);
+                    context.SetCustomStatus(new OrchestrateSettlementReportMetadata
+                    {
+                        OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                    });
+                },
+                TaskContinuationOptions.ExecuteSynchronously));
 
         await Task.WhenAll(fileRequestTasks);
 

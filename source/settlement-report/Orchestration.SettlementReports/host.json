@@ -12,9 +12,6 @@
         "isEnabled": true,
         "excludedTypes": "Request"
       },
-      "logLevel": {
-        "default": "Information"
-      },
       "enableLiveMetricsFilters": true
     }
   }
