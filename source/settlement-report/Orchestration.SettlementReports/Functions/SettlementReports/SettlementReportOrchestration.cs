@@ -55,7 +55,7 @@ internal sealed class SettlementReportOrchestration
 
         context.SetCustomStatus(new OrchestrateSettlementReportMetadata { OrchestrationProgress = 10 });
 
-        var generatedFiles = new ConcurrentBag<GeneratedSettlementReportFileDto>();
+        var generatedFiles = new List<GeneratedSettlementReportFileDto>();
         var orderedResults = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
