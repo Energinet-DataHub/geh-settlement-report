@@ -65,7 +65,16 @@ internal sealed class SettlementReportOrchestration
             .CallActivityAsync<GeneratedSettlementReportFileDto>(
                 nameof(GenerateSettlementReportFileActivity),
                 new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                dataSourceExceptionHandler));
+                dataSourceExceptionHandler).ContinueWith(
+                async x =>
+                {
+                    generatedFiles.Add(await x);
+                    context.SetCustomStatus(new OrchestrateSettlementReportMetadata
+                    {
+                        OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                    });
+                },
+                TaskContinuationOptions.ExecuteSynchronously));
 
         await Task.WhenAll(fileRequestTasks);
 
