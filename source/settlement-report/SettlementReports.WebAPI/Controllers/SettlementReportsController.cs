@@ -115,7 +115,7 @@ public class SettlementReportsController
         return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("download")]
     [Authorize]
     [Produces("application/octet-stream")]
