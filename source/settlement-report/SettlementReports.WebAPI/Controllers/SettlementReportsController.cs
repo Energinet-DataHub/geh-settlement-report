@@ -54,7 +54,23 @@ public class SettlementReportsController
     [EnableRevision(activityName: "RequestSettlementReportAPI", entityType: typeof(SettlementReportRequestDto))]
     public async Task<ActionResult<long>> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
-        if (_userContext.CurrentUser.Actor.MarketRole == FrontendActorMarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
+        var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
+        {
+            FrontendActorMarketRole.Other => MarketRole.Other,
+            FrontendActorMarketRole.GridAccessProvider => MarketRole.GridAccessProvider,
+            FrontendActorMarketRole.EnergySupplier => MarketRole.EnergySupplier,
+            FrontendActorMarketRole.SystemOperator => MarketRole.SystemOperator,
+            FrontendActorMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
+            _ => throw new ArgumentOutOfRangeException(nameof(_userContext.CurrentUser.Actor.MarketRole)),
+        };
+
+        if (_userContext.CurrentUser is { MultiTenancy: true, Actor.MarketRole: FrontendActorMarketRole.DataHubAdministrator } &&
+            settlementReportRequest.MarketRoleOverride.HasValue)
+        {
+            marketRole = settlementReportRequest.MarketRoleOverride.Value;
+        }
+
+        if (marketRole == MarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
         {
             settlementReportRequest = settlementReportRequest with
             {
@@ -65,7 +81,7 @@ public class SettlementReportsController
             };
         }
 
-        if (!IsValid(settlementReportRequest))
+        if (!IsValid(settlementReportRequest, marketRole))
         {
             return Forbid();
         }
@@ -75,16 +91,6 @@ public class SettlementReportsController
             if (settlementReportRequest.Filter.GridAreas.Any(kv => kv.Value is null))
                 return BadRequest();
         }
-
-        var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
-        {
-            FrontendActorMarketRole.Other => MarketRole.Other,
-            FrontendActorMarketRole.GridAccessProvider => MarketRole.GridAccessProvider,
-            FrontendActorMarketRole.EnergySupplier => MarketRole.EnergySupplier,
-            FrontendActorMarketRole.SystemOperator => MarketRole.SystemOperator,
-            FrontendActorMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
-            _ => throw new ArgumentOutOfRangeException(nameof(_userContext.CurrentUser.Actor.MarketRole)),
-        };
 
         var chargeOwnerId = marketRole is MarketRole.GridAccessProvider or MarketRole.SystemOperator
             ? _userContext.CurrentUser.Actor.ActorNumber
@@ -142,16 +148,14 @@ public class SettlementReportsController
         }
     }
 
-    private bool IsValid(SettlementReportRequestDto req)
+    private bool IsValid(SettlementReportRequestDto req, MarketRole marketRole)
     {
         if (_userContext.CurrentUser.MultiTenancy)
         {
             return true;
         }
 
-        var marketRole = _userContext.CurrentUser.Actor.MarketRole;
-
-        if (marketRole == FrontendActorMarketRole.GridAccessProvider)
+        if (marketRole == MarketRole.GridAccessProvider)
         {
             if (!string.IsNullOrWhiteSpace(req.Filter.EnergySupplier))
             {
@@ -161,12 +165,12 @@ public class SettlementReportsController
             return req.Filter.GridAreas.All(x => _userContext.CurrentUser.Actor.GridAreas.Contains(x.Key));
         }
 
-        if (marketRole == FrontendActorMarketRole.EnergySupplier)
+        if (marketRole == MarketRole.EnergySupplier)
         {
             return req.Filter.EnergySupplier == _userContext.CurrentUser.Actor.ActorNumber;
         }
 
-        if (marketRole == FrontendActorMarketRole.SystemOperator &&
+        if (marketRole == MarketRole.SystemOperator &&
             req.Filter.CalculationType != CalculationType.BalanceFixing &&
             req.Filter.CalculationType != CalculationType.Aggregation)
         {
