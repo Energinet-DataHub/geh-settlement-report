@@ -63,33 +63,20 @@ internal sealed class SettlementReportOrchestration
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        var processingQueue = new ConcurrentQueue<SettlementReportFileRequestDto>(orderedResults);
-        var tasks = new List<Task<GeneratedSettlementReportFileDto>>();
-
-        while (processingQueue.Count > 0)
-        {
-            while (tasks.Count < MaxQueuedItems && processingQueue.TryDequeue(out var item))
+        var fileRequestTasks = orderedResults.Select(fileRequest => context
+            .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                nameof(GenerateSettlementReportFileActivity),
+                new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
+                dataSourceExceptionHandler).ContinueWith(async x =>
             {
-                var fileRequestTask = context
-                    .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                        nameof(GenerateSettlementReportFileActivity),
-                        new GenerateSettlementReportFileInput(item, settlementReportRequest.ActorInfo),
-                        dataSourceExceptionHandler);
+                generatedFiles.Add(await x);
+                context.SetCustomStatus(new OrchestrateSettlementReportMetadata
+                {
+                    OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                });
+            }));
 
-                tasks.Add(fileRequestTask);
-            }
-
-            var completedTask = await Task.WhenAny(tasks);
-            tasks.Remove(completedTask);
-            generatedFiles.Add(await completedTask);
-            context.SetCustomStatus(new OrchestrateSettlementReportMetadata
-            {
-                OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
-            });
-            tasks.Remove(completedTask);
-        }
-
-        await Task.WhenAll(tasks);
+        await Task.WhenAll(fileRequestTasks);
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
             nameof(GatherSettlementReportFilesActivity),
