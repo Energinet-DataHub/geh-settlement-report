@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Concurrent;
 using Azure;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Exceptions;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -54,27 +55,28 @@ internal sealed class SettlementReportOrchestration
 
         context.SetCustomStatus(new OrchestrateSettlementReportMetadata { OrchestrationProgress = 10 });
 
-        var generatedFiles = new List<GeneratedSettlementReportFileDto>();
+        var generatedFiles = new ConcurrentBag<GeneratedSettlementReportFileDto>();
         var orderedResults = scatterResults
             .OrderBy(x => x.PartialFileInfo.FileOffset)
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        foreach (var scatterChunk in orderedResults.Chunk(3))
-        {
-            var fileRequestTasks = scatterChunk.Select(fileRequest => context
-                .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                    nameof(GenerateSettlementReportFileActivity),
-                    new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                    dataSourceExceptionHandler));
+        var fileRequestTasks = orderedResults.Select(fileRequest => context
+            .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                nameof(GenerateSettlementReportFileActivity),
+                new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
+                dataSourceExceptionHandler).ContinueWith(
+                async x =>
+                {
+                    generatedFiles.Add(await x);
+                    context.SetCustomStatus(new OrchestrateSettlementReportMetadata
+                    {
+                        OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                    });
+                },
+                TaskContinuationOptions.ExecuteSynchronously));
 
-            generatedFiles.AddRange(await Task.WhenAll(fileRequestTasks));
-
-            context.SetCustomStatus(new OrchestrateSettlementReportMetadata
-            {
-                OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
-            });
-        }
+        await Task.WhenAll(fileRequestTasks);
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
             nameof(GatherSettlementReportFilesActivity),
