@@ -34,7 +34,7 @@ public sealed class SettlementReportMeteringPointMasterDataRepository : ISettlem
 
     public Task<int> CountAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, long maximumCalculationVersion)
     {
-        return Task.FromResult<int>(1);
+        return Task.FromResult(1);
     }
 
     public async IAsyncEnumerable<SettlementReportMeteringPointMasterDataRow> GetAsync(SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo, int skip, int take, long maximumCalculationVersion)
