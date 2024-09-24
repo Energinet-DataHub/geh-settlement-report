@@ -121,13 +121,13 @@ public class SettlementReportsController
         return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
-    [HttpGet]
+    [HttpPost]
     [Route("download")]
     [Authorize]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
     [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
-    public async Task<ActionResult> DownloadFileAsync(SettlementReportRequestId requestId)
+    public async Task<ActionResult> DownloadFileAsync([FromBody]SettlementReportRequestId requestId)
     {
         try
         {
@@ -140,7 +140,7 @@ public class SettlementReportsController
                     _userContext.CurrentUser.MultiTenancy)
                 .ConfigureAwait(false);
 
-            return File(stream.GetBuffer(), MediaTypeNames.Application.Zip);
+            return File(stream.GetBuffer(), MediaTypeNames.Application.Octet);
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
         {
