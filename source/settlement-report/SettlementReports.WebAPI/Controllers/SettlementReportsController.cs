@@ -134,7 +134,7 @@ public class SettlementReportsController
                     _userContext.CurrentUser.MultiTenancy)
                 .ConfigureAwait(false);
 
-            return File(stream.GetBuffer(), MediaTypeNames.Application.Zip);
+            return File(stream.GetBuffer(), MediaTypeNames.Application.Octet);
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
         {
