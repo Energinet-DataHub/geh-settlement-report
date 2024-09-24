@@ -51,36 +51,40 @@ public sealed class MeteringPointMasterDataFileGenerator : CsvFileGeneratorBase<
     {
         public SettlementReportMeteringPointMasterDataRowMap(SettlementReportRequestedByActor actorInfo)
         {
+            var columnIndex = 0;
             Map(r => r.MeteringPointId)
                 .Name("METERINGPOINTID")
-                .Index(0);
+                .Index(columnIndex++);
 
             Map(r => r.PeriodStart)
                 .Name("VALIDFROM")
-                .Index(1);
+                .Index(columnIndex++);
 
             Map(r => r.PeriodEnd)
                 .Name("VALIDTO")
-                .Index(2);
+                .Index(columnIndex++);
 
             Map(r => r.GridAreaId)
                 .Name("GRIDAREAID")
-                .Index(3)
+                .Index(columnIndex++)
                 .Convert(row => row.Value.GridAreaId.PadLeft(3, '0'));
 
-            Map(r => r.GridAreaToId)
-                .Name("TOGRIDAREAID")
-                .Index(4)
-                .Convert(row => row.Value.GridAreaToId?.PadLeft(3, '0'));
+            if (actorInfo.MarketRole is not MarketRole.EnergySupplier)
+            {
+                Map(r => r.GridAreaToId)
+                    .Name("TOGRIDAREAID")
+                    .Index(columnIndex++)
+                    .Convert(row => row.Value.GridAreaToId?.PadLeft(3, '0'));
 
-            Map(r => r.GridAreaFromId)
-                .Name("FROMGRIDAREAID")
-                .Index(5)
-                .Convert(row => row.Value.GridAreaFromId?.PadLeft(3, '0'));
+                Map(r => r.GridAreaFromId)
+                    .Name("FROMGRIDAREAID")
+                    .Index(columnIndex++)
+                    .Convert(row => row.Value.GridAreaFromId?.PadLeft(3, '0'));
+            }
 
             Map(r => r.MeteringPointType)
                 .Name("TYPEOFMP")
-                .Index(6)
+                .Index(columnIndex++)
                 .Convert(row => row.Value.MeteringPointType switch
                 {
                     null => string.Empty,
@@ -104,7 +108,7 @@ public sealed class MeteringPointMasterDataFileGenerator : CsvFileGeneratorBase<
 
             Map(r => r.SettlementMethod)
                 .Name("SETTLEMENTMETHOD")
-                .Index(7)
+                .Index(columnIndex++)
                 .Convert(row => row.Value.SettlementMethod switch
                 {
                     null => string.Empty,
@@ -117,7 +121,7 @@ public sealed class MeteringPointMasterDataFileGenerator : CsvFileGeneratorBase<
             {
                 Map(r => r.EnergySupplierId)
                     .Name("ENERGYSUPPLIERID")
-                    .Index(8);
+                    .Index(columnIndex++);
             }
         }
     }
