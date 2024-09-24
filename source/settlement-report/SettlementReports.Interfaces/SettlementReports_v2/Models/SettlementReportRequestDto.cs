@@ -19,4 +19,5 @@ public sealed record SettlementReportRequestDto(
     bool PreventLargeTextFiles,
     bool IncludeBasisData,
     bool IncludeMonthlyAmount,
-    SettlementReportRequestFilterDto Filter);
+    SettlementReportRequestFilterDto Filter,
+    MarketRole? MarketRoleOverride);
