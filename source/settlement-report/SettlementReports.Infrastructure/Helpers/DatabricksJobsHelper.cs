@@ -92,12 +92,12 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("split-report-by-grid-area", string.Empty);
+            jobParameters.Add("split-report-by-grid-area", request.SplitReportPerGridArea.ToString());
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("prevent-large-text-files", string.Empty);
+            jobParameters.Add("prevent-large-text-files", request.PreventLargeTextFiles.ToString());
         }
 
         return RunParameters.CreateJobParams(jobParameters);
