@@ -35,10 +35,11 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
     public async Task<JobRunId> RunSettlementReportsJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        SettlementReportRequestId reportId)
+        SettlementReportRequestId reportId,
+        string actorGln)
     {
         var job = await GetSettlementReportsJobAsync(GetJobName(request.Filter.CalculationType)).ConfigureAwait(false);
-        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportId)).ConfigureAwait(false));
+        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportId, actorGln)).ConfigureAwait(false));
     }
 
     public async Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId)
@@ -71,36 +72,36 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         return await _jobsApiClient.Jobs.Get(settlementJob.JobId).ConfigureAwait(false);
     }
 
-    private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, SettlementReportRequestId reportId)
+    private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, SettlementReportRequestId reportId, string actorGln)
     {
         var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"\"{c.Key}\": \"{(c.Value is null ? string.Empty : c.Value?.Id)}\""))}}}";
 
-        var jobParameters = new Dictionary<string, string>()
+        var jobParameters = new List<string>
         {
-            { "report-id", reportId.Id },
-            { "calculation-type", CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType) },
-            { "calculation-id-by-grid-area", gridAreas },
-            { "period-start", request.Filter.PeriodStart.ToInstant().ToString() },
-            { "period-end", request.Filter.PeriodEnd.ToInstant().ToString() },
-            { "market-role", MapMarketRole(marketRole) },
+            $"--report-id={reportId.Id}",
+            $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
+            $"--calculation-id-by-grid-area={gridAreas}",
+            $"--period-start={request.Filter.PeriodStart.ToInstant()}",
+            $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
+            $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
+            $"--requesting-actor-id={actorGln}",
         };
-
         if (request.Filter.EnergySupplier != null)
         {
-            jobParameters.Add("energy-supplier-id", request.Filter.EnergySupplier);
+            jobParameters.Add($"--energy-supplier-id={request.Filter.EnergySupplier}");
         }
 
         if (request.SplitReportPerGridArea)
         {
-            jobParameters.Add("split-report-by-grid-area", request.SplitReportPerGridArea.ToString());
+            jobParameters.Add("--split-report-by-grid-area");
         }
 
         if (request.PreventLargeTextFiles)
         {
-            jobParameters.Add("prevent-large-text-files", request.PreventLargeTextFiles.ToString());
+            jobParameters.Add("--prevent-large-text-files");
         }
 
-        return RunParameters.CreateJobParams(jobParameters);
+        return RunParameters.CreatePythonParams(jobParameters);
     }
 
     private static string MapMarketRole(MarketRole marketRole)
