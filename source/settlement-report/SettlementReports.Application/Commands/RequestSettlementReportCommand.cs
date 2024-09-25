@@ -21,5 +21,5 @@ public sealed record RequestSettlementReportCommand(
     Guid UserId,
     Guid ActorId,
     bool IsFas,
-    string? ChargeOwnerId,
+    string ActorGln,
     MarketRole MarketRole);
