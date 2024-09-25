@@ -92,16 +92,12 @@ public class SettlementReportsController
                 return BadRequest();
         }
 
-        var chargeOwnerId = marketRole is MarketRole.GridAccessProvider or MarketRole.SystemOperator
-            ? _userContext.CurrentUser.Actor.ActorNumber
-            : null;
-
         var requestCommand = new RequestSettlementReportCommand(
             settlementReportRequest,
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
             _userContext.CurrentUser.MultiTenancy,
-            chargeOwnerId,
+            _userContext.CurrentUser.Actor.ActorNumber,
             marketRole);
 
         var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
