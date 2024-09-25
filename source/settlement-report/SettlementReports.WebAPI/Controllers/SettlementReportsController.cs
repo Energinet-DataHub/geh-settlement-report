@@ -54,6 +54,7 @@ public class SettlementReportsController
     [EnableRevision(activityName: "RequestSettlementReportAPI", entityType: typeof(SettlementReportRequestDto))]
     public async Task<ActionResult<long>> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
+        var actorNumber = _userContext.CurrentUser.Actor.ActorNumber;
         var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
         {
             FrontendActorMarketRole.Other => MarketRole.Other,
@@ -65,9 +66,10 @@ public class SettlementReportsController
         };
 
         if (_userContext.CurrentUser is { MultiTenancy: true, Actor.MarketRole: FrontendActorMarketRole.DataHubAdministrator } &&
-            settlementReportRequest.MarketRoleOverride.HasValue)
+            settlementReportRequest is { MarketRoleOverride: not null, ActorNumberOverride: not null })
         {
             marketRole = settlementReportRequest.MarketRoleOverride.Value;
+            actorNumber = settlementReportRequest.ActorNumberOverride;
         }
 
         if (marketRole == MarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
@@ -97,7 +99,7 @@ public class SettlementReportsController
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
             _userContext.CurrentUser.MultiTenancy,
-            _userContext.CurrentUser.Actor.ActorNumber,
+            actorNumber,
             marketRole);
 
         var result = await _requestSettlementReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
