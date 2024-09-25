@@ -21,7 +21,8 @@ public interface IDatabricksJobsHelper
     Task<JobRunId> RunSettlementReportsJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        SettlementReportRequestId reportId);
+        SettlementReportRequestId reportId,
+        string actorGln);
 
     Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId);
 }
