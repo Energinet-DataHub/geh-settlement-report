@@ -20,4 +20,5 @@ public sealed record SettlementReportRequestDto(
     bool IncludeBasisData,
     bool IncludeMonthlyAmount,
     SettlementReportRequestFilterDto Filter,
+    string? ActorNumberOverride = null,
     MarketRole? MarketRoleOverride = null);
