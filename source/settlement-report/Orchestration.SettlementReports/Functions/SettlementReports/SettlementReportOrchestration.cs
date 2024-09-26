@@ -110,7 +110,8 @@ internal sealed class SettlementReportOrchestration
         // 1) From SQL.
         // 2) From BlobStorage.
         if (retryContext.LastFailure.ErrorType.Contains("SqlException") ||
-            retryContext.LastFailure.ErrorType == typeof(RequestFailedException).FullName)
+            retryContext.LastFailure.ErrorType == typeof(RequestFailedException).FullName ||
+            retryContext.LastFailure.ErrorType == typeof(OperationCanceledException).FullName)
         {
             return retryContext.LastAttemptNumber <= 2;
         }
