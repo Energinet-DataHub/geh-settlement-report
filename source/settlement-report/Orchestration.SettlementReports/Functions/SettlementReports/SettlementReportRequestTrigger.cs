@@ -64,6 +64,7 @@ internal sealed class SettlementReportRequestTrigger
                     payload: System.Text.Json.JsonSerializer.Serialize(settlementReportRequest)))
             .ConfigureAwait(false);
 
+        var actorNumber = _userContext.CurrentUser.Actor.ActorNumber;
         var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
         {
             FrontendActorMarketRole.Other => MarketRole.Other,
@@ -75,9 +76,10 @@ internal sealed class SettlementReportRequestTrigger
         };
 
         if (_userContext.CurrentUser is { MultiTenancy: true, Actor.MarketRole: FrontendActorMarketRole.DataHubAdministrator } &&
-            settlementReportRequest.MarketRoleOverride.HasValue)
+            settlementReportRequest is { MarketRoleOverride: not null, ActorNumberOverride: not null })
         {
             marketRole = settlementReportRequest.MarketRoleOverride.Value;
+            actorNumber = settlementReportRequest.ActorNumberOverride;
         }
 
         if (marketRole == MarketRole.EnergySupplier && string.IsNullOrWhiteSpace(settlementReportRequest.Filter.EnergySupplier))
@@ -103,7 +105,7 @@ internal sealed class SettlementReportRequestTrigger
         }
 
         var chargeOwnerId = marketRole is MarketRole.GridAccessProvider or MarketRole.SystemOperator
-            ? _userContext.CurrentUser.Actor.ActorNumber
+            ? actorNumber
             : null;
 
         var actorInfo = new SettlementReportRequestedByActor(marketRole, chargeOwnerId);
