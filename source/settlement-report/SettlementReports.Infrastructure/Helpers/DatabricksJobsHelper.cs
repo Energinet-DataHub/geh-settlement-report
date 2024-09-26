@@ -84,7 +84,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
-            $"--requesting-actor-id={actorGln}",
+            $"--requesting-actor-id={request.ActorNumberOverride ?? actorGln}",
         };
         if (request.Filter.EnergySupplier != null)
         {
