@@ -76,7 +76,7 @@ internal sealed class SettlementReportOrchestration
                         OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
                     });
                 },
-                TaskContinuationOptions.ExecuteSynchronously));
+                TaskContinuationOptions.ExecuteSynchronously & TaskContinuationOptions.NotOnFaulted));
 
         await Task.WhenAll(fileRequestTasks);
 
