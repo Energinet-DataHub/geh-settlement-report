@@ -74,13 +74,17 @@ internal sealed class SettlementReportOrchestration
         while (requestsHandled < fileRequestTasks.Count)
         {
             // Wait for one of the tasks to complete
-            var doneTask = await Task.WhenAny(fileRequestTasks);
+            var doneTask = await Task.WhenAny(fileRequestTasks.Where(x => IsActive(x.Status)));
             generatedFiles.Add(doneTask.Result);
-            context.SetCustomStatus(new OrchestrateSettlementReportMetadata
-            {
-                OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
-            });
             requestsHandled++;
+
+            if (!context.IsReplaying)
+            {
+                context.SetCustomStatus(new OrchestrateSettlementReportMetadata
+                {
+                    OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+                });
+            }
         }
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
@@ -120,5 +124,21 @@ internal sealed class SettlementReportOrchestration
         }
 
         return false;
+    }
+
+    private static bool IsActive(TaskStatus taskStatus)
+    {
+        return taskStatus switch
+        {
+            TaskStatus.Created => true,
+            TaskStatus.WaitingForActivation => true,
+            TaskStatus.WaitingToRun =>true,
+            TaskStatus.Running => true,
+            TaskStatus.WaitingForChildrenToComplete => true,
+            TaskStatus.RanToCompletion => false,
+            TaskStatus.Canceled => false,
+            TaskStatus.Faulted => false,
+            _ => throw new NotImplementedException(),
+        };
     }
 }
