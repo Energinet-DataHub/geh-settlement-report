@@ -68,15 +68,11 @@ internal sealed class SettlementReportOrchestration
                 new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
                 dataSourceExceptionHandler)).ToList();
 
-        var requestsHandled = 0;
-
-        while (requestsHandled < fileRequestTasks.Count)
+        while (fileRequestTasks.Count != 0)
         {
-            // Wait for one of the tasks to complete
-            var doneTask = await Task.WhenAny(fileRequestTasks.Where(x => IsActive(x.Status)));
+            var doneTask = await Task.WhenAny(fileRequestTasks);
             generatedFiles.Add(doneTask.Result);
-            requestsHandled++;
-
+            fileRequestTasks.Remove(doneTask);
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
                 OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
