@@ -77,13 +77,10 @@ internal sealed class SettlementReportOrchestration
             generatedFiles.Add(doneTask.Result);
             requestsHandled++;
 
-            if (!context.IsReplaying)
+            context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
-                context.SetCustomStatus(new OrchestrateSettlementReportMetadata
-                {
-                    OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
-                });
-            }
+                OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
+            });
         }
 
         var generatedSettlementReport = await context.CallActivityAsync<GeneratedSettlementReportDto>(
