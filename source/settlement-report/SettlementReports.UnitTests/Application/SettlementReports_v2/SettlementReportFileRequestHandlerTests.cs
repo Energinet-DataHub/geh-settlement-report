@@ -161,6 +161,6 @@ public class SettlementReportFileRequestHandlerTests
         var resultedFileName = resultGeneratedSettlementReportFile.FileInfo.FileName;
 
         // Assert
-        Assert.Contains($"{_fileName}_DDM_{_startDate:dd-MM-yyyy}", resultedFileName);
+        Assert.Contains($"{_fileName}_{_startDate:dd-MM-yyyy}", resultedFileName);
     }
 }

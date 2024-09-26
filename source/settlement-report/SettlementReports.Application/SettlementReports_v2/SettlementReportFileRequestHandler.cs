@@ -71,20 +71,11 @@ public sealed class SettlementReportFileRequestHandler : ISettlementReportFileRe
 
         if (actorInfo.MarketRole == MarketRole.GridAccessProvider && !string.IsNullOrWhiteSpace(actorInfo.ChargeOwnerId))
         {
-            filename += $"_{actorInfo.ChargeOwnerId}";
+            filename += $"_{actorInfo.ChargeOwnerId}_DDM";
         }
         else if (actorInfo.MarketRole == MarketRole.EnergySupplier && !string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
         {
-            filename += $"_{fileRequest.RequestFilter.EnergySupplier}";
-        }
-
-        if (!string.IsNullOrWhiteSpace(fileRequest.RequestFilter.EnergySupplier))
-        {
-            filename += $"_DDQ";
-        }
-        else
-        {
-            filename += "_DDM";
+            filename += $"_{fileRequest.RequestFilter.EnergySupplier}_DDQ";
         }
 
         var convertedStart = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(fileRequest.RequestFilter.PeriodStart, "Romance Standard Time");
