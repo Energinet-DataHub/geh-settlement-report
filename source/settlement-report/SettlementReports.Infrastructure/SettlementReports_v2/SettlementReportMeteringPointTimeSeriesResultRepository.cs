@@ -47,8 +47,19 @@ public sealed class SettlementReportMeteringPointTimeSeriesResultRepository : IS
         }
 
         var (_, calculationId) = filter.GridAreas.Single();
+        var view = ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution);
 
-        return ApplyFilter(_settlementReportDatabricksContext.MeteringPointTimeSeriesView, filter, resolution)
+        if (actorInfo.MarketRole == MarketRole.SystemOperator)
+        {
+            var systemOperatorMeteringPoints = GetSystemOperatorMeteringPoints(actorInfo);
+            view = view.Join(
+                systemOperatorMeteringPoints,
+                outer => outer.MeteringPointId,
+                inner => inner,
+                (outer, _) => outer);
+        }
+
+        return view
             .Where(row => row.CalculationId == calculationId!.Id)
             .Select(row => row.MeteringPointId)
             .Distinct()

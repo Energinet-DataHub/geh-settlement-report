@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Concurrent;
 using Azure;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Exceptions;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
