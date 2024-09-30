@@ -124,17 +124,15 @@ public class SettlementReportsController
     [Route("download")]
     [Authorize]
     [Produces("application/octet-stream")]
-    [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
     public async Task<ActionResult> DownloadFileAsync([FromBody]SettlementReportRequestId requestId)
     {
         try
         {
-            var stream = new MemoryStream();
-            await _downloadHandler
+            var stream = await _downloadHandler
                 .DownloadReportAsync(
                     requestId,
-                    () => stream,
                     _userContext.CurrentUser.Actor.ActorId,
                     _userContext.CurrentUser.MultiTenancy)
                 .ConfigureAwait(false);

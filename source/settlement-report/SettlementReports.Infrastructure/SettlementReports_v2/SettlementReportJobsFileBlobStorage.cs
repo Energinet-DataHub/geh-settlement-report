@@ -26,11 +26,11 @@ public sealed class SettlementReportJobsFileBlobStorage : ISettlementReportJobsF
         _blobContainerClient = blobContainerClient;
     }
 
-    public async Task DownloadAsync(string fileName, Stream downloadStream)
+    public async Task<Stream> DownloadAsync(string fileName)
     {
         var blobName = GetBlobName(fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
+        return await blobClient.OpenReadAsync().ConfigureAwait(false);
     }
 
     private static string GetBlobName(string fileName)
