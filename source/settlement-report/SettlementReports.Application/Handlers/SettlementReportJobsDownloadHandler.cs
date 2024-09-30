@@ -30,9 +30,8 @@ public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsD
         _repository = repository;
     }
 
-    public async Task DownloadReportAsync(
+    public async Task<Stream> DownloadReportAsync(
         SettlementReportRequestId requestId,
-        Func<Stream> outputStreamProvider,
         Guid actorId,
         bool isMultitenancy)
     {
@@ -48,8 +47,8 @@ public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsD
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a Blob file name.");
 
-        await _fileRepository
-            .DownloadAsync(report.BlobFileName, outputStreamProvider())
+        return await _fileRepository
+            .DownloadAsync(report.BlobFileName)
             .ConfigureAwait(false);
     }
 }

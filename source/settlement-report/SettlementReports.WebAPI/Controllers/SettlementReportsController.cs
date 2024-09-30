@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net;
 using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
@@ -123,22 +124,20 @@ public class SettlementReportsController
     [Route("download")]
     [Authorize]
     [Produces("application/octet-stream")]
-    [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
     public async Task<ActionResult> DownloadFileAsync([FromBody]SettlementReportRequestId requestId)
     {
         try
         {
-            var stream = new MemoryStream();
-            await _downloadHandler
+            var stream = await _downloadHandler
                 .DownloadReportAsync(
                     requestId,
-                    () => stream,
                     _userContext.CurrentUser.Actor.ActorId,
                     _userContext.CurrentUser.MultiTenancy)
                 .ConfigureAwait(false);
 
-            return File(stream.GetBuffer(), MediaTypeNames.Application.Octet);
+            return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
         {
