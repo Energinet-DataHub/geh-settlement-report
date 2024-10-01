@@ -16,5 +16,5 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public interface ISettlementReportJobsFileRepository
 {
-    Task DownloadAsync(string blobFileName, Stream downloadStream);
+    Task<Stream> DownloadAsync(string blobFileName);
 }
