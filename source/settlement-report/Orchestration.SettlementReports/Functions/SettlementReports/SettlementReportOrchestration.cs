@@ -26,6 +26,8 @@ namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Fun
 
 internal sealed class SettlementReportOrchestration
 {
+    private const int MaxQueuedItems = 5;
+
     [Function(nameof(OrchestrateSettlementReport))]
     public async Task<string> OrchestrateSettlementReport(
          [OrchestrationTrigger] TaskOrchestrationContext context,
@@ -60,16 +62,17 @@ internal sealed class SettlementReportOrchestration
             .ThenBy(x => x.PartialFileInfo.ChunkOffset)
             .ToList();
 
-        foreach (var scatterChunk in orderedResults.Chunk(3))
+        var fileRequestTasks = orderedResults.Select(fileRequest => context
+            .CallActivityAsync<GeneratedSettlementReportFileDto>(
+                nameof(GenerateSettlementReportFileActivity),
+                new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
+                dataSourceExceptionHandler)).ToList();
+
+        while (fileRequestTasks.Count != 0)
         {
-            var fileRequestTasks = scatterChunk.Select(fileRequest => context
-                .CallActivityAsync<GeneratedSettlementReportFileDto>(
-                    nameof(GenerateSettlementReportFileActivity),
-                    new GenerateSettlementReportFileInput(fileRequest, settlementReportRequest.ActorInfo),
-                    dataSourceExceptionHandler));
-
-            generatedFiles.AddRange(await Task.WhenAll(fileRequestTasks));
-
+            var doneTask = await Task.WhenAny(fileRequestTasks);
+            generatedFiles.Add(await doneTask);
+            fileRequestTasks.Remove(doneTask);
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
                 OrchestrationProgress = (80.0 * generatedFiles.Count / orderedResults.Count) + 10,
@@ -106,7 +109,8 @@ internal sealed class SettlementReportOrchestration
         // 1) From SQL.
         // 2) From BlobStorage.
         if (retryContext.LastFailure.ErrorType.Contains("SqlException") ||
-            retryContext.LastFailure.ErrorType == typeof(RequestFailedException).FullName)
+            retryContext.LastFailure.ErrorType == typeof(RequestFailedException).FullName ||
+            retryContext.LastFailure.ErrorType == typeof(OperationCanceledException).FullName)
         {
             return retryContext.LastAttemptNumber <= 2;
         }
