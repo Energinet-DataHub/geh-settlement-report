@@ -117,20 +117,4 @@ internal sealed class SettlementReportOrchestration
 
         return false;
     }
-
-    private static bool IsActive(TaskStatus taskStatus)
-    {
-        return taskStatus switch
-        {
-            TaskStatus.Created => true,
-            TaskStatus.WaitingForActivation => true,
-            TaskStatus.WaitingToRun =>true,
-            TaskStatus.Running => true,
-            TaskStatus.WaitingForChildrenToComplete => true,
-            TaskStatus.RanToCompletion => false,
-            TaskStatus.Canceled => false,
-            TaskStatus.Faulted => false,
-            _ => throw new NotImplementedException(),
-        };
-    }
 }
