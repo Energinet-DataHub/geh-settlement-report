@@ -71,7 +71,7 @@ internal sealed class SettlementReportOrchestration
         while (fileRequestTasks.Count != 0)
         {
             var doneTask = await Task.WhenAny(fileRequestTasks);
-            generatedFiles.Add(doneTask.Result);
+            generatedFiles.Add(await doneTask);
             fileRequestTasks.Remove(doneTask);
             context.SetCustomStatus(new OrchestrateSettlementReportMetadata
             {
