@@ -51,7 +51,7 @@ public class DeltaTableOptions
 
     public string ENERGY_RESULTS_POINTS_PER_ES_GA_V1_VIEW_NAME { get; set; } = "energy_per_es_v1";
 
-    public string ENERGY_RESULTS_METERING_POINT_TIME_SERIES_V1_VIEW_NAME { get; set; } = "metering_point_time_series_v3";
+    public string ENERGY_RESULTS_METERING_POINT_TIME_SERIES_V1_VIEW_NAME { get; set; } = "metering_point_time_series_v1";
 
     public string CHARGE_LINK_PERIODS_V1_VIEW_NAME { get; set; } = "charge_link_periods_v1";
 
