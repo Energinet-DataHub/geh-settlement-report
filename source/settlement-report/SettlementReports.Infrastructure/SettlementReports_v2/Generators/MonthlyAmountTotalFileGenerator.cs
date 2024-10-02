@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using CsvHelper;
 using CsvHelper.Configuration;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
@@ -42,9 +43,14 @@ public sealed class MonthlyAmountTotalFileGenerator : CsvFileGeneratorBase<Settl
         return _dataSource.GetAsync(filter, actorInfo, skipChunks, takeChunks);
     }
 
-    public sealed class SettlementReportMonthlyAmountRowMap : ClassMap<SettlementReportMonthlyAmountRow>
+    protected override void RegisterClassMap(CsvWriter csvHelper, SettlementReportRequestFilterDto filter, SettlementReportRequestedByActor actorInfo)
     {
-        public SettlementReportMonthlyAmountRowMap()
+        csvHelper.Context.RegisterClassMap(new SettlementReportTotalMonthlyAmountRowMap(actorInfo));
+    }
+
+    public sealed class SettlementReportTotalMonthlyAmountRowMap : ClassMap<SettlementReportMonthlyAmountRow>
+    {
+        public SettlementReportTotalMonthlyAmountRowMap(SettlementReportRequestedByActor actorInfo)
         {
             Map(r => r.EnergyBusinessProcess)
                 .Name("ENERGYBUSINESSPROCESS")
@@ -118,9 +124,12 @@ public sealed class MonthlyAmountTotalFileGenerator : CsvFileGeneratorBase<Settl
                 .Name("CHARGEID")
                 .Index(10);
 
-            Map(r => r.ChargeOwnerId)
-                .Name("CHARGEOWNER")
-                .Index(11);
+            if (actorInfo.MarketRole is not MarketRole.SystemOperator)
+            {
+                Map(r => r.ChargeOwnerId)
+                    .Name("CHARGEOWNER")
+                    .Index(11);
+            }
         }
     }
 }
