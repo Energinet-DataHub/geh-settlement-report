@@ -124,12 +124,12 @@ public sealed class MonthlyAmountTotalFileGenerator : CsvFileGeneratorBase<Settl
                 .Name("CHARGEID")
                 .Index(10);
 
-            if (actorInfo.MarketRole is not MarketRole.SystemOperator)
-            {
-                Map(r => r.ChargeOwnerId)
-                    .Name("CHARGEOWNER")
-                    .Index(11);
-            }
+            Map(r => r.ChargeOwnerId)
+                .Name("CHARGEOWNER")
+                .Index(11)
+                .Convert(row => actorInfo.MarketRole is not MarketRole.SystemOperator
+                    ? row.Value.ChargeOwnerId
+                    : string.Empty);
         }
     }
 }
