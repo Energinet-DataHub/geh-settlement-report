@@ -75,7 +75,10 @@ public sealed class MonthlyAmountFileGenerator : CsvFileGeneratorBase<Settlement
                     Resolution.Hour => "PT1H",
                     Resolution.Day => "P1D",
                     Resolution.Month => "P1M",
-                    _ => throw new ArgumentOutOfRangeException(nameof(row.Value.Resolution)),
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(row.Value.Resolution),
+                        row.Value.Resolution,
+                        "Value does not contain a enum representation of a Resolution"),
                 });
 
             Map(r => r.QuantityUnit)
@@ -86,7 +89,10 @@ public sealed class MonthlyAmountFileGenerator : CsvFileGeneratorBase<Settlement
                     null => string.Empty,
                     QuantityUnit.Kwh => "KWH",
                     QuantityUnit.Pieces => "PCS",
-                    _ => throw new ArgumentOutOfRangeException(nameof(row.Value.QuantityUnit)),
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(row.Value.QuantityUnit),
+                        row.Value.QuantityUnit,
+                        string.Empty),
                 });
 
             Map(r => r.Currency)
@@ -95,7 +101,10 @@ public sealed class MonthlyAmountFileGenerator : CsvFileGeneratorBase<Settlement
                 .Convert(row => row.Value.Currency switch
                 {
                     Currency.DKK => "DKK",
-                    _ => throw new ArgumentOutOfRangeException(nameof(row.Value.Currency)),
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(row.Value.Currency),
+                        row.Value.Currency,
+                        "Value does not contain a enum representation of a Currency"),
                 });
 
             Map(r => r.Amount)
@@ -112,7 +121,10 @@ public sealed class MonthlyAmountFileGenerator : CsvFileGeneratorBase<Settlement
                     ChargeType.Tariff => "D03",
                     ChargeType.Fee => "D02",
                     ChargeType.Subscription => "D01",
-                    _ => throw new ArgumentOutOfRangeException(nameof(row.Value.ChargeType)),
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(row.Value.ChargeType),
+                        row.Value.ChargeType,
+                        "Value does not contain a enum representation of a ChargeType"),
                 });
 
             Map(r => r.ChargeCode)
