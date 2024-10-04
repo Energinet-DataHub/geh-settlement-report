@@ -99,40 +99,43 @@ internal sealed class SettlementReportListHttpTrigger
         {
             var updatedReport = settlementReport;
 
-            var instanceInfo = await durableTaskClient
-                .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
-                .ConfigureAwait(false);
-
-            if (instanceInfo == null)
+            if (settlementReport.Status == SettlementReportStatus.InProgress && settlementReport.JobId == null)
             {
-                // If the orchestration instance is not found, we assume it is running on the other orchestration,
-                // either the heavy or the light one
-                continue;
-            }
+                var instanceInfo = await durableTaskClient
+                    .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
+                    .ConfigureAwait(false);
 
-            if (settlementReport.Status == SettlementReportStatus.InProgress)
-            {
-                if (instanceInfo.RuntimeStatus
-                    is OrchestrationRuntimeStatus.Terminated
-                    or OrchestrationRuntimeStatus.Failed)
+                if (instanceInfo == null)
                 {
-                    await _updateFailedSettlementReportsHandler
-                        .UpdateFailedReportAsync(settlementReport.RequestId)
-                        .ConfigureAwait(false);
-
-                    updatedReport = settlementReport with { Status = SettlementReportStatus.Failed };
+                    // If the orchestration instance is not found, we assume it is running on the other orchestration,
+                    // either the heavy or the light one
+                    continue;
                 }
-                else
+
+                if (settlementReport.Status == SettlementReportStatus.InProgress)
                 {
-                    var customStatus = instanceInfo.ReadCustomStatusAs<OrchestrateSettlementReportMetadata>();
-                    if (customStatus != null)
+                    if (instanceInfo.RuntimeStatus
+                        is OrchestrationRuntimeStatus.Terminated
+                        or OrchestrationRuntimeStatus.Failed)
                     {
-                        updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
+                        await _updateFailedSettlementReportsHandler
+                            .UpdateFailedReportAsync(settlementReport.RequestId)
+                            .ConfigureAwait(false);
+
+                        updatedReport = settlementReport with { Status = SettlementReportStatus.Failed };
+                    }
+                    else
+                    {
+                        var customStatus = instanceInfo.ReadCustomStatusAs<OrchestrateSettlementReportMetadata>();
+                        if (customStatus != null)
+                        {
+                            updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
+                        }
                     }
                 }
-            }
 
-            finalSettlementReports.Add(updatedReport);
+                finalSettlementReports.Add(updatedReport);
+            }
         }
 
         return finalSettlementReports;
