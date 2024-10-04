@@ -130,9 +130,9 @@ internal sealed class SettlementReportListHttpTrigger
                         updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
                     }
                 }
-
-                finalSettlementReports.Add(updatedReport);
             }
+
+            finalSettlementReports.Add(updatedReport);
         }
 
         return finalSettlementReports;
