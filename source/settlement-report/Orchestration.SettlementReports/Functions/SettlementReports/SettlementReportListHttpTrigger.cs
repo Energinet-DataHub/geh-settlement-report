@@ -112,25 +112,22 @@ internal sealed class SettlementReportListHttpTrigger
                     continue;
                 }
 
-                if (settlementReport.Status == SettlementReportStatus.InProgress)
+                if (instanceInfo.RuntimeStatus
+                    is OrchestrationRuntimeStatus.Terminated
+                    or OrchestrationRuntimeStatus.Failed)
                 {
-                    if (instanceInfo.RuntimeStatus
-                        is OrchestrationRuntimeStatus.Terminated
-                        or OrchestrationRuntimeStatus.Failed)
-                    {
-                        await _updateFailedSettlementReportsHandler
-                            .UpdateFailedReportAsync(settlementReport.RequestId)
-                            .ConfigureAwait(false);
+                    await _updateFailedSettlementReportsHandler
+                        .UpdateFailedReportAsync(settlementReport.RequestId)
+                        .ConfigureAwait(false);
 
-                        updatedReport = settlementReport with { Status = SettlementReportStatus.Failed };
-                    }
-                    else
+                    updatedReport = settlementReport with { Status = SettlementReportStatus.Failed };
+                }
+                else
+                {
+                    var customStatus = instanceInfo.ReadCustomStatusAs<OrchestrateSettlementReportMetadata>();
+                    if (customStatus != null)
                     {
-                        var customStatus = instanceInfo.ReadCustomStatusAs<OrchestrateSettlementReportMetadata>();
-                        if (customStatus != null)
-                        {
-                            updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
-                        }
+                        updatedReport = updatedReport with { Progress = customStatus.OrchestrationProgress };
                     }
                 }
 
