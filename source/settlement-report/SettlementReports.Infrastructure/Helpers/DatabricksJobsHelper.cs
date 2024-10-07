@@ -88,7 +88,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         };
         if (request.Filter.EnergySupplier != null)
         {
-            jobParameters.Add($"--energy-supplier-id={request.Filter.EnergySupplier}");
+            jobParameters.Add($"--energy-supplier-ids=[{request.Filter.EnergySupplier}]");
         }
 
         if (request.SplitReportPerGridArea)
