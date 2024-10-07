@@ -99,19 +99,19 @@ internal sealed class SettlementReportListHttpTrigger
         {
             var updatedReport = settlementReport;
 
-            var instanceInfo = await durableTaskClient
-                .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
-                .ConfigureAwait(false);
-
-            if (instanceInfo == null)
+            if (settlementReport.Status == SettlementReportStatus.InProgress && settlementReport.JobId == null)
             {
-                // If the orchestration instance is not found, we assume it is running on the other orchestration,
-                // either the heavy or the light one
-                continue;
-            }
+                var instanceInfo = await durableTaskClient
+                    .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
+                    .ConfigureAwait(false);
 
-            if (settlementReport.Status == SettlementReportStatus.InProgress)
-            {
+                if (instanceInfo == null)
+                {
+                    // If the orchestration instance is not found, we assume it is running on the other orchestration,
+                    // either the heavy or the light one
+                    continue;
+                }
+
                 if (instanceInfo.RuntimeStatus
                     is OrchestrationRuntimeStatus.Terminated
                     or OrchestrationRuntimeStatus.Failed)
