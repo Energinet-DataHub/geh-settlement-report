@@ -79,7 +79,7 @@ public class SettlementReportsController
             {
                 Filter = settlementReportRequest.Filter with
                 {
-                    EnergySupplier = _userContext.CurrentUser.Actor.ActorNumber,
+                    EnergySupplier = actorNumber,
                 },
             };
         }
