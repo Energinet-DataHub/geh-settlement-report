@@ -88,7 +88,7 @@ internal sealed class SettlementReportRequestTrigger
             {
                 Filter = settlementReportRequest.Filter with
                 {
-                    EnergySupplier = _userContext.CurrentUser.Actor.ActorNumber,
+                    EnergySupplier = actorNumber,
                 },
             };
         }
