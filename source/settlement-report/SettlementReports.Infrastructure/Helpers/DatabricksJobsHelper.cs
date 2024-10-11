@@ -101,6 +101,11 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             jobParameters.Add("--prevent-large-text-files");
         }
 
+        if (request.IncludeBasisData)
+        {
+            jobParameters.Add("--include-basis-data");
+        }
+
         return RunParameters.CreatePythonParams(jobParameters);
     }
 
