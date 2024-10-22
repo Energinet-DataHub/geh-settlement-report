@@ -80,12 +80,16 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         {
             $"--report-id={reportId.Id}",
             $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
-            $"--calculation-id-by-grid-area={gridAreas}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
             $"--requesting-actor-id={request.ActorNumberOverride ?? actorGln}",
         };
+
+        jobParameters.Add(request.Filter.CalculationType == CalculationType.BalanceFixing
+            ? $"--grid_area_codes={gridAreas}"
+            : $"--calculation-id-by-grid-area=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]");
+
         if (request.Filter.EnergySupplier != null)
         {
             jobParameters.Add($"--energy-supplier-ids=[{request.Filter.EnergySupplier}]");
