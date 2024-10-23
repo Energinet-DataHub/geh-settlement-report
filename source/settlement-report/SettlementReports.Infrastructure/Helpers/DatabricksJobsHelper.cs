@@ -87,8 +87,8 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         };
 
         jobParameters.Add(request.Filter.CalculationType == CalculationType.BalanceFixing
-            ? $"--grid_area_codes={gridAreas}"
-            : $"--calculation-id-by-grid-area=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]");
+            ? $"--grid_area_codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
+            : $"--calculation-id-by-grid-area={gridAreas}");
 
         if (request.Filter.EnergySupplier != null)
         {
