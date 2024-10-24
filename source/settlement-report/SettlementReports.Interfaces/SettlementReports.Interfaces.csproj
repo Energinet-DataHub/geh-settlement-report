@@ -4,7 +4,7 @@
     <RootNamespace>Energinet.DataHub.SettlementReport.Interfaces</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NodaTime" Version="3.1.12" />
+    <PackageReference Include="NodaTime" Version="3.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
