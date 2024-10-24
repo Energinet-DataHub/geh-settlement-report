@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="11.2.4" />
     <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.5.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
