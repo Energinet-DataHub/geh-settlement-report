@@ -58,6 +58,8 @@ public sealed class SettlementReport
 
     public long? JobId { get; init; }
 
+    public bool IsNotficationSent { get; private set; }
+
     public SettlementReport(
         IClock clock,
         Guid userId,
@@ -80,6 +82,7 @@ public sealed class SettlementReport
         SplitReportPerGridArea = request.SplitReportPerGridArea;
         IncludeMonthlyAmount = request.IncludeMonthlyAmount;
         GridAreas = JsonSerializer.Serialize(request.Filter.GridAreas);
+        IsNotficationSent = false;
     }
 
     public SettlementReport(
@@ -106,6 +109,7 @@ public sealed class SettlementReport
         SplitReportPerGridArea = request.SplitReportPerGridArea;
         IncludeMonthlyAmount = request.IncludeMonthlyAmount;
         GridAreas = JsonSerializer.Serialize(request.Filter.GridAreas);
+        IsNotficationSent = false;
     }
 
     // EF Core Constructor.
@@ -131,5 +135,10 @@ public sealed class SettlementReport
     public void MarkAsFailed()
     {
         Status = SettlementReportStatus.Failed;
+    }
+
+    public void MarkAsNotificationSent()
+    {
+        IsNotficationSent = true;
     }
 }

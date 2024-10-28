@@ -21,6 +21,7 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Depend
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
@@ -42,10 +43,8 @@ public static class CalculationResultsExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services
-            .AddOptions<ServiceBusNamespaceOptions>()
-            .BindConfiguration(ServiceBusNamespaceOptions.SectionName)
-            .ValidateDataAnnotations();
+        services.AddOptions<IntegrationEventsOptions>().BindConfiguration(IntegrationEventsOptions.SectionName).ValidateDataAnnotations();
+        services.AddOptions<ServiceBusNamespaceOptions>().BindConfiguration(ServiceBusNamespaceOptions.SectionName).ValidateDataAnnotations();
 
         services.AddDatabricksSqlStatementForApplication(configuration);
 
@@ -74,7 +73,6 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
         services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddSettlementReportBlobStorage();
-        services.AddServiceBusClientForApplication(configuration);
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddDbContext<SettlementReportDatabaseContext>(
             options => options.UseSqlServer(
@@ -104,6 +102,9 @@ public static class CalculationResultsExtensions
 
         // Used by sql statements (queries)
         services.AddOptions<DeltaTableOptions>().Bind(configuration);
+
+        services.AddServiceBusClientForApplication(configuration);
+        services.AddIntegrationEventsPublisher<IntegrationEventProvider>(configuration);
 
         return services;
     }

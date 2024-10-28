@@ -89,4 +89,13 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ToListAsync()
             .ConfigureAwait(false);
     }
+
+    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetNeedsNotificationSent()
+    {
+        return await _context.SettlementReports
+            .Where(x => x.IsNotficationSent == false)
+            .OrderBy(x => x.EndedDateTime)
+            .ToListAsync()
+            .ConfigureAwait(false);
+    }
 }
