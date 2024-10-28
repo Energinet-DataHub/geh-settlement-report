@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Publisher;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
@@ -31,12 +32,12 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
     public async IAsyncEnumerable<IntegrationEvent> GetAsync()
     {
         var reportsForNotifications = await _settlementReportRepository
-            .GetNeedsNotificationSent()
+            .GetNeedsNotificationSentForCompletedAndFailed()
             .ConfigureAwait(false);
 
         foreach (var reportForNotification in reportsForNotifications)
         {
-            yield return await CreateAsync(reportForNotification).ConfigureAwait(false);
+            yield return await CreateAsync(reportForNotification, reportForNotification.Status).ConfigureAwait(false);
 
             reportForNotification.MarkAsNotificationSent();
 
@@ -45,7 +46,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
         }
     }
 
-    private Task<IntegrationEvent> CreateAsync(Application.SettlementReports_v2.SettlementReport reportForNotification)
+    private Task<IntegrationEvent> CreateAsync(Application.SettlementReports_v2.SettlementReport reportForNotification, SettlementReportStatus status)
     {
         ArgumentNullException.ThrowIfNull(reportForNotification);
 
@@ -57,7 +58,12 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
             Contracts.UserNotificationTriggered.CurrentMinorVersion,
             new Contracts.UserNotificationTriggered
             {
-                ReasonIdentifier = "SettlementReportFinished",
+                ReasonIdentifier = status switch
+                {
+                    SettlementReportStatus.Completed => "SettlementReportCompleted",
+                    SettlementReportStatus.Failed => "SettlementReportFailed",
+                    _ => throw new InvalidOperationException("Sending notification for settlement report with status other than Completed or Failed is not supported"),
+                },
                 TargetActorId = reportForNotification.ActorId.ToString(),
                 RelatedId = reportForNotification.Id.ToString(),
                 OccurredAt = now.ToTimestamp(),
