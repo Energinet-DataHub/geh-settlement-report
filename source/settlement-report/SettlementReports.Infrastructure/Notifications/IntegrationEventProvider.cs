@@ -68,7 +68,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
                 TargetUserId = reportForNotification.UserId.ToString(),
                 RelatedId = reportForNotification.Id.ToString(),
                 OccurredAt = now.ToTimestamp(),
-                ExpiresAt = now.AddHours(23).ToTimestamp(),
+                ExpiresAt = now.AddDays(6).ToTimestamp(),
             });
 
         return Task.FromResult(integrationEvent);

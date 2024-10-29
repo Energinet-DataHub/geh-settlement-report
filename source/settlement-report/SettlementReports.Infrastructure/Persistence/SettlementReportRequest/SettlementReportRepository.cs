@@ -94,7 +94,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
     public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetNeedsNotificationSentForCompletedAndFailed()
     {
         return await _context.SettlementReports
-            .Where(x => x.IsNotficationSent == false && (x.Status == SettlementReportStatus.Completed || x.Status == SettlementReportStatus.Failed))
+            .Where(x => x.IsNotificationSent == false && (x.Status == SettlementReportStatus.Completed || x.Status == SettlementReportStatus.Failed))
             .OrderBy(x => x.EndedDateTime)
             .ToListAsync()
             .ConfigureAwait(false);

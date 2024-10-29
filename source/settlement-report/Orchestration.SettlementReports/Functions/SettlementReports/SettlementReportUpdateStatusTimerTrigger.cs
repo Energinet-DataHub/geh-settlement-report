@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.Messaging.Communication.Publisher;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
@@ -20,10 +21,14 @@ namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Fun
 internal sealed class SettlementReportUpdateStatusTimerTrigger
 {
     private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
+    private readonly IPublisher _publisher;
 
-    public SettlementReportUpdateStatusTimerTrigger(IListSettlementReportJobsHandler listSettlementReportJobsHandler)
+    public SettlementReportUpdateStatusTimerTrigger(
+        IListSettlementReportJobsHandler listSettlementReportJobsHandler,
+        IPublisher publisher)
     {
         _listSettlementReportJobsHandler = listSettlementReportJobsHandler;
+        _publisher = publisher;
     }
 
     [Function(nameof(UpdateStatusForSettlementReports))]
@@ -32,7 +37,8 @@ internal sealed class SettlementReportUpdateStatusTimerTrigger
         FunctionContext executionContext)
     {
         // We are not interested in the result of the handler, as the handler will update the status of the settlement reports
-        // It will also handling sending Notifications to the expected recipients
+        // It will also handle sending Notifications to the expected recipients
         await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+        await _publisher.PublishAsync(executionContext.CancellationToken).ConfigureAwait(false);
     }
 }
