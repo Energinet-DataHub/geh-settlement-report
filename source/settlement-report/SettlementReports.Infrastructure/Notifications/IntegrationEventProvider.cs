@@ -60,11 +60,12 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
             {
                 ReasonIdentifier = status switch
                 {
-                    SettlementReportStatus.Completed => "SettlementReportCompleted",
+                    SettlementReportStatus.Completed => "SettlementReportReadyForDownload",
                     SettlementReportStatus.Failed => "SettlementReportFailed",
                     _ => throw new InvalidOperationException("Sending notification for settlement report with status other than Completed or Failed is not supported"),
                 },
                 TargetActorId = reportForNotification.ActorId.ToString(),
+                TargetUserId = reportForNotification.UserId.ToString(),
                 RelatedId = reportForNotification.Id.ToString(),
                 OccurredAt = now.ToTimestamp(),
                 ExpiresAt = now.AddHours(23).ToTimestamp(),
