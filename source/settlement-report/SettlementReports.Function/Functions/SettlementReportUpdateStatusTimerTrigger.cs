@@ -16,7 +16,7 @@ using Energinet.DataHub.Core.Messaging.Communication.Publisher;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
-namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports;
+namespace SettlementReports.Function.Functions;
 
 internal sealed class SettlementReportUpdateStatusTimerTrigger
 {
@@ -36,6 +36,8 @@ internal sealed class SettlementReportUpdateStatusTimerTrigger
         [TimerTrigger("0 */5 * * * *")] TimerInfo timer,
         FunctionContext executionContext)
     {
+        ArgumentNullException.ThrowIfNull(executionContext);
+
         // We are not interested in the result of the handler, as the handler will update the status of the settlement reports
         // It will also handle sending Notifications to the expected recipients
         await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
