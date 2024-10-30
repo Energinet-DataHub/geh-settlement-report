@@ -32,7 +32,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
     public async IAsyncEnumerable<IntegrationEvent> GetAsync()
     {
         var reportsForNotifications = await _settlementReportRepository
-            .GetNeedsNotificationSentForCompletedAndFailed()
+            .GetPendingNotificationsForCompletedAndFailed()
             .ConfigureAwait(false);
 
         foreach (var reportForNotification in reportsForNotifications)

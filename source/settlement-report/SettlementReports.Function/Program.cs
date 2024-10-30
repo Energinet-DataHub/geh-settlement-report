@@ -22,11 +22,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInj
 using Microsoft.Extensions.Hosting;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWebApplication(worker =>
-    {
-        // Http => Authentication
-        worker.UseUserMiddlewareForIsolatedWorker<FrontendUser>();
-    })
+    .ConfigureFunctionsWebApplication()
     .ConfigureServices((context, services) =>
     {
         // Common

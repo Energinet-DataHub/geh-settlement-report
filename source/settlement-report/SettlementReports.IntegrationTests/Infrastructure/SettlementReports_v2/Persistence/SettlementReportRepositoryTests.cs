@@ -325,7 +325,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var repository = new SettlementReportRepository(context);
 
         // act
-        var actual = (await repository.GetNeedsNotificationSentForCompletedAndFailed()).ToList();
+        var actual = (await repository.GetPendingNotificationsForCompletedAndFailed()).ToList();
 
         // assert
         Assert.Empty(actual);
@@ -348,7 +348,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
             return request;
         });
-        await PrepareNewRequestAsync(requestFilterDto =>
+        var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
         {
             var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
@@ -366,11 +366,15 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var repository = new SettlementReportRepository(context);
 
         // act
-        var actual = (await repository.GetNeedsNotificationSentForCompletedAndFailed()).ToList();
+        var actual = (await repository.GetPendingNotificationsForCompletedAndFailed()).ToList();
+        var actualSent = await repository.GetAsync(alreadySent.RequestId);
 
         // assert
         Assert.Single(actual);
+        Assert.NotNull(actualSent);
         Assert.Equal(expected.Id, actual[0].Id);
+        Assert.False(actual[0].IsNotificationSent);
+        Assert.True(actualSent.IsNotificationSent);
     }
 
     private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
