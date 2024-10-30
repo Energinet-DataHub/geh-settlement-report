@@ -61,7 +61,7 @@ runs:
           --no-restore \
           --configuration Release \
           --output '${{ inputs.output_path }}\migration\databasemigration'
-          
+
     - name: Publish Settlement Reports Functions
       shell: bash
       run: |
