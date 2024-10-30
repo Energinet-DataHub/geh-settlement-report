@@ -29,9 +29,6 @@ var host = new HostBuilder()
         services.AddApplicationInsightsForIsolatedWorker(SubsystemInformation.SubsystemName);
         services.AddHealthChecksForIsolatedWorker();
 
-        // Http => Authentication
-        services.AddUserAuthenticationForIsolatedWorker<FrontendUser, FrontendUserProvider>();
-
         // Shared by modules
         services.AddNodaTimeForApplication();
 
