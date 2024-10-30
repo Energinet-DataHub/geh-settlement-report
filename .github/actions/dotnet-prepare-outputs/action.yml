@@ -61,3 +61,13 @@ runs:
           --no-restore \
           --configuration Release \
           --output '${{ inputs.output_path }}\migration\databasemigration'
+          
+    - name: Publish Settlement Reports Functions
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\settlement-report\SettlementReports.Function\SettlementReports.Function.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.output_path }}\functions\settlement-reports'
