@@ -23,6 +23,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Databricks.Client;
 
 namespace SettlementReports.WebAPI.Controllers;
 
@@ -153,11 +154,18 @@ public class SettlementReportsController
     [EnableRevision(activityName: "CancelSettlementReportAPI")]
     public async Task<ActionResult> CancelSettlementReport([FromBody] SettlementReportRequestId requestId)
     {
-        var command = new CancelSettlementReportCommand(requestId, _userContext.CurrentUser.UserId);
+        try
+        {
+            var command = new CancelSettlementReportCommand(requestId, _userContext.CurrentUser.UserId);
 
-        await _cancelSettlementReportJobHandler.HandleAsync(command).ConfigureAwait(false);
+            await _cancelSettlementReportJobHandler.HandleAsync(command).ConfigureAwait(false);
 
-        return Ok();
+            return NoContent();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ClientApiException)
+        {
+            return BadRequest();
+        }
     }
 
     private bool IsValid(SettlementReportRequestDto req, MarketRole marketRole)

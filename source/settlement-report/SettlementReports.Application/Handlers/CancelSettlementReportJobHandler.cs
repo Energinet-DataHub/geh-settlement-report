@@ -15,29 +15,21 @@
 using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
 public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJobHandler
 {
     private readonly IDatabricksJobsHelper _jobHelper;
-    private readonly IGetSettlementReportsHandler _getSettlementReportsHandler;
     private readonly ISettlementReportRepository _repository;
-    private readonly IClock _clock;
 
     public CancelSettlementReportJobHandler(
         IDatabricksJobsHelper jobHelper,
-        IGetSettlementReportsHandler getSettlementReportsHandler,
-        ISettlementReportRepository repository,
-        IClock clock)
+        ISettlementReportRepository repository)
     {
         _jobHelper = jobHelper;
-        _getSettlementReportsHandler = getSettlementReportsHandler;
         _repository = repository;
-        _clock = clock;
     }
 
     public async Task HandleAsync(CancelSettlementReportCommand cancelSettlementReportCommand)
