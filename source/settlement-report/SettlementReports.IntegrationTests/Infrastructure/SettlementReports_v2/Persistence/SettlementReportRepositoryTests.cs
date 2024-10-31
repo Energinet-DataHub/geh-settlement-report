@@ -289,6 +289,94 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         Assert.Equal(expectedRequest.Id, actual[0].Id);
     }
 
+    [Fact]
+    public async Task GetForNotificationAsync_ReturnsNone_WhenNoneArePresent()
+    {
+        // arrange
+        var expected = await PrepareNewRequestForJobAsync(requestFilterDto =>
+        {
+            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+                SystemClock.Instance,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                false,
+                new JobRunId(Random.Shared.NextInt64()),
+                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsNotificationSent();
+            return request;
+        });
+        await PrepareNewRequestAsync(requestFilterDto =>
+        {
+            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+                SystemClock.Instance,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                false,
+                new JobRunId(Random.Shared.NextInt64()),
+                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsNotificationSent();
+            return request;
+        });
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new SettlementReportRepository(context);
+
+        // act
+        var actual = (await repository.GetPendingNotificationsForCompletedAndFailed()).ToList();
+
+        // assert
+        Assert.Empty(actual);
+    }
+
+    [Fact]
+    public async Task GetForNotificationAsync_ReturnsCorrect_WhenTheyArePresent()
+    {
+        // arrange
+        var expected = await PrepareNewRequestForJobAsync(requestFilterDto =>
+        {
+            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+                SystemClock.Instance,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                false,
+                new JobRunId(Random.Shared.NextInt64()),
+                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            return request;
+        });
+        var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
+        {
+            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+                SystemClock.Instance,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                false,
+                new JobRunId(Random.Shared.NextInt64()),
+                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsNotificationSent();
+            return request;
+        });
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new SettlementReportRepository(context);
+
+        // act
+        var actual = (await repository.GetPendingNotificationsForCompletedAndFailed()).ToList();
+        var actualSent = await repository.GetAsync(alreadySent.RequestId);
+
+        // assert
+        Assert.Single(actual);
+        Assert.NotNull(actualSent);
+        Assert.Equal(expected.Id, actual[0].Id);
+        Assert.False(actual[0].IsNotificationSent);
+        Assert.True(actualSent.IsNotificationSent);
+    }
+
     private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();

@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Interface
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.UnitTests", "source\settlement-report\SettlementReports.UnitTests\SettlementReports.UnitTests.csproj", "{AC7E764C-12EF-492A-A60D-2E284AF2D31D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Function", "source\settlement-report\SettlementReports.Function\SettlementReports.Function.csproj", "{323D0FB4-7D5C-4C44-8C52-C629766750F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8A8252D2-968E-4097-8D84-5E1A4287AB23} = {9805FFFF-9C74-4E1F-9FE8-0423C9469E33}
@@ -96,5 +102,6 @@ Global
 		{B9A8CF9A-7B62-481E-A155-DA07CD3172E9} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 		{16B95F69-FEED-4E17-9010-B97C3591CBD5} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
+		{323D0FB4-7D5C-4C44-8C52-C629766750F8} = {8A8252D2-968E-4097-8D84-5E1A4287AB23}
 	EndGlobalSection
 EndGlobal

@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using FluentAssertions.Extensions;
 using Moq;
 using Xunit;
 
@@ -359,13 +360,13 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
             { "805", new CalculationId(Guid.Parse("45B9732A-49F8-450B-AA68-ED4661879D6F")) },
         };
 
-        var offset = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time").GetUtcOffset(DateTime.UtcNow);
-        var startDate = new DateTimeOffset(2024, 1, 1, 1, 0, 0, offset).UtcDateTime;
-        var endDate = startDate.AddMonths(1);
+        var offsetStart = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time").GetUtcOffset(new DateTime(2024, 5, 1, 0, 0, 0));
+        var periodStart = new DateTimeOffset(2024, 5, 1, 0, 0, 0, offsetStart);
+        var periodEnd = periodStart.AddMonths(1);
         var filter = new SettlementReportRequestFilterDto(
             calculationFilter,
-            startDate,
-            endDate,
+            periodStart,
+            periodEnd,
             CalculationType.WholesaleFixing,
             null,
             null);
@@ -634,11 +635,13 @@ public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<Se
             { "806", new CalculationId(Guid.Parse("45B9732A-49F8-450B-AA68-ED4661879D6F")) },
         };
 
-        var offset = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time").GetUtcOffset(DateTime.UtcNow);
+        var offsetStart = TimeZoneInfo.FindSystemTimeZoneById("Romance Standard Time").GetUtcOffset(new DateTime(2024, 5, 1, 0, 0, 0));
+        var periodStart = new DateTimeOffset(2024, 5, 1, 0, 0, 0, offsetStart);
+        var periodEnd = periodStart.AddMonths(1);
         var filter = new SettlementReportRequestFilterDto(
             calculationFilter,
-            new DateTimeOffset(2024, 1, 1, 1, 0, 0, offset).UtcDateTime,
-            new DateTimeOffset(2024, 1, 1, 1, 0, 0, offset).UtcDateTime.AddMonths(1),
+            periodStart.UtcDateTime,
+            periodEnd.UtcDateTime,
             CalculationType.WholesaleFixing,
             null,
             null);

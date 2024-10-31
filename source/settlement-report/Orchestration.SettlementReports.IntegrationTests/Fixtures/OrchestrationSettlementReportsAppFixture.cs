@@ -22,6 +22,7 @@ using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
+using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.Options;
@@ -237,6 +238,11 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         appHostSettings.ProcessEnvironmentVariables.Add(
             $"RevisionLogOptions:ApiAddress",
             MockServer.Url! + "/revision-log");
+
+        // Integration events
+        appHostSettings.ProcessEnvironmentVariables.Add($"{IntegrationEventsOptions.SectionName}__{nameof(IntegrationEventsOptions.SubscriptionName)}", "fake_value");
+        appHostSettings.ProcessEnvironmentVariables.Add($"{IntegrationEventsOptions.SectionName}__{nameof(IntegrationEventsOptions.TopicName)}", "fake_value");
+        appHostSettings.ProcessEnvironmentVariables.Add($"{ServiceBusNamespaceOptions.SectionName}__{nameof(ServiceBusNamespaceOptions.FullyQualifiedNamespace)}", "fake_value");
 
         return appHostSettings;
     }

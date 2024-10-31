@@ -10,6 +10,12 @@
     <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="13.3.0" />
     <PackageReference Include="Energinet.DataHub.Core.Databricks.SqlStatementExecution" Version="11.2.4" />
     <PackageReference Include="Energinet.DataHub.Core.JsonSerialization" Version="2.2.12" />
+    <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="6.1.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.28.3" />
+    <PackageReference Include="Grpc.Tools" Version="2.67.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
@@ -21,5 +27,16 @@
   <ItemGroup>
     <ProjectReference Include="..\SettlementReports.Application\SettlementReports.Application.csproj" />
     <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Contracts/*.proto">
+      <GrpcServices>None</GrpcServices>
+      <Access>Public</Access>
+      <ProtoCompile>True</ProtoCompile>
+      <CompileOutputs>True</CompileOutputs>
+      <OutputDir>obj\contracts</OutputDir>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
   </ItemGroup>
 </Project>
