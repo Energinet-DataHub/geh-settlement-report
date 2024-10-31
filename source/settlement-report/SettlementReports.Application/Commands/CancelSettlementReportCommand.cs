@@ -14,17 +14,8 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
+namespace Energinet.DataHub.SettlementReport.Application.Commands;
 
-public interface IDatabricksJobsHelper
-{
-    Task<JobRunId> RunSettlementReportsJobAsync(
-        SettlementReportRequestDto request,
-        MarketRole marketRole,
-        SettlementReportRequestId reportId,
-        string actorGln);
-
-    Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId);
-
-    Task CancelSettlementReportJobAsync(long runId);
-}
+public sealed record CancelSettlementReportCommand(
+    SettlementReportRequestId RequestId,
+    Guid UserId);
