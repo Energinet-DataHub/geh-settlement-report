@@ -16,16 +16,19 @@ using Azure.Identity;
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
+using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -72,6 +75,8 @@ public static class CalculationResultsExtensions
         services.AddScoped<ILatestCalculationVersionRepository, LatestCalculationVersionRepository>();
         services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
         services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
+        services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
+        services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddSettlementReportBlobStorage();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddDbContext<SettlementReportDatabaseContext>(
