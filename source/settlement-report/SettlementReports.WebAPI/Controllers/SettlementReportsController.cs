@@ -34,6 +34,7 @@ public class SettlementReportsController
 {
     private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
     private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
+    private readonly IGetSettlementReportHandler _getSettlementReportHandler;
     private readonly ISettlementReportJobsDownloadHandler _downloadHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
@@ -41,12 +42,14 @@ public class SettlementReportsController
         IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
         IUserContext<FrontendUser> userContext,
         IListSettlementReportJobsHandler listSettlementReportJobsHandler,
-        ISettlementReportJobsDownloadHandler downloadHandler)
+        ISettlementReportJobsDownloadHandler downloadHandler,
+        IGetSettlementReportHandler getSettlementReportHandler)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
         _userContext = userContext;
         _listSettlementReportJobsHandler = listSettlementReportJobsHandler;
         _downloadHandler = downloadHandler;
+        _getSettlementReportHandler = getSettlementReportHandler;
     }
 
     [HttpPost]
@@ -113,6 +116,17 @@ public class SettlementReportsController
     [Authorize]
     [EnableRevision(activityName: "ListSettlementReportsAPI", entityType: typeof(RequestedSettlementReportDto))]
     public async Task<IEnumerable<RequestedSettlementReportDto>> ListSettlementReports()
+    {
+        if (_userContext.CurrentUser.MultiTenancy)
+            return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
+
+        return await _listSettlementReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+    }
+
+    [HttpGet]
+    [Authorize]
+    [EnableRevision(activityName: "GetSettlementReportsAPI", entityType: typeof(RequestedSettlementReportDto))]
+    public async Task<IEnumerable<RequestedSettlementReportDto>> GetSettlementReport([FromQuery] string reportID)
     {
         if (_userContext.CurrentUser.MultiTenancy)
             return await _listSettlementReportJobsHandler.HandleAsync().ConfigureAwait(false);
