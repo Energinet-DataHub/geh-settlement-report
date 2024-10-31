@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
@@ -86,6 +87,15 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
         return await _context.SettlementReports
             .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId != null)
             .OrderByDescending(x => x.Id)
+            .ToListAsync()
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
+    {
+        return await _context.SettlementReports
+            .Where(x => x.IsNotificationSent == false && (x.Status == SettlementReportStatus.Completed || x.Status == SettlementReportStatus.Failed))
+            .OrderBy(x => x.EndedDateTime)
             .ToListAsync()
             .ConfigureAwait(false);
     }

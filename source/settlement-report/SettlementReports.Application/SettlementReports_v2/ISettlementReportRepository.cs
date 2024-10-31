@@ -31,4 +31,6 @@ public interface ISettlementReportRepository
     Task<IEnumerable<SettlementReport>> GetForJobsAsync();
 
     Task<IEnumerable<SettlementReport>> GetForJobsAsync(Guid actorId);
+
+    Task<IEnumerable<SettlementReport>> GetPendingNotificationsForCompletedAndFailed();
 }

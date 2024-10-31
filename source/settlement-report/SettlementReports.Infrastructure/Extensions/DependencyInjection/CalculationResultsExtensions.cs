@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Azure.Identity;
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
+using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
+using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
@@ -26,6 +30,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 
@@ -37,6 +42,9 @@ public static class CalculationResultsExtensions
     public static IServiceCollection AddSettlementReportsV2Module(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services.AddOptions<IntegrationEventsOptions>().BindConfiguration(IntegrationEventsOptions.SectionName).ValidateDataAnnotations();
+        services.AddOptions<ServiceBusNamespaceOptions>().BindConfiguration(ServiceBusNamespaceOptions.SectionName).ValidateDataAnnotations();
 
         services.AddDatabricksSqlStatementForApplication(configuration);
 
@@ -65,7 +73,6 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
         services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddSettlementReportBlobStorage();
-
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddDbContext<SettlementReportDatabaseContext>(
             options => options.UseSqlServer(
@@ -84,10 +91,20 @@ public static class CalculationResultsExtensions
             (key, builder) =>
             {
                 builder.AddDbContextCheck<SettlementReportDatabaseContext>(name: key);
+                builder.AddAzureServiceBusSubscription(
+                    provider => provider.GetRequiredService<IOptions<ServiceBusNamespaceOptions>>().Value
+                        .FullyQualifiedNamespace,
+                    provider => provider.GetRequiredService<IOptions<IntegrationEventsOptions>>().Value.TopicName,
+                    provider => provider.GetRequiredService<IOptions<IntegrationEventsOptions>>().Value
+                        .SubscriptionName,
+                    _ => new DefaultAzureCredential());
             });
 
         // Used by sql statements (queries)
         services.AddOptions<DeltaTableOptions>().Bind(configuration);
+
+        services.AddServiceBusClientForApplication(configuration);
+        services.AddIntegrationEventsPublisher<IntegrationEventProvider>(configuration);
 
         return services;
     }
