@@ -132,4 +132,9 @@ public sealed class SettlementReport
     {
         Status = SettlementReportStatus.Failed;
     }
+
+    public void MarkAsCanceled()
+    {
+        Status = SettlementReportStatus.Canceled;
+    }
 }
