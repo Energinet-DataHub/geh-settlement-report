@@ -21,6 +21,7 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SettlementReports.Function.Extensions.DependencyInjection;
 using SettlementReports.WebAPI.Extensions.DependencyInjection;
 
 var host = new HostBuilder()
@@ -39,7 +40,7 @@ var host = new HostBuilder()
         services.AddRevisionLogIntegrationModule(context.Configuration);
 
         // Modules
-        services.AddSettlementReportApiModule(context.Configuration);
+        services.AddSettlementReportFunctionModule(context.Configuration);
     })
     .ConfigureLogging((hostingContext, logging) =>
     {
