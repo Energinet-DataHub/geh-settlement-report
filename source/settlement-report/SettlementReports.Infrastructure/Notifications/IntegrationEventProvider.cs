@@ -66,7 +66,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
                 },
                 TargetActorId = reportForNotification.ActorId.ToString(),
                 TargetUserId = reportForNotification.UserId.ToString(),
-                RelatedId = reportForNotification.Id.ToString(),
+                RelatedId = reportForNotification.RequestId,
                 OccurredAt = now.ToTimestamp(),
                 ExpiresAt = now.AddDays(6).ToTimestamp(),
             });
