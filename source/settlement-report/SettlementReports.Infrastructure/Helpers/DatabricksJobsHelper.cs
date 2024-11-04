@@ -48,6 +48,11 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         return ConvertJobStatus(jobRun.Item1);
     }
 
+    public Task CancelSettlementReportJobAsync(long runId)
+    {
+        return _jobsApiClient.Jobs.RunsCancel(runId);
+    }
+
     private string GetJobName(CalculationType calculationType)
     {
         return calculationType switch
@@ -137,7 +142,12 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             return JobRunStatus.Completed;
         }
 
-        if (jobRun.State.ResultState is RunResultState.FAILED or RunResultState.TIMEDOUT or RunResultState.CANCELED or RunResultState.UPSTREAM_FAILED or RunResultState.UPSTREAM_CANCELED)
+        if (jobRun.State.ResultState is RunResultState.CANCELED or RunResultState.UPSTREAM_CANCELED)
+        {
+            return JobRunStatus.Canceled;
+        }
+
+        if (jobRun.State.ResultState is RunResultState.FAILED or RunResultState.TIMEDOUT or RunResultState.UPSTREAM_FAILED)
         {
             return JobRunStatus.Failed;
         }

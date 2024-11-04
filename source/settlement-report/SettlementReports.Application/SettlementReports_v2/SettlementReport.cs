@@ -141,4 +141,9 @@ public sealed class SettlementReport
     {
         IsNotificationSent = true;
     }
+
+    public void MarkAsCanceled()
+    {
+        Status = SettlementReportStatus.Canceled;
+    }
 }

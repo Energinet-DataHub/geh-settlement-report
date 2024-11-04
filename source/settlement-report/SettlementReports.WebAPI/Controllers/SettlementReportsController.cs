@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
 using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
@@ -24,6 +23,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Databricks.Client;
 
 namespace SettlementReports.WebAPI.Controllers;
 
@@ -35,18 +35,21 @@ public class SettlementReportsController
     private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
     private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
     private readonly ISettlementReportJobsDownloadHandler _downloadHandler;
+    private readonly ICancelSettlementReportJobHandler _cancelSettlementReportJobHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
     public SettlementReportsController(
         IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
         IUserContext<FrontendUser> userContext,
         IListSettlementReportJobsHandler listSettlementReportJobsHandler,
-        ISettlementReportJobsDownloadHandler downloadHandler)
+        ISettlementReportJobsDownloadHandler downloadHandler,
+        ICancelSettlementReportJobHandler cancelSettlementReportJobHandler)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
         _userContext = userContext;
         _listSettlementReportJobsHandler = listSettlementReportJobsHandler;
         _downloadHandler = downloadHandler;
+        _cancelSettlementReportJobHandler = cancelSettlementReportJobHandler;
     }
 
     [HttpPost]
@@ -126,7 +129,7 @@ public class SettlementReportsController
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
-    public async Task<ActionResult> DownloadFileAsync([FromBody]SettlementReportRequestId requestId)
+    public async Task<ActionResult> DownloadFileAsync([FromBody] SettlementReportRequestId requestId)
     {
         try
         {
@@ -142,6 +145,26 @@ public class SettlementReportsController
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
         {
             return NotFound();
+        }
+    }
+
+    [HttpPost]
+    [Route("cancel")]
+    [Authorize(Roles = "settlement-reports:manage")]
+    [EnableRevision(activityName: "CancelSettlementReportAPI")]
+    public async Task<ActionResult> CancelSettlementReport([FromBody] SettlementReportRequestId requestId)
+    {
+        try
+        {
+            var command = new CancelSettlementReportCommand(requestId, _userContext.CurrentUser.UserId);
+
+            await _cancelSettlementReportJobHandler.HandleAsync(command).ConfigureAwait(false);
+
+            return NoContent();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ClientApiException)
+        {
+            return BadRequest();
         }
     }
 

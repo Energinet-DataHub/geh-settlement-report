@@ -65,7 +65,10 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
                     case JobRunStatus.Completed:
                         await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
                         break;
-                    case JobRunStatus.Canceled or JobRunStatus.Failed:
+                    case JobRunStatus.Canceled:
+                        await MarkAsCanceledAsync(settlementReportDto).ConfigureAwait(false);
+                        break;
+                    case JobRunStatus.Failed:
                         await MarkAsFailedAsync(settlementReportDto).ConfigureAwait(false);
                         break;
                 }
@@ -97,6 +100,22 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             .ConfigureAwait(false);
     }
 
+    private async Task MarkAsCanceledAsync(RequestedSettlementReportDto settlementReportDto)
+    {
+        ArgumentNullException.ThrowIfNull(settlementReportDto);
+        ArgumentNullException.ThrowIfNull(settlementReportDto.JobId);
+
+        var request = await _repository
+            .GetAsync(settlementReportDto.JobId.Id)
+            .ConfigureAwait(false);
+
+        request.MarkAsCanceled();
+
+        await _repository
+            .AddOrUpdateAsync(request)
+            .ConfigureAwait(false);
+    }
+
     private async Task MarkAsFailedAsync(RequestedSettlementReportDto settlementReportDto)
     {
         ArgumentNullException.ThrowIfNull(settlementReportDto);
@@ -120,7 +139,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             JobRunStatus.Running => SettlementReportStatus.InProgress,
             JobRunStatus.Queued => SettlementReportStatus.InProgress,
             JobRunStatus.Completed => SettlementReportStatus.Completed,
-            JobRunStatus.Canceled => SettlementReportStatus.Failed,
+            JobRunStatus.Canceled => SettlementReportStatus.Canceled,
             JobRunStatus.Failed => SettlementReportStatus.Failed,
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, null),
         };

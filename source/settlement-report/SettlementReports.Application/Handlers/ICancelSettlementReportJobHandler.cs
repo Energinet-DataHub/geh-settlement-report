@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Application.Commands;
 
-public enum SettlementReportStatus
+namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+
+public interface ICancelSettlementReportJobHandler
 {
-    InProgress,
-    Completed,
-    Failed,
-    Canceled,
+    Task HandleAsync(CancelSettlementReportCommand cancelSettlementReportCommand);
 }

@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-public enum SettlementReportStatus
-{
-    InProgress,
-    Completed,
-    Failed,
-    Canceled,
-}
+namespace Energinet.DataHub.SettlementReport.Application.Commands;
+
+public sealed record CancelSettlementReportCommand(
+    SettlementReportRequestId RequestId,
+    Guid UserId);
