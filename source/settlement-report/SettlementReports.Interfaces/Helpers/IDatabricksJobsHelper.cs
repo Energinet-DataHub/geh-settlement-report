@@ -25,4 +25,6 @@ public interface IDatabricksJobsHelper
         string actorGln);
 
     Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId);
+
+    Task CancelSettlementReportJobAsync(long runId);
 }
