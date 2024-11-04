@@ -182,6 +182,9 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
             "FUNCTIONS_WORKER_RUNTIME",
             "dotnet-isolated");
         appHostSettings.ProcessEnvironmentVariables.Add(
+            "AzureWebJobsStorage",
+            AzuriteManager.FullConnectionString);
+        appHostSettings.ProcessEnvironmentVariables.Add(
             "DURABLETASK_STORAGE_CONNECTION_STRING",
             AzuriteManager.FullConnectionString);
         appHostSettings.ProcessEnvironmentVariables.Add(
