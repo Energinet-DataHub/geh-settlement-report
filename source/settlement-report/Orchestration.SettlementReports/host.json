@@ -3,7 +3,10 @@
   "extensions": {
     "durableTask": {
       "maxConcurrentActivityFunctions": 7,
-      "hubName": "%OrchestrationsTaskHubName%"
+      "hubName": "%OrchestrationsTaskHubName%",
+      "storageProvider": {
+        "connectionStringName": "DURABLETASK_STORAGE_CONNECTION_STRING"
+      }
     }
   },
   "logging": {
