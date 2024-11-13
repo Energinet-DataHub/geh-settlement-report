@@ -4,7 +4,7 @@
   "documentation" : { },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2024-11-13T07:52:37Z",
+  "lastModifiedDate" : "2024-11-13T08:14:35Z",
   "model" : {
     "people" : [ {
       "description" : "Person who interacts with DataHub.",
@@ -497,6 +497,13 @@
         "properties" : {
           "structurizr.dsl.identifier" : "dh3.sharedunitycatalog"
         },
+        "relationships" : [ {
+          "description" : "Read data / write data",
+          "destinationId" : "72",
+          "id" : "73",
+          "sourceId" : "25",
+          "tags" : "Relationship"
+        } ],
         "tags" : "Element,Container,Intermediate Technology,Microsoft Azure - Azure Databricks",
         "technology" : "Azure Databricks"
       }, {
@@ -567,10 +574,222 @@
         "tags" : "Element,Container,Microsoft Azure - Azure AD B2C",
         "technology" : "Azure AD B2C"
       }, {
+        "description" : "Calculation inputs and results",
+        "documentation" : { },
+        "group" : "Wholesale",
+        "id" : "72",
+        "name" : "Wholesale DataLake",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaledatalake"
+        },
+        "tags" : "Element,Container,Data Storage,Microsoft Azure - Data Lake Store Gen1,Mandalorian",
+        "technology" : "Azure Data Lake Gen 2"
+      }, {
+        "description" : "Executes calculations",
+        "documentation" : { },
+        "group" : "Wholesale/Databricks Workspace",
+        "id" : "74",
+        "name" : "Calculator Job",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesalecalculatorjob"
+        },
+        "relationships" : [ {
+          "description" : "Read inputs / write results",
+          "destinationId" : "25",
+          "id" : "75",
+          "sourceId" : "74",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Read inputs / write results",
+          "destinationId" : "72",
+          "id" : "76",
+          "sourceId" : "74",
+          "tags" : "Relationship,Simple View"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Azure Databricks,Mandalorian",
+        "technology" : "Azure Databricks"
+      }, {
+        "description" : "Executes delta migrations (invoked during deployment)",
+        "documentation" : { },
+        "group" : "Wholesale/Databricks Workspace",
+        "id" : "77",
+        "name" : "Migration Job",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesalemigrationjob"
+        },
+        "relationships" : [ {
+          "description" : "Migrate database objects and data",
+          "destinationId" : "25",
+          "id" : "78",
+          "sourceId" : "77",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Read inputs / write results",
+          "destinationId" : "72",
+          "id" : "79",
+          "sourceId" : "77",
+          "tags" : "Relationship,Simple View"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Azure Databricks,Mandalorian",
+        "technology" : "Azure Databricks"
+      }, {
+        "description" : "Executes delta SQL migrations",
+        "documentation" : { },
+        "group" : "Wholesale/Databricks Workspace",
+        "id" : "80",
+        "name" : "Deployment Warehouse",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaledeploymentwarehouse"
+        },
+        "relationships" : [ {
+          "description" : "Read/write executed migrations",
+          "destinationId" : "25",
+          "id" : "81",
+          "sourceId" : "80",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Azure Databricks,Mandalorian,Intermediate Technology",
+        "technology" : "Azure Databricks SQL Warehouse"
+      }, {
+        "description" : "Executes delta SQL queries (also used by EDI)",
+        "documentation" : { },
+        "group" : "Wholesale/Databricks Workspace",
+        "id" : "82",
+        "name" : "Runtime Warehouse",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaleruntimewarehouse"
+        },
+        "relationships" : [ {
+          "description" : "Read results",
+          "destinationId" : "25",
+          "id" : "83",
+          "sourceId" : "82",
+          "tags" : "Relationship"
+        }, {
+          "description" : "writes generated reports",
+          "destinationId" : "98",
+          "id" : "99",
+          "sourceId" : "82",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Azure Databricks,Mandalorian,Mosaic,Intermediate Technology",
+        "technology" : "Azure Databricks SQL Warehouse"
+      }, {
+        "description" : "Executes delta SQL queries",
+        "documentation" : { },
+        "group" : "Wholesale/Databricks Workspace",
+        "id" : "84",
+        "name" : "Settlement Reports Warehouse",
+        "properties" : {
+          "structurizr.dsl.identifier" : "settlementreportswarehouse"
+        },
+        "relationships" : [ {
+          "description" : "Read basis data and results",
+          "destinationId" : "25",
+          "id" : "85",
+          "sourceId" : "84",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Azure Databricks,Mandalorian,Raccoons,Intermediate Technology",
+        "technology" : "Azure Databricks SQL Warehouse"
+      }, {
+        "description" : "Meta data of calculations",
+        "documentation" : { },
+        "group" : "Wholesale",
+        "id" : "86",
+        "name" : "Wholesale Database",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaledb"
+        },
+        "tags" : "Element,Container,Data Storage,Microsoft Azure - SQL Database,Mandalorian",
+        "technology" : "SQL Database Schema"
+      }, {
+        "description" : "Backend server providing external web API for Wholesale subsystem",
+        "documentation" : { },
+        "group" : "Wholesale",
+        "id" : "87",
+        "name" : "Wholesale API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaleapi"
+        },
+        "relationships" : [ {
+          "description" : "Subscribes to integration events",
+          "destinationId" : "28",
+          "id" : "88",
+          "sourceId" : "87",
+          "tags" : "Relationship",
+          "technology" : "integration event/amqp"
+        }, {
+          "description" : "Uses",
+          "destinationId" : "86",
+          "id" : "89",
+          "sourceId" : "87",
+          "tags" : "Relationship",
+          "technology" : "EF Core"
+        }, {
+          "description" : "Retrieves results from",
+          "destinationId" : "82",
+          "id" : "90",
+          "sourceId" : "87",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Retrieves results from",
+          "destinationId" : "72",
+          "id" : "91",
+          "sourceId" : "87",
+          "tags" : "Relationship,Simple View"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - App Services,Mandalorian,MarketParticipant Subscriber",
+        "technology" : "Asp.Net Core Web API"
+      }, {
+        "description" : "Orchestrate calculation workflow, generate settlement reports",
+        "documentation" : { },
+        "group" : "Wholesale",
+        "id" : "92",
+        "name" : "Wholesale Orchestrations",
+        "properties" : {
+          "structurizr.dsl.identifier" : "wholesaleorchestrations"
+        },
+        "relationships" : [ {
+          "description" : "Listens on Wholesale Inbox queue",
+          "destinationId" : "28",
+          "id" : "93",
+          "sourceId" : "92",
+          "tags" : "Relationship",
+          "technology" : "message/amqp"
+        }, {
+          "description" : "Uses",
+          "destinationId" : "86",
+          "id" : "94",
+          "sourceId" : "92",
+          "tags" : "Relationship",
+          "technology" : "EF Core"
+        }, {
+          "description" : "Invokes",
+          "destinationId" : "74",
+          "id" : "95",
+          "sourceId" : "92",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Retrieves results from",
+          "destinationId" : "82",
+          "id" : "96",
+          "sourceId" : "92",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Retrieves results from",
+          "destinationId" : "72",
+          "id" : "97",
+          "sourceId" : "92",
+          "tags" : "Relationship,Simple View"
+        } ],
+        "tags" : "Element,Container,Microsoft Azure - Function Apps,Mandalorian",
+        "technology" : "Azure function, C#"
+      }, {
         "description" : "Contains the generated reports",
         "documentation" : { },
         "group" : "Settlement Reports",
-        "id" : "72",
+        "id" : "98",
         "name" : "Blob Storage",
         "properties" : {
           "structurizr.dsl.identifier" : "settlementreportblobstorage"
@@ -581,7 +800,7 @@
         "description" : "Contains received notifications and manages their delivery status",
         "documentation" : { },
         "group" : "Settlement Reports",
-        "id" : "73",
+        "id" : "100",
         "name" : "Database",
         "properties" : {
           "structurizr.dsl.identifier" : "settlementreportdatabase"
@@ -592,24 +811,31 @@
         "description" : "Schedules and excutes the durable functions that generate the reports",
         "documentation" : { },
         "group" : "Settlement Reports",
-        "id" : "74",
+        "id" : "101",
         "name" : "Settlement Reports Orchestrator",
         "properties" : {
           "structurizr.dsl.identifier" : "settlementreportorchestrator"
         },
         "relationships" : [ {
           "description" : "manages report status",
-          "destinationId" : "73",
-          "id" : "75",
-          "sourceId" : "74",
+          "destinationId" : "100",
+          "id" : "102",
+          "sourceId" : "101",
           "tags" : "Relationship",
           "technology" : "[EF Core]"
         }, {
           "description" : "writes reports",
-          "destinationId" : "72",
-          "id" : "76",
-          "sourceId" : "74",
+          "destinationId" : "98",
+          "id" : "103",
+          "sourceId" : "101",
           "tags" : "Relationship"
+        }, {
+          "description" : "retrieves results from",
+          "destinationId" : "82",
+          "id" : "104",
+          "sourceId" : "101",
+          "tags" : "Relationship",
+          "technology" : "Databricks SQL Statement API"
         } ],
         "tags" : "Element,Container,Microsoft Azure - Function Apps,Raccoons",
         "technology" : "Azure function, C#"
@@ -617,24 +843,25 @@
         "description" : "Polls the status of the Job API",
         "documentation" : { },
         "group" : "Settlement Reports",
-        "id" : "77",
+        "id" : "105",
         "name" : "Settlement Reports Worker",
         "properties" : {
           "structurizr.dsl.identifier" : "settlementreportworker"
         },
         "relationships" : [ {
           "description" : "manages report status",
-          "destinationId" : "73",
-          "id" : "78",
-          "sourceId" : "77",
+          "destinationId" : "100",
+          "id" : "106",
+          "sourceId" : "105",
           "tags" : "Relationship",
           "technology" : "[EF Core]"
         }, {
-          "description" : "uses Job API",
-          "destinationId" : "85",
-          "id" : "86",
-          "sourceId" : "77",
-          "tags" : "Relationship"
+          "description" : "retrieves status from",
+          "destinationId" : "82",
+          "id" : "107",
+          "sourceId" : "105",
+          "tags" : "Relationship",
+          "technology" : "Databricks Job API"
         } ],
         "tags" : "Element,Container,Microsoft Azure - Function Apps,Raccoons",
         "technology" : "Azure function, C#"
@@ -642,30 +869,31 @@
         "description" : "Manages the settlement reports using the Job API",
         "documentation" : { },
         "group" : "Settlement Reports",
-        "id" : "79",
+        "id" : "108",
         "name" : "Settlement Reports WebAPI",
         "properties" : {
           "structurizr.dsl.identifier" : "settlementreportapi"
         },
         "relationships" : [ {
           "description" : "manages report status",
-          "destinationId" : "73",
-          "id" : "80",
-          "sourceId" : "79",
+          "destinationId" : "100",
+          "id" : "109",
+          "sourceId" : "108",
           "tags" : "Relationship",
           "technology" : "[EF Core]"
         }, {
           "description" : "reads reports generated by Job API",
-          "destinationId" : "72",
-          "id" : "81",
-          "sourceId" : "79",
+          "destinationId" : "98",
+          "id" : "110",
+          "sourceId" : "108",
           "tags" : "Relationship"
         }, {
-          "description" : "uses Job API",
-          "destinationId" : "85",
-          "id" : "87",
-          "sourceId" : "79",
-          "tags" : "Relationship"
+          "description" : "manages report generation jobs",
+          "destinationId" : "82",
+          "id" : "111",
+          "sourceId" : "108",
+          "tags" : "Relationship",
+          "technology" : "Databricks Job API"
         } ],
         "tags" : "Element,Container,Microsoft Azure - App Services,Raccoons",
         "technology" : "Asp.Net Core Web API"
@@ -673,39 +901,22 @@
         "description" : "Backend for Frontend",
         "documentation" : { },
         "group" : "Related Subsystems",
-        "id" : "82",
+        "id" : "112",
         "name" : "BFF",
         "properties" : {
           "structurizr.dsl.identifier" : "bffsubsystem"
         },
         "relationships" : [ {
           "description" : "uses HTTP API",
-          "destinationId" : "74",
-          "id" : "83",
-          "sourceId" : "82",
+          "destinationId" : "101",
+          "id" : "113",
+          "sourceId" : "112",
           "tags" : "Relationship"
         }, {
           "description" : "uses HTTP API",
-          "destinationId" : "79",
-          "id" : "84",
-          "sourceId" : "82",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,Subsystem"
-      }, {
-        "description" : "Backend for Frontend",
-        "documentation" : { },
-        "group" : "Job API component",
-        "id" : "85",
-        "name" : "Job API",
-        "properties" : {
-          "structurizr.dsl.identifier" : "jobapi"
-        },
-        "relationships" : [ {
-          "description" : "writes reports",
-          "destinationId" : "72",
-          "id" : "88",
-          "sourceId" : "85",
+          "destinationId" : "108",
+          "id" : "114",
+          "sourceId" : "112",
           "tags" : "Relationship"
         } ],
         "tags" : "Element,Container,Subsystem"
@@ -785,7 +996,7 @@
   },
   "name" : "DataHub",
   "properties" : {
-    "structurizr.dsl" : "IyBUaGUgJ3ZpZXdzLmRzbCcgZmlsZSBpcyBpbnRlbmRlZCBhcyBhIG1lYW4gZm9yIHZpZXdpbmcgYW5kIHZhbGlkYXRpbmcgdGhlIG1vZGVsCiMgaW4gdGhlIGRvbWFpbiByZXBvc2l0b3J5LiBJdCBzaG91bGQKIyAgICogRXh0ZW5kIHRoZSBiYXNlIG1vZGVsIGFuZCBvdmVycmlkZSB0aGUgJ2RoMycgc29mdHdhcmUgc3lzdGVtCiMgICAqIEluY2x1ZGUgb2YgdGhlIGBtb2RlbC5kc2xgIGZpbGVzIGZyb20gZWFjaCBkb21haW4gcmVwb3NpdG9yeSB1c2luZyBhbiBVUkwKIwojIFRoZSBgbW9kZWwuZHNsYCBmaWxlIG11c3QgY29udGFpbiB0aGUgYWN0dWFsIG1vZGVsLCBhbmQgaXMgdGhlIHBpZWNlIHRoYXQgbXVzdAojIGJlIHJldXNhYmxlIGFuZCBpbmNsdWRlZCBpbiBvdGhlciBTdHJ1Y3R1cml6ciBmaWxlcyBsaWtlIGB2aWV3cy5kc2xgIGFuZAojIGRlcGxveW1lbnQgZGlhZ3JhbSBmaWxlcy4KCndvcmtzcGFjZSBleHRlbmRzIGh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9FbmVyZ2luZXQtRGF0YUh1Yi9vcGVuZ2VoLWFyY2gtZGlhZ3JhbXMvbWFpbi9kb2NzL2RpYWdyYW1zL2M0LW1vZGVsL2RoLWJhc2UtbW9kZWwuZHNsIHsKCiAgICBtb2RlbCB7CiAgICAgICAgIwogICAgICAgICMgRGF0YUh1YiAzLjAgKGV4dGVuZHMpCiAgICAgICAgIwogICAgICAgICFyZWYgZGgzIHsKCiAgICAgICAgICAgICMgSW5jbHVkZSBtb2RlbC4KICAgICAgICAgICAgIyBSZWFkIGRlc2NyaXB0aW9uIGluIHRoZSAndmlld3MuZHNsJyBmaWxlLgogICAgICAgICAgICAKICAgICAgICAgICAgc2V0dGxlbWVudFJlcG9ydERvbWFpbiA9IGdyb3VwICJTZXR0bGVtZW50IFJlcG9ydHMiIHsKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0QmxvYlN0b3JhZ2UgPSBjb250YWluZXIgIkJsb2IgU3RvcmFnZSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJDb250YWlucyB0aGUgZ2VuZXJhdGVkIHJlcG9ydHMiCiAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXp1cmUgQmxvYiBTdG9yYWdlIgogICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGEgU3RvcmFnZSIgIlJhY2Nvb25zIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHNldHRsZW1lbnRSZXBvcnREYXRhYmFzZSA9IGNvbnRhaW5lciAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiQ29udGFpbnMgcmVjZWl2ZWQgbm90aWZpY2F0aW9ucyBhbmQgbWFuYWdlcyB0aGVpciBkZWxpdmVyeSBzdGF0dXMiCiAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiU1FMIERhdGFiYXNlIFNjaGVtYSIKICAgICAgICAgICAgICAgICAgICB0YWdzICJEYXRhIFN0b3JhZ2UiICJNaWNyb3NvZnQgQXp1cmUgLSBTUUwgRGF0YWJhc2UiICJSYWNjb29ucyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0T3JjaGVzdHJhdG9yID0gY29udGFpbmVyICJTZXR0bGVtZW50IFJlcG9ydHMgT3JjaGVzdHJhdG9yIiB7CiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIlNjaGVkdWxlcyBhbmQgZXhjdXRlcyB0aGUgZHVyYWJsZSBmdW5jdGlvbnMgdGhhdCBnZW5lcmF0ZSB0aGUgcmVwb3J0cyIKICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJBenVyZSBmdW5jdGlvbiwgQyMiCiAgICAgICAgICAgICAgICAgICAgdGFncyAiTWljcm9zb2Z0IEF6dXJlIC0gRnVuY3Rpb24gQXBwcyIgIlJhY2Nvb25zIgogICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHNldHRsZW1lbnRSZXBvcnREYXRhYmFzZSAibWFuYWdlcyByZXBvcnQgc3RhdHVzIiAiW0VGIENvcmVdIgogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gc2V0dGxlbWVudFJlcG9ydEJsb2JTdG9yYWdlICJ3cml0ZXMgcmVwb3J0cyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0V29ya2VyID0gY29udGFpbmVyICJTZXR0bGVtZW50IFJlcG9ydHMgV29ya2VyIiB7CiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIlBvbGxzIHRoZSBzdGF0dXMgb2YgdGhlIEpvYiBBUEkiCiAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXp1cmUgZnVuY3Rpb24sIEMjIgogICAgICAgICAgICAgICAgICAgIHRhZ3MgIk1pY3Jvc29mdCBBenVyZSAtIEZ1bmN0aW9uIEFwcHMiICJSYWNjb29ucyIKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBzZXR0bGVtZW50UmVwb3J0RGF0YWJhc2UgIm1hbmFnZXMgcmVwb3J0IHN0YXR1cyIgIltFRiBDb3JlXSIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0QXBpID0gY29udGFpbmVyICJTZXR0bGVtZW50IFJlcG9ydHMgV2ViQVBJIiB7CiAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIk1hbmFnZXMgdGhlIHNldHRsZW1lbnQgcmVwb3J0cyB1c2luZyB0aGUgSm9iIEFQSSIKICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJBc3AuTmV0IENvcmUgV2ViIEFQSSIKICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBBcHAgU2VydmljZXMiICJSYWNjb29ucyIKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBzZXR0bGVtZW50UmVwb3J0RGF0YWJhc2UgIm1hbmFnZXMgcmVwb3J0IHN0YXR1cyIgIltFRiBDb3JlXSIKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHNldHRsZW1lbnRSZXBvcnRCbG9iU3RvcmFnZSAicmVhZHMgcmVwb3J0cyBnZW5lcmF0ZWQgYnkgSm9iIEFQSSIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQoKICAgICAgICAgICAgIyBJTVBPUlRBTlQ6CiAgICAgICAgICAgICMgVGhlIG9yZGVyIGJ5IHdoaWNoIG1vZGVscyBhcmUgaW5jbHVkZWQgaXMgaW1wb3J0YW50IGZvciBob3cgdGhlIGRvbWFpbi10by1kb21haW4gcmVsYXRpb25zaGlwcyBhcmUgc3BlY2lmaWVkLgogICAgICAgICAgICAjIEEgZG9tYWluLXRvLWRvbWFpbiByZWxhdGlvbnNoaXAgc2hvdWxkIGJlIHNwZWNpZmllZCBpbiB0aGUgImNsaWVudCIgb2YgYSAiY2xpZW50LT5zZXJ2ZXIiIGRlcGVuZGVuY3ksIGFuZAogICAgICAgICAgICAjIGhlbmNlIGRvbWFpbnMgdGhhdCBkb2Vzbid0IGRlcGVuZCBvbiBvdGhlcnMsIHNob3VsZCBiZSBsaXN0ZWQgZmlyc3QuCgogICAgICAgICAgICByZWxhdGVkU3Vic3lzdGVtcyA9IGdyb3VwICJSZWxhdGVkIFN1YnN5c3RlbXMiIHsKCiAgICAgICAgICAgICAgICBiZmZTdWJzeXN0ZW0gPSBjb250YWluZXIgIkJGRiIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJCYWNrZW5kIGZvciBGcm9udGVuZCIKICAgICAgICAgICAgICAgICAgICB0YWdzICJTdWJzeXN0ZW0iCgogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gc2V0dGxlbWVudFJlcG9ydE9yY2hlc3RyYXRvciAidXNlcyBIVFRQIEFQSSIKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHNldHRsZW1lbnRSZXBvcnRBcGkgInVzZXMgSFRUUCBBUEkiCiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICB9CgogICAgICAgICAgICBmdXR1cmVDb21wb25lbnQgPSBncm91cCAiSm9iIEFQSSBjb21wb25lbnQiIHsKCiAgICAgICAgICAgICAgICBqb2JBcGkgPSBjb250YWluZXIgIkpvYiBBUEkiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiQmFja2VuZCBmb3IgRnJvbnRlbmQiCiAgICAgICAgICAgICAgICAgICAgdGFncyAiU3Vic3lzdGVtIgoKICAgICAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0V29ya2VyIC0+IHRoaXMgInVzZXMgSm9iIEFQSSIKICAgICAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0QXBpIC0+IHRoaXMgInVzZXMgSm9iIEFQSSIKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHNldHRsZW1lbnRSZXBvcnRCbG9iU3RvcmFnZSAid3JpdGVzIHJlcG9ydHMiCiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICB9CgogICAgICAgIH0KICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgY29udGFpbmVyIGRoMyAiU2V0dGxlbWVudFJlcG9ydCIgewogICAgICAgICAgICB0aXRsZSAiW0NvbnRhaW5lcl0gRGF0YUh1YiAzLjAgLSBTZXR0bGVtZW50IFJlcG9ydHMiCiAgICAgICAgICAgIGluY2x1ZGUgLT5zZXR0bGVtZW50UmVwb3J0RG9tYWluLT4KICAgICAgICAgICAgZXhjbHVkZSAiZWxlbWVudC50YWc9PUludGVybWVkaWF0ZSBUZWNobm9sb2d5IgogICAgICAgICAgICBleGNsdWRlICJyZWxhdGlvbnNoaXAudGFnPT1EZXRhaWxlZCBWaWV3IgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIGRoMyAiU2V0dGxlbWVudFJlcG9ydERldGFpbGVkIiB7CiAgICAgICAgICAgIHRpdGxlICJbQ29udGFpbmVyXSBEYXRhSHViIDMuMCAtIFNldHRsZW1lbnQgUmVwb3J0cyAoRGV0YWlsZWQpIgogICAgICAgICAgICBpbmNsdWRlIC0+c2V0dGxlbWVudFJlcG9ydERvbWFpbi0+CiAgICAgICAgICAgIGV4Y2x1ZGUgInJlbGF0aW9uc2hpcC50YWc9PVNpbXBsZSBWaWV3IgogICAgICAgIH0KICAgIH0KfQ=="
+    "structurizr.dsl" : "IyBUaGUgJ3ZpZXdzLmRzbCcgZmlsZSBpcyBpbnRlbmRlZCBhcyBhIG1lYW4gZm9yIHZpZXdpbmcgYW5kIHZhbGlkYXRpbmcgdGhlIG1vZGVsCiMgaW4gdGhlIGRvbWFpbiByZXBvc2l0b3J5LiBJdCBzaG91bGQKIyAgICogRXh0ZW5kIHRoZSBiYXNlIG1vZGVsIGFuZCBvdmVycmlkZSB0aGUgJ2RoMycgc29mdHdhcmUgc3lzdGVtCiMgICAqIEluY2x1ZGUgb2YgdGhlIGBtb2RlbC5kc2xgIGZpbGVzIGZyb20gZWFjaCBkb21haW4gcmVwb3NpdG9yeSB1c2luZyBhbiBVUkwKIwojIFRoZSBgbW9kZWwuZHNsYCBmaWxlIG11c3QgY29udGFpbiB0aGUgYWN0dWFsIG1vZGVsLCBhbmQgaXMgdGhlIHBpZWNlIHRoYXQgbXVzdAojIGJlIHJldXNhYmxlIGFuZCBpbmNsdWRlZCBpbiBvdGhlciBTdHJ1Y3R1cml6ciBmaWxlcyBsaWtlIGB2aWV3cy5kc2xgIGFuZAojIGRlcGxveW1lbnQgZGlhZ3JhbSBmaWxlcy4KCndvcmtzcGFjZSBleHRlbmRzIGh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9FbmVyZ2luZXQtRGF0YUh1Yi9vcGVuZ2VoLWFyY2gtZGlhZ3JhbXMvbWFpbi9kb2NzL2RpYWdyYW1zL2M0LW1vZGVsL2RoLWJhc2UtbW9kZWwuZHNsIHsKCiAgICBtb2RlbCB7CiAgICAgICAgIwogICAgICAgICMgRGF0YUh1YiAzLjAgKGV4dGVuZHMpCiAgICAgICAgIwogICAgICAgICFyZWYgZGgzIHsKCiAgICAgICAgICAgICMgSW5jbHVkZSBXaG9sZXNhbGUgbW9kZWwKICAgICAgICAgICAgIyBSZWFkIGRlc2NyaXB0aW9uIGluIHRoZSAndmlld3MuZHNsJyBmaWxlLgogICAgICAgICAgICAKICAgICAgICAgICAgd2hvbGVzYWxlU3Vic3lzdGVtID0gZ3JvdXAgIldob2xlc2FsZSIgewogICAgICAgICAgICAgICAgd2hvbGVzYWxlRGF0YUxha2UgPSBjb250YWluZXIgIldob2xlc2FsZSBEYXRhTGFrZSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJDYWxjdWxhdGlvbiBpbnB1dHMgYW5kIHJlc3VsdHMiCiAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXp1cmUgRGF0YSBMYWtlIEdlbiAyIgogICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGEgU3RvcmFnZSIgIk1pY3Jvc29mdCBBenVyZSAtIERhdGEgTGFrZSBTdG9yZSBHZW4xIiAiTWFuZGFsb3JpYW4iCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICMgUmVsYXRpb25zIHRvIHNoYXJlZAogICAgICAgICAgICAgICAgICAgIGRoMy5zaGFyZWRVbml0eUNhdGFsb2cgLT4gdGhpcyAiUmVhZCBkYXRhIC8gd3JpdGUgZGF0YSIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgCiAgICAgICAgICAgICAgICB3aG9sZXNhbGVEYXRhYnJpY2tzV29ya3NwYWNlID0gZ3JvdXAgIkRhdGFicmlja3MgV29ya3NwYWNlIiB7CiAgICAgICAgICAgICAgICAgICAgd2hvbGVzYWxlQ2FsY3VsYXRvckpvYiA9IGNvbnRhaW5lciAiQ2FsY3VsYXRvciBKb2IiIHsKICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIkV4ZWN1dGVzIGNhbGN1bGF0aW9ucyIKICAgICAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXp1cmUgRGF0YWJyaWNrcyIKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiTWljcm9zb2Z0IEF6dXJlIC0gQXp1cmUgRGF0YWJyaWNrcyIgIk1hbmRhbG9yaWFuIgogICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgIyBTdWJzeXN0ZW0gcmVsYXRpb25zaGlwcwogICAgICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IGRoMy5zaGFyZWRVbml0eUNhdGFsb2cgIlJlYWQgaW5wdXRzIC8gd3JpdGUgcmVzdWx0cyIKICAgICAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVEYXRhTGFrZSAiUmVhZCBpbnB1dHMgLyB3cml0ZSByZXN1bHRzIiB7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJTaW1wbGUgVmlldyIKICAgICAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICB3aG9sZXNhbGVNaWdyYXRpb25Kb2IgPSBjb250YWluZXIgIk1pZ3JhdGlvbiBKb2IiIHsKICAgICAgICAgICAgICAgICAgICAgICAgZGVzY3JpcHRpb24gIkV4ZWN1dGVzIGRlbHRhIG1pZ3JhdGlvbnMgKGludm9rZWQgZHVyaW5nIGRlcGxveW1lbnQpIgogICAgICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJBenVyZSBEYXRhYnJpY2tzIgogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBBenVyZSBEYXRhYnJpY2tzIiAiTWFuZGFsb3JpYW4iCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAjIFN1YnN5c3RlbSByZWxhdGlvbnNoaXBzCiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gZGgzLnNoYXJlZFVuaXR5Q2F0YWxvZyAiTWlncmF0ZSBkYXRhYmFzZSBvYmplY3RzIGFuZCBkYXRhIgogICAgICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHdob2xlc2FsZURhdGFMYWtlICJSZWFkIGlucHV0cyAvIHdyaXRlIHJlc3VsdHMiIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgIlNpbXBsZSBWaWV3IgogICAgICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIHdob2xlc2FsZURlcGxveW1lbnRXYXJlaG91c2UgPSBjb250YWluZXIgIkRlcGxveW1lbnQgV2FyZWhvdXNlIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJFeGVjdXRlcyBkZWx0YSBTUUwgbWlncmF0aW9ucyIKICAgICAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXp1cmUgRGF0YWJyaWNrcyBTUUwgV2FyZWhvdXNlIgogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBBenVyZSBEYXRhYnJpY2tzIiAiTWFuZGFsb3JpYW4iICJJbnRlcm1lZGlhdGUgVGVjaG5vbG9neSIKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICMgU3Vic3lzdGVtIHJlbGF0aW9uc2hpcHMKICAgICAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBkaDMuc2hhcmVkVW5pdHlDYXRhbG9nICJSZWFkL3dyaXRlIGV4ZWN1dGVkIG1pZ3JhdGlvbnMiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIHdob2xlc2FsZVJ1bnRpbWVXYXJlaG91c2UgPSBjb250YWluZXIgIlJ1bnRpbWUgV2FyZWhvdXNlIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJFeGVjdXRlcyBkZWx0YSBTUUwgcXVlcmllcyAoYWxzbyB1c2VkIGJ5IEVESSkiCiAgICAgICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIERhdGFicmlja3MgU1FMIFdhcmVob3VzZSIKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiTWljcm9zb2Z0IEF6dXJlIC0gQXp1cmUgRGF0YWJyaWNrcyIgIk1hbmRhbG9yaWFuIiAiTW9zYWljIiAiSW50ZXJtZWRpYXRlIFRlY2hub2xvZ3kiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAjIFN1YnN5c3RlbSByZWxhdGlvbnNoaXBzCiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gZGgzLnNoYXJlZFVuaXR5Q2F0YWxvZyAiUmVhZCByZXN1bHRzIgogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBzZXR0bGVtZW50UmVwb3J0c1dhcmVob3VzZSA9IGNvbnRhaW5lciAiU2V0dGxlbWVudCBSZXBvcnRzIFdhcmVob3VzZSIgewogICAgICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiRXhlY3V0ZXMgZGVsdGEgU1FMIHF1ZXJpZXMiCiAgICAgICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIERhdGFicmlja3MgU1FMIFdhcmVob3VzZSIKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiTWljcm9zb2Z0IEF6dXJlIC0gQXp1cmUgRGF0YWJyaWNrcyIgIk1hbmRhbG9yaWFuIiAiUmFjY29vbnMiICJJbnRlcm1lZGlhdGUgVGVjaG5vbG9neSIKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICMgU3Vic3lzdGVtIHJlbGF0aW9uc2hpcHMKICAgICAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBkaDMuc2hhcmVkVW5pdHlDYXRhbG9nICJSZWFkIGJhc2lzIGRhdGEgYW5kIHJlc3VsdHMiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHdob2xlc2FsZURiID0gY29udGFpbmVyICJXaG9sZXNhbGUgRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiTWV0YSBkYXRhIG9mIGNhbGN1bGF0aW9ucyIKICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJTUUwgRGF0YWJhc2UgU2NoZW1hIgogICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGEgU3RvcmFnZSIgIk1pY3Jvc29mdCBBenVyZSAtIFNRTCBEYXRhYmFzZSIgIk1hbmRhbG9yaWFuIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHdob2xlc2FsZUFwaSA9IGNvbnRhaW5lciAiV2hvbGVzYWxlIEFQSSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJCYWNrZW5kIHNlcnZlciBwcm92aWRpbmcgZXh0ZXJuYWwgd2ViIEFQSSBmb3IgV2hvbGVzYWxlIHN1YnN5c3RlbSIKICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJBc3AuTmV0IENvcmUgV2ViIEFQSSIKICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBBcHAgU2VydmljZXMiICJNYW5kYWxvcmlhbiIgIk1hcmtldFBhcnRpY2lwYW50IFN1YnNjcmliZXIiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICMgQmFzZSBtb2RlbCByZWxhdGlvbnNoaXBzCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBkaDMuc2hhcmVkU2VydmljZUJ1cyAiU3Vic2NyaWJlcyB0byBpbnRlZ3JhdGlvbiBldmVudHMiICJpbnRlZ3JhdGlvbiBldmVudC9hbXFwIgogICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAjIFN1YnN5c3RlbSByZWxhdGlvbnNoaXBzCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVEYiAiVXNlcyIgIkVGIENvcmUiCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVSdW50aW1lV2FyZWhvdXNlICJSZXRyaWV2ZXMgcmVzdWx0cyBmcm9tIgogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gd2hvbGVzYWxlRGF0YUxha2UgIlJldHJpZXZlcyByZXN1bHRzIGZyb20iIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiU2ltcGxlIFZpZXciCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgd2hvbGVzYWxlT3JjaGVzdHJhdGlvbnMgPSBjb250YWluZXIgIldob2xlc2FsZSBPcmNoZXN0cmF0aW9ucyIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJPcmNoZXN0cmF0ZSBjYWxjdWxhdGlvbiB3b3JrZmxvdywgZ2VuZXJhdGUgc2V0dGxlbWVudCByZXBvcnRzIgogICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIGZ1bmN0aW9uLCBDIyIKICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBGdW5jdGlvbiBBcHBzIiAiTWFuZGFsb3JpYW4iCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICMgQmFzZSBtb2RlbCByZWxhdGlvbnNoaXBzCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBkaDMuc2hhcmVkU2VydmljZUJ1cyAiTGlzdGVucyBvbiBXaG9sZXNhbGUgSW5ib3ggcXVldWUiICJtZXNzYWdlL2FtcXAiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICMgU3Vic3lzdGVtIHJlbGF0aW9uc2hpcHMKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHdob2xlc2FsZURiICJVc2VzIiAiRUYgQ29yZSIKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHdob2xlc2FsZUNhbGN1bGF0b3JKb2IgIkludm9rZXMiCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVSdW50aW1lV2FyZWhvdXNlICJSZXRyaWV2ZXMgcmVzdWx0cyBmcm9tIgogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gd2hvbGVzYWxlRGF0YUxha2UgIlJldHJpZXZlcyByZXN1bHRzIGZyb20iIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiU2ltcGxlIFZpZXciCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CgogICAgICAgICAgICAjIEluY2x1ZGUgbW9kZWwuCiAgICAgICAgICAgICMgUmVhZCBkZXNjcmlwdGlvbiBpbiB0aGUgJ3ZpZXdzLmRzbCcgZmlsZS4KICAgICAgICAgICAgCiAgICAgICAgICAgIHNldHRsZW1lbnRSZXBvcnREb21haW4gPSBncm91cCAiU2V0dGxlbWVudCBSZXBvcnRzIiB7CiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgc2V0dGxlbWVudFJlcG9ydEJsb2JTdG9yYWdlID0gY29udGFpbmVyICJCbG9iIFN0b3JhZ2UiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiQ29udGFpbnMgdGhlIGdlbmVyYXRlZCByZXBvcnRzIgogICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIEJsb2IgU3RvcmFnZSIKICAgICAgICAgICAgICAgICAgICB0YWdzICJEYXRhIFN0b3JhZ2UiICJSYWNjb29ucyIKICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgd2hvbGVzYWxlUnVudGltZVdhcmVob3VzZSAtPiB0aGlzICJ3cml0ZXMgZ2VuZXJhdGVkIHJlcG9ydHMiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgc2V0dGxlbWVudFJlcG9ydERhdGFiYXNlID0gY29udGFpbmVyICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJDb250YWlucyByZWNlaXZlZCBub3RpZmljYXRpb25zIGFuZCBtYW5hZ2VzIHRoZWlyIGRlbGl2ZXJ5IHN0YXR1cyIKICAgICAgICAgICAgICAgICAgICB0ZWNobm9sb2d5ICJTUUwgRGF0YWJhc2UgU2NoZW1hIgogICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGEgU3RvcmFnZSIgIk1pY3Jvc29mdCBBenVyZSAtIFNRTCBEYXRhYmFzZSIgIlJhY2Nvb25zIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgICAgIHNldHRsZW1lbnRSZXBvcnRPcmNoZXN0cmF0b3IgPSBjb250YWluZXIgIlNldHRsZW1lbnQgUmVwb3J0cyBPcmNoZXN0cmF0b3IiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiU2NoZWR1bGVzIGFuZCBleGN1dGVzIHRoZSBkdXJhYmxlIGZ1bmN0aW9ucyB0aGF0IGdlbmVyYXRlIHRoZSByZXBvcnRzIgogICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIGZ1bmN0aW9uLCBDIyIKICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBGdW5jdGlvbiBBcHBzIiAiUmFjY29vbnMiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gc2V0dGxlbWVudFJlcG9ydERhdGFiYXNlICJtYW5hZ2VzIHJlcG9ydCBzdGF0dXMiICJbRUYgQ29yZV0iCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBzZXR0bGVtZW50UmVwb3J0QmxvYlN0b3JhZ2UgIndyaXRlcyByZXBvcnRzIgogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gd2hvbGVzYWxlUnVudGltZVdhcmVob3VzZSAicmV0cmlldmVzIHJlc3VsdHMgZnJvbSIgIkRhdGFicmlja3MgU1FMIFN0YXRlbWVudCBBUEkiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgc2V0dGxlbWVudFJlcG9ydFdvcmtlciA9IGNvbnRhaW5lciAiU2V0dGxlbWVudCBSZXBvcnRzIFdvcmtlciIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJQb2xscyB0aGUgc3RhdHVzIG9mIHRoZSBKb2IgQVBJIgogICAgICAgICAgICAgICAgICAgIHRlY2hub2xvZ3kgIkF6dXJlIGZ1bmN0aW9uLCBDIyIKICAgICAgICAgICAgICAgICAgICB0YWdzICJNaWNyb3NvZnQgQXp1cmUgLSBGdW5jdGlvbiBBcHBzIiAiUmFjY29vbnMiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gc2V0dGxlbWVudFJlcG9ydERhdGFiYXNlICJtYW5hZ2VzIHJlcG9ydCBzdGF0dXMiICJbRUYgQ29yZV0iCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVSdW50aW1lV2FyZWhvdXNlICJyZXRyaWV2ZXMgc3RhdHVzIGZyb20iICJEYXRhYnJpY2tzIEpvYiBBUEkiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgc2V0dGxlbWVudFJlcG9ydEFwaSA9IGNvbnRhaW5lciAiU2V0dGxlbWVudCBSZXBvcnRzIFdlYkFQSSIgewogICAgICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uICJNYW5hZ2VzIHRoZSBzZXR0bGVtZW50IHJlcG9ydHMgdXNpbmcgdGhlIEpvYiBBUEkiCiAgICAgICAgICAgICAgICAgICAgdGVjaG5vbG9neSAiQXNwLk5ldCBDb3JlIFdlYiBBUEkiCiAgICAgICAgICAgICAgICAgICAgdGFncyAiTWljcm9zb2Z0IEF6dXJlIC0gQXBwIFNlcnZpY2VzIiAiUmFjY29vbnMiCiAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgIHRoaXMgLT4gc2V0dGxlbWVudFJlcG9ydERhdGFiYXNlICJtYW5hZ2VzIHJlcG9ydCBzdGF0dXMiICJbRUYgQ29yZV0iCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBzZXR0bGVtZW50UmVwb3J0QmxvYlN0b3JhZ2UgInJlYWRzIHJlcG9ydHMgZ2VuZXJhdGVkIGJ5IEpvYiBBUEkiCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiB3aG9sZXNhbGVSdW50aW1lV2FyZWhvdXNlICJtYW5hZ2VzIHJlcG9ydCBnZW5lcmF0aW9uIGpvYnMiICJEYXRhYnJpY2tzIEpvYiBBUEkiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KCiAgICAgICAgICAgICMgSU1QT1JUQU5UOgogICAgICAgICAgICAjIFRoZSBvcmRlciBieSB3aGljaCBtb2RlbHMgYXJlIGluY2x1ZGVkIGlzIGltcG9ydGFudCBmb3IgaG93IHRoZSBkb21haW4tdG8tZG9tYWluIHJlbGF0aW9uc2hpcHMgYXJlIHNwZWNpZmllZC4KICAgICAgICAgICAgIyBBIGRvbWFpbi10by1kb21haW4gcmVsYXRpb25zaGlwIHNob3VsZCBiZSBzcGVjaWZpZWQgaW4gdGhlICJjbGllbnQiIG9mIGEgImNsaWVudC0+c2VydmVyIiBkZXBlbmRlbmN5LCBhbmQKICAgICAgICAgICAgIyBoZW5jZSBkb21haW5zIHRoYXQgZG9lc24ndCBkZXBlbmQgb24gb3RoZXJzLCBzaG91bGQgYmUgbGlzdGVkIGZpcnN0LgoKICAgICAgICAgICAgcmVsYXRlZFN1YnN5c3RlbXMgPSBncm91cCAiUmVsYXRlZCBTdWJzeXN0ZW1zIiB7CgogICAgICAgICAgICAgICAgYmZmU3Vic3lzdGVtID0gY29udGFpbmVyICJCRkYiIHsKICAgICAgICAgICAgICAgICAgICBkZXNjcmlwdGlvbiAiQmFja2VuZCBmb3IgRnJvbnRlbmQiCiAgICAgICAgICAgICAgICAgICAgdGFncyAiU3Vic3lzdGVtIgoKICAgICAgICAgICAgICAgICAgICB0aGlzIC0+IHNldHRsZW1lbnRSZXBvcnRPcmNoZXN0cmF0b3IgInVzZXMgSFRUUCBBUEkiCiAgICAgICAgICAgICAgICAgICAgdGhpcyAtPiBzZXR0bGVtZW50UmVwb3J0QXBpICJ1c2VzIEhUVFAgQVBJIgogICAgICAgICAgICAgICAgfQoKICAgICAgICAgICAgfQoKICAgICAgICB9CiAgICB9CgogICAgdmlld3MgewogICAgICAgIGNvbnRhaW5lciBkaDMgIlNldHRsZW1lbnRSZXBvcnQiIHsKICAgICAgICAgICAgdGl0bGUgIltDb250YWluZXJdIERhdGFIdWIgMy4wIC0gU2V0dGxlbWVudCBSZXBvcnRzIgogICAgICAgICAgICBpbmNsdWRlIC0+c2V0dGxlbWVudFJlcG9ydERvbWFpbi0+CiAgICAgICAgICAgIGV4Y2x1ZGUgImVsZW1lbnQudGFnPT1JbnRlcm1lZGlhdGUgVGVjaG5vbG9neSIKICAgICAgICAgICAgZXhjbHVkZSAicmVsYXRpb25zaGlwLnRhZz09RGV0YWlsZWQgVmlldyIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBkaDMgIlNldHRsZW1lbnRSZXBvcnREZXRhaWxlZCIgewogICAgICAgICAgICB0aXRsZSAiW0NvbnRhaW5lcl0gRGF0YUh1YiAzLjAgLSBTZXR0bGVtZW50IFJlcG9ydHMgKERldGFpbGVkKSIKICAgICAgICAgICAgaW5jbHVkZSAtPnNldHRsZW1lbnRSZXBvcnREb21haW4tPgogICAgICAgICAgICBleGNsdWRlICJyZWxhdGlvbnNoaXAudGFnPT1TaW1wbGUgVmlldyIKICAgICAgICB9CiAgICB9Cn0="
   },
   "views" : {
     "configuration" : {
@@ -834,171 +1045,113 @@
     },
     "containerViews" : [ {
       "dimensions" : {
-        "height" : 2366,
-        "width" : 3579
+        "height" : 2367,
+        "width" : 2477
       },
       "elements" : [ {
-        "id" : "72",
-        "x" : 808,
-        "y" : 1633
+        "id" : "98",
+        "x" : 1787,
+        "y" : 1702
       }, {
-        "id" : "73",
-        "x" : 1558,
-        "y" : 1633
+        "id" : "100",
+        "x" : 990,
+        "y" : 1440
       }, {
-        "id" : "74",
-        "x" : 433,
-        "y" : 1033
+        "id" : "101",
+        "x" : 990,
+        "y" : 840
       }, {
-        "id" : "77",
-        "x" : 1933,
-        "y" : 1033
+        "id" : "105",
+        "x" : 240,
+        "y" : 840
       }, {
-        "id" : "79",
-        "x" : 1183,
-        "y" : 1033
+        "id" : "108",
+        "x" : 1740,
+        "y" : 840
       }, {
-        "id" : "82",
-        "x" : 808,
-        "y" : 433
-      }, {
-        "id" : "85",
-        "x" : 2695,
-        "y" : 1633
+        "id" : "112",
+        "x" : 1365,
+        "y" : 240
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "SettlementReport",
       "order" : 1,
-      "paperSize" : "A3_Landscape",
       "relationships" : [ {
-        "id" : "75",
-        "vertices" : [ {
-          "x" : 1408,
-          "y" : 1529
-        } ]
+        "id" : "102"
       }, {
-        "id" : "76"
+        "id" : "103"
       }, {
-        "id" : "78"
+        "id" : "106"
       }, {
-        "id" : "80"
+        "id" : "109"
       }, {
-        "id" : "81"
+        "id" : "110"
       }, {
-        "id" : "83"
+        "id" : "113"
       }, {
-        "id" : "84"
-      }, {
-        "id" : "86"
-      }, {
-        "id" : "87",
-        "vertices" : [ {
-          "x" : 1783,
-          "y" : 1333
-        }, {
-          "x" : 2562,
-          "y" : 1529
-        } ]
-      }, {
-        "id" : "88",
-        "vertices" : [ {
-          "x" : 2562,
-          "y" : 1529
-        }, {
-          "x" : 2412,
-          "y" : 1431
-        }, {
-          "x" : 1558,
-          "y" : 1431
-        }, {
-          "x" : 1408,
-          "y" : 1529
-        } ]
+        "id" : "114"
       } ],
       "softwareSystemId" : "24",
       "title" : "[Container] DataHub 3.0 - Settlement Reports"
     }, {
       "dimensions" : {
-        "height" : 2366,
-        "width" : 3579
+        "height" : 2915,
+        "width" : 2892
       },
       "elements" : [ {
-        "id" : "72",
-        "x" : 808,
-        "y" : 1633
-      }, {
-        "id" : "73",
-        "x" : 1558,
-        "y" : 1633
-      }, {
-        "id" : "74",
-        "x" : 433,
-        "y" : 1033
-      }, {
-        "id" : "77",
-        "x" : 1933,
-        "y" : 1033
-      }, {
-        "id" : "79",
-        "x" : 1183,
-        "y" : 1033
-      }, {
         "id" : "82",
-        "x" : 808,
-        "y" : 433
+        "x" : 1136,
+        "y" : 2175
       }, {
-        "id" : "85",
-        "x" : 2695,
-        "y" : 1633
+        "id" : "98",
+        "x" : 252,
+        "y" : 1701
+      }, {
+        "id" : "100",
+        "x" : 1472,
+        "y" : 1506
+      }, {
+        "id" : "101",
+        "x" : 240,
+        "y" : 839
+      }, {
+        "id" : "105",
+        "x" : 2202,
+        "y" : 1506
+      }, {
+        "id" : "108",
+        "x" : 990,
+        "y" : 839
+      }, {
+        "id" : "112",
+        "x" : 615,
+        "y" : 239
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "SettlementReportDetailed",
       "order" : 2,
-      "paperSize" : "A3_Landscape",
       "relationships" : [ {
-        "id" : "75",
-        "vertices" : [ {
-          "x" : 1408,
-          "y" : 1529
-        } ]
+        "id" : "102"
       }, {
-        "id" : "76"
+        "id" : "103"
       }, {
-        "id" : "78"
+        "id" : "104"
       }, {
-        "id" : "80"
+        "id" : "106"
       }, {
-        "id" : "81"
+        "id" : "107"
       }, {
-        "id" : "83"
+        "id" : "109"
       }, {
-        "id" : "84"
+        "id" : "110"
       }, {
-        "id" : "86"
+        "id" : "111"
       }, {
-        "id" : "87",
-        "vertices" : [ {
-          "x" : 1783,
-          "y" : 1333
-        }, {
-          "x" : 2562,
-          "y" : 1529
-        } ]
+        "id" : "113"
       }, {
-        "id" : "88",
-        "vertices" : [ {
-          "x" : 2562,
-          "y" : 1529
-        }, {
-          "x" : 2412,
-          "y" : 1431
-        }, {
-          "x" : 1558,
-          "y" : 1431
-        }, {
-          "x" : 1408,
-          "y" : 1529
-        } ]
+        "id" : "114"
+      }, {
+        "id" : "99"
       } ],
       "softwareSystemId" : "24",
       "title" : "[Container] DataHub 3.0 - Settlement Reports (Detailed)"

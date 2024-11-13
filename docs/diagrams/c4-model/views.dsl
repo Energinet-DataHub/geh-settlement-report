@@ -15,6 +15,9 @@ workspace extends https://raw.githubusercontent.com/Energinet-DataHub/opengeh-ar
         #
         !ref dh3 {
 
+            # Include Wholesale model
+            !include https://raw.githubusercontent.com/Energinet-DataHub/opengeh-wholesale/main/docs/diagrams/c4-model/model.dsl
+
             # Include model.
             !include model.dsl
 
@@ -31,19 +34,6 @@ workspace extends https://raw.githubusercontent.com/Energinet-DataHub/opengeh-ar
 
                     this -> settlementReportOrchestrator "uses HTTP API"
                     this -> settlementReportApi "uses HTTP API"
-                }
-
-            }
-
-            futureComponent = group "Job API component" {
-
-                jobApi = container "Job API" {
-                    description "Backend for Frontend"
-                    tags "Subsystem"
-
-                    settlementReportWorker -> this "uses Job API"
-                    settlementReportApi -> this "uses Job API"
-                    this -> settlementReportBlobStorage "writes reports"
                 }
 
             }
