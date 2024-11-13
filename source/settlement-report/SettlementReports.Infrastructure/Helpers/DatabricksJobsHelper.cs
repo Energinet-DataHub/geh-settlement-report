@@ -89,11 +89,10 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
             $"--requesting-actor-id={request.ActorNumberOverride ?? actorGln}",
+            request.Filter.CalculationType == CalculationType.BalanceFixing
+                ? $"--grid-area-codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
+                : $"--calculation-id-by-grid-area={gridAreas}",
         };
-
-        jobParameters.Add(request.Filter.CalculationType == CalculationType.BalanceFixing
-            ? $"--grid_area_codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
-            : $"--calculation-id-by-grid-area={gridAreas}");
 
         if (request.Filter.EnergySupplier != null)
         {
