@@ -54,7 +54,7 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
         DatabaseManager = new WholesaleDatabaseManager<SettlementReportDatabaseContext>();
 
         DurableTaskManager = new DurableTaskManager(
-            "DURABLETASK_STORAGE_CONNECTION_STRING",
+            "AzureWebJobsStorage",
             AzuriteManager.FullConnectionString);
 
         HostConfigurationBuilder = new FunctionAppHostConfigurationBuilder();
