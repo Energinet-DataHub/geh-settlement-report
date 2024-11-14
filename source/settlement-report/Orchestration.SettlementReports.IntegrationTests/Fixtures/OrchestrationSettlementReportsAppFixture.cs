@@ -185,9 +185,6 @@ public class OrchestrationSettlementReportsAppFixture : IAsyncLifetime
             "AzureWebJobsStorage",
             AzuriteManager.FullConnectionString);
         appHostSettings.ProcessEnvironmentVariables.Add(
-            "DURABLETASK_STORAGE_CONNECTION_STRING",
-            AzuriteManager.FullConnectionString);
-        appHostSettings.ProcessEnvironmentVariables.Add(
             "APPLICATIONINSIGHTS_CONNECTION_STRING",
             IntegrationTestConfiguration.ApplicationInsightsConnectionString);
 
