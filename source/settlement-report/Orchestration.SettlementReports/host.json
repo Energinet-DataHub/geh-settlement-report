@@ -2,7 +2,7 @@
   "version": "2.0",
   "extensions": {
     "durableTask": {
-      "maxConcurrentActivityFunctions": 7,
+      "maxConcurrentActivityFunctions": 3,
       "hubName": "%OrchestrationsTaskHubName%",
       "storageProvider": {
         "connectionStringName": "DURABLETASK_STORAGE_CONNECTION_STRING"
