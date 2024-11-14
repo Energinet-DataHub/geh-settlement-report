@@ -89,11 +89,10 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
             $"--requesting-actor-id={request.ActorNumberOverride ?? actorGln}",
+            request.Filter.CalculationType == CalculationType.BalanceFixing
+                ? $"--grid-area-codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
+                : $"--calculation-id-by-grid-area={gridAreas}",
         };
-
-        jobParameters.Add(request.Filter.CalculationType == CalculationType.BalanceFixing
-            ? $"--grid_area_codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
-            : $"--calculation-id-by-grid-area={gridAreas}");
 
         if (request.Filter.EnergySupplier != null)
         {
@@ -132,32 +131,35 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
 
     private static JobRunStatus ConvertJobStatus(Run jobRun)
     {
-        if (jobRun.State == null)
+        if (jobRun.Status == null)
         {
             return JobRunStatus.Queued;
         }
 
-        if (jobRun.State.ResultState == RunResultState.SUCCESS && jobRun.IsCompleted)
+        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.IsCompleted && jobRun.Status.TerminationDetails.Code is RunTerminationCode.SUCCESS)
         {
             return JobRunStatus.Completed;
         }
 
-        if (jobRun.State.ResultState is RunResultState.CANCELED or RunResultState.UPSTREAM_CANCELED)
+        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is RunTerminationCode.CANCELED)
         {
             return JobRunStatus.Canceled;
         }
 
-        if (jobRun.State.ResultState is RunResultState.FAILED or RunResultState.TIMEDOUT or RunResultState.UPSTREAM_FAILED)
+        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is
+                RunTerminationCode.INTERNAL_ERROR
+                or RunTerminationCode.DRIVER_ERROR
+                or RunTerminationCode.CLOUD_FAILURE
+                or RunTerminationCode.CLUSTER_ERROR
+                or RunTerminationCode.RUN_EXECUTION_ERROR)
         {
             return JobRunStatus.Failed;
         }
 
-        return jobRun.State.LifeCycleState switch
+        return jobRun.Status.State switch
         {
-            RunLifeCycleState.RUNNING => JobRunStatus.Running,
-            RunLifeCycleState.QUEUED or RunLifeCycleState.PENDING => JobRunStatus.Queued,
-            RunLifeCycleState.TERMINATED => JobRunStatus.Canceled,
-            RunLifeCycleState.INTERNAL_ERROR => JobRunStatus.Failed,
+            RunStatusState.PENDING or RunStatusState.QUEUED => JobRunStatus.Queued,
+            RunStatusState.RUNNING => JobRunStatus.Running,
             _ => JobRunStatus.Queued,
         };
     }
