@@ -42,10 +42,10 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportId, actorGln)).ConfigureAwait(false));
     }
 
-    public async Task<JobRunStatus> GetSettlementReportsJobStatusAsync(long runId)
+    public async Task<JobRunWithStatusAndEndTime> GetSettlementReportsJobWithStatusAndEndTimeAsync(long runId)
     {
         var jobRun = await _jobsApiClient.Jobs.RunsGet(runId, false).ConfigureAwait(false);
-        return ConvertJobStatus(jobRun.Item1);
+        return new JobRunWithStatusAndEndTime(ConvertJobStatus(jobRun.Item1), jobRun.Item1.EndTime);
     }
 
     public Task CancelSettlementReportJobAsync(long runId)
@@ -136,17 +136,17 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             return JobRunStatus.Queued;
         }
 
-        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.IsCompleted && jobRun.Status.TerminationDetails.Code is RunTerminationCode.SUCCESS)
+        if (jobRun.Status.State is RunStatusState.TERMINATED or RunStatusState.TERMINATING && jobRun.IsCompleted && jobRun.Status.TerminationDetails.Code is RunTerminationCode.SUCCESS)
         {
             return JobRunStatus.Completed;
         }
 
-        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is RunTerminationCode.CANCELED or RunTerminationCode.USER_CANCELED)
+        if (jobRun.Status.State is RunStatusState.TERMINATED or RunStatusState.TERMINATING && jobRun.Status.TerminationDetails.Code is RunTerminationCode.CANCELED or RunTerminationCode.USER_CANCELED)
         {
             return JobRunStatus.Canceled;
         }
 
-        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is
+        if (jobRun.Status.State is RunStatusState.TERMINATED or RunStatusState.TERMINATING && jobRun.Status.TerminationDetails.Code is
                 RunTerminationCode.INTERNAL_ERROR
                 or RunTerminationCode.DRIVER_ERROR
                 or RunTerminationCode.CLOUD_FAILURE

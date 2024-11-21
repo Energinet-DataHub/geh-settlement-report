@@ -58,12 +58,12 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         {
             if (settlementReportDto.Status != SettlementReportStatus.Completed)
             {
-                var jobStatus = await _jobHelper.GetSettlementReportsJobStatusAsync(settlementReportDto.JobId!.Id)
+                var jobResult = await _jobHelper.GetSettlementReportsJobWithStatusAndEndTimeAsync(settlementReportDto.JobId!.Id)
                     .ConfigureAwait(false);
-                switch (jobStatus)
+                switch (jobResult.Status)
                 {
                     case JobRunStatus.Completed:
-                        await MarkAsCompletedAsync(settlementReportDto).ConfigureAwait(false);
+                        await MarkAsCompletedAsync(settlementReportDto, jobResult.EndTime).ConfigureAwait(false);
                         break;
                     case JobRunStatus.Canceled:
                         await MarkAsCanceledAsync(settlementReportDto).ConfigureAwait(false);
@@ -73,7 +73,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
                         break;
                 }
 
-                results.Add(settlementReportDto with { Status = MapFromJobStatus(jobStatus) });
+                results.Add(settlementReportDto with { Status = MapFromJobStatus(jobResult.Status) });
             }
             else
             {
@@ -84,7 +84,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         return results;
     }
 
-    private async Task MarkAsCompletedAsync(RequestedSettlementReportDto settlementReportDto)
+    private async Task MarkAsCompletedAsync(RequestedSettlementReportDto settlementReportDto, DateTimeOffset? endTime)
     {
         ArgumentNullException.ThrowIfNull(settlementReportDto);
         ArgumentNullException.ThrowIfNull(settlementReportDto.JobId);
@@ -93,7 +93,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             .GetAsync(settlementReportDto.JobId.Id)
             .ConfigureAwait(false);
 
-        request.MarkAsCompleted(_clock, settlementReportDto.RequestId);
+        request.MarkAsCompleted(_clock, settlementReportDto.RequestId, endTime);
 
         await _repository
             .AddOrUpdateAsync(request)
