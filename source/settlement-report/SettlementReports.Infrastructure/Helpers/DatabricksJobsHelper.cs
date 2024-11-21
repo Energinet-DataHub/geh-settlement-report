@@ -141,7 +141,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             return JobRunStatus.Completed;
         }
 
-        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is RunTerminationCode.CANCELED)
+        if (jobRun.Status.State is RunStatusState.TERMINATED && jobRun.Status.TerminationDetails.Code is RunTerminationCode.CANCELED or RunTerminationCode.USER_CANCELED)
         {
             return JobRunStatus.Canceled;
         }
