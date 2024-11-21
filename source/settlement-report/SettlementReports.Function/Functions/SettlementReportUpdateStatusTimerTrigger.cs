@@ -33,7 +33,7 @@ internal sealed class SettlementReportUpdateStatusTimerTrigger
 
     [Function(nameof(UpdateStatusForSettlementReports))]
     public async Task UpdateStatusForSettlementReports(
-        [TimerTrigger("0 */5 * * * *")] TimerInfo timer,
+        [TimerTrigger("0 */1 * * * *")] TimerInfo timer,
         FunctionContext executionContext)
     {
         ArgumentNullException.ThrowIfNull(executionContext);

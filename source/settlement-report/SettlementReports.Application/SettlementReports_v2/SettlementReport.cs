@@ -125,11 +125,11 @@ public sealed class SettlementReport
         EndedDateTime = clock.GetCurrentInstant();
     }
 
-    public void MarkAsCompleted(IClock clock, SettlementReportRequestId requestId)
+    public void MarkAsCompleted(IClock clock, SettlementReportRequestId requestId, DateTimeOffset? endTime)
     {
         Status = SettlementReportStatus.Completed;
         BlobFileName = requestId.Id + ".zip";
-        EndedDateTime = clock.GetCurrentInstant();
+        EndedDateTime = endTime?.ToInstant() ?? clock.GetCurrentInstant();
     }
 
     public void MarkAsFailed()
