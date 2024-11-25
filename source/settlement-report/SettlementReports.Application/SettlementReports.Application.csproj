@@ -2,10 +2,15 @@
   <PropertyGroup>
     <AssemblyName>Energinet.DataHub.SettlementReport.Application</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Application</RootNamespace>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="11.2.4" />
-    <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.6.1" />
+    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="11.2.5" />
+    <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.6.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
   </ItemGroup>
   <ItemGroup>
