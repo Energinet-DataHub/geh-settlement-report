@@ -2,24 +2,29 @@
   <PropertyGroup>
     <AssemblyName>Energinet.DataHub.SettlementReport.Infrastructure</AssemblyName>
     <RootNamespace>Energinet.DataHub.SettlementReport.Infrastructure</RootNamespace>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
     <PackageReference Include="Azure.Storage.Files.DataLake" Version="12.21.0" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
-    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="13.3.0" />
-    <PackageReference Include="Energinet.DataHub.Core.Databricks.SqlStatementExecution" Version="11.2.4" />
-    <PackageReference Include="Energinet.DataHub.Core.JsonSerialization" Version="2.2.12" />
-    <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="6.1.0" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="13.3.2" />
+    <PackageReference Include="Energinet.DataHub.Core.Databricks.SqlStatementExecution" Version="11.2.5" />
+    <PackageReference Include="Energinet.DataHub.Core.JsonSerialization" Version="2.2.13" />
+    <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="6.1.1" />
     <PackageReference Include="Google.Protobuf" Version="3.28.3" />
     <PackageReference Include="Grpc.Tools" Version="2.67.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="NodaTime" Version="3.2.0" />
     <PackageReference Include="SimplerSoftware.EntityFrameworkCore.SqlServer.NodaTime" Version="8.0.1" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />

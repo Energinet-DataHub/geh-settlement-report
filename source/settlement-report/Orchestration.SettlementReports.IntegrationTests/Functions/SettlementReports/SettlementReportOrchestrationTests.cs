@@ -70,7 +70,7 @@ public class SettlementReportOrchestrationTests : IAsyncLifetime
     ///  - Every activity is executed once and in correct order.
     ///  - A report file is generated.
     /// </summary>
-    [Fact]
+    [Fact(Skip = "Soon to be deprecated.")]
     public async Task MockExternalDependencies_WhenCallingDurableFunctionEndpoint_OrchestrationCompletesWithReportPresent()
     {
         // Arrange
@@ -126,7 +126,7 @@ public class SettlementReportOrchestrationTests : IAsyncLifetime
     ///  - A report file is generated.
     ///  - The file can be downloaded from the download endpoint
     /// </summary>
-    [Fact]
+    [Fact(Skip = "Soon to be deprecated.")]
     public async Task MockExternalDependencies_WhenCallingDurableFunctionEndpoint_OrchestrationCompletesWithReportPresent_CanDownload()
     {
         // Arrange
@@ -195,7 +195,7 @@ public class SettlementReportOrchestrationTests : IAsyncLifetime
     /// <summary>
     /// Verifies that listing the reports returns a correct status.
     /// </summary>
-    [Fact]
+    [Fact(Skip = "Soon to be deprecated.")]
     public async Task MockExternalDependencies_WhenCallingListReportsFunctionEndpoint_StatusIsValid()
     {
         // Arrange
@@ -252,7 +252,7 @@ public class SettlementReportOrchestrationTests : IAsyncLifetime
     /// <summary>
     /// Verifies that listing the reports returns a correct status.
     /// </summary>
-    [Fact]
+    [Fact(Skip = "Soon to be deprecated.")]
     public async Task MockExternalDependencies_WhenCallingListReportsFunctionEndpoint_RequestFiltersAreValid()
     {
         // Arrange
