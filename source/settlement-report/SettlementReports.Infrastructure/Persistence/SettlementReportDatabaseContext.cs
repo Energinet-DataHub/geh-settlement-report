@@ -30,6 +30,8 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
 
     public DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; init; } = null!;
 
+    public DbSet<GridAreaOwnerEntity> GridAreaOwners { get; init; } = null!;
+
     public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,6 +39,7 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
         modelBuilder.HasDefaultSchema(Schema);
 
         modelBuilder.ApplyConfiguration(new SettlementReportEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new GridAreaOwnerEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }

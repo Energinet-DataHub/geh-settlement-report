@@ -13,16 +13,20 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
+using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
+using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
+using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
@@ -37,6 +41,23 @@ public static class SettlementReportModuleExtensions
     public static IServiceCollection AddSettlementReportFunctionModule(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
+
+        services
+            .AddOptions<IntegrationEventsOptions>()
+            .BindConfiguration(IntegrationEventsOptions.SectionName)
+            .ValidateDataAnnotations();
+
+        services
+            .AddOptions<ServiceBusNamespaceOptions>()
+            .BindConfiguration(ServiceBusNamespaceOptions.SectionName)
+            .ValidateDataAnnotations();
+
+        services.AddScoped<IGridAreaOwnershipAssignedEventStore, GridAreaOwnerRepository>();
+        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
+        services.AddSubscriber<IntegrationEventSubscriptionHandler>(
+        [
+            GridAreaOwnershipAssigned.Descriptor,
+        ]);
 
         // general services
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
