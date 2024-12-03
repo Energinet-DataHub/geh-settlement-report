@@ -82,7 +82,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install mypy types-python-dateutil
-          mypy ./source/settlement_report_python --disallow-untyped-defs --ignore-missing-imports
+          mypy ./source/settlement_report_python/settlement_report_job --disallow-untyped-defs --ignore-missing-imports
 
   settlement_report_black_check:
     runs-on: ubuntu-latest
