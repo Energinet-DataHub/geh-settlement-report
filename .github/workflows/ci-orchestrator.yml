@@ -35,10 +35,24 @@ jobs:
   changes:
     uses: ./.github/workflows/detect-changes.yml
 
+  ci_docker:
+    needs: changes
+    uses: Energinet-DataHub/.github/.github/workflows/python-build-and-push-docker-image.yml@v13
+    with:
+      docker_changed: ${{ needs.changes.outputs.docker == 'true' }}
+      docker_changed_in_commit: ${{ needs.changes.outputs.docker_in_commit == 'true' }}
+
   ci_dotnet:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
+
+  ci_python:
+    needs: changes
+    if: ${{ needs.changes.outputs.settlement_report_job == 'true' }}
+    uses: ./.github/workflows/ci-python.yml
+    with:
+      image_tag: ${{ needs.ci_docker.outputs.image_tag }}
 
   render_c4model_views:
     needs: changes
