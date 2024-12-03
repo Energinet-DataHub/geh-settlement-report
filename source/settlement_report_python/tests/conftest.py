@@ -337,25 +337,14 @@ def source_path(file_path_finder: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def databricks_path(source_path: str) -> str:
-    """
-    Returns the source/databricks folder path.
-    Please note that this only works if current folder haven't been changed prior using
-    `os.chdir()`. The correctness also relies on the prerequisite that this function is
-    actually located in a file located directly in the tests folder.
-    """
-    return f"{source_path}/databricks"
-
-
-@pytest.fixture(scope="session")
-def settlement_report_path(databricks_path: str) -> str:
+def settlement_report_path(source_path: str) -> str:
     """
     Returns the source/databricks/ folder path.
     Please note that this only works if current folder haven't been changed prior using
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return f"{databricks_path}/settlement_report"
+    return f"{source_path}/settlement_report_python"
 
 
 @pytest.fixture(scope="session")
@@ -401,14 +390,14 @@ def tests_path(settlement_report_path: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def settlement_report_job_container_path(databricks_path: str) -> str:
+def settlement_report_job_container_path(source_path: str) -> str:
     """
     Returns the <repo-root>/source folder path.
     Please note that this only works if current folder haven't been changed prior using
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return f"{databricks_path}/settlement_report"
+    return f"{source_path}/settlement_report_container"
 
 
 @pytest.fixture(scope="session")

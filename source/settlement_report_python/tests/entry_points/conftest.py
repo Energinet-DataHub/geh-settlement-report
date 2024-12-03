@@ -12,9 +12,9 @@ def virtual_environment() -> Generator:
     activating the virtual environment from pytest."""
 
     # Create and activate the virtual environment
-    subprocess.call(["virtualenv", ".wholesale-pytest"])
+    subprocess.call(["virtualenv", ".settlement-report-pytest"])
     subprocess.call(
-        "source .wholesale-pytest/bin/activate", shell=True, executable="/bin/bash"
+        "source .settlement-report-pytest/bin/activate", shell=True, executable="/bin/bash"
     )
 
     yield None
@@ -27,7 +27,7 @@ def virtual_environment() -> Generator:
 def installed_package(
     virtual_environment: Generator, settlement_report_job_container_path: str
 ) -> None:
-    """Ensures that the wholesale package is installed (after building it)."""
+    """Ensures that the settlement report package is installed (after building it)."""
 
     # Build the package wheel
     os.chdir(settlement_report_job_container_path)
