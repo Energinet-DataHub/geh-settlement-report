@@ -5,6 +5,6 @@
 version: 2
 updates:
   - package-ecosystem: nuget
-    directory: /source/settlement-report
+    directory: /source/settlement_report_python
     schedule:
       interval: monthly
