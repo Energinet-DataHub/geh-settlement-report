@@ -12,15 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
+using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Model;
 
-public interface ISettlementReportDatabaseContext
-{
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
-
-    DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
-
-    Task<int> SaveChangesAsync();
-}
+public sealed record GridAreaOwner(GridAreaCode Code, ActorNumber ActorNumber, Instant ValidFrom);
