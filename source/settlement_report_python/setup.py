@@ -14,7 +14,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="opengeh-settlement-report",
+    name="geh-settlement-report",
     version=1.0,
     description="Tools for settlement report",
     long_description="",

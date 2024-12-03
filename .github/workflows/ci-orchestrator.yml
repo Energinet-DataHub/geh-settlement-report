@@ -48,7 +48,7 @@ jobs:
     uses: ./.github/workflows/ci-dotnet.yml
 
   ci_python:
-    needs: changes
+    needs: [changes, ci_docker]
     if: ${{ needs.changes.outputs.settlement_report_job == 'true' }}
     uses: ./.github/workflows/ci-python.yml
     with:
