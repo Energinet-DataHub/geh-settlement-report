@@ -397,7 +397,7 @@ def settlement_report_job_container_path(source_path: str) -> str:
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return f"{source_path}/settlement_report_container"
+    return f"{source_path}/settlement_report_python"
 
 
 @pytest.fixture(scope="session")
