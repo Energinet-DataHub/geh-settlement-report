@@ -16,7 +16,7 @@ def virtual_environment() -> Generator:
     subprocess.call(
         "source .settlement-report-pytest/bin/activate",
         shell=True,
-        executable="/bin/bash"
+        executable="/bin/bash",
     )
 
     yield None
