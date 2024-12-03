@@ -17,8 +17,8 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
-using NodaTime;
-using NodaTime.Serialization.Protobuf;
+using Google.Protobuf.WellKnownTypes;
+using NodaTime.Extensions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
@@ -33,96 +33,49 @@ public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDataba
     }
 
     [Fact]
-    public async Task GetLatestAsync_PastOwnership_ReturnsOwner()
+    public async Task Get_MultipleGridOwnersInPeriod_ReturnsAll()
     {
         // Arrange
         var gridAreaCode = new GridAreaCode("111");
-        var gridAreaOwnershipAssigned = new GridAreaOwnershipAssigned
+        var actorNumber = "7025915927252";
+        var jan = new GridAreaOwnershipAssigned
         {
             GridAreaCode = gridAreaCode.Value,
-            ActorNumber = Guid.NewGuid().ToString(),
-            ValidFrom = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromHours(72)).ToTimestamp(),
+            ActorNumber = actorNumber,
+            ValidFrom = DateTimeOffset.Parse("2024-01-01").ToTimestamp(),
+            SequenceNumber = 1,
+        };
+        var feb = new GridAreaOwnershipAssigned
+        {
+            GridAreaCode = gridAreaCode.Value,
+            ActorNumber = actorNumber,
+            ValidFrom = DateTimeOffset.Parse("2024-02-01").ToTimestamp(),
+            SequenceNumber = 1,
+        };
+        var mar = new GridAreaOwnershipAssigned
+        {
+            GridAreaCode = gridAreaCode.Value,
+            ActorNumber = actorNumber,
+            ValidFrom = DateTimeOffset.Parse("2024-03-01").ToTimestamp(),
             SequenceNumber = 1,
         };
 
         await using var dbContext = _databaseManager.CreateDbContext();
         var target = new GridAreaOwnerRepository(dbContext);
-        await target.AddAsync(gridAreaOwnershipAssigned);
+        await target.AddAsync(jan);
+        await target.AddAsync(feb);
+        await target.AddAsync(mar);
 
         // Act
-        var createdGridAreaOwner = await target.GetLatestAsync(new GridAreaCode(gridAreaOwnershipAssigned.GridAreaCode));
+        var owners = (await target.GetGridAreaOwnersAsync(
+            new GridAreaCode(jan.GridAreaCode),
+            DateTimeOffset.Parse("2024-01-01").ToInstant(),
+            DateTimeOffset.Parse("2024-03-01").AddSeconds(-1).ToInstant()))
+            .OrderBy(x => x.ValidFrom).ToList();
 
         // Assert
-        Assert.NotNull(createdGridAreaOwner);
-        Assert.Equal(gridAreaOwnershipAssigned.GridAreaCode, createdGridAreaOwner.Code.Value);
-        Assert.Equal(gridAreaOwnershipAssigned.ActorNumber, createdGridAreaOwner.ActorNumber.Value);
-        Assert.Equal(gridAreaOwnershipAssigned.ValidFrom.ToDateTimeOffset(), createdGridAreaOwner.ValidFrom.ToDateTimeOffset());
-    }
-
-    [Fact]
-    public async Task GetLatestAsync_FutureOwnership_ReturnsNull()
-    {
-        // Arrange
-        var gridAreaCode = new GridAreaCode("222");
-        var gridAreaOwnershipAssigned = new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = gridAreaCode.Value,
-            ActorNumber = Guid.NewGuid().ToString(),
-            ValidFrom = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromHours(72)).ToTimestamp(),
-            SequenceNumber = 1,
-        };
-
-        await using var dbContext = _databaseManager.CreateDbContext();
-        var target = new GridAreaOwnerRepository(dbContext);
-        await target.AddAsync(gridAreaOwnershipAssigned);
-
-        // Act
-        var createdGridAreaOwner = await target.GetLatestAsync(gridAreaCode);
-
-        // Assert
-        Assert.Null(createdGridAreaOwner);
-    }
-
-    [Fact]
-    public async Task GetLatestAsync_MultipleEvents_ReturnsLatest()
-    {
-        // Arrange
-        var gridAreaCode = new GridAreaCode("333");
-        var gridAreaOwnershipAssigned1 = new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = gridAreaCode.Value,
-            ActorNumber = Guid.NewGuid().ToString(),
-            ValidFrom = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromHours(72)).ToTimestamp(),
-            SequenceNumber = 1,
-        };
-
-        var gridAreaOwnershipAssigned2 = new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = gridAreaOwnershipAssigned1.GridAreaCode,
-            ActorNumber = Guid.NewGuid().ToString(),
-            ValidFrom = gridAreaOwnershipAssigned1.ValidFrom,
-            SequenceNumber = 2,
-        };
-
-        var gridAreaOwnershipAssigned3 = new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = gridAreaOwnershipAssigned1.GridAreaCode,
-            ActorNumber = Guid.NewGuid().ToString(),
-            ValidFrom = gridAreaOwnershipAssigned1.ValidFrom,
-            SequenceNumber = 3,
-        };
-
-        await using var dbContext = _databaseManager.CreateDbContext();
-        var target = new GridAreaOwnerRepository(dbContext);
-        await target.AddAsync(gridAreaOwnershipAssigned2);
-        await target.AddAsync(gridAreaOwnershipAssigned3);
-        await target.AddAsync(gridAreaOwnershipAssigned1);
-
-        // Act
-        var createdGridAreaOwner = await target.GetLatestAsync(gridAreaCode);
-
-        // Assert
-        Assert.NotNull(createdGridAreaOwner);
-        Assert.Equal(gridAreaOwnershipAssigned3.ActorNumber, createdGridAreaOwner.ActorNumber.Value);
+        Assert.Equal(2, owners.Count);
+        Assert.Equal(DateTimeOffset.Parse("2024-01-01"), owners[0].ValidFrom.ToDateTimeOffset());
+        Assert.Equal(DateTimeOffset.Parse("2024-02-01"), owners[1].ValidFrom.ToDateTimeOffset());
     }
 }

@@ -21,6 +21,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInj
 using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
@@ -46,6 +47,7 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddScoped<ICancelSettlementReportJobHandler, CancelSettlementReportJobHandler>();
+        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
         services.AddSettlementReportBlobStorage();
 
         // Database Health check

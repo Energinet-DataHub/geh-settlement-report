@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Infrastructure.Model;
+using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
 
 public interface IGridAreaOwnerRepository
 {
-    Task<GridAreaOwner?> GetLatestAsync(GridAreaCode gridAreaCode);
+    Task<IEnumerable<GridAreaOwner>> GetGridAreaOwnersAsync(GridAreaCode gridAreaCode, Instant periodFrom, Instant periodTo);
 }

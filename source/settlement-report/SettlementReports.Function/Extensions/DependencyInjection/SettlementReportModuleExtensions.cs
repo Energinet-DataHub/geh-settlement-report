@@ -53,7 +53,6 @@ public static class SettlementReportModuleExtensions
             .ValidateDataAnnotations();
 
         services.AddScoped<IGridAreaOwnershipAssignedEventStore, GridAreaOwnerRepository>();
-        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
         services.AddSubscriber<IntegrationEventSubscriptionHandler>(
         [
             GridAreaOwnershipAssigned.Descriptor,

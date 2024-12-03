@@ -29,27 +29,25 @@ public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAre
         _dbContext = dbContext;
     }
 
-    public async Task<GridAreaOwner?> GetLatestAsync(GridAreaCode gridAreaCode)
+    public async Task<IEnumerable<GridAreaOwner>> GetGridAreaOwnersAsync(GridAreaCode gridAreaCode, Instant periodFrom, Instant periodTo)
     {
         ArgumentNullException.ThrowIfNull(gridAreaCode);
 
-        var ownershipValidAt = DateTimeOffset.UtcNow;
+        var from = periodFrom.ToDateTimeOffset();
+        var to = periodTo.ToDateTimeOffset();
 
-        var entity = await _dbContext
+        var entities = await _dbContext
             .GridAreaOwners
             .OrderByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.ValidFrom)
             .ThenByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.SequenceNumber)
-            .FirstOrDefaultAsync(gridAreaOwnerEntity =>
-                gridAreaOwnerEntity.ValidFrom < ownershipValidAt &&
+            .Where(gridAreaOwnerEntity =>
+                gridAreaOwnerEntity.ValidFrom >= from && gridAreaOwnerEntity.ValidFrom <= to &&
                 gridAreaOwnerEntity.Code == gridAreaCode.Value)
+            .ToListAsync()
             .ConfigureAwait(false);
 
-        return entity != null
-            ? new GridAreaOwner(
-                new GridAreaCode(entity.Code),
-                new ActorNumber(entity.ActorNumber),
-                Instant.FromDateTimeOffset(entity.ValidFrom))
-            : null;
+        return entities
+            .Select(x => new GridAreaOwner(new GridAreaCode(x.Code), new ActorNumber(x.ActorNumber), Instant.FromDateTimeOffset(x.ValidFrom)));
     }
 
     public async Task AddAsync(GridAreaOwnershipAssigned gridAreaOwnershipAssigned)
