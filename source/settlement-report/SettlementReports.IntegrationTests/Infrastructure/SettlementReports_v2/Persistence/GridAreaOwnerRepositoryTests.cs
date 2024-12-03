@@ -70,7 +70,7 @@ public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDataba
         var owners = (await target.GetGridAreaOwnersAsync(
             new GridAreaCode(jan.GridAreaCode),
             DateTimeOffset.Parse("2024-01-01").ToInstant(),
-            DateTimeOffset.Parse("2024-03-01").AddSeconds(-1).ToInstant()))
+            DateTimeOffset.Parse("2024-03-01").ToInstant()))
             .OrderBy(x => x.ValidFrom).ToList();
 
         // Assert

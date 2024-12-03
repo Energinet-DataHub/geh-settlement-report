@@ -41,7 +41,7 @@ public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAre
             .OrderByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.ValidFrom)
             .ThenByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.SequenceNumber)
             .Where(gridAreaOwnerEntity =>
-                gridAreaOwnerEntity.ValidFrom >= from && gridAreaOwnerEntity.ValidFrom <= to &&
+                gridAreaOwnerEntity.ValidFrom >= from && gridAreaOwnerEntity.ValidFrom < to &&
                 gridAreaOwnerEntity.Code == gridAreaCode.Value)
             .ToListAsync()
             .ConfigureAwait(false);
