@@ -40,8 +40,6 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
 
     public async Task<JobRunId> HandleAsync(RequestSettlementReportCommand request)
     {
-        var reportId = new SettlementReportRequestId(Guid.NewGuid().ToString());
-
         if (request.MarketRole == MarketRole.GridAccessProvider)
         {
             JobRunId? firstRunId = null;
@@ -52,36 +50,14 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
 
             foreach (var owner in distinctOwners)
             {
-                var id = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, owner.Value).ConfigureAwait(false);
+                var id = await StartReportAsync(request, owner.Value).ConfigureAwait(false);
                 firstRunId ??= id;
-
-                await _settlementReportInitializeHandler
-                    .InitializeFromJobAsync(
-                        request.UserId,
-                        request.ActorId,
-                        request.IsFas,
-                        id,
-                        reportId,
-                        request.RequestDto)
-                    .ConfigureAwait(false);
             }
 
             return firstRunId!;
         }
 
-        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, request.ActorGln).ConfigureAwait(false);
-
-        await _settlementReportInitializeHandler
-            .InitializeFromJobAsync(
-                request.UserId,
-                request.ActorId,
-                request.IsFas,
-                runId,
-                reportId,
-                request.RequestDto)
-            .ConfigureAwait(false);
-
-        return runId;
+        return await StartReportAsync(request, request.ActorGln).ConfigureAwait(false);
     }
 
     private async Task<IEnumerable<ActorNumber>> GetGridAreaOwnersAsync(IEnumerable<string> gridAreaCodes, SettlementReportRequestFilterDto filter)
@@ -102,5 +78,24 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
         }
 
         return gridAreaOwners;
+    }
+
+    private async Task<JobRunId> StartReportAsync(RequestSettlementReportCommand request, string requestActorGln)
+    {
+        var reportId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+
+        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
+
+        await _settlementReportInitializeHandler
+            .InitializeFromJobAsync(
+                request.UserId,
+                request.ActorId,
+                request.IsFas,
+                runId,
+                reportId,
+                request.RequestDto)
+            .ConfigureAwait(false);
+
+        return runId;
     }
 }
