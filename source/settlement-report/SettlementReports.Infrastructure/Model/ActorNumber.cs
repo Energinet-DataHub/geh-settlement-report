@@ -12,6 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Application.Model;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Model;
 
 public sealed record ActorNumber(string Value);

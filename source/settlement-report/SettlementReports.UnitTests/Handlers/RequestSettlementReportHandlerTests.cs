@@ -15,7 +15,6 @@
 using System.Collections.ObjectModel;
 using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
-using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
@@ -56,7 +55,7 @@ public class RequestSettlementReportHandlerTests
             .ReturnsAsync(jobRunId);
 
         var command = new RequestSettlementReportCommand(request, Guid.NewGuid(), Guid.NewGuid(), true, "1233", MarketRole.EnergySupplier);
-        var handler = new RequestSettlementReportHandler(jobHelperMock.Object, initializerMock.Object, new Mock<IGridAreaOwnerRepository>().Object);
+        var handler = new RequestSettlementReportHandler(jobHelperMock.Object, initializerMock.Object);
 
         // Act
         var result = await handler.HandleAsync(command);
