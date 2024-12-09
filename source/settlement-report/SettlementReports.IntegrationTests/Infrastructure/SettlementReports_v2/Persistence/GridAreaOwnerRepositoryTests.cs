@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
+using Energinet.DataHub.SettlementReport.Infrastructure.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;

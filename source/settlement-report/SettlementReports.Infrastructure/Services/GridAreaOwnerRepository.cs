@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
-using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
+using Energinet.DataHub.SettlementReport.Infrastructure.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
