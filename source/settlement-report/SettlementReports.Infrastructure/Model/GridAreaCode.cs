@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Model;
 
-namespace Energinet.DataHub.SettlementReport.Application.Model;
-
-public sealed record GridAreaOwner(GridAreaCode Code, ActorNumber ActorNumber, Instant ValidFrom);
+public sealed record GridAreaCode(string Value);
