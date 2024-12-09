@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
+using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
 
-public interface ISettlementReportDatabaseContext
+public interface IGridAreaOwnershipAssignedEventStore
 {
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
-
-    DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
-
-    Task<int> SaveChangesAsync();
+    Task AddAsync(GridAreaOwnershipAssigned gridAreaOwnershipAssigned);
 }

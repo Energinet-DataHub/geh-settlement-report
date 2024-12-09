@@ -13,14 +13,20 @@
 // limitations under the License.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 
-public interface ISettlementReportDatabaseContext
+public class GridAreaOwnerEntityConfiguration : IEntityTypeConfiguration<GridAreaOwnerEntity>
 {
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
+    public void Configure(EntityTypeBuilder<GridAreaOwnerEntity> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
 
-    DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
-
-    Task<int> SaveChangesAsync();
+        builder.ToTable("GridAreaOwner");
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(e => e.Code).HasMaxLength(4);
+        builder.Property(e => e.ActorNumber).HasMaxLength(50);
+    }
 }
