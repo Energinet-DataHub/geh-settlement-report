@@ -43,6 +43,7 @@ public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDataba
     [InlineData("2023-12-30", "2023-12-31", "105", "")]
     [InlineData("2023-12-30", "2024-01-01", "106", "")]
     [InlineData("2023-12-30", "2024-01-02", "107", "1")]
+    [InlineData("2023-12-30", "2024-04-02", "108", "1,2")]
     public async Task Get_GridOwnerInPeriod_ReturnsOwner(string from, string to, string gridAreaCode, string expectedOwners)
     {
         // arrange
