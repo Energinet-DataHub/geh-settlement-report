@@ -13,9 +13,12 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Application.Commands;
+using Energinet.DataHub.SettlementReport.Application.Model;
+using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
@@ -23,19 +26,66 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
 {
     private readonly IDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
+    private readonly IGridAreaOwnerRepository _gridAreaOwnerRepository;
 
     public RequestSettlementReportHandler(
         IDatabricksJobsHelper jobHelper,
-        ISettlementReportInitializeHandler settlementReportInitializeHandler)
+        ISettlementReportInitializeHandler settlementReportInitializeHandler,
+        IGridAreaOwnerRepository gridAreaOwnerRepository)
     {
         _jobHelper = jobHelper;
         _settlementReportInitializeHandler = settlementReportInitializeHandler;
+        _gridAreaOwnerRepository = gridAreaOwnerRepository;
     }
 
     public async Task<JobRunId> HandleAsync(RequestSettlementReportCommand request)
     {
+        if (request.MarketRole == MarketRole.GridAccessProvider)
+        {
+            JobRunId? firstRunId = null;
+
+            var gridAreas = request.RequestDto.Filter.GridAreas.Select(x => x.Key);
+
+            var distinctOwners = await GetGridAreaOwnersAsync(gridAreas, request.RequestDto.Filter).ConfigureAwait(false);
+
+            foreach (var owner in distinctOwners)
+            {
+                var id = await StartReportAsync(request, owner.Value).ConfigureAwait(false);
+                firstRunId ??= id;
+            }
+
+            return firstRunId!;
+        }
+
+        return await StartReportAsync(request, request.ActorGln).ConfigureAwait(false);
+    }
+
+    private async Task<IEnumerable<ActorNumber>> GetGridAreaOwnersAsync(IEnumerable<string> gridAreaCodes, SettlementReportRequestFilterDto filter)
+    {
+        var gridAreaOwners = new HashSet<ActorNumber>();
+
+        foreach (var grid in gridAreaCodes)
+        {
+            var owners = await _gridAreaOwnerRepository.GetGridAreaOwnersAsync(
+                new GridAreaCode(grid),
+                filter.PeriodStart.ToInstant(),
+                filter.PeriodEnd.ToInstant()).ConfigureAwait(false);
+
+            foreach (var owner in owners)
+            {
+                gridAreaOwners.Add(owner.ActorNumber);
+            }
+        }
+
+        return gridAreaOwners;
+    }
+
+    private async Task<JobRunId> StartReportAsync(RequestSettlementReportCommand request, string requestActorGln)
+    {
         var reportId = new SettlementReportRequestId(Guid.NewGuid().ToString());
-        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, request.ActorGln).ConfigureAwait(false);
+
+        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
+
         await _settlementReportInitializeHandler
             .InitializeFromJobAsync(
                 request.UserId,

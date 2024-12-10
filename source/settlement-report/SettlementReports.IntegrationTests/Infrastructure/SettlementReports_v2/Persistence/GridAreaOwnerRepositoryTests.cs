@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
-using Energinet.DataHub.SettlementReport.Infrastructure.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
@@ -32,50 +32,55 @@ public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDataba
         _databaseManager = fixture.DatabaseManager;
     }
 
-    [Fact]
-    public async Task Get_MultipleGridOwnersInPeriod_ReturnsAll()
+    [Theory]
+    // fixed owners for grid area 1:2024-01-01, 2:2024-01-15
+    // sliding window + grid area code + expected
+    [InlineData("2024-02-01", "2024-03-01", "100", "2")]
+    [InlineData("2024-01-14", "2024-03-01", "101", "1,2")]
+    [InlineData("2024-01-01", "2024-01-14", "102", "1")]
+    [InlineData("2024-01-01", "2024-01-15", "103", "1")]
+    [InlineData("2024-01-01", "2024-01-16", "104", "1,2")]
+    [InlineData("2023-12-30", "2023-12-31", "105", "")]
+    [InlineData("2023-12-30", "2024-01-01", "106", "")]
+    [InlineData("2023-12-30", "2024-01-02", "107", "1")]
+    public async Task Get_GridOwnerInPeriod_ReturnsOwner(string from, string to, string gridAreaCode, string expectedOwners)
     {
-        // Arrange
-        var gridAreaCode = new GridAreaCode("111");
-        var actorNumber = "7025915927252";
-        var jan = new GridAreaOwnershipAssigned
+        // arrange
+        await using var dbContext = _databaseManager.CreateDbContext();
+
+        var target = new GridAreaOwnerRepository(dbContext);
+
+        await target.AddAsync(new GridAreaOwnershipAssigned
         {
-            GridAreaCode = gridAreaCode.Value,
-            ActorNumber = actorNumber,
+            GridAreaCode = new GridAreaCode(gridAreaCode).Value,
+            ActorNumber = "1",
             ValidFrom = DateTimeOffset.Parse("2024-01-01").ToTimestamp(),
             SequenceNumber = 1,
-        };
-        var feb = new GridAreaOwnershipAssigned
+        });
+        await target.AddAsync(new GridAreaOwnershipAssigned
         {
-            GridAreaCode = gridAreaCode.Value,
-            ActorNumber = actorNumber,
-            ValidFrom = DateTimeOffset.Parse("2024-02-01").ToTimestamp(),
+            GridAreaCode = new GridAreaCode(gridAreaCode).Value,
+            ActorNumber = "2",
+            ValidFrom = DateTimeOffset.Parse("2024-01-15").ToTimestamp(),
             SequenceNumber = 1,
-        };
-        var mar = new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = gridAreaCode.Value,
-            ActorNumber = actorNumber,
-            ValidFrom = DateTimeOffset.Parse("2024-03-01").ToTimestamp(),
-            SequenceNumber = 1,
-        };
+        });
 
-        await using var dbContext = _databaseManager.CreateDbContext();
-        var target = new GridAreaOwnerRepository(dbContext);
-        await target.AddAsync(jan);
-        await target.AddAsync(feb);
-        await target.AddAsync(mar);
-
-        // Act
+        // act
         var owners = (await target.GetGridAreaOwnersAsync(
-            new GridAreaCode(jan.GridAreaCode),
-            DateTimeOffset.Parse("2024-01-01").ToInstant(),
-            DateTimeOffset.Parse("2024-03-01").ToInstant()))
-            .OrderBy(x => x.ValidFrom).ToList();
+                new GridAreaCode(gridAreaCode),
+                DateTimeOffset.Parse(from).ToInstant(),
+                DateTimeOffset.Parse(to).ToInstant()))
+            .Select(x => x.ActorNumber)
+            .ToList();
 
-        // Assert
-        Assert.Equal(2, owners.Count);
-        Assert.Equal(DateTimeOffset.Parse("2024-01-01"), owners[0].ValidFrom.ToDateTimeOffset());
-        Assert.Equal(DateTimeOffset.Parse("2024-02-01"), owners[1].ValidFrom.ToDateTimeOffset());
+        // assert
+        var expected = expectedOwners.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(x => new ActorNumber(x)).ToList();
+
+        Assert.Equal(expected.Count, owners.Count);
+
+        foreach (var expectedOwner in expected)
+        {
+            Assert.Contains(expectedOwner, owners);
+        }
     }
 }

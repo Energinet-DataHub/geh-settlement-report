@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Model;
+using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
-using Energinet.DataHub.SettlementReport.Infrastructure.Model;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -33,20 +34,34 @@ public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAre
     {
         ArgumentNullException.ThrowIfNull(gridAreaCode);
 
-        var from = periodFrom.ToDateTimeOffset();
-        var to = periodTo.ToDateTimeOffset();
+        var f = periodFrom.ToDateTimeOffset();
+        var t = periodTo.ToDateTimeOffset();
 
-        var entities = await _dbContext
-            .GridAreaOwners
-            .OrderByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.ValidFrom)
-            .ThenByDescending(gridAreaOwnerEntity => gridAreaOwnerEntity.SequenceNumber)
-            .Where(gridAreaOwnerEntity =>
-                gridAreaOwnerEntity.ValidFrom >= from && gridAreaOwnerEntity.ValidFrom < to &&
-                gridAreaOwnerEntity.Code == gridAreaCode.Value)
-            .ToListAsync()
-            .ConfigureAwait(false);
+        var inner = from ga in _dbContext.GridAreaOwners
+            select new
+            {
+                ga.Code,
+                ga.ActorNumber,
+                ga.ValidFrom,
+                ValidTo = _dbContext.GridAreaOwners.OrderBy(x => x.ValidFrom).FirstOrDefault(x => x.Code == ga.Code && x.ValidFrom > ga.ValidFrom) != null
+                    ? _dbContext.GridAreaOwners.OrderBy(x => x.ValidFrom).FirstOrDefault(x => x.Code == ga.Code && x.ValidFrom > ga.ValidFrom)!.ValidFrom
+                    : (DateTimeOffset?)null,
+                ga.SequenceNumber,
+            };
 
-        return entities
+        var query = from ga in inner
+            where
+                ga.Code == gridAreaCode.Value &&
+                (ga.ValidTo == null || f <= ga.ValidTo) && ga.ValidFrom < t
+            orderby ga.ValidFrom descending, ga.SequenceNumber descending
+            select new
+            {
+                ga.Code,
+                ga.ActorNumber,
+                ga.ValidFrom,
+            };
+
+        return (await query.ToListAsync().ConfigureAwait(false))
             .Select(x => new GridAreaOwner(new GridAreaCode(x.Code), new ActorNumber(x.ActorNumber), Instant.FromDateTimeOffset(x.ValidFrom)));
     }
 
