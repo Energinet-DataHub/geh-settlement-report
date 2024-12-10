@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
