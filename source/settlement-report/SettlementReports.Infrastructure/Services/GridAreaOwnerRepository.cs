@@ -43,9 +43,10 @@ public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAre
                 ga.Code,
                 ga.ActorNumber,
                 ga.ValidFrom,
-                ValidTo = _dbContext.GridAreaOwners.OrderBy(x => x.ValidFrom).FirstOrDefault(x => x.Code == ga.Code && x.ValidFrom > ga.ValidFrom) != null
-                    ? _dbContext.GridAreaOwners.OrderBy(x => x.ValidFrom).FirstOrDefault(x => x.Code == ga.Code && x.ValidFrom > ga.ValidFrom)!.ValidFrom
-                    : (DateTimeOffset?)null,
+                ValidTo = _dbContext.GridAreaOwners
+                    .Where(x => x.Code == ga.Code && x.ValidFrom > ga.ValidFrom)
+                    .Select(x => (DateTimeOffset?)x.ValidFrom)
+                    .OrderBy(x => x).FirstOrDefault(),
                 ga.SequenceNumber,
             };
 
