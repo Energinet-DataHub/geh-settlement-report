@@ -87,8 +87,8 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
-            $"--requesting-actor-market-role={MapMarketRole(request.MarketRoleOverride ?? marketRole)}",
-            $"--requesting-actor-id={request.ActorNumberOverride ?? actorGln}",
+            $"--requesting-actor-market-role={MapMarketRole(marketRole)}",
+            $"--requesting-actor-id={actorGln}",
             request.Filter.CalculationType == CalculationType.BalanceFixing
                 ? $"--grid-area-codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
                 : $"--calculation-id-by-grid-area={gridAreas}",
