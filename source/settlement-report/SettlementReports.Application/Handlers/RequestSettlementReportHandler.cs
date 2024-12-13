@@ -40,7 +40,7 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
 
     public async Task<JobRunId> HandleAsync(RequestSettlementReportCommand request)
     {
-        if (request.MarketRole == MarketRole.GridAccessProvider)
+        if (request.MarketRole == MarketRole.GridAccessProvider && request.RequestDto.Filter.GridAreas.Count > 0)
         {
             JobRunId? firstRunId = null;
 
