@@ -46,7 +46,7 @@ settlementReportDomain = group "Settlement Reports" {
     }
 
     settlementReportsDatabricksWorkspace = group "Databricks Workspace" {
-    wholesaleCalculatorJob = container "Balance Fixing Settlement Report Job" {
+    settlementReportBalanceFixingJob = container "Balance Fixing Settlement Report Job" {
         description "Creates settlement reports for balance fixing"
         technology "Azure Databricks"
         tags "Microsoft Azure - Azure Databricks" "Mandalorian"
