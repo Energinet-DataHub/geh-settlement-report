@@ -46,15 +46,16 @@ settlementReportDomain = group "Settlement Reports" {
     }
 
     settlementReportsDatabricksWorkspace = group "Databricks Workspace" {
-    settlementReportBalanceFixingJob = container "Balance Fixing Settlement Report Job" {
-        description "Creates settlement reports for balance fixing"
-        technology "Azure Databricks"
-        tags "Microsoft Azure - Azure Databricks" "Mandalorian"
+        settlementReportBalanceFixingJob = container "Balance Fixing Settlement Report Job" {
+            description "Creates settlement reports for balance fixing"
+            technology "Azure Databricks"
+            tags "Microsoft Azure - Azure Databricks" "Mandalorian"
 
-        # Subsystem relationships
-        # this -> dh3.sharedUnityCatalog "Read inputs / write results"
-        # this -> wholesaleDataLake "Read inputs / write results" {
-        #     tags "Simple View"
-        # }
+            # Subsystem relationships
+            # this -> dh3.sharedUnityCatalog "Read inputs / write results"
+            # this -> wholesaleDataLake "Read inputs / write results" {
+            #     tags "Simple View"
+            # }
+        }
     }
 }
