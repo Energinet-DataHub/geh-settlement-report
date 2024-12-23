@@ -36,7 +36,7 @@ settlementReportDomain = group "Settlement Reports" {
     }
 
     settlementReportApi = container "Settlement Reports WebAPI" {
-        description "Manages the settlement reports using the Jobss API"
+        description "Manages the settlement reports using the Jobsss API"
         technology "Asp.Net Core Web API"
         tags "Microsoft Azure - App Services" "Raccoons"
 
