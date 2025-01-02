@@ -29,8 +29,8 @@ on:
         value: ${{ jobs.changes.outputs.render_c4model_views }}
       db_migrations:
         value: ${{ jobs.changes.outputs.db_migrations }}
-      settlement_report_job:
-        value: ${{ jobs.changes.outputs.settlement_report_job }}
+      databricks:
+        value: ${{ jobs.changes.outputs.databricks }}
       docker:
         value: ${{ jobs.changes.outputs.docker }}
       docker_in_commit:
