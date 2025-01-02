@@ -116,5 +116,5 @@ jobs:
           filter="domain/
           entry_points/
           infrastructure/"
-
+          chmod +x ./.devcontainer/check_test_count.sh
           IMAGE_TAG=${{ inputs.image_tag }} docker compose -f .devcontainer/docker-compose.yml run --rm -u root python-unit-test ./.devcontainer/check_test_count.sh $filter
