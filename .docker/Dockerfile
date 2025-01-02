@@ -55,4 +55,5 @@ RUN spark-shell
 RUN usermod -l nayvoj jovyan && \
     usermod -u 1001 nayvoj && \
     usermod -l jovyan nayvoj
+
 RUN usermod -u 1001 jovyan
