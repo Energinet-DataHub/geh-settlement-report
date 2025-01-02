@@ -71,6 +71,10 @@ jobs:
               - 'docs/diagrams/c4-model/views.json'
               - 'docs/diagrams/c4-model/model.dsl'
             databricks:
+              - '.github/workflows/cd.yml'
+              - '.github/workflows/ci-databricks.yml'
+              - '.devcontainer/docker-compose.yml'
+              - '.docker/requirements.txt'
               - 'source/settlement_report_python/**'
             docker:
               - .docker/**
