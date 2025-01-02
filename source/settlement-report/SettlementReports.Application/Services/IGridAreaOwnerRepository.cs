@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Model;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Model;
+namespace Energinet.DataHub.SettlementReport.Application.Services;
 
-public sealed record GridAreaOwner(GridAreaCode Code, ActorNumber ActorNumber, Instant ValidFrom);
+public interface IGridAreaOwnerRepository
+{
+    Task<IEnumerable<GridAreaOwner>> GetGridAreaOwnersAsync(GridAreaCode gridAreaCode, Instant periodFrom, Instant periodTo);
+}
