@@ -95,7 +95,6 @@ jobs:
 
   # Check executed unit tests
   settlement_report_unit_test_check:
-    if: ${{ inputs.has_calculator_job_changes }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

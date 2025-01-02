@@ -47,10 +47,10 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
 
-  ci_python:
+  ci_databricks:
     needs: [changes, ci_docker]
-    if: ${{ needs.changes.outputs.settlement_report_job == 'true' }}
-    uses: ./.github/workflows/ci-python.yml
+    if: ${{ needs.changes.outputs.databricks == 'true' }}
+    uses: ./.github/workflows/ci-databricks.yml
     with:
       image_tag: ${{ needs.ci_docker.outputs.image_tag }}
 
@@ -75,6 +75,7 @@ jobs:
         changes,
         ci_base,
         ci_dotnet,
+        ci_databricks,
         render_c4model_views,
       ]
     if: |

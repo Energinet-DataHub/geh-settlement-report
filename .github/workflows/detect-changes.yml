@@ -44,7 +44,7 @@ jobs:
       dotnet: ${{ steps.filter.outputs.dotnet }}
       render_c4model_views: ${{ steps.filter.outputs.render_c4model_views }}
       db_migrations: ${{ steps.filter.outputs.db_migrations }}
-      settlement_report_job: ${{ steps.filter.outputs.settlement_report_job }}
+      databricks: ${{ steps.filter.outputs.databricks }}
       docker: ${{ steps.filter.outputs.docker }}
       docker_in_commit: ${{ steps.docker_changed.outputs.any_changed }}
     steps:
@@ -70,7 +70,7 @@ jobs:
               - 'docs/diagrams/c4-model/views.dsl'
               - 'docs/diagrams/c4-model/views.json'
               - 'docs/diagrams/c4-model/model.dsl'
-            settlement_report_job:
+            databricks:
               - 'source/settlement_report_python/**'
             docker:
               - .docker/**
