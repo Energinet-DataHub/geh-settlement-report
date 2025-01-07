@@ -3,7 +3,7 @@
 settlementReportDomain = group "Settlement Reports" {
 
     settlementReportsBalanceFixingJob = container "Balance Fixing Settlement Report Job" {
-        description "Creates settlement reports for balance fixing"
+        description "Creates balance fixing settlement reports"
         technology "Azure Databricks"
         tags "Microsoft Azure - Azure Databricks" "Mandalorian"
 
