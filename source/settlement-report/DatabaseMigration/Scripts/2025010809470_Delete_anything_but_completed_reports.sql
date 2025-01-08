@@ -1,0 +1,1 @@
+DELETE FROM [settlementreports].[SettlementReport] WHERE status <> 1
