@@ -33,6 +33,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\202410261405_Add_IsNotificationSent_to_SettlementReport.sql" />
     <EmbeddedResource Include="Scripts\202412021100_Add_GridAreaOwner.sql" />
     <EmbeddedResource Include="Scripts\202412131100_Update_GridAreaOwner_ValidFrom.sql" />
+    <EmbeddedResource Include="Scripts\2025010809470_Delete_anything_but_completed_reports.sql" />
   </ItemGroup>
 
   <ItemGroup>
