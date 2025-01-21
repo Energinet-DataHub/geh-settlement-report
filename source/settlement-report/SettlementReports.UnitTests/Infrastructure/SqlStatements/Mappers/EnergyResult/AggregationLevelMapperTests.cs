@@ -15,7 +15,6 @@
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.EnergyResult;
@@ -33,7 +32,7 @@ public class AggregationLevelMapperTests
         var actual = AggregationLevelMapper.ToDeltaTableValue(type, null, null);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -47,7 +46,7 @@ public class AggregationLevelMapperTests
         var actual = AggregationLevelMapper.ToDeltaTableValue(type, "someEnergySupplier", null);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -61,7 +60,7 @@ public class AggregationLevelMapperTests
         var actual = AggregationLevelMapper.ToDeltaTableValue(type, null, "somBalanceResponsible");
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -75,6 +74,6 @@ public class AggregationLevelMapperTests
         var actual = AggregationLevelMapper.ToDeltaTableValue(type, "someEnergySupplier", "somBalanceResponsible");
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 }

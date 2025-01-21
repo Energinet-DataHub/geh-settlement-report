@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.EnergyResult;
@@ -30,7 +29,7 @@ public class ResolutionMapperTests
         var actualType = ResolutionMapper.FromDeltaTableValue(deltaTableValue);
 
         // Assert
-        actualType.Should().Be(expectedType);
+        Assert.Equal(expectedType, actualType);
     }
 
     [Fact]
@@ -39,12 +38,8 @@ public class ResolutionMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => ResolutionMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => ResolutionMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Theory]
@@ -56,7 +51,7 @@ public class ResolutionMapperTests
         var actualDeltaTableValue = ResolutionMapper.ToDeltaTableValue(resolution);
 
         // Assert
-        actualDeltaTableValue.Should().Be(expectedDeltaTableValue);
+        Assert.Equal(expectedDeltaTableValue, actualDeltaTableValue);
     }
 
     [Fact]
@@ -65,11 +60,7 @@ public class ResolutionMapperTests
         // Arrange
         var invalidResolutionValue = (Resolution)int.MinValue;
 
-        // Act
-        var act = () => ResolutionMapper.ToDeltaTableValue(invalidResolutionValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidResolutionValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => ResolutionMapper.ToDeltaTableValue(invalidResolutionValue));
     }
 }

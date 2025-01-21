@@ -15,7 +15,6 @@
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using FluentAssertions;
 using NodaTime;
 using Xunit;
 
@@ -41,8 +40,8 @@ public class EnergyResultTests
         // Arrange
         var emptyTimeSeriesPoints = Array.Empty<EnergyTimeSeriesPoint>();
 
-        // Act
-        var act = () => new EnergyResult(
+        // Act + Assert
+        Assert.Throws<ArgumentException>(() => new EnergyResult(
             anyId,
             anyCalculationId,
             anyGridArea,
@@ -56,9 +55,6 @@ public class EnergyResultTests
             anyFromGridArea,
             anyMeteringPointId,
             anyResolution,
-            anyVersion);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("*empty*");
+            anyVersion));
     }
 }

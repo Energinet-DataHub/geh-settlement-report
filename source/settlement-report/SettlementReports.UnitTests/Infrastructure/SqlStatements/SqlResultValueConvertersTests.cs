@@ -15,7 +15,6 @@
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using FluentAssertions;
 using NodaTime;
 using Xunit;
 
@@ -27,7 +26,7 @@ public class SqlResultValueConvertersTests
     public void ToInstant_WhenValueIsNull_ReturnsNull()
     {
         var actual = SqlResultValueConverters.ToInstant(null);
-        actual.Should().BeNull();
+        Assert.Null(actual);
     }
 
     [Fact]
@@ -40,14 +39,14 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToInstant(value);
 
         // Assert
-        actual.Should().Be(Instant.FromUtc(2021, 1, 1, 0, 0, 0));
+        Assert.Equal(Instant.FromUtc(2021, 1, 1, 0, 0, 0), actual);
     }
 
     [Fact]
     public void ToInt_WhenValueIsNull_ReturnsNull()
     {
         var actual = SqlResultValueConverters.ToInt(null);
-        actual.Should().BeNull();
+        Assert.Null(actual);
     }
 
     [Fact]
@@ -60,14 +59,14 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToInt(value);
 
         // Assert
-        actual.Should().Be(123);
+        Assert.Equal(123, actual);
     }
 
     [Fact]
     public void ToDecimal_WhenValueIsNull_ReturnsNull()
     {
         var actual = SqlResultValueConverters.ToDecimal(null);
-        actual.Should().BeNull();
+        Assert.Null(actual);
     }
 
     [Fact]
@@ -80,14 +79,14 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToDecimal(value);
 
         // Assert
-        actual.Should().Be(1.123m);
+        Assert.Equal(1.123m, actual);
     }
 
     [Fact]
     public void ToDateTimeOffset_WhenValueIsNull_ReturnsNull()
     {
         var actual = SqlResultValueConverters.ToDateTimeOffset(null);
-        actual.Should().BeNull();
+        Assert.Null(actual);
     }
 
     [Fact]
@@ -100,7 +99,7 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToDateTimeOffset(value);
 
         // Assert
-        actual.Should().Be(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero));
+        Assert.Equal(new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero), actual);
     }
 
     [Fact]
@@ -114,7 +113,7 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToQuantityQualities(value);
 
         // Assert
-        actual.Should().BeEquivalentTo(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -127,6 +126,6 @@ public class SqlResultValueConvertersTests
         var actual = SqlResultValueConverters.ToTimeSeriesType(value);
 
         // Assert
-        actual.Should().Be(TimeSeriesType.Production);
+        Assert.Equal(TimeSeriesType.Production, actual);
     }
 }

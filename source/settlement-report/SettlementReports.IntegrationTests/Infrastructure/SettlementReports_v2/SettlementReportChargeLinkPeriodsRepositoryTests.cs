@@ -20,13 +20,10 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Sta
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
-using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public class SettlementReportChargeLinkPeriodsRepositoryTests : TestBase<SettlementReportChargeLinkPeriodsRepository>
@@ -228,7 +225,7 @@ public class SettlementReportChargeLinkPeriodsRepositoryTests : TestBase<Settlem
             take: int.MaxValue).ToListAsync();
 
         Assert.Equal(returnCount, results.Count);
-        expectedMeteringPointIds.Should().Equal(results.Select(x => x.MeteringPointId).ToList());
+        Assert.Equal(expectedMeteringPointIds, results.Select(x => x.MeteringPointId));
     }
 
     [Fact(Skip = "Performance testing")]
