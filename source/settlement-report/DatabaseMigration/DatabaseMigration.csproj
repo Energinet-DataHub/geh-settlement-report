@@ -34,6 +34,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\202412021100_Add_GridAreaOwner.sql" />
     <EmbeddedResource Include="Scripts\202412131100_Update_GridAreaOwner_ValidFrom.sql" />
     <EmbeddedResource Include="Scripts\202501080947_Delete_anything_but_completed_reports.sql" />
+    <EmbeddedResource Include="Scripts\202501211010_Update_Previous_Gridarea_Owner.sql" />
   </ItemGroup>
 
   <ItemGroup>
