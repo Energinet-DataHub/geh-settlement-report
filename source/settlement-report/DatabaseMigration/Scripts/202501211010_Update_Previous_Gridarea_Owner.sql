@@ -9,7 +9,7 @@ VALUES
 UPDATE [settlementreports].[GridAreaOwner]
 SET ActorNumber = '5790000836703'
 WHERE id = 62 AND SequenceNumber = 233 -- matches the correct row in the production database
-
+;
 --- Merger of 512 and 543 into 543
 GO
 --This will add the new owner of the grid area 755, which is valid from the 3rd of January 2022
@@ -21,7 +21,7 @@ VALUES
 UPDATE [settlementreports].[GridAreaOwner]
 SET ActorNumber = '5790001087975'
 WHERE id = 63 AND SequenceNumber = 234 -- matches the correct row in the production database
-
+;
 --- Merger of 152 and 131 into 131
 GO
 --This will add the new owner of the grid area 755, which is valid from the 3rd of January 2022
@@ -33,7 +33,7 @@ VALUES
 UPDATE [settlementreports].[GridAreaOwner]
 SET ActorNumber = '5790000681372'
 WHERE id = 61 AND SequenceNumber = 235 -- matches the correct row in the production database
-
+;
 --- Merger of 398 and 131 into 131
 GO
 --This will add the new owner of the grid area 755, which is valid from the 3rd of January 2022
