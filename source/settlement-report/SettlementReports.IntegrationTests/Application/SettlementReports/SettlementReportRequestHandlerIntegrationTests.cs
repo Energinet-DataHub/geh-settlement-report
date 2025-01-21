@@ -17,11 +17,10 @@ using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using FluentAssertions.Extensions;
 using Moq;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Application.SettlementReports;
 
 public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<SettlementReportRequestHandler>
 {

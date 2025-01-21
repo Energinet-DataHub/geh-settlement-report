@@ -9,11 +9,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="7.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Azure.Storage.Blobs" Version="8.0.1" />
     <PackageReference Include="Azure.Storage.Files.DataLake" Version="12.21.0" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="14.0.2" />
-    <PackageReference Include="Energinet.DataHub.Core.Databricks.SqlStatementExecution" Version="11.2.5" />
+    <PackageReference Include="Energinet.DataHub.Core.Databricks.SqlStatementExecution" Version="12.0.2" />
     <PackageReference Include="Energinet.DataHub.Core.JsonSerialization" Version="3.0.2" />
     <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="6.1.3" />
     <PackageReference Include="Google.Protobuf" Version="3.29.3" />

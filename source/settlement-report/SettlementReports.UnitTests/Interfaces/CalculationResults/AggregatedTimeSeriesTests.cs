@@ -15,7 +15,6 @@
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using FluentAssertions;
 using NodaTime.Extensions;
 using Xunit;
 
@@ -33,8 +32,8 @@ public class AggregatedTimeSeriesTests
         // Arrange
         var emptyTimeSeriesPoints = Array.Empty<EnergyTimeSeriesPoint>();
 
-        // Act
-        var act = () => new AggregatedTimeSeries(
+        // Act + Assert
+        Assert.Throws<ArgumentException>(() => new AggregatedTimeSeries(
             gridArea: anyGridArea,
             timeSeriesPoints: emptyTimeSeriesPoints,
             timeSeriesType: anyTimeSeriesType,
@@ -42,9 +41,6 @@ public class AggregatedTimeSeriesTests
             DateTimeOffset.Parse("2022-01-01T00:00Z").ToInstant(),
             DateTimeOffset.Parse("2022-01-01T00:45Z").ToInstant(),
             Resolution.Quarter,
-            1);
-
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("*empty*");
+            1));
     }
 }

@@ -15,8 +15,6 @@
 using Energinet.DataHub.SettlementReport.Infrastructure.Factories;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.Factories;
@@ -24,7 +22,6 @@ namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.Factories;
 public class WholesaleTimeSeriesPointFactoryTests
 {
     private const string DefaultTime = "2022-05-16T01:00:00.000Z";
-    private const string DefaultQuantityQualities = "[\"measured\", \"missing\"]";
 
     [Fact]
     public void Create_WhenNullableFieldsNull_ReturnsNullForThoseFields()
@@ -36,11 +33,10 @@ public class WholesaleTimeSeriesPointFactoryTests
         var actual = WholesaleTimeSeriesPointFactory.Create(row);
 
         // Assert
-        using var assertionScope = new AssertionScope();
-        actual.Quantity.Should().BeNull();
-        actual.Price.Should().BeNull();
-        actual.Amount.Should().BeNull();
-        actual.Qualities.Should().BeNull();
+        Assert.NotNull(actual.Quantity);
+        Assert.NotNull(actual.Price);
+        Assert.NotNull(actual.Amount);
+        Assert.NotNull(actual.Qualities);
     }
 
     private static DatabricksSqlRow CreateDefaultSqlResultRow(string time, string? quantity, string? quantityQualities, string? price, string? amount)

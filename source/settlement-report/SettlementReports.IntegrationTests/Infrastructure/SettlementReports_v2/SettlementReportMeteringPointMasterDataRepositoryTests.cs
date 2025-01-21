@@ -20,11 +20,10 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Sta
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
-using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<SettlementReportMeteringPointMasterDataRepository>
@@ -128,7 +127,7 @@ public class SettlementReportMeteringPointMasterDataRepositoryTests : TestBase<S
             new SettlementReportRequestedByActor(MarketRole.DataHubAdministrator, null),
             int.MaxValue);
 
-        actual.Should().Be(2);
+        Assert.Equal(2, actual);
     }
 
     [Fact(Skip = "Performance testing")]

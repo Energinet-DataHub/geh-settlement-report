@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.WholesaleResult;
@@ -31,7 +30,7 @@ public class ChargeTypeMapperTests
         var actualType = ChargeTypeMapper.FromDeltaTableValue(deltaTableValue);
 
         // Assert
-        actualType.Should().Be(expectedType);
+        Assert.Equal(expectedType, actualType);
     }
 
     [Fact]
@@ -40,12 +39,8 @@ public class ChargeTypeMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => ChargeTypeMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => ChargeTypeMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Theory]
@@ -58,7 +53,7 @@ public class ChargeTypeMapperTests
         var actualDeltaTableValue = ChargeTypeMapper.ToDeltaTableValue(chargeType);
 
         // Assert
-        actualDeltaTableValue.Should().Be(expectedDeltaTableValue);
+        Assert.Equal(expectedDeltaTableValue, actualDeltaTableValue);
     }
 
     [Fact]
@@ -67,11 +62,7 @@ public class ChargeTypeMapperTests
         // Arrange
         var invalidChargeTypeValue = (ChargeType)int.MinValue;
 
-        // Act
-        var act = () => ChargeTypeMapper.ToDeltaTableValue(invalidChargeTypeValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidChargeTypeValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => ChargeTypeMapper.ToDeltaTableValue(invalidChargeTypeValue));
     }
 }

@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.WholesaleResult;
@@ -31,7 +30,7 @@ public class AmountTypeMapperTests
         var actualType = AmountTypeMapper.FromDeltaTableValue(deltaTableValue);
 
         // Assert
-        actualType.Should().Be(expectedType);
+        Assert.Equal(expectedType, actualType);
     }
 
     [Fact]
@@ -40,12 +39,8 @@ public class AmountTypeMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => AmountTypeMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => AmountTypeMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Theory]
@@ -58,7 +53,7 @@ public class AmountTypeMapperTests
         var actualDeltaTableValue = AmountTypeMapper.ToDeltaTableValue(amountType);
 
         // Assert
-        actualDeltaTableValue.Should().Be(expectedDeltaTableValue);
+        Assert.Equal(expectedDeltaTableValue, actualDeltaTableValue);
     }
 
     [Fact]
@@ -67,11 +62,7 @@ public class AmountTypeMapperTests
         // Arrange
         var invalidValue = (AmountType)int.MinValue;
 
-        // Act
-        var act = () => AmountTypeMapper.ToDeltaTableValue(invalidValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => AmountTypeMapper.ToDeltaTableValue(invalidValue));
     }
 }

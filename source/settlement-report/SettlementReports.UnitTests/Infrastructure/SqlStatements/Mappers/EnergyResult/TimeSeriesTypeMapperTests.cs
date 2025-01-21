@@ -16,7 +16,6 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.EnergyResult;
@@ -39,7 +38,7 @@ public class TimeSeriesTypeMapperTests
         var actual = TimeSeriesTypeMapper.FromDeltaTableValue(deltaValue);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -58,7 +57,7 @@ public class TimeSeriesTypeMapperTests
         var actual = TimeSeriesTypeMapper.ToDeltaTableValue(type);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -67,12 +66,8 @@ public class TimeSeriesTypeMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => TimeSeriesTypeMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => TimeSeriesTypeMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Fact]
@@ -81,11 +76,7 @@ public class TimeSeriesTypeMapperTests
         // Arrange
         var invalidValue = (TimeSeriesType)99;
 
-        // Act
-        var act = () => TimeSeriesTypeMapper.ToDeltaTableValue(invalidValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => TimeSeriesTypeMapper.ToDeltaTableValue(invalidValue));
     }
 }
