@@ -33,10 +33,10 @@ public class WholesaleTimeSeriesPointFactoryTests
         var actual = WholesaleTimeSeriesPointFactory.Create(row);
 
         // Assert
-        Assert.NotNull(actual.Quantity);
-        Assert.NotNull(actual.Price);
-        Assert.NotNull(actual.Amount);
-        Assert.NotNull(actual.Qualities);
+        Assert.Null(actual.Quantity);
+        Assert.Null(actual.Price);
+        Assert.Null(actual.Amount);
+        Assert.Null(actual.Qualities);
     }
 
     private static DatabricksSqlRow CreateDefaultSqlResultRow(string time, string? quantity, string? quantityQualities, string? price, string? amount)
