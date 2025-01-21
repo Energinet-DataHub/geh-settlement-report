@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.WholesaleResult;
@@ -30,7 +29,7 @@ public class QuantityUnitMapperTests
         var actualType = QuantityUnitMapper.FromDeltaTableValue(deltaTableValue);
 
         // Assert
-        actualType.Should().Be(expectedType);
+        Assert.Equal(expectedType, actualType);
     }
 
     [Fact]
@@ -39,11 +38,7 @@ public class QuantityUnitMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => QuantityUnitMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => QuantityUnitMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 }

@@ -45,11 +45,6 @@ jobs:
       fail-fast: false
       matrix:
         tests_filter_expression:
-          - name: Orchestration SettlementReports
-            paths: \source\settlement-report\Orchestration.SettlementReports.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.IntegrationTests.dll
-            filter: empty # Means skip
-            use_azure_functions_tools: true
-            contentroot_variable_name: empty # Means skip
           - name: SettlementReport Results
             paths: \source\settlement-report\SettlementReports.IntegrationTests\bin\Release\net8.0\Energinet.DataHub.SettlementReports.IntegrationTests.dll
             filter: empty # Means skip

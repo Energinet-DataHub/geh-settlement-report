@@ -15,7 +15,6 @@
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers;
@@ -35,7 +34,7 @@ public class CalculationTypeMapperTests
         var actual = CalculationTypeMapper.ToDeltaTableValue(type);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
@@ -51,7 +50,7 @@ public class CalculationTypeMapperTests
         var actual = CalculationTypeMapper.FromDeltaTableValue(deltaTableValue);
 
         // Assert
-        actual.Should().Be(expected);
+        Assert.Equal(expected, actual);
     }
 
     [Fact]
@@ -60,12 +59,8 @@ public class CalculationTypeMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => CalculationTypeMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalculationTypeMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Fact]
@@ -74,11 +69,7 @@ public class CalculationTypeMapperTests
         // Arrange
         var invalidValue = (CalculationType)99;
 
-        // Act
-        var act = () => CalculationTypeMapper.ToDeltaTableValue(invalidValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => CalculationTypeMapper.ToDeltaTableValue(invalidValue));
     }
 }
