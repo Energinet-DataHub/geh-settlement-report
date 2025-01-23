@@ -16,6 +16,6 @@ namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
 public static class DatabricksJobNames
 {
-    public const string BalanceFixing = "SettlementReportBalanceFixing";
     public const string Wholesale = "SettlementReportWholesaleCalculations";
+    public const string BalanceFixing = "SettlementReportBalanceFixing";
 }
