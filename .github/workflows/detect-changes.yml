@@ -60,7 +60,6 @@ jobs:
         with:
           filters: |
             dotnet:
-              - '.github/workflows/cd.yml'
               - '.github/workflows/ci-dotnet.yml'
               - '.github/actions/dotnet-*/**'
               - 'source/settlement-report/!(DatabaseMigration/**)**'
@@ -71,7 +70,6 @@ jobs:
               - 'docs/diagrams/c4-model/views.json'
               - 'docs/diagrams/c4-model/model.dsl'
             databricks:
-              - '.github/workflows/cd.yml'
               - '.github/workflows/ci-databricks.yml'
               - '.devcontainer/docker-compose.yml'
               - '.docker/requirements.txt'
