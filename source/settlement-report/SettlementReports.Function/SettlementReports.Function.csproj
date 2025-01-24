@@ -12,6 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Energinet.DataHub.Core.Logging.LoggingMiddleware" Version="3.2.1" />
     <PackageReference Include="Energinet.DataHub.RevisionLog.Integration" Version="1.1.4" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.3.1" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
