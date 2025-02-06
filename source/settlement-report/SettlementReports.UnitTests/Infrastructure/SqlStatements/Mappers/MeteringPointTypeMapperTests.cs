@@ -15,7 +15,6 @@
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers;
@@ -28,12 +27,8 @@ public class MeteringPointTypeMapperTests
         // Arrange
         var invalidDeltaTableValue = Guid.NewGuid().ToString();
 
-        // Act
-        var act = () => MeteringPointTypeMapper.FromDeltaTableValue(invalidDeltaTableValue);
-
-        // Assert
-        act.Should().Throw<ArgumentOutOfRangeException>()
-            .And.ActualValue.Should().Be(invalidDeltaTableValue);
+        // Act + Assert
+        Assert.Throws<ArgumentOutOfRangeException>(() => MeteringPointTypeMapper.FromDeltaTableValue(invalidDeltaTableValue));
     }
 
     [Theory]
@@ -46,6 +41,6 @@ public class MeteringPointTypeMapperTests
         var actualType = MeteringPointTypeMapper.FromTimeSeriesTypeDeltaTableValue(timeSeriesType);
 
         // Assert
-        actualType.Should().Be(expectedType);
+        Assert.Equal(expectedType, actualType);
     }
 }

@@ -22,13 +22,12 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
-using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSettlementReportsHandler>,
@@ -121,20 +120,20 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
 
         // Assert
         Assert.Equal(3, items.Count);
-        items.Should().NotContain(item => item.RequestId == new SettlementReportRequestId(notUsersRequest1.ToString()));
-        items.Should().NotContain(item => item.RequestId == new SettlementReportRequestId(notUsersRequest2.ToString()));
+        Assert.DoesNotContain(items, item => item.RequestId == new SettlementReportRequestId(notUsersRequest1.ToString()));
+        Assert.DoesNotContain(items, item => item.RequestId == new SettlementReportRequestId(notUsersRequest2.ToString()));
         Assert.Collection(
             Enumerable.Reverse(items),
             item => Assert.Equal(targetActorId, item.RequestedByActorId),
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId2.ToString(), item.RequestId!.Id);
+                Assert.Equal(requestId2.ToString(), item.RequestId.Id);
             },
             item =>
             {
                 Assert.Equal(targetActorId, item.RequestedByActorId);
-                Assert.Equal(requestId3.ToString(), item.RequestId!.Id);
+                Assert.Equal(requestId3.ToString(), item.RequestId.Id);
             });
     }
 

@@ -34,10 +34,6 @@ public static class DatabricksExtensions
 
         services.AddDatabricksSqlStatementExecution(configuration);
 
-        // Health checks
-        services.AddHealthChecks()
-            .AddDatabricksSqlStatementApiHealthCheck(name: "DatabricksSqlStatementApi");
-
         return services;
     }
 }
