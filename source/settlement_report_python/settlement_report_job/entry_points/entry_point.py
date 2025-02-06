@@ -97,7 +97,7 @@ def start_task_with_deps(
         cloud_role_name=cloud_role_name,
         tracer_name="settlement-report-job",
         applicationinsights_connection_string=applicationinsights_connection_string,
-        extras={"Subsystem": "wholesale-aggregations"},
+        extras={"Subsystem": "settlement-report-aggregations"},
     )
 
     with config.get_tracer().start_as_current_span(
