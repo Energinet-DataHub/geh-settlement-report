@@ -44,7 +44,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "wholesale-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -85,7 +85,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "wholesale-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.settlement_report_job.entry_points.job_args.settlement_report_job_args"
         | count
@@ -115,7 +115,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "argparse.ArgumentTypeError"
         | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "wholesale-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -163,7 +163,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "argparse.ArgumentTypeError"
         | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "wholesale-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.telemetry_logging.span_recording"
         | count
