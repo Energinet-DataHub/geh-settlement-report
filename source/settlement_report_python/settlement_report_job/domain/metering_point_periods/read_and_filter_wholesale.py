@@ -16,7 +16,7 @@ from uuid import UUID
 
 from pyspark.sql import DataFrame
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 
 from settlement_report_job.domain.utils.join_metering_points_periods_and_charge_link_periods import (
     join_metering_points_periods_and_charge_link_periods,
@@ -48,7 +48,6 @@ def read_and_filter(
     select_columns: list[str],
     repository: WholesaleRepository,
 ) -> DataFrame:
-
     metering_point_periods = read_metering_point_periods_by_calculation_ids(
         repository=repository,
         period_start=period_start,

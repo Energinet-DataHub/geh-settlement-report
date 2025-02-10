@@ -15,7 +15,7 @@ from datetime import datetime
 
 from pyspark.sql import DataFrame, functions as F
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 
 from settlement_report_job.domain.utils.factory_filters import (
     read_and_filter_by_latest_calculations,
@@ -47,7 +47,6 @@ def read_and_filter(
     time_zone: str,
     repository: WholesaleRepository,
 ) -> DataFrame:
-
     metering_point_periods = read_filtered_metering_point_periods_by_grid_area_codes(
         repository=repository,
         period_start=period_start,

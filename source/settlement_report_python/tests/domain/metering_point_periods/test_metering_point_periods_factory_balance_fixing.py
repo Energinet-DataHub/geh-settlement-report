@@ -1,17 +1,18 @@
 from unittest.mock import Mock
 
-from pyspark.sql import SparkSession, DataFrame
-import test_factories.default_test_data_spec as default_data
-import test_factories.metering_point_periods_factory as input_metering_point_periods_factory
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
+from pyspark.sql import DataFrame, SparkSession
+
+import tests.test_factories.default_test_data_spec as default_data
+import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
 from settlement_report_job.domain.metering_point_periods.metering_point_periods_factory import (
     create_metering_point_periods,
 )
+from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from test_factories import latest_calculations_factory
-from utils import Dates as d
+from tests.test_factories import latest_calculations_factory
+from tests.utils import Dates as d
 
 
 def _get_repository_mock(
@@ -39,7 +40,6 @@ def test_create_metering_point_periods__when_grid_access_provider__returns_expec
     spark: SparkSession,
     standard_balance_fixing_scenario_grid_access_provider_args: SettlementReportArgs,
 ) -> None:
-
     # Arrange
     expected_columns = [
         "grid_area_code_partitioning",

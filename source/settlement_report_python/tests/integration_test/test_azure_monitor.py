@@ -16,20 +16,21 @@ import sys
 import time
 import uuid
 from datetime import timedelta
-from typing import cast, Callable
+from typing import Callable, cast
 from unittest.mock import Mock, patch
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
+
+from settlement_report_job.entry_points.entry_point import (
+    start_task_with_deps,
+)
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.entry_point import (
-    start_task_with_deps,
-)
 from settlement_report_job.entry_points.tasks.task_type import TaskType
-from integration_test_configuration import IntegrationTestConfiguration
+from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
 class TestWhenInvokedWithArguments:
@@ -101,7 +102,7 @@ class TestWhenInvokedWithArguments:
 
         # Assert, but timeout if not succeeded
         wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=3), step=timedelta(seconds=10)
+            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
         )
 
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
@@ -165,7 +166,7 @@ class TestWhenInvokedWithArguments:
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.telemetry_logging.span_recording"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count
         """
 
@@ -180,7 +181,7 @@ class TestWhenInvokedWithArguments:
 
         # Assert, but timeout if not succeeded
         wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=3), step=timedelta(seconds=10)
+            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
         )
 
     @staticmethod

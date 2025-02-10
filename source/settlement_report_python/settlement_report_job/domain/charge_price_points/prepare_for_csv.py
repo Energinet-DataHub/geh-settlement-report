@@ -14,7 +14,7 @@
 
 from pyspark.sql import DataFrame, functions as F, Window
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 
 from settlement_report_job.domain.utils.csv_column_names import (
     CsvColumnNames,

@@ -1,11 +1,12 @@
 import uuid
 from unittest.mock import Mock
 
-from pyspark.sql import SparkSession, DataFrame
-import test_factories.default_test_data_spec as default_data
-import test_factories.charge_link_periods_factory as input_charge_link_periods_factory
-import test_factories.metering_point_periods_factory as input_metering_point_periods_factory
-import test_factories.charge_price_information_periods_factory as input_charge_price_information_periods_factory
+from pyspark.sql import DataFrame, SparkSession
+
+import tests.test_factories.charge_link_periods_factory as input_charge_link_periods_factory
+import tests.test_factories.charge_price_information_periods_factory as input_charge_price_information_periods_factory
+import tests.test_factories.default_test_data_spec as default_data
+import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
 from settlement_report_job.domain.metering_point_periods.metering_point_periods_factory import (
     create_metering_point_periods,
 )
@@ -132,7 +133,6 @@ def test_create_metering_point_periods__when_energy_supplier__returns_expected_c
     spark: SparkSession,
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
 ) -> None:
-
     # Arrange
     expected_columns = [
         "grid_area_code_partitioning",
@@ -164,7 +164,6 @@ def test_create_metering_point_periods__when_grid_access_provider__returns_expec
     spark: SparkSession,
     standard_wholesale_fixing_scenario_grid_access_provider_args: SettlementReportArgs,
 ) -> None:
-
     # Arrange
     expected_columns = [
         "grid_area_code_partitioning",

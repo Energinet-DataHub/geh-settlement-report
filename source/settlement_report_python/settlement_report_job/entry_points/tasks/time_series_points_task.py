@@ -18,7 +18,7 @@ from settlement_report_job.domain.time_series_points.time_series_points_factory 
     create_time_series_points_for_balance_fixing,
 )
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from telemetry_logging import use_span
+from geh_common.telemetry import use_span
 from settlement_report_job.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
 )

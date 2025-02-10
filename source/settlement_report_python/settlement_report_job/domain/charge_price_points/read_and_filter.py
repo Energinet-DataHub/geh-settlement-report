@@ -22,7 +22,7 @@ from settlement_report_job.domain.utils.factory_filters import (
 from settlement_report_job.domain.utils.join_metering_points_periods_and_charge_link_periods import (
     join_metering_points_periods_and_charge_link_periods,
 )
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 from settlement_report_job.domain.utils.market_role import MarketRole
 from settlement_report_job.infrastructure.repository import WholesaleRepository
 from settlement_report_job.domain.utils.repository_filtering import (

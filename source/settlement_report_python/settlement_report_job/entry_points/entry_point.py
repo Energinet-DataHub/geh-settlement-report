@@ -19,8 +19,8 @@ from collections.abc import Callable
 
 from opentelemetry.trace import SpanKind
 
-import telemetry_logging.logging_configuration as config
-from telemetry_logging.span_recording import span_record_exception
+import geh_common.telemetry.logging_configuration as config
+from geh_common.telemetry.span_recording import span_record_exception
 from settlement_report_job.entry_points.tasks import task_factory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
@@ -106,7 +106,6 @@ def start_task_with_deps(
         # Try/except added to enable adding custom fields to the exception as
         # the span attributes do not appear to be included in the exception.
         try:
-
             # The command line arguments are parsed to have necessary information for
             # coming log messages
             command_line_args = parse_command_line_args()

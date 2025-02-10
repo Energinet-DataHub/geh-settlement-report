@@ -15,7 +15,7 @@ from collections.abc import Callable
 
 from pyspark.sql import DataFrame, functions as F
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 from settlement_report_job.domain.utils.market_role import MarketRole
 from settlement_report_job.infrastructure.repository import WholesaleRepository
 from settlement_report_job.infrastructure.wholesale.column_names import (

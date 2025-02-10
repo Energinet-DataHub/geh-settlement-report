@@ -27,7 +27,7 @@ from settlement_report_job.entry_points.job_args.calculation_type import Calcula
 from settlement_report_job.infrastructure.paths import (
     get_settlement_reports_output_path,
 )
-from telemetry_logging import Logger, logging_configuration
+from geh_common.telemetry import Logger, logging_configuration
 from settlement_report_job.domain.utils.market_role import MarketRole
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
@@ -46,7 +46,6 @@ def parse_job_arguments(
     logger.info(f"Command line arguments: {repr(job_args)}")
 
     with logging_configuration.start_span("settlement_report.parse_job_arguments"):
-
         grid_area_codes = (
             _create_grid_area_codes(job_args.grid_area_codes)
             if job_args.calculation_type is CalculationType.BALANCE_FIXING
