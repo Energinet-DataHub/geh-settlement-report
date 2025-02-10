@@ -19,7 +19,7 @@ from collections.abc import Callable
 
 from opentelemetry.trace import SpanKind
 
-import telemetry_logging.logging_configuration as config
+import geh_common.telemetry.logging_configuration as config
 from geh_common.telemetry.span_recording import span_record_exception
 from settlement_report_job.entry_points.tasks import task_factory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
