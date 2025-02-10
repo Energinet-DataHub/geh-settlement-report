@@ -16,20 +16,21 @@ import sys
 import time
 import uuid
 from datetime import timedelta
-from typing import cast, Callable
+from typing import Callable, cast
 from unittest.mock import Mock, patch
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
+
+from settlement_report_job.entry_points.entry_point import (
+    start_task_with_deps,
+)
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.entry_point import (
-    start_task_with_deps,
-)
 from settlement_report_job.entry_points.tasks.task_type import TaskType
-from integration_test_configuration import IntegrationTestConfiguration
+from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
 class TestWhenInvokedWithArguments:

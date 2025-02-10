@@ -12,46 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from datetime import datetime
+from functools import reduce
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from assertion import assert_file_names_and_columns
-from settlement_report_job.infrastructure import csv_writer
-
-from pyspark.sql import SparkSession, DataFrame
 import pyspark.sql.functions as F
-from settlement_report_job.domain.utils.market_role import (
-    MarketRole,
-)
+import pytest
+from pyspark.sql import DataFrame, SparkSession
+
+import settlement_report_job.domain.energy_results.order_by_columns as energy_order_by_columns
+import settlement_report_job.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
+import tests.test_factories.energy_factory as energy_factory
+import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
 from settlement_report_job.domain.energy_results.prepare_for_csv import (
     prepare_for_csv,
 )
-from data_seeding import (
-    standard_wholesale_fixing_scenario_data_generator,
+from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
+from settlement_report_job.domain.utils.market_role import (
+    MarketRole,
 )
-from settlement_report_job.infrastructure.csv_writer import _write_files
-from test_factories.default_test_data_spec import (
-    create_energy_results_data_spec,
-)
-from dbutils_fixture import DBUtilsFixture
-from functools import reduce
-import pytest
-
 from settlement_report_job.domain.utils.report_data_type import ReportDataType
-
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-import test_factories.time_series_points_csv_factory as time_series_points_factory
-import test_factories.energy_factory as energy_factory
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
+from settlement_report_job.infrastructure import csv_writer
+from settlement_report_job.infrastructure.csv_writer import _write_files
 from settlement_report_job.infrastructure.paths import get_report_output_path
 from settlement_report_job.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
-import settlement_report_job.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
-import settlement_report_job.domain.energy_results.order_by_columns as energy_order_by_columns
+from tests.assertion import assert_file_names_and_columns
+from tests.data_seeding import (
+    standard_wholesale_fixing_scenario_data_generator,
+)
+from tests.dbutils_fixture import DBUtilsFixture
+from tests.test_factories.default_test_data_spec import (
+    create_energy_results_data_spec,
+)
 
 
 def _read_csv_file(
@@ -476,9 +474,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
     assert len(result_files) == expected_file_count
     file_name_components = result_files[0][:-4].split("_")
 
-    assert not file_name_components[
-        -1
-    ].isdigit(), (
+    assert not file_name_components[-1].isdigit(), (
         "A valid integer indicating a present chunk index was found when not expected!"
     )
 
@@ -519,9 +515,9 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
         file_name_components = result_file[:-4].split("_")
         chunk_id_if_present = file_name_components[-1]
 
-        assert (
-            not chunk_id_if_present.isdigit()
-        ), "A valid integer indicating a present chunk index was found when not expected!"
+        assert not chunk_id_if_present.isdigit(), (
+            "A valid integer indicating a present chunk index was found when not expected!"
+        )
 
 
 def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
