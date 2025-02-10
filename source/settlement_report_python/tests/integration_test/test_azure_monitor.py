@@ -166,7 +166,7 @@ class TestWhenInvokedWithArguments:
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.telemetry_logging.span_recording"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count
         """
 
