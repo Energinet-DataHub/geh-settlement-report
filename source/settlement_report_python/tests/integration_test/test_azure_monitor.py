@@ -102,7 +102,7 @@ class TestWhenInvokedWithArguments:
 
         # Assert, but timeout if not succeeded
         wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=3), step=timedelta(seconds=10)
+            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
         )
 
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
@@ -181,7 +181,7 @@ class TestWhenInvokedWithArguments:
 
         # Assert, but timeout if not succeeded
         wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=3), step=timedelta(seconds=10)
+            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
         )
 
     @staticmethod
