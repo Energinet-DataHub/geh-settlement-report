@@ -474,7 +474,9 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
     assert len(result_files) == expected_file_count
     file_name_components = result_files[0][:-4].split("_")
 
-    assert not file_name_components[-1].isdigit(), (
+    assert not file_name_components[
+        -1
+    ].isdigit(), (
         "A valid integer indicating a present chunk index was found when not expected!"
     )
 
@@ -515,9 +517,9 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
         file_name_components = result_file[:-4].split("_")
         chunk_id_if_present = file_name_components[-1]
 
-        assert not chunk_id_if_present.isdigit(), (
-            "A valid integer indicating a present chunk index was found when not expected!"
-        )
+        assert (
+            not chunk_id_if_present.isdigit()
+        ), "A valid integer indicating a present chunk index was found when not expected!"
 
 
 def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
