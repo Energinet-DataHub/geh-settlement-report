@@ -14,7 +14,7 @@
 
 from pyspark.sql import DataFrame, functions as F
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 from settlement_report_job.domain.utils.market_role import MarketRole
 from settlement_report_job.domain.utils.map_to_csv_naming import (
     METERING_POINT_TYPES,
@@ -39,7 +39,6 @@ def prepare_for_csv(
     metering_point_periods: DataFrame,
     requesting_actor_market_role: MarketRole,
 ) -> DataFrame:
-
     columns = [
         F.col(DataProductColumnNames.grid_area_code).alias(
             EphemeralColumns.grid_area_code_partitioning

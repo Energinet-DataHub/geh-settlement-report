@@ -62,7 +62,6 @@ def dbutils() -> DBUtilsFixture:
 def cleanup_before_tests(
     input_database_location: str,
 ):
-
     if os.path.exists(input_database_location):
         shutil.rmtree(input_database_location)
 
@@ -440,7 +439,7 @@ def spark(
 def configure_dummy_logging() -> None:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
-    from telemetry_logging.logging_configuration import configure_logging
+    from geh_common.telemetry.logging_configuration import configure_logging
 
     configure_logging(
         cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name"

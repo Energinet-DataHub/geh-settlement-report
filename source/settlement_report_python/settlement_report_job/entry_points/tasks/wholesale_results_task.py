@@ -15,7 +15,7 @@ from settlement_report_job.entry_points.job_args.settlement_report_args import (
 from settlement_report_job.domain.wholesale_results.wholesale_results_factory import (
     create_wholesale_results,
 )
-from telemetry_logging import use_span
+from geh_common.telemetry import use_span
 
 
 class WholesaleResultsTask(TaskBase):

@@ -15,7 +15,7 @@
 import zipfile
 
 from typing import Any
-from telemetry_logging import use_span
+from geh_common.telemetry import use_span
 
 
 @use_span()

@@ -18,7 +18,7 @@ from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 
-from telemetry_logging import use_span
+from geh_common.telemetry import use_span
 
 
 class ChargeLinkPeriodsTask(TaskBase):

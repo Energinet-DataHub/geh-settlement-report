@@ -19,7 +19,7 @@ from typing import Any
 
 from pyspark.sql import DataFrame, Window, functions as F
 
-from telemetry_logging import Logger, use_span
+from geh_common.telemetry import Logger, use_span
 from settlement_report_job.domain.utils.report_data_type import ReportDataType
 from settlement_report_job.infrastructure.report_name_factory import FileNameFactory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
@@ -48,7 +48,6 @@ def write(
     order_by_columns: list[str],
     rows_per_file: int = 1_000_000,
 ) -> list[str]:
-
     report_output_path = get_report_output_path(args)
     spark_output_path = f"{report_output_path}/{_get_folder_name(report_data_type)}"
 

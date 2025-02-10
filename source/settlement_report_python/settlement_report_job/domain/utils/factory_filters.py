@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pyspark.sql import DataFrame, Column, functions as F
 
-from telemetry_logging import Logger
+from geh_common.telemetry import Logger
 from settlement_report_job.domain.utils.csv_column_names import EphemeralColumns
 from settlement_report_job.domain.utils.get_start_of_day import (
     get_start_of_day,

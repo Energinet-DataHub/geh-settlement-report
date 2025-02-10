@@ -17,7 +17,7 @@ from settlement_report_job.infrastructure.repository import WholesaleRepository
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from telemetry_logging import use_span
+from geh_common.telemetry import use_span
 
 from settlement_report_job.domain.utils.settlement_report_args_utils import (
     should_have_result_file_per_grid_area,
