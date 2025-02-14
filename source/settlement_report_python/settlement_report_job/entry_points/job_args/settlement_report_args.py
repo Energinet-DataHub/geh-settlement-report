@@ -3,12 +3,13 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from geh_common.parsing.pydantic_settings_parsing import PydanticParsingSettings
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 from settlement_report_job.domain.utils.market_role import MarketRole
 
 
 @dataclass
-class SettlementReportArgs:
+class SettlementReportArgs(PydanticParsingSettings):
     report_id: str
     period_start: datetime
     period_end: datetime
