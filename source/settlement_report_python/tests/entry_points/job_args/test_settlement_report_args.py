@@ -13,7 +13,7 @@
 # limitations under the License.
 import re
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import patch
 
 import pytest
@@ -28,6 +28,9 @@ from settlement_report_job.entry_points.job_args.environment_variables import (
     EnvironmentVariable,
 )
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
+from settlement_report_job.entry_points.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
 
 DEFAULT_REPORT_ID = "12345678-9fc8-409a-a169-fbd49479d718"
 
@@ -107,6 +110,11 @@ def job_environment_variables() -> dict:
     }
 
 
+@pytest.fixture(scope="session")
+def timezone_fixture() -> timezone:
+    return timezone.utc
+
+
 def test_when_invoked_with_incorrect_parameters__fails(
     job_environment_variables: dict,
 ) -> None:
@@ -124,6 +132,7 @@ def test_when_invoked_with_incorrect_parameters__fails(
 def test_when_parameters_for_balance_fixing__parses_parameters_from_contract(
     job_environment_variables: dict,
     sys_argv_from_contract_for_balance_fixing: list[str],
+    timezone_fixture,
 ) -> None:
     """
     This test ensures that the settlement report job for balance fixing accepts
@@ -132,17 +141,17 @@ def test_when_parameters_for_balance_fixing__parses_parameters_from_contract(
     # Arrange
     with patch("sys.argv", sys_argv_from_contract_for_balance_fixing):
         with patch.dict("os.environ", job_environment_variables):
-            command_line_args = parse_command_line_arguments()
-            # Act
-            actual_args = parse_job_arguments(command_line_args)
+            actual_args = SettlementReportArgs()
 
     # Assert - settlement report arguments
     assert actual_args.report_id == DEFAULT_REPORT_ID
-    assert actual_args.period_start == datetime(2022, 5, 31, 22)
-    assert actual_args.period_end == datetime(2022, 6, 1, 22)
+    assert actual_args.period_start == datetime(
+        2022, 5, 31, 22, tzinfo=timezone_fixture
+    )
+    assert actual_args.period_end == datetime(2022, 6, 1, 22, tzinfo=timezone_fixture)
     assert actual_args.calculation_type == CalculationType.BALANCE_FIXING
-    assert actual_args.grid_area_codes == ["804", "805"]
-    assert actual_args.energy_supplier_ids == ["1234567890123"]
+    assert actual_args.grid_area_codes == [804, 805]
+    assert actual_args.energy_supplier_ids == [1234567890123]
     assert actual_args.prevent_large_text_files is True
     assert actual_args.split_report_by_grid_area is True
     assert actual_args.time_zone == "Europe/Copenhagen"
@@ -152,6 +161,7 @@ def test_when_parameters_for_balance_fixing__parses_parameters_from_contract(
 def test_when_parameters_for_wholesale__parses_parameters_from_contract(
     job_environment_variables: dict,
     sys_argv_from_contract_for_wholesale: list[str],
+    timezone_fixture,
 ) -> None:
     """
     This test ensures that the settlement report job for wholesale calculations accepts
@@ -160,20 +170,20 @@ def test_when_parameters_for_wholesale__parses_parameters_from_contract(
     # Arrange
     with patch("sys.argv", sys_argv_from_contract_for_wholesale):
         with patch.dict("os.environ", job_environment_variables):
-            command_line_args = parse_command_line_arguments()
-            # Act
-            actual_args = parse_job_arguments(command_line_args)
+            actual_args = SettlementReportArgs()
 
     # Assert - settlement report arguments
     assert actual_args.report_id == DEFAULT_REPORT_ID
-    assert actual_args.period_start == datetime(2022, 5, 31, 22)
-    assert actual_args.period_end == datetime(2022, 6, 1, 22)
+    assert actual_args.period_start == datetime(
+        2022, 5, 31, 22, tzinfo=timezone_fixture
+    )
+    assert actual_args.period_end == datetime(2022, 6, 1, 22, tzinfo=timezone_fixture)
     assert actual_args.calculation_type == CalculationType.WHOLESALE_FIXING
     assert actual_args.calculation_id_by_grid_area == {
         "804": uuid.UUID("95bd2365-c09b-4ee7-8c25-8dd56b564811"),
         "805": uuid.UUID("d3e2b83a-2fd9-4bcd-a6dc-41e4ce74cd6d"),
     }
-    assert actual_args.energy_supplier_ids == ["1234567890123"]
+    assert actual_args.energy_supplier_ids == [1234567890123]
     assert actual_args.prevent_large_text_files is True
     assert actual_args.split_report_by_grid_area is True
     assert actual_args.time_zone == "Europe/Copenhagen"
@@ -317,11 +327,11 @@ def test_returns_expected_value_for_include_basis_data(
 @pytest.mark.parametrize(
     "energy_supplier_ids_argument, expected_energy_suppliers_ids",
     [
-        ("[1234567890123]", ["1234567890123"]),
-        ("[1234567890123]", ["1234567890123"]),
-        ("[1234567890123, 2345678901234]", ["1234567890123", "2345678901234"]),
-        ("[1234567890123,2345678901234]", ["1234567890123", "2345678901234"]),
-        ("[ 1234567890123,2345678901234 ]", ["1234567890123", "2345678901234"]),
+        ([1234567890123], [1234567890123]),
+        ([1234567890123], [1234567890123]),
+        ([1234567890123, 2345678901234], [1234567890123, 2345678901234]),
+        ([1234567890123, 2345678901234], [1234567890123, 2345678901234]),
+        ([1234567890123, 2345678901234], [1234567890123, 2345678901234]),
     ],
 )
 def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplier_ids(
@@ -338,10 +348,7 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
-            command_line_args = parse_command_line_arguments()
-
-            # Act
-            actual_args = parse_job_arguments(command_line_args)
+            actual_args = SettlementReportArgs()
 
     # Assert
     assert actual_args.energy_supplier_ids == expected_energy_suppliers_ids
