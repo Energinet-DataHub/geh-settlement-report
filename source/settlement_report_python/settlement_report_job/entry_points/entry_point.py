@@ -92,7 +92,9 @@ def _start_task(task_type: TaskType) -> None:
     start_task_with_deps(task_type=task_type)
 
 
-@start_trace()
+@start_trace(
+    initial_span_name="entry_point"
+)  # to mimic previous setup using (__name__)
 def start_task_with_deps(task_type: TaskType):
     args = SettlementReportArgs()
     spark = initialize_spark()
