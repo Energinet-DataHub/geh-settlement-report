@@ -19,7 +19,11 @@ from collections.abc import Callable
 
 from opentelemetry.trace import SpanKind
 
-import geh_common.telemetry.logging_configuration as config
+from geh_common.telemetry.logging_configuration import (
+    LoggingSettings,
+    configure_logging,
+    add_extras,
+)
 from geh_common.telemetry.span_recording import span_record_exception
 from settlement_report_job.entry_points.tasks import task_factory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
@@ -74,17 +78,33 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    applicationinsights_connection_string = os.getenv(
-        "APPLICATIONINSIGHTS_CONNECTION_STRING"
+    logging_settings = LoggingSettings(
+        subsystem="settlement-report-aggregations",
+        cloud_role_name="dbr-settlement-report",
     )
-
-    start_task_with_deps(
-        task_type=task_type,
-        applicationinsights_connection_string=applicationinsights_connection_string,
-    )
+    configure_logging(logging_settings=logging_settings)
+    start_task_with_deps(task_type=task_type)
 
 
-def start_task_with_deps(
+def start_task_with_deps(task_type: TaskType):
+    # coming log messages
+
+    command_line_args = parse_command_line_arguments()
+    report_id = command_line_args.report_id
+
+    # Add settlement_report_id to structured logging data to be included in
+    # every log message.
+    add_extras({"settlement_report_id": report_id})
+    # span.set_attributes(config.get_extras())  # why though?
+    # args = parse_job_args(command_line_args)
+    args = SettlementReportArgs()
+    spark = initialize_spark()
+
+    task = task_factory.create(task_type, spark, args)
+    task.execute()
+
+
+def start_task_with_deps_old(
     *,
     task_type: TaskType,
     cloud_role_name: str = "dbr-settlement-report",
