@@ -7,7 +7,6 @@ from settlement_report_job.entry_points.job_args.calculation_type import Calcula
 from settlement_report_job.domain.utils.market_role import MarketRole
 
 
-# @dataclass
 class SettlementReportArgs(PydanticParsingSettings):
     report_id: str
     period_start: datetime
@@ -15,7 +14,7 @@ class SettlementReportArgs(PydanticParsingSettings):
     calculation_type: CalculationType
     requesting_actor_market_role: MarketRole
     requesting_actor_id: str
-    calculation_id_by_grid_area: dict[str, uuid.UUID] | None = None
+    calculation_id_by_grid_area: dict[int, uuid.UUID] | None = None
     """ A dictionary containing grid area codes (keys) and calculation ids (values). None for balance fixing"""
     grid_area_codes: list[int] | None = None  # TODO: actually int
     """ None if NOT balance fixing"""

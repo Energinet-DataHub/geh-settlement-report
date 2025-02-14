@@ -18,6 +18,7 @@ import uuid
 from pathlib import Path
 from typing import Callable, Generator
 from unittest import mock
+import uuid
 
 import pytest
 import yaml
@@ -452,7 +453,33 @@ def script_args_fixture() -> list[str]:
         "--force_configuration",
         "false",
         "--orchestration-instance-id",
-        "4a540892-2c0a-46a9-9257-c4e13051d76a",
+        str(uuid.uuid4()),
+        "--report-id",
+        str(uuid.uuid4()),
+        "--period-start",
+        "2024-01-01T23:00:00",
+        "--period-end",
+        "2024-01-02T23:00:00",
+        "--calculation-type",
+        "wholesale_fixing",
+        "--requesting-actor-market-role",
+        "system_operator",
+        "--requesting-actor-id",
+        "5790001330552",
+        "--calculation-id-by-grid-area",
+        f"804={uuid.uuid4()}",
+        "--split-report-by-grid-area",
+        "true",
+        "--prevent-large-text-files",
+        "false",
+        "--time-zone",
+        "Europe/Copenhagen",
+        "--catalog-name",
+        "spark_catalog",
+        "--settlement-reports-output-path",
+        "/workspaces/geh-settlement-report/source/settlement_report_python/tests/__data_lake__/master/settlement_reports_output",
+        "--include-basis-data",
+        "true",
     ]
     return sys_argv
 

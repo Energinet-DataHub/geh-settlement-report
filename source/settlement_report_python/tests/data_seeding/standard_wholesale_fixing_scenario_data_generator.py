@@ -30,7 +30,7 @@ from tests.test_factories.default_test_data_spec import (
     create_total_monthly_amounts_row,
 )
 
-GRID_AREAS = ["804", "805"]
+GRID_AREAS = [804, 805]
 CALCULATION_ID = "12345678-6f20-40c5-9a95-f419a1245d7e"
 CALCULATION_TYPE = CalculationTypeDataProductValue.WHOLESALE_FIXING
 ENERGY_SUPPLIER_IDS = ["1000000000000", "2000000000000"]

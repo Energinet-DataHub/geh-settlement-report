@@ -96,6 +96,8 @@ def _start_task(task_type: TaskType) -> None:
     initial_span_name="entry_point"
 )  # to mimic previous setup using (__name__)
 def start_task_with_deps(task_type: TaskType):
+    print("PRINTING FROM THE START WITH DEPS:")
+    # print(SettlementReportArgs())
     args = SettlementReportArgs()
     spark = initialize_spark()
     task = task_factory.create(task_type, spark, args)
