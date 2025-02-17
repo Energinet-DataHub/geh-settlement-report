@@ -5,6 +5,7 @@ from typing import Optional
 from geh_common.parsing.pydantic_settings_parsing import PydanticParsingSettings
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 from settlement_report_job.domain.utils.market_role import MarketRole
+from pydantic import field_validator
 
 
 class SettlementReportArgs(PydanticParsingSettings):
@@ -29,6 +30,15 @@ class SettlementReportArgs(PydanticParsingSettings):
 
     """The path to the folder where the settlement reports are stored."""
     include_basis_data: bool
+
+    @field_validator("grid_area_codes")
+    @classmethod
+    def validate_grid_area_codes(cls, v):
+        if v is None:
+            return v
+        if not all(isinstance(code, int) and 100 <= code <= 999 for code in v):
+            raise ValueError("Grid area codes must consist of 3 digits (100-999).")
+        return v
 
 
 @dataclass

@@ -56,11 +56,9 @@ class TestWhenInvokedWithArguments:
 
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
-        script_args = script_args_fixture  # Get the original fixture values
+        script_args = script_args_fixture
         new_report_id = str(uuid.uuid4())
-        updated_args = update_script_arg(
-            script_args, "--report-id", new_report_id
-        )  # Replace report-id
+        updated_args = update_script_arg(script_args, "--report-id", new_report_id)
 
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()
@@ -119,8 +117,8 @@ class TestWhenInvokedWithArguments:
 
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
         self,
-        standard_wholesale_fixing_scenario_args: SettlementReportArgs,
         integration_test_configuration: IntegrationTestConfiguration,
+        script_args_fixture,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -137,19 +135,19 @@ class TestWhenInvokedWithArguments:
 
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
-        standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())
-        standard_wholesale_fixing_scenario_args.calculation_type = (
-            CalculationType.BALANCE_FIXING
+        script_args = script_args_fixture  # Get the original fixture values
+        new_report_id = str(uuid.uuid4())
+        updated_args = update_script_arg(script_args, "--report-id", new_report_id)
+        updated_args = update_script_arg(
+            updated_args, "--calculation-type", CalculationType.BALANCE_FIXING.value
         )
-        standard_wholesale_fixing_scenario_args.grid_area_codes = [
-            8054
-        ]  # Should produce an error with balance fixing
+        if "--grid-area-codes" not in updated_args:
+            updated_args.extend(["--grid-area-codes", "[8054]"])
+
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()
         )
-        os.environ["CATALOG_NAME"] = "test_catalog"
         task_factory_mock = Mock()
-        self.prepare_command_line_arguments(standard_wholesale_fixing_scenario_args)
 
         # Act
         with pytest.raises(SystemExit):
@@ -157,14 +155,21 @@ class TestWhenInvokedWithArguments:
                 "settlement_report_job.entry_points.tasks.task_factory.create",
                 task_factory_mock,
             ):
-                with patch(
-                    "settlement_report_job.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                    return_value=None,
+                with (
+                    patch(
+                        "settlement_report_job.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                        return_value=None,
+                    ),
+                    patch("sys.argv", updated_args),
+                    patch.dict(
+                        "os.environ",
+                        {
+                            "APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string,
+                            "CATALOG_NAME": "test_catalog",
+                        },
+                    ),
                 ):
-                    start_task_with_deps(
-                        task_type=valid_task_type,
-                        applicationinsights_connection_string=applicationinsights_connection_string,
-                    )
+                    _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -173,11 +178,11 @@ class TestWhenInvokedWithArguments:
         query = f"""
         AppExceptions
         | where AppRoleName == "dbr-settlement-report"
-        | where ExceptionType == "argparse.ArgumentTypeError"
-        | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
+        | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
+        | where OuterMessage contains "Grid area codes must consist of 3 digits (100-999)"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
-        | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
+        | where Properties.subsystem == "settlement-report-aggregations"
+        | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count
         """
@@ -194,38 +199,6 @@ class TestWhenInvokedWithArguments:
         # Assert, but timeout if not succeeded
         wait_for_condition(
             assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
-        )
-
-    @staticmethod
-    def prepare_command_line_arguments(
-        standard_wholesale_fixing_scenario_args: SettlementReportArgs,
-    ) -> None:
-        standard_wholesale_fixing_scenario_args.report_id = str(
-            uuid.uuid4()
-        )  # Ensure unique report id
-        sys.argv = []
-        sys.argv.append(
-            "--entry-point=execute_wholesale_results"
-        )  # Workaround as the parse command line arguments starts with the second argument
-        sys.argv.append(
-            f"--report-id={str(standard_wholesale_fixing_scenario_args.report_id)}"
-        )
-        sys.argv.append(
-            f"--period-start={str(standard_wholesale_fixing_scenario_args.period_start.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
-        )
-        sys.argv.append(
-            f"--period-end={str(standard_wholesale_fixing_scenario_args.period_end.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
-        )
-        sys.argv.append(
-            f"--calculation-type={str(standard_wholesale_fixing_scenario_args.calculation_type.value)}"
-        )
-        sys.argv.append("--requesting-actor-market-role=datahub_administrator")
-        sys.argv.append("--requesting-actor-id=1234567890123")
-        sys.argv.append(
-            f"--grid-area-codes={str(standard_wholesale_fixing_scenario_args.grid_area_codes)}"
-        )
-        sys.argv.append(
-            '--calculation-id-by-grid-area={"804": "bf6e1249-d4c2-4ec2-8ce5-4c7fe8756253"}'
         )
 
 

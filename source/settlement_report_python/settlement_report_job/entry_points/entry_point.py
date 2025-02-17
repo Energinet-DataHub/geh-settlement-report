@@ -24,18 +24,14 @@ from geh_common.telemetry import Logger
 from geh_common.telemetry.logging_configuration import (
     LoggingSettings,
     configure_logging,
+    add_extras,
 )
 from geh_common.telemetry.span_recording import span_record_exception
 from settlement_report_job.entry_points.tasks import task_factory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.job_args.settlement_report_job_args import (
-    parse_job_arguments,  # TODO: Clean up
-    parse_command_line_arguments,  # TODO: Clean up
-)
 from settlement_report_job.entry_points.tasks.task_type import TaskType
-from settlement_report_job.entry_points.utils.get_dbutils import get_dbutils
 from settlement_report_job.infrastructure.spark_initializor import initialize_spark
 
 
@@ -79,23 +75,23 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    args = SettlementReportArgs()
-    report_id = args.report_id
-    extras = {"settlement_report_id": report_id}
     logging_settings = LoggingSettings(
         subsystem="settlement-report-aggregations",
         cloud_role_name="dbr-settlement-report",
         orchestration_instance_id=uuid.uuid4(),  # Generate a random one until implemented in the CI
     )
-    configure_logging(logging_settings=logging_settings, extras=extras)
-    start_task_with_deps(task_type=task_type, job_args=args)
+    configure_logging(logging_settings=logging_settings)
+    start_task_with_deps(task_type=task_type)
 
 
 @start_trace(
     initial_span_name="entry_point"
 )  # to mimic previous setup using (__name__)
-def start_task_with_deps(task_type: TaskType, job_args: SettlementReportArgs):
-    args = job_args
+def start_task_with_deps(task_type: TaskType):
+    add_extras(
+        {"settlement_report_id": get_report_id_from_args()}
+    )  # Add extra before pydantic validation
+    args = SettlementReportArgs()
     logger = Logger(__name__)
     logger.info(f"Command line arguments: {args}")
     spark = initialize_spark()
@@ -103,49 +99,16 @@ def start_task_with_deps(task_type: TaskType, job_args: SettlementReportArgs):
     task.execute()
 
 
-# def start_task_with_deps_old(
-#     # TODO: Clean up
-#     *,
-#     task_type: TaskType,
-#     cloud_role_name: str = "dbr-settlement-report",
-#     applicationinsights_connection_string: str | None = None,
-#     parse_command_line_args: Callable[..., Namespace] = parse_command_line_arguments,
-#     parse_job_args: Callable[..., SettlementReportArgs] = parse_job_arguments,
-# ) -> None:
-#     """Start overload with explicit dependencies for easier testing."""
-#     config.configure_logging(
-#         cloud_role_name=cloud_role_name,
-#         tracer_name="settlement-report-job",
-#         applicationinsights_connection_string=applicationinsights_connection_string,
-#         extras={"Subsystem": "settlement-report-aggregations"},
-#     )
+def get_report_id_from_args() -> str:
+    """
+    Checks if --report-id is part of sys.argv and returns its value.
 
-#     with config.get_tracer().start_as_current_span(
-#         __name__, kind=SpanKind.SERVER
-#     ) as span:
-#         # Try/except added to enable adding custom fields to the exception as
-#         # the span attributes do not appear to be included in the exception.
-#         try:
-#             # The command line arguments are parsed to have necessary information for
-#             # coming log messages
-#             command_line_args = parse_command_line_args()
-
-#             # Add settlement_report_id to structured logging data to be included in
-#             # every log message.
-#             config.add_extras({"settlement_report_id": command_line_args.report_id})
-#             span.set_attributes(config.get_extras())
-#             args = parse_job_args(command_line_args)
-#             spark = initialize_spark()
-
-#             task = task_factory.create(task_type, spark, args)
-#             task.execute()
-
-#         # Added as ConfigArgParse uses sys.exit() rather than raising exceptions
-#         except SystemExit as e:
-#             if e.code != 0:
-#                 span_record_exception(e, span)
-#             sys.exit(e.code)
-
-#         except Exception as e:
-#             span_record_exception(e, span)
-#             sys.exit(4)
+    :return: The value of --report-id if found, otherwise None.
+    """
+    try:
+        # Find the index of --report-id and return the next element
+        index = sys.argv.index("--report-id") + 1
+        return sys.argv[index] if index < len(sys.argv) else None
+    except ValueError:
+        # If --report-id is not found, return None
+        return None
