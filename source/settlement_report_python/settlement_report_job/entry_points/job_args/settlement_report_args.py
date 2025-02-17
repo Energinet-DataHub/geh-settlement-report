@@ -17,9 +17,9 @@ class SettlementReportArgs(PydanticParsingSettings):
     requesting_actor_id: str
     calculation_id_by_grid_area: dict[str, uuid.UUID] | None = None
     """ A dictionary containing grid area codes (keys) and calculation ids (values). None for balance fixing"""
-    grid_area_codes: list[int] | None = None
+    grid_area_codes: list[str] | None = None
     """ None if NOT balance fixing"""
-    energy_supplier_ids: list[int] | None = None
+    energy_supplier_ids: list[str] | None = None
     split_report_by_grid_area: bool
     prevent_large_text_files: bool
     time_zone: str = "Europe/Copenhagen"
@@ -34,6 +34,11 @@ class SettlementReportArgs(PydanticParsingSettings):
     def validate_grid_area_codes(cls, v):
         if v is None:
             return v
-        if not all(isinstance(code, int) and 100 <= code <= 999 for code in v):
-            raise ValueError("Grid area codes must consist of 3 digits (100-999).")
+        if not all(
+            isinstance(code, str) and code.isdigit() and 100 <= int(code) <= 999
+            for code in v
+        ):
+            raise ValueError(
+                "Grid area codes must be strings representing a three-digit number (100-999)."
+            )
         return v
