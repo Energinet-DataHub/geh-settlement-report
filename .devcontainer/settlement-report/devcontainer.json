@@ -8,11 +8,11 @@
       "ASDF_VERSION": "0.15.0"
     }
   },
-  "workspaceMount": "source=${localWorkspaceFolder}/source/geh_settlement_report,target=/workspace,type=bind,consistency=cached",
-  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "workspaceFolder": "/workspace/source/geh_settlement_report",
   "remoteUser": "vscode",
   "shutdownAction": "none",
-  "postCreateCommand": "~/scripts/post-create.sh",
+  "postCreateCommand": "~/scripts/post-create.sh ~",
   "postStartCommand": "uv sync",
   "containerEnv": {
     "UV_PROJECT_ENVIRONMENT": "/home/vscode/.venv",

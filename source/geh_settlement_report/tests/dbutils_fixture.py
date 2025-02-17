@@ -1,6 +1,5 @@
 import os
 import shutil
-
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -44,10 +43,7 @@ class DBUtilsFixture:
     def ls(self, path: str):
         _paths = Path(self._clean_path(path)).glob("*")
         _objects = [
-            DBUtilsFileInfoFixture(
-                str(p.absolute()), p.name, p.stat().st_size, int(p.stat().st_mtime)
-            )
-            for p in _paths
+            DBUtilsFileInfoFixture(str(p.absolute()), p.name, p.stat().st_size, int(p.stat().st_mtime)) for p in _paths
         ]
         return _objects
 
@@ -56,9 +52,7 @@ class DBUtilsFixture:
 
     def mv(self, src: str, dest: str, recurse: bool = False):
         copy_func = shutil.copytree if recurse else shutil.copy
-        shutil.move(
-            self._clean_path(src), self._clean_path(dest), copy_function=copy_func
-        )
+        shutil.move(self._clean_path(src), self._clean_path(dest), copy_function=copy_func)
 
     def put(self, path: str, content: str, overwrite: bool = False):
         _f = Path(self._clean_path(path))

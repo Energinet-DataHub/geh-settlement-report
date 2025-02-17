@@ -16,8 +16,7 @@ from enum import Enum
 
 
 class MarketRole(Enum):
-    """
-    The market role value affects what is included in the settlement report.
+    """The market role value affects what is included in the settlement report.
     The 'market-role' command line argument must use one of these values.
     """
 

@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 from unittest.mock import Mock
 
 import pytest
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import functions as F
+
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
 import tests.test_factories.default_test_data_spec as default_data
 from geh_settlement_report.domain.charge_price_points.prepare_for_csv import (
@@ -15,8 +18,6 @@ from geh_settlement_report.infrastructure.wholesale.column_names import (
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     ChargeResolutionDataProductValue,
 )
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql import functions as F
 from tests.utils import Dates
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE

@@ -39,9 +39,7 @@ class TimeSeriesPointsTask(TaskBase):
     def execute(
         self,
     ) -> None:
-        """
-        Entry point for the logic of creating time series.
-        """
+        """Entry point for the logic of creating time series."""
         if not self.args.include_basis_data:
             return
 

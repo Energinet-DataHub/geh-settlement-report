@@ -16,9 +16,7 @@ from enum import Enum
 
 
 class TaskType(Enum):
-    """
-    Databricks tasks that can be executed.
-    """
+    """Databricks tasks that can be executed."""
 
     TimeSeriesHourly = 1
     TimeSeriesQuarterly = 2

@@ -1,4 +1,6 @@
 import pytest
+from pyspark.sql import SparkSession
+
 from geh_settlement_report.domain.utils.csv_column_names import (
     CsvColumnNames,
 )
@@ -10,7 +12,6 @@ from geh_settlement_report.entry_points.tasks.monthly_amounts_task import (
     MonthlyAmountsTask,
 )
 from geh_settlement_report.infrastructure.paths import get_report_output_path
-from pyspark.sql import SparkSession
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
 from tests.dbutils_fixture import DBUtilsFixture

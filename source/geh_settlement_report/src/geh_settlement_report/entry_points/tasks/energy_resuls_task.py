@@ -25,9 +25,7 @@ class EnergyResultsTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating energy results.
-        """
+        """Entry point for the logic of creating energy results."""
         if self.args.requesting_actor_market_role == MarketRole.SYSTEM_OPERATOR:
             return
 

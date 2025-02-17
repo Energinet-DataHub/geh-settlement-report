@@ -21,6 +21,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
+
 from geh_settlement_report.entry_points.entry_point import (
     start_task_with_deps,
 )
@@ -29,7 +30,6 @@ from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from geh_settlement_report.entry_points.tasks.task_type import TaskType
-
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 

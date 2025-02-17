@@ -26,9 +26,7 @@ class ChargePricePointsTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating charge prices.
-        """
+        """Entry point for the logic of creating charge prices."""
         if not self.args.include_basis_data:
             return
 

@@ -50,7 +50,7 @@ def read_and_filter(
 
     charge_price_points = (
         repository.read_charge_price_points()
-        .where((F.col(DataProductColumnNames.charge_time) >= period_start))
+        .where(F.col(DataProductColumnNames.charge_time) >= period_start)
         .where(F.col(DataProductColumnNames.charge_time) < period_end)
     )
 

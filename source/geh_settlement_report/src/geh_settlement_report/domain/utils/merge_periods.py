@@ -7,8 +7,8 @@ from geh_settlement_report.infrastructure.wholesale.column_names import (
 
 
 def merge_connected_periods(df: DataFrame) -> DataFrame:
-    """
-    Merges connected and/or overlapping periods within each group of rows in the input DataFrame.
+    """Merges connected and/or overlapping periods within each group of rows in the input DataFrame.
+
     Args:
         df: a dataframe that contains any number of columns plus the columns 'from_date' and 'to_date'
 

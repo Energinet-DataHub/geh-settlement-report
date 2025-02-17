@@ -13,15 +13,13 @@
 # limitations under the License.
 
 import zipfile
-
 from typing import Any
+
 from geh_common.telemetry import use_span
 
 
 @use_span()
-def create_zip_file(
-    dbutils: Any, report_id: str, save_path: str, files_to_zip: list[str]
-) -> None:
+def create_zip_file(dbutils: Any, report_id: str, save_path: str, files_to_zip: list[str]) -> None:
     """Creates a zip file from a list of files and saves it to the specified path.
 
     Notice that we have to create the zip file in /tmp and then move it to the desired

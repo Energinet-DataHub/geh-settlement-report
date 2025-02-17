@@ -1,4 +1,7 @@
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import lit
+
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.monthly_amounts_per_charge_factory as monthly_amounts_per_charge_factory
 from geh_settlement_report.domain.monthly_amounts.prepare_for_csv import (
@@ -11,8 +14,6 @@ from geh_settlement_report.domain.utils.csv_column_names import (
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import lit
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

@@ -24,9 +24,7 @@ class WholesaleResultsTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating wholesale results.
-        """
+        """Entry point for the logic of creating wholesale results."""
         repository = WholesaleRepository(self.spark, self.args.catalog_name)
         wholesale_results_df = create_wholesale_results(args=self.args, repository=repository)
 

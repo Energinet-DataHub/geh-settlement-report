@@ -1,6 +1,8 @@
 import uuid
 from unittest.mock import Mock
 
+from pyspark.sql import DataFrame, SparkSession
+
 import tests.test_factories.charge_link_periods_factory as input_charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as input_charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
@@ -15,7 +17,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
-from pyspark.sql import DataFrame, SparkSession
 
 
 def _get_repository_mock(

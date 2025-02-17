@@ -13,7 +13,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values.calculation_type
 from geh_settlement_report.infrastructure.wholesale.data_values.settlement_method import (
     SettlementMethodDataProductValue,
 )
-
 from tests.test_factories.amounts_per_charge_factory import AmountsPerChargeRow
 from tests.test_factories.charge_link_periods_factory import ChargeLinkPeriodsRow
 from tests.test_factories.charge_price_information_periods_factory import (

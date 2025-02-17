@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 
 import pytest
+from pyspark.sql import SparkSession
+
 from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
@@ -11,7 +13,6 @@ from geh_settlement_report.infrastructure.report_name_factory import (
     FileNameFactory,
     ReportDataType,
 )
-from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="function")

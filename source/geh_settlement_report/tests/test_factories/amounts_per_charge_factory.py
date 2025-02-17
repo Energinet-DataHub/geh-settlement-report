@@ -3,6 +3,8 @@ from datetime import datetime
 from decimal import Decimal
 from typing import List, Union
 
+from pyspark.sql import DataFrame, SparkSession
+
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
@@ -18,7 +20,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values.settlement_metho
 from geh_settlement_report.infrastructure.wholesale.schemas.amounts_per_charge_v1 import (
     amounts_per_charge_v1,
 )
-from pyspark.sql import DataFrame, SparkSession
 
 
 @dataclass

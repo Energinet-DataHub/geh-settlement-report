@@ -4,6 +4,9 @@ from functools import reduce
 from unittest.mock import Mock
 
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods
 import tests.test_factories.default_test_data_spec as default_data
@@ -20,8 +23,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
 )
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 from tests.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE

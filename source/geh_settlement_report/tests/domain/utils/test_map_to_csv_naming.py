@@ -1,5 +1,9 @@
-import geh_settlement_report.domain.utils.map_to_csv_naming as mapping_dicts
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import StringType, StructField, StructType
+
+import geh_settlement_report.domain.utils.map_to_csv_naming as mapping_dicts
 from geh_settlement_report.domain.utils.map_from_dict import map_from_dict
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
@@ -7,9 +11,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
-from pyspark.sql.types import StringType, StructField, StructType
 
 
 @pytest.mark.parametrize(

@@ -1,3 +1,6 @@
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.types import StructType
+
 from geh_settlement_report.infrastructure.wholesale import (
     database_definitions,
 )
@@ -26,8 +29,6 @@ from geh_settlement_report.infrastructure.wholesale.schemas.latest_calculations_
 from geh_settlement_report.infrastructure.wholesale.schemas.total_monthly_amounts_v1 import (
     total_monthly_amounts_v1,
 )
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.types import StructType
 
 
 def write_latest_calculations_by_day_to_delta_table(

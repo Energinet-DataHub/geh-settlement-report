@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+from pyspark.sql import DataFrame, SparkSession
+
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
     ChargeResolutionDataProductValue,
@@ -10,8 +12,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
-from pyspark.sql import DataFrame, SparkSession
-
 from tests.test_factories import (
     amounts_per_charge_factory,
     charge_link_periods_factory,

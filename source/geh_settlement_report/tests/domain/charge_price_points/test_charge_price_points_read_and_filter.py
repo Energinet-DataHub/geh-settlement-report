@@ -4,6 +4,8 @@ from unittest.mock import Mock
 from uuid import UUID
 
 import pytest
+from pyspark.sql import DataFrame, SparkSession
+
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
@@ -13,7 +15,6 @@ from geh_settlement_report.domain.charge_price_points.read_and_filter import (
     read_and_filter,
 )
 from geh_settlement_report.domain.utils.market_role import MarketRole
-from pyspark.sql import DataFrame, SparkSession
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

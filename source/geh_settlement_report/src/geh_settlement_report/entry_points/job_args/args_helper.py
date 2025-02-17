@@ -21,7 +21,7 @@ def valid_date(s: str) -> datetime:
     try:
         return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:
-        msg = "not a valid date: {0!r}".format(s)
+        msg = f"not a valid date: {s!r}"
         raise configargparse.ArgumentTypeError(msg)
 
 
@@ -34,11 +34,7 @@ def valid_energy_supplier_ids(s: str) -> list[str]:
     tokens = [token.strip() for token in s.strip("[]").split(",")]
 
     # Energy supplier IDs must always consist of 13 or 16 digits
-    if any(
-        (len(token) != 13 and len(token) != 16)
-        or any(c < "0" or c > "9" for c in token)
-        for token in tokens
-    ):
+    if any((len(token) != 13 and len(token) != 16) or any(c < "0" or c > "9" for c in token) for token in tokens):
         msg = "Energy supplier IDs must consist of 13 or 16 digits"
         raise configargparse.ArgumentTypeError(msg)
 

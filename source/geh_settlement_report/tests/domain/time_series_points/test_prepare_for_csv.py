@@ -3,6 +3,10 @@ from decimal import Decimal
 
 import pyspark.sql.functions as F
 import pytest
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql.types import DecimalType
+
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
 from geh_settlement_report.domain.time_series_points.prepare_for_csv import (
@@ -18,9 +22,6 @@ from geh_settlement_report.infrastructure.wholesale.column_names import (
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
 )
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import monotonically_increasing_id
-from pyspark.sql.types import DecimalType
 
 DEFAULT_TIME_ZONE = "Europe/Copenhagen"
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE

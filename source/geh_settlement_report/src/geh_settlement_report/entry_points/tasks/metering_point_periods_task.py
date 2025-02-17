@@ -26,9 +26,7 @@ class MeteringPointPeriodsTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating metering point periods.
-        """
+        """Entry point for the logic of creating metering point periods."""
         if not self.args.include_basis_data:
             return
 

@@ -2,6 +2,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+
 from geh_settlement_report.infrastructure.create_zip_file import create_zip_file
 
 

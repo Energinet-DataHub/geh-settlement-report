@@ -1,14 +1,15 @@
 from datetime import datetime
 
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
 from geh_settlement_report.domain.utils.merge_periods import (
     merge_connected_periods,
 )
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 
 JAN_1ST = datetime(2023, 12, 31, 23)
 JAN_2ND = datetime(2024, 1, 1, 23)

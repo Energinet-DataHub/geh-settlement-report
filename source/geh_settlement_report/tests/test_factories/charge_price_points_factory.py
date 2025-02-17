@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 
+from pyspark.sql import DataFrame, SparkSession
+
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
@@ -12,7 +14,6 @@ from geh_settlement_report.infrastructure.wholesale.data_values import (
 from geh_settlement_report.infrastructure.wholesale.schemas.charge_price_points_v1 import (
     charge_price_points_v1,
 )
-from pyspark.sql import DataFrame, SparkSession
 
 
 @dataclass

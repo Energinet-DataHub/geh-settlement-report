@@ -17,6 +17,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 import pytest
+
 from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.entry_points.entry_point import (
     parse_command_line_arguments,

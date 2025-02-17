@@ -16,6 +16,7 @@ import importlib.metadata
 from typing import Any
 
 import pytest
+
 from geh_settlement_report.entry_points import entry_point as module
 
 # IMPORTANT:

@@ -4,6 +4,9 @@ from functools import reduce
 from unittest.mock import Mock
 
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.energy_factory as energy_factory
 from geh_settlement_report.domain.energy_results.read_and_filter import (
@@ -19,8 +22,6 @@ from geh_settlement_report.infrastructure.wholesale.column_names import (
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
 )
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 from tests.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE

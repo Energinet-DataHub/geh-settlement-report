@@ -1,5 +1,7 @@
 from unittest.mock import Mock
 
+from pyspark.sql import DataFrame, SparkSession
+
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
 from geh_settlement_report.domain.metering_point_periods.metering_point_periods_factory import (
@@ -9,7 +11,6 @@ from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from pyspark.sql import DataFrame, SparkSession
 from tests.test_factories import latest_calculations_factory
 from tests.utils import Dates as d
 

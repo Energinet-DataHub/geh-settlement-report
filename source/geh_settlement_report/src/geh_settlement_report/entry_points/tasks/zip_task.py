@@ -17,9 +17,7 @@ class ZipTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating the final zip file.
-        """
+        """Entry point for the logic of creating the final zip file."""
         report_output_path = get_report_output_path(self.args)
         files_to_zip = [
             f"{report_output_path}/{file_info.name}" for file_info in self.dbutils.fs.ls(report_output_path)

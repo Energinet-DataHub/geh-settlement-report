@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WORKSPACE_DIR=${1:-"."}
+WORKSPACE_DIR=${1:-"$HOME"}
 
 # find all .tool-versions within the repo, but ignore all hidden directories
 if test -f "$WORKSPACE_DIR/.tool-versions"; then

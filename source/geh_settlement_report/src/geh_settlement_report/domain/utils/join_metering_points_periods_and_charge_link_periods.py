@@ -10,8 +10,7 @@ def join_metering_points_periods_and_charge_link_periods(
     charge_link_periods: DataFrame,
     metering_point_periods: DataFrame,
 ) -> DataFrame:
-    """
-    Joins metering point periods and charge link periods and returns the joined DataFrame.
+    """Joins metering point periods and charge link periods and returns the joined DataFrame.
     Periods are joined on calculation_id and metering_point_id.
     The output DataFrame will contain the columns from_date and to_date, which are the intersection of the periods.
     """

@@ -4,6 +4,8 @@ from functools import reduce
 from unittest.mock import Mock
 
 import pytest
+from pyspark.sql import DataFrame, SparkSession
+
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
@@ -15,7 +17,6 @@ from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from pyspark.sql import DataFrame, SparkSession
 from tests.utils import Dates as d
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE

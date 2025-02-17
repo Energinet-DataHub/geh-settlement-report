@@ -1,6 +1,8 @@
 from datetime import datetime
 from unittest.mock import Mock
 
+from pyspark.sql import DataFrame, SparkSession
+
 import tests.test_factories.default_test_data_spec as default_data
 from geh_settlement_report.domain.metering_point_periods.read_and_filter_balance_fixing import (
     read_and_filter,
@@ -8,7 +10,6 @@ from geh_settlement_report.domain.metering_point_periods.read_and_filter_balance
 from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from pyspark.sql import DataFrame, SparkSession
 from tests.test_factories import (
     latest_calculations_factory,
     metering_point_periods_factory,

@@ -26,9 +26,7 @@ class ChargeLinkPeriodsTask(TaskBase):
 
     @use_span()
     def execute(self) -> None:
-        """
-        Entry point for the logic of creating charge links.
-        """
+        """Entry point for the logic of creating charge links."""
         if not self.args.include_basis_data:
             return
 
