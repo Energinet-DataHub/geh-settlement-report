@@ -30,9 +30,5 @@
     "python.testing.pytestEnabled": true,
     "python.analysis.typeCheckingMode": "basic",
     "python.analysis.languageServerMode": "full", // Use the full language server mode
-    "python.analysis.autoFormatStrings": true, // Automatically format strings
-    // PowerShell settings
-    "powershell.codeFormatting.avoidSemicolonsAsLineTerminators": true,
-    "powershell.codeFormatting.useCorrectCasing": true,
-    "powershell.codeFormatting.whitespaceBetweenParameters": true,
+    "python.analysis.autoFormatStrings": true // Automatically format strings
 }
