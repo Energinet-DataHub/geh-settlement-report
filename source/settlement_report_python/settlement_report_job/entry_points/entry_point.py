@@ -32,8 +32,8 @@ from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from settlement_report_job.entry_points.job_args.settlement_report_job_args import (
-    parse_job_arguments,  # TODO: Clean up
-    parse_command_line_arguments,  # TODO: Clean up
+    parse_job_arguments,
+    parse_command_line_arguments,
 )
 from settlement_report_job.entry_points.tasks.task_type import TaskType
 from settlement_report_job.entry_points.utils.get_dbutils import get_dbutils
