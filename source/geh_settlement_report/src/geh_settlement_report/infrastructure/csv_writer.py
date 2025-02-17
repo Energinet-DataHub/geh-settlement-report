@@ -226,7 +226,7 @@ def _get_file_info_list(
 
 @use_span()
 def _merge_files(dbutils: Any, new_files: list[TmpFile], headers: list[str]) -> list[str]:
-    """Merges the new files and moves them to the final location.
+    """Merge the new files and moves them to the final location.
 
     Args:
         dbutils (Any): The DBUtils object.

@@ -17,6 +17,7 @@ from enum import Enum
 
 class ReportDataType(Enum):
     """Types of data that can be included in a settlement report.
+
     Used to distinguish between different types of data in the report.
     """
 

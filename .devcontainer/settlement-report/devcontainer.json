@@ -8,10 +8,13 @@
       "ASDF_VERSION": "0.15.0"
     }
   },
+  "runArgs": [
+    "--name",
+    "geh_settlement_report"
+  ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "workspaceFolder": "/workspace/source/geh_settlement_report",
   "remoteUser": "vscode",
-  "shutdownAction": "none",
   "postCreateCommand": "~/scripts/post-create.sh ~",
   "postStartCommand": "uv sync",
   "containerEnv": {

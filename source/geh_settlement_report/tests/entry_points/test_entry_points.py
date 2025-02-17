@@ -27,17 +27,13 @@ from geh_settlement_report.entry_points import entry_point as module
 def assert_entry_point_exists(entry_point_name: str) -> Any:
     # Load the entry point function from the installed wheel
     try:
-        entry_points = importlib.metadata.entry_points(
-            group="console_scripts", name=entry_point_name
-        )
+        entry_points = importlib.metadata.entry_points(group="console_scripts", name=entry_point_name)
 
         if not entry_points:
             assert False, f"The {entry_point_name} entry point was not found."
 
         # Filter for the specific entry point group and name
-        matching_entry_points = [
-            ep for ep in entry_points if ep.name == entry_point_name
-        ]
+        matching_entry_points = [ep for ep in entry_points if ep.name == entry_point_name]
 
         if not matching_entry_points:
             assert False, f"The {entry_point_name} entry point was not found."
@@ -51,13 +47,8 @@ def assert_entry_point_exists(entry_point_name: str) -> Any:
             module,
             function_name,
         ):
-            assert False, (
-                f"The entry point module function {function_name} does not exist in entry_point.py."
-            )
+            assert False, f"The entry point module function {function_name} does not exist in entry_point.py."
 
-        print(
-            f"Entry point {entry_point_name} found: Importing {full_module_path}.{function_name}"
-        )
         importlib.import_module(full_module_path, function_name)
     except importlib.metadata.PackageNotFoundError:
         assert False, f"The {entry_point_name} entry point was not found."

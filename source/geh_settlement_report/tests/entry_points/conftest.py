@@ -27,9 +27,7 @@ def virtual_environment() -> Generator:
 
 
 @pytest.fixture(scope="session")
-def installed_package(
-    virtual_environment: Generator, settlement_report_job_container_path: str
-) -> None:
+def installed_package(virtual_environment: Generator, settlement_report_job_container_path: str) -> None:
     """Ensures that the settlement report package is installed (after building it)."""
 
     # Build the package wheel

@@ -18,7 +18,7 @@ from pyspark.sql import functions as F
 
 
 def map_from_dict(d: dict) -> Column:
-    """Converts a dictionary to a Spark map column
+    """Convert a dictionary to a Spark map column.
 
     Args:
         d (dict): Dictionary to convert to a Spark map column

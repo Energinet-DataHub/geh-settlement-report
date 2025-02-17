@@ -10,6 +10,7 @@ from geh_settlement_report.entry_points.job_args.settlement_report_args import (
 
 class MarketRoleInFileName:
     """Market role identifiers used in the csv file name in the settlement report.
+
     System operator and datahub admin are not included as they are not part of the file name.
     """
 

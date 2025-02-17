@@ -17,7 +17,10 @@ import configargparse
 
 
 def valid_date(s: str) -> datetime:
-    """See https://stackoverflow.com/questions/25470844/specify-date-format-for-python-argparse-input-arguments"""
+    """Validate date format.
+
+    See https://stackoverflow.com/questions/25470844/specify-date-format-for-python-argparse-input-arguments
+    """
     try:
         return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
     except ValueError:

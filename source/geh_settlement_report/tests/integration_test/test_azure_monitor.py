@@ -208,17 +208,17 @@ def wait_for_condition(callback: Callable, *, timeout: timedelta, step: timedelt
         # noinspection PyBroadException
         try:
             callback()
-            print(f"Condition met in {elapsed_ms} ms")
+            print(f"Condition met in {elapsed_ms} ms")  # noqa
             return
         except Exception:
             if elapsed_ms > timeout.total_seconds() * 1000:
-                print(
+                print(  # noqa
                     f"Condition failed to be met before timeout. Timed out after {elapsed_ms} ms",
                     file=sys.stderr,
                 )
                 raise
             time.sleep(step.seconds)
-            print(f"Condition not met after {elapsed_ms} ms. Retrying...")
+            print(f"Condition not met after {elapsed_ms} ms. Retrying...")  # noqa
 
 
 def assert_row_count(actual, expected_count):
