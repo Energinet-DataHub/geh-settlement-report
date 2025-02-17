@@ -103,8 +103,6 @@ class TestWhenInvokedWithArguments:
         | where Properties.CategoryName == "Energinet.DataHub.settlement_report_job.entry_points.entry_point"
         | count
         """
-        print("############ QUERY BEING QUERIED: ############")
-        print(query)
 
         workspace_id = integration_test_configuration.get_analytics_workspace_id()
 
