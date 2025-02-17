@@ -20,6 +20,7 @@ from collections.abc import Callable
 
 from opentelemetry.trace import SpanKind
 from geh_common.telemetry.decorators import start_trace
+from geh_common.telemetry import Logger
 from geh_common.telemetry.logging_configuration import (
     LoggingSettings,
     configure_logging,
@@ -78,10 +79,8 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    command_line_args = parse_command_line_arguments()
-    report_id = command_line_args.report_id
-    # Add settlement_report_id to structured logging data to be included in
-    # every log message.
+    args = SettlementReportArgs()
+    report_id = args.report_id
     extras = {"settlement_report_id": report_id}
     logging_settings = LoggingSettings(
         subsystem="settlement-report-aggregations",
@@ -89,16 +88,16 @@ def _start_task(task_type: TaskType) -> None:
         orchestration_instance_id=uuid.uuid4(),  # Generate a random one until implemented in the CI
     )
     configure_logging(logging_settings=logging_settings, extras=extras)
-    start_task_with_deps(task_type=task_type)
+    start_task_with_deps(task_type=task_type, job_args=args)
 
 
 @start_trace(
     initial_span_name="entry_point"
 )  # to mimic previous setup using (__name__)
-def start_task_with_deps(task_type: TaskType):
-    print("PRINTING FROM THE START WITH DEPS:")
-    # print(SettlementReportArgs())
-    args = SettlementReportArgs()
+def start_task_with_deps(task_type: TaskType, job_args: SettlementReportArgs):
+    args = job_args
+    logger = Logger(__name__)
+    logger.info(f"Command line arguments: {args}")
     spark = initialize_spark()
     task = task_factory.create(task_type, spark, args)
     task.execute()

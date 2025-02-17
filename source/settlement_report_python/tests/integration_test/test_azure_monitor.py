@@ -24,6 +24,7 @@ from azure.monitor.query import LogsQueryClient, LogsQueryResult
 
 from settlement_report_job.entry_points.entry_point import (
     start_task_with_deps,
+    _start_task,
 )
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
@@ -39,6 +40,7 @@ class TestWhenInvokedWithArguments:
         standard_wholesale_fixing_scenario_args: SettlementReportArgs,
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture,
+        env_args_fixture,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -56,6 +58,9 @@ class TestWhenInvokedWithArguments:
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
         standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())
+        applicationinsights_connection_string = (
+            integration_test_configuration.get_applicationinsights_connection_string()
+        )
 
         task_factory_mock = Mock()
 
@@ -70,8 +75,14 @@ class TestWhenInvokedWithArguments:
                     return_value=None,
                 ),
                 patch("sys.argv", script_args_fixture),
+                patch.dict(
+                    "os.environ",
+                    {
+                        "APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string
+                    },
+                ),
             ):
-                start_task_with_deps(task_type=valid_task_type)
+                _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
