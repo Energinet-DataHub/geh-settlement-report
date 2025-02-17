@@ -1,8 +1,8 @@
 from pathlib import Path
-import pytest
 from tempfile import TemporaryDirectory
-from pyspark.sql import SparkSession
-from settlement_report_job.infrastructure.create_zip_file import create_zip_file
+
+import pytest
+from geh_settlement_report.infrastructure.create_zip_file import create_zip_file
 
 
 def test_create_zip_file__when_dbutils_is_none__raise_exception():

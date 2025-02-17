@@ -1,22 +1,21 @@
 import uuid
 from unittest.mock import Mock
 
-from pyspark.sql import DataFrame, SparkSession
-
 import tests.test_factories.charge_link_periods_factory as input_charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as input_charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
-from settlement_report_job.domain.metering_point_periods.metering_point_periods_factory import (
+from geh_settlement_report.domain.metering_point_periods.metering_point_periods_factory import (
     create_metering_point_periods,
 )
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
+from pyspark.sql import DataFrame, SparkSession
 
 
 def _get_repository_mock(
@@ -31,9 +30,7 @@ def _get_repository_mock(
         mock_repository.read_charge_link_periods.return_value = charge_link_periods
 
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -47,9 +44,7 @@ def test_create_metering_point_periods__when_datahub_admin__returns_expected_val
     args.period_start = default_data.DEFAULT_PERIOD_START
     args.period_end = default_data.DEFAULT_PERIOD_END
     args.calculation_id_by_grid_area = {
-        default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(
-            default_data.DEFAULT_CALCULATION_ID
-        )
+        default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
     }
     expected = {
         "grid_area_code_partitioning": default_data.DEFAULT_GRID_AREA_CODE,

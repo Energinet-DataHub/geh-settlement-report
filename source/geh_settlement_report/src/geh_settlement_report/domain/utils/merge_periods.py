@@ -1,6 +1,7 @@
-from pyspark.sql import DataFrame, functions as F, Window
+from pyspark.sql import DataFrame, Window
+from pyspark.sql import functions as F
 
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -17,28 +18,21 @@ def merge_connected_periods(df: DataFrame) -> DataFrame:
 
     """
     other_columns = [
-        col
-        for col in df.columns
-        if col not in [DataProductColumnNames.from_date, DataProductColumnNames.to_date]
+        col for col in df.columns if col not in [DataProductColumnNames.from_date, DataProductColumnNames.to_date]
     ]
-    window_spec = Window.partitionBy(other_columns).orderBy(
-        DataProductColumnNames.from_date
-    )
+    window_spec = Window.partitionBy(other_columns).orderBy(DataProductColumnNames.from_date)
 
     # Add columns to identify overlapping periods
     df_with_next = df.withColumn(
         "next_from_date", F.lead(DataProductColumnNames.from_date).over(window_spec)
-    ).withColumn(
-        "next_to_date", F.lead(DataProductColumnNames.to_date).over(window_spec)
-    )
+    ).withColumn("next_to_date", F.lead(DataProductColumnNames.to_date).over(window_spec))
 
     # Add a column to identify the start of a new group of connected periods
     df_with_group = df_with_next.withColumn(
         "group",
         F.sum(
             F.when(
-                F.col(DataProductColumnNames.from_date)
-                > F.lag(DataProductColumnNames.to_date).over(window_spec),
+                F.col(DataProductColumnNames.from_date) > F.lag(DataProductColumnNames.to_date).over(window_spec),
                 1,
             ).otherwise(0)
         ).over(window_spec.rowsBetween(Window.unboundedPreceding, Window.currentRow)),

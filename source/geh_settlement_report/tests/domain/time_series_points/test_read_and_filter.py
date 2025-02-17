@@ -4,27 +4,25 @@ from functools import reduce
 from unittest.mock import Mock
 
 import pytest
-from pyspark.sql import SparkSession, functions as F
-import tests.test_factories.default_test_data_spec as default_data
-import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods
-from settlement_report_job.infrastructure.wholesale.data_values import (
-    CalculationTypeDataProductValue,
-)
-
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.time_series_points.read_and_filter import (
-    read_and_filter_for_wholesale,
+import tests.test_factories.default_test_data_spec as default_data
+import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
+from geh_settlement_report.domain.time_series_points.read_and_filter import (
     read_and_filter_for_balance_fixing,
+    read_and_filter_for_wholesale,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from tests.test_factories import latest_calculations_factory
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
+    CalculationTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
 )
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from tests.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE
@@ -73,9 +71,7 @@ def test_read_and_filter_for_wholesale__when_input_has_both_resolution_types__re
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
         calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
+            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
         },
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
@@ -85,14 +81,9 @@ def test_read_and_filter_for_wholesale__when_input_has_both_resolution_types__re
     )
 
     # Assert
-    actual_metering_point_ids = (
-        actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
-    )
+    actual_metering_point_ids = actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
     assert len(actual_metering_point_ids) == 1
-    assert (
-        actual_metering_point_ids[0][DataProductColumnNames.metering_point_id]
-        == expected_metering_point_id
-    )
+    assert actual_metering_point_ids[0][DataProductColumnNames.metering_point_id] == expected_metering_point_id
 
 
 def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period(
@@ -108,9 +99,7 @@ def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period
 
     df = time_series_points_factory.create(
         spark,
-        default_data.create_time_series_points_data_spec(
-            from_date=data_from_date, to_date=data_to_date
-        ),
+        default_data.create_time_series_points_data_spec(from_date=data_from_date, to_date=data_to_date),
     )
     mock_repository = Mock()
     mock_repository.read_metering_point_time_series.return_value = df
@@ -120,9 +109,7 @@ def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period
         period_start=period_start,
         period_end=period_end,
         calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
+            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
         },
         energy_supplier_ids=None,
         metering_point_resolution=MeteringPointResolutionDataProductValue.HOUR,
@@ -133,12 +120,12 @@ def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period
 
     # Assert
     assert actual_df.count() == number_of_hours_in_period
-    actual_max_time = actual_df.orderBy(
-        DataProductColumnNames.observation_time, ascending=False
-    ).first()[DataProductColumnNames.observation_time]
-    actual_min_time = actual_df.orderBy(
-        DataProductColumnNames.observation_time, ascending=True
-    ).first()[DataProductColumnNames.observation_time]
+    actual_max_time = actual_df.orderBy(DataProductColumnNames.observation_time, ascending=False).first()[
+        DataProductColumnNames.observation_time
+    ]
+    actual_min_time = actual_df.orderBy(DataProductColumnNames.observation_time, ascending=True).first()[
+        DataProductColumnNames.observation_time
+    ]
     assert actual_min_time == period_start
     assert actual_max_time == period_end - timedelta(hours=1)
 
@@ -169,9 +156,7 @@ def test_read_and_filter_for_wholesale__returns_only_selected_grid_area(
     actual_df = read_and_filter_for_wholesale(
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
-        calculation_id_by_grid_area={
-            selected_grid_area_code: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
-        },
+        calculation_id_by_grid_area={selected_grid_area_code: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)},
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
         requesting_actor_id=DATAHUB_ADMINISTRATOR_ID,
@@ -180,9 +165,7 @@ def test_read_and_filter_for_wholesale__returns_only_selected_grid_area(
     )
 
     # Assert
-    actual_grid_area_codes = (
-        actual_df.select(DataProductColumnNames.grid_area_code).distinct().collect()
-    )
+    actual_grid_area_codes = actual_df.select(DataProductColumnNames.grid_area_code).distinct().collect()
     assert len(actual_grid_area_codes) == 1
     assert actual_grid_area_codes[0][0] == selected_grid_area_code
 
@@ -217,9 +200,7 @@ def test_read_and_filter_for_wholesale__returns_only_metering_points_from_select
     actual_df = read_and_filter_for_wholesale(
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
-        calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(selected_calculation_id)
-        },
+        calculation_id_by_grid_area={default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(selected_calculation_id)},
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
         requesting_actor_id=DATAHUB_ADMINISTRATOR_ID,
@@ -228,14 +209,9 @@ def test_read_and_filter_for_wholesale__returns_only_metering_points_from_select
     )
 
     # Assert
-    actual_metering_point_ids = (
-        actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
-    )
+    actual_metering_point_ids = actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
     assert len(actual_metering_point_ids) == 1
-    assert (
-        actual_metering_point_ids[0][DataProductColumnNames.metering_point_id]
-        == expected_metering_point_id
-    )
+    assert actual_metering_point_ids[0][DataProductColumnNames.metering_point_id] == expected_metering_point_id
 
 
 ENERGY_SUPPLIER_A = "1000000000000"
@@ -282,9 +258,7 @@ def test_read_and_filter_for_wholesale__returns_data_for_expected_energy_supplie
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
         calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
+            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
         },
         energy_supplier_ids=selected_energy_supplier_ids,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
@@ -294,9 +268,9 @@ def test_read_and_filter_for_wholesale__returns_data_for_expected_energy_supplie
     )
 
     # Assert
-    assert set(
-        row[DataProductColumnNames.energy_supplier_id] for row in actual_df.collect()
-    ) == set(expected_energy_supplier_ids)
+    assert set(row[DataProductColumnNames.energy_supplier_id] for row in actual_df.collect()) == set(
+        expected_energy_supplier_ids
+    )
 
 
 @pytest.mark.parametrize(
@@ -318,9 +292,7 @@ def test_read_and_filter_for_wholesale__when_system_operator__returns_only_time_
     )
     charge_price_information_period_df = charge_price_information_periods.create(
         spark,
-        default_data.create_charge_price_information_periods_row(
-            charge_owner_id=SYSTEM_OPERATOR_ID
-        ),
+        default_data.create_charge_price_information_periods_row(charge_owner_id=SYSTEM_OPERATOR_ID),
     )
     charge_link_periods_df = charge_link_periods_factory.create(
         spark,
@@ -328,9 +300,7 @@ def test_read_and_filter_for_wholesale__when_system_operator__returns_only_time_
     )
     mock_repository = Mock()
     mock_repository.read_metering_point_time_series.return_value = time_series_points_df
-    mock_repository.read_charge_price_information_periods.return_value = (
-        charge_price_information_period_df
-    )
+    mock_repository.read_charge_price_information_periods.return_value = charge_price_information_period_df
     mock_repository.read_charge_link_periods.return_value = charge_link_periods_df
 
     # Act
@@ -338,9 +308,7 @@ def test_read_and_filter_for_wholesale__when_system_operator__returns_only_time_
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
         calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
+            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
         },
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.SYSTEM_OPERATOR,
@@ -364,9 +332,7 @@ def test_read_and_filter_for_balance_fixing__returns_only_time_series_points_fro
         [
             time_series_points_factory.create(
                 spark,
-                default_data.create_time_series_points_data_spec(
-                    calculation_id=calculation_id
-                ),
+                default_data.create_time_series_points_data_spec(calculation_id=calculation_id),
             )
             for calculation_id in [latest_calculation_id, not_latest_calculation_id]
         ],
@@ -395,14 +361,9 @@ def test_read_and_filter_for_balance_fixing__returns_only_time_series_points_fro
     )
 
     # Assert
-    actual_calculation_ids = (
-        actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
-    )
+    actual_calculation_ids = actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
     assert len(actual_calculation_ids) == 1
-    assert (
-        actual_calculation_ids[0][DataProductColumnNames.calculation_id]
-        == latest_calculation_id
-    )
+    assert actual_calculation_ids[0][DataProductColumnNames.calculation_id] == latest_calculation_id
 
 
 def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results(
@@ -422,9 +383,7 @@ def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results
         [
             time_series_points_factory.create(
                 spark,
-                default_data.create_time_series_points_data_spec(
-                    calculation_id=calc_id, calculation_type=calc_type
-                ),
+                default_data.create_time_series_points_data_spec(calculation_id=calc_id, calculation_type=calc_type),
             )
             for calc_id, calc_type in calculation_id_and_type.items()
         ],
@@ -435,9 +394,7 @@ def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results
         [
             latest_calculations_factory.create(
                 spark,
-                default_data.create_latest_calculations_per_day_row(
-                    calculation_id=calc_id, calculation_type=calc_type
-                ),
+                default_data.create_latest_calculations_per_day_row(calculation_id=calc_id, calculation_type=calc_type),
             )
             for calc_id, calc_type in calculation_id_and_type.items()
         ],
@@ -459,14 +416,9 @@ def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results
     )
 
     # Assert
-    actual_calculation_ids = (
-        actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
-    )
+    actual_calculation_ids = actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
     assert len(actual_calculation_ids) == 1
-    assert (
-        actual_calculation_ids[0][DataProductColumnNames.calculation_id]
-        == "22222222-9fc8-409a-a169-fbd49479d718"
-    )
+    assert actual_calculation_ids[0][DataProductColumnNames.calculation_id] == "22222222-9fc8-409a-a169-fbd49479d718"
 
 
 def test_read_and_filter_for_balance_fixing__when_two_calculations_with_time_overlap__returns_only_latest_calculation_data(
@@ -539,10 +491,7 @@ def test_read_and_filter_for_balance_fixing__when_two_calculations_with_time_ove
         actual_calculation_ids = (
             actual_df.where(
                 (F.col(DataProductColumnNames.observation_time) >= day)
-                & (
-                    F.col(DataProductColumnNames.observation_time)
-                    < day + timedelta(days=1)
-                )
+                & (F.col(DataProductColumnNames.observation_time) < day + timedelta(days=1))
             )
             .select(DataProductColumnNames.calculation_id)
             .distinct()
@@ -621,9 +570,7 @@ def test_read_and_filter_for_balance_fixing__latest_calculation_for_grid_area(
     # Assert
     assert all(
         row[DataProductColumnNames.calculation_id] == calculation_id_1
-        for row in actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code) == grid_area_1
-        )
+        for row in actual_df.where(F.col(DataProductColumnNames.grid_area_code) == grid_area_1)
         .select(DataProductColumnNames.calculation_id)
         .distinct()
         .collect()
@@ -631,9 +578,7 @@ def test_read_and_filter_for_balance_fixing__latest_calculation_for_grid_area(
 
     assert all(
         row[DataProductColumnNames.calculation_id] == calculation_id_2
-        for row in actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code) == grid_area_2
-        )
+        for row in actual_df.where(F.col(DataProductColumnNames.grid_area_code) == grid_area_2)
         .select(DataProductColumnNames.calculation_id)
         .distinct()
         .collect()

@@ -1,27 +1,27 @@
+import uuid
 from datetime import timedelta
 from functools import reduce
-import uuid
 from unittest.mock import Mock
 
 import pytest
-from pyspark.sql import SparkSession, functions as F
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
-from settlement_report_job.infrastructure.wholesale.data_values import (
-    CalculationTypeDataProductValue,
-)
-from tests.test_factories import latest_calculations_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.energy_factory as energy_factory
-
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.energy_results.read_and_filter import (
+from geh_settlement_report.domain.energy_results.read_and_filter import (
     read_and_filter_from_view,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from geh_settlement_report.infrastructure.wholesale.data_values import (
+    CalculationTypeDataProductValue,
+)
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from tests.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE
@@ -54,14 +54,10 @@ def energy_read_and_filter_mock_repository(
             if df_energy_v1 is None:
                 df_energy_v1 = energy_factory.create_energy_v1(spark, testing_spec)
             else:
-                df_energy_v1 = df_energy_v1.union(
-                    energy_factory.create_energy_v1(spark, testing_spec)
-                )
+                df_energy_v1 = df_energy_v1.union(energy_factory.create_energy_v1(spark, testing_spec))
 
             if df_energy_per_es_v1 is None:
-                df_energy_per_es_v1 = energy_factory.create_energy_per_es_v1(
-                    spark, testing_spec
-                )
+                df_energy_per_es_v1 = energy_factory.create_energy_per_es_v1(spark, testing_spec)
             else:
                 df_energy_per_es_v1 = df_energy_per_es_v1.union(
                     energy_factory.create_energy_per_es_v1(spark, testing_spec)
@@ -84,19 +80,11 @@ def test_read_and_filter_from_view__when_requesting_actor_is_energy_supplier__re
     contains_data: bool,
 ) -> None:
     # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.ENERGY_SUPPLIER
-    )
-    standard_wholesale_fixing_scenario_args.requesting_actor_id = (
-        requesting_energy_supplier_id
-    )
-    standard_wholesale_fixing_scenario_args.energy_supplier_ids = [
-        requesting_energy_supplier_id
-    ]
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
+    standard_wholesale_fixing_scenario_args.requesting_actor_id = requesting_energy_supplier_id
+    standard_wholesale_fixing_scenario_args.energy_supplier_ids = [requesting_energy_supplier_id]
 
-    expected_columns = (
-        energy_read_and_filter_mock_repository.read_energy_per_es.return_value.columns
-    )
+    expected_columns = energy_read_and_filter_mock_repository.read_energy_per_es.return_value.columns
 
     # Act
     actual_df = read_and_filter_from_view(
@@ -108,9 +96,7 @@ def test_read_and_filter_from_view__when_requesting_actor_is_energy_supplier__re
     assert expected_columns == actual_df.columns
 
     assert (
-        actual_df.filter(
-            f"{DataProductColumnNames.energy_supplier_id} != '{requesting_energy_supplier_id}'"
-        ).count()
+        actual_df.filter(f"{DataProductColumnNames.energy_supplier_id} != '{requesting_energy_supplier_id}'").count()
         == 0
     )
 
@@ -136,14 +122,10 @@ def test_read_and_filter_from_view__when_datahub_admin__returns_results_for_expe
     contains_data: bool,
 ) -> None:
     # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = energy_supplier_ids
 
-    expected_columns = (
-        energy_read_and_filter_mock_repository.read_energy_per_es.return_value.columns
-    )
+    expected_columns = energy_read_and_filter_mock_repository.read_energy_per_es.return_value.columns
 
     # Act
     actual_df = read_and_filter_from_view(
@@ -182,17 +164,13 @@ def test_read_and_filter_from_view__when_grid_access_provider__returns_expected_
     grid_area_code: str,
 ) -> None:
     # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.GRID_ACCESS_PROVIDER
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
     standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = {
         grid_area_code: uuid.UUID(DEFAULT_CALCULATION_ID),
     }
 
-    expected_columns = (
-        energy_read_and_filter_mock_repository.read_energy.return_value.columns
-    )
+    expected_columns = energy_read_and_filter_mock_repository.read_energy.return_value.columns
 
     # Act
     actual_df = read_and_filter_from_view(
@@ -217,9 +195,7 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_rows_from_
     standard_balance_fixing_scenario_args: SettlementReportArgs,
 ) -> None:
     # Arrange
-    standard_balance_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     standard_balance_fixing_scenario_args.grid_area_codes = ["804"]
 
     not_latest_calculation_id = "11111111-9fc8-409a-a169-fbd49479d718"
@@ -229,9 +205,7 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_rows_from_
         [
             energy_factory.create_energy_per_es_v1(
                 spark,
-                default_data.create_energy_results_data_spec(
-                    calculation_id=calculation_id
-                ),
+                default_data.create_energy_results_data_spec(calculation_id=calculation_id),
             )
             for calculation_id in [latest_calculation_id, not_latest_calculation_id]
         ],
@@ -255,14 +229,9 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_rows_from_
     )
 
     # Assert
-    actual_calculation_ids = (
-        actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
-    )
+    actual_calculation_ids = actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
     assert len(actual_calculation_ids) == 1
-    assert (
-        actual_calculation_ids[0][DataProductColumnNames.calculation_id]
-        == latest_calculation_id
-    )
+    assert actual_calculation_ids[0][DataProductColumnNames.calculation_id] == latest_calculation_id
 
 
 def test_read_and_filter_from_view__when_balance_fixing_with_two_calculations_with_time_overlap__returns_only_latest_calculation_data(
@@ -270,9 +239,7 @@ def test_read_and_filter_from_view__when_balance_fixing_with_two_calculations_wi
     standard_balance_fixing_scenario_args: SettlementReportArgs,
 ) -> None:
     # Arrange
-    standard_balance_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     day_1 = DEFAULT_FROM_DATE
     day_2 = day_1 + timedelta(days=1)
     day_3 = day_1 + timedelta(days=2)
@@ -322,9 +289,7 @@ def test_read_and_filter_from_view__when_balance_fixing_with_two_calculations_wi
 
     standard_balance_fixing_scenario_args.period_start = day_1
     standard_balance_fixing_scenario_args.period_end = day_4
-    standard_balance_fixing_scenario_args.grid_area_codes = [
-        default_data.DEFAULT_GRID_AREA_CODE
-    ]
+    standard_balance_fixing_scenario_args.grid_area_codes = [default_data.DEFAULT_GRID_AREA_CODE]
 
     # Act
     actual_df = read_and_filter_from_view(
@@ -354,9 +319,7 @@ def test_read_and_filter_from_view__when_balance_fixing__latest_calculation_for_
     spark: SparkSession, standard_balance_fixing_scenario_args: SettlementReportArgs
 ) -> None:
     # Arrange
-    standard_balance_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     day_1 = DEFAULT_FROM_DATE
     day_2 = day_1 + timedelta(days=1)  # exclusive
     grid_area_1 = "805"
@@ -421,9 +384,7 @@ def test_read_and_filter_from_view__when_balance_fixing__latest_calculation_for_
     # Assert
     assert all(
         row[DataProductColumnNames.calculation_id] == calculation_id_1
-        for row in actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code) == grid_area_1
-        )
+        for row in actual_df.where(F.col(DataProductColumnNames.grid_area_code) == grid_area_1)
         .select(DataProductColumnNames.calculation_id)
         .distinct()
         .collect()
@@ -431,9 +392,7 @@ def test_read_and_filter_from_view__when_balance_fixing__latest_calculation_for_
 
     assert all(
         row[DataProductColumnNames.calculation_id] == calculation_id_2
-        for row in actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code) == grid_area_2
-        )
+        for row in actual_df.where(F.col(DataProductColumnNames.grid_area_code) == grid_area_2)
         .select(DataProductColumnNames.calculation_id)
         .distinct()
         .collect()
@@ -457,9 +416,7 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_balance_fi
         [
             energy_factory.create_energy_per_es_v1(
                 spark,
-                default_data.create_energy_results_data_spec(
-                    calculation_id=calc_id, calculation_type=calc_type
-                ),
+                default_data.create_energy_results_data_spec(calculation_id=calc_id, calculation_type=calc_type),
             )
             for calc_id, calc_type in calculation_id_and_type.items()
         ],
@@ -470,9 +427,7 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_balance_fi
         [
             latest_calculations_factory.create(
                 spark,
-                default_data.create_latest_calculations_per_day_row(
-                    calculation_id=calc_id, calculation_type=calc_type
-                ),
+                default_data.create_latest_calculations_per_day_row(calculation_id=calc_id, calculation_type=calc_type),
             )
             for calc_id, calc_type in calculation_id_and_type.items()
         ],
@@ -482,12 +437,8 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_balance_fi
     mock_repository.read_energy_per_es.return_value = energy_per_es
     mock_repository.read_latest_calculations.return_value = latest_calculations
 
-    standard_balance_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
-    standard_balance_fixing_scenario_args.grid_area_codes = [
-        default_data.DEFAULT_GRID_AREA_CODE
-    ]
+    standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
+    standard_balance_fixing_scenario_args.grid_area_codes = [default_data.DEFAULT_GRID_AREA_CODE]
 
     # Act
     actual_df = read_and_filter_from_view(
@@ -496,11 +447,6 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_balance_fi
     )
 
     # Assert
-    actual_calculation_ids = (
-        actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
-    )
+    actual_calculation_ids = actual_df.select(DataProductColumnNames.calculation_id).distinct().collect()
     assert len(actual_calculation_ids) == 1
-    assert (
-        actual_calculation_ids[0][DataProductColumnNames.calculation_id]
-        == "22222222-9fc8-409a-a169-fbd49479d718"
-    )
+    assert actual_calculation_ids[0][DataProductColumnNames.calculation_id] == "22222222-9fc8-409a-a169-fbd49479d718"

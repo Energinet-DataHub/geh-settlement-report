@@ -17,17 +17,15 @@ from datetime import datetime
 from unittest.mock import patch
 
 import pytest
-
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.entry_points.entry_point import (
-    parse_job_arguments,
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.entry_point import (
     parse_command_line_arguments,
+    parse_job_arguments,
 )
-
-from settlement_report_job.entry_points.job_args.environment_variables import (
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.environment_variables import (
     EnvironmentVariable,
 )
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 
 DEFAULT_REPORT_ID = "12345678-9fc8-409a-a169-fbd49479d718"
 
@@ -38,29 +36,21 @@ def _get_contract_parameters(filename: str) -> list[str]:
         text = file.read()
         text = text.replace("{report-id}", DEFAULT_REPORT_ID)
         lines = text.splitlines()
-        return list(
-            filter(lambda line: not line.startswith("#") and len(line) > 0, lines)
-        )
+        return list(filter(lambda line: not line.startswith("#") and len(line) > 0, lines))
 
 
-def _substitute_requesting_actor_market_role(
-    sys_argv: list[str], market_role: str
-) -> list[str]:
+def _substitute_requesting_actor_market_role(sys_argv: list[str], market_role: str) -> list[str]:
     pattern = r"--requesting-actor-market-role=(\w+)"
 
     for i, item in enumerate(sys_argv):
         if re.search(pattern, item):
-            sys_argv[i] = re.sub(
-                pattern, f"--requesting-actor-market-role={market_role}", item
-            )
+            sys_argv[i] = re.sub(pattern, f"--requesting-actor-market-role={market_role}", item)
             break
 
     return sys_argv
 
 
-def _substitute_energy_supplier_ids(
-    sys_argv: list[str], energy_supplier_ids: str
-) -> list[str]:
+def _substitute_energy_supplier_ids(sys_argv: list[str], energy_supplier_ids: str) -> list[str]:
     for i, item in enumerate(sys_argv):
         if item.startswith("--energy-supplier-ids="):
             sys_argv[i] = f"--energy-supplier-ids={energy_supplier_ids}"
@@ -234,9 +224,7 @@ def test_returns_expected_value_for_prevent_large_text_files(
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
     if not prevent_large_text_files:
         test_sys_args = [
-            item
-            for item in sys_argv_from_contract_for_wholesale
-            if not item.startswith("--prevent-large-text-files")
+            item for item in sys_argv_from_contract_for_wholesale if not item.startswith("--prevent-large-text-files")
         ]
 
     with patch("sys.argv", test_sys_args):
@@ -266,9 +254,7 @@ def test_returns_expected_value_for_split_report_by_grid_area(
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
     if not split_report_by_grid_area:
         test_sys_args = [
-            item
-            for item in sys_argv_from_contract_for_wholesale
-            if not item.startswith("--split-report-by-grid-area")
+            item for item in sys_argv_from_contract_for_wholesale if not item.startswith("--split-report-by-grid-area")
         ]
 
     with patch("sys.argv", test_sys_args):
@@ -298,9 +284,7 @@ def test_returns_expected_value_for_include_basis_data(
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
     if not include_basis_data:
         test_sys_args = [
-            item
-            for item in sys_argv_from_contract_for_wholesale
-            if not item.startswith("--include-basis-data")
+            item for item in sys_argv_from_contract_for_wholesale if not item.startswith("--include-basis-data")
         ]
 
     with patch("sys.argv", test_sys_args):
@@ -332,9 +316,7 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
 ) -> None:
     # Arrange
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-    test_sys_args = _substitute_energy_supplier_ids(
-        test_sys_args, energy_supplier_ids_argument
-    )
+    test_sys_args = _substitute_energy_supplier_ids(test_sys_args, energy_supplier_ids_argument)
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
@@ -363,9 +345,7 @@ def test_when_invalid_energy_supplier_ids__raise_exception(
 ) -> None:
     # Arrange
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-    test_sys_args = _substitute_energy_supplier_ids(
-        test_sys_args, energy_supplier_ids_argument
-    )
+    test_sys_args = _substitute_energy_supplier_ids(test_sys_args, energy_supplier_ids_argument)
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
@@ -384,9 +364,7 @@ def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(
 ) -> None:
     # Arrange
     test_sys_args = [
-        item
-        for item in sys_argv_from_contract_for_wholesale
-        if not item.startswith("--energy-supplier-ids")
+        item for item in sys_argv_from_contract_for_wholesale if not item.startswith("--energy-supplier-ids")
     ]
 
     with patch.dict("os.environ", job_environment_variables):
@@ -428,7 +406,6 @@ class TestWhenInvokedWithValidMarketRole:
 
 
 class TestWhenInvokedWithInvalidMarketRole:
-
     def test_raise_system_exit_with_non_zero_code(
         self,
         job_environment_variables: dict,
@@ -463,9 +440,7 @@ class TestWhenUnknownCalculationType:
 
         for i, item in enumerate(test_sys_args):
             if re.search(pattern, item):
-                test_sys_args[i] = re.sub(
-                    pattern, f"--calculation-type={unknown_calculation_type}", item
-                )
+                test_sys_args[i] = re.sub(pattern, f"--calculation-type={unknown_calculation_type}", item)
                 break
 
         with patch("sys.argv", test_sys_args):
@@ -489,9 +464,7 @@ class TestWhenMissingEnvVariables:
         with patch("sys.argv", sys_argv_from_contract_for_wholesale):
             for excluded_env_var in job_environment_variables.keys():
                 env_variables_with_one_missing = {
-                    key: value
-                    for key, value in job_environment_variables.items()
-                    if key != excluded_env_var
+                    key: value for key, value in job_environment_variables.items() if key != excluded_env_var
                 }
 
                 with patch.dict("os.environ", env_variables_with_one_missing):

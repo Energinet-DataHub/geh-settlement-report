@@ -14,24 +14,25 @@
 from datetime import datetime
 from uuid import UUID
 
-from pyspark.sql import DataFrame, functions as F
-
 from geh_common.telemetry import Logger, use_span
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.domain.time_series_points.system_operator_filter import (
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
+from geh_settlement_report.domain.time_series_points.system_operator_filter import (
     filter_time_series_points_on_charge_owner,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.factory_filters import (
+    filter_by_calculation_id_by_grid_area,
+    filter_by_energy_supplier_ids,
+    read_and_filter_by_latest_calculations,
+)
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
-)
-from settlement_report_job.domain.utils.factory_filters import (
-    filter_by_energy_supplier_ids,
-    filter_by_calculation_id_by_grid_area,
-    read_and_filter_by_latest_calculations,
 )
 
 log = Logger(__name__)
@@ -90,9 +91,7 @@ def read_and_filter_for_wholesale(
         repository=repository,
     )
 
-    time_series_points = time_series_points.where(
-        filter_by_calculation_id_by_grid_area(calculation_id_by_grid_area)
-    )
+    time_series_points = time_series_points.where(filter_by_calculation_id_by_grid_area(calculation_id_by_grid_area))
 
     if requesting_actor_market_role is MarketRole.SYSTEM_OPERATOR:
         time_series_points = filter_time_series_points_on_charge_owner(
@@ -120,8 +119,6 @@ def _read_from_view(
     )
 
     if energy_supplier_ids:
-        time_series_points = time_series_points.where(
-            filter_by_energy_supplier_ids(energy_supplier_ids)
-        )
+        time_series_points = time_series_points.where(filter_by_energy_supplier_ids(energy_supplier_ids))
 
     return time_series_points

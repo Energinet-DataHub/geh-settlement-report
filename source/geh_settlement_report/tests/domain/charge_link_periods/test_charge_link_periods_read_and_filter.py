@@ -4,19 +4,18 @@ from functools import reduce
 from unittest.mock import Mock
 
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
-from settlement_report_job.domain.charge_link_periods.read_and_filter import (
+from geh_settlement_report.domain.charge_link_periods.read_and_filter import (
     read_and_filter,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from pyspark.sql import DataFrame, SparkSession
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE
@@ -48,9 +47,7 @@ def _get_repository_mock(
     mock_repository.read_metering_point_periods.return_value = metering_point_period
     mock_repository.read_charge_link_periods.return_value = charge_link_periods
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -82,9 +79,7 @@ def _get_repository_mock(
             True,
             id="charge link starts within but stops after selected period",
         ),
-        pytest.param(
-            JAN_4TH, JAN_5TH, False, id="charge link starts after selected period"
-        ),
+        pytest.param(JAN_4TH, JAN_5TH, False, id="charge link starts after selected period"),
     ],
 )
 def test_read_and_filter__returns_charge_link_periods_that_overlap_with_selected_period(
@@ -99,16 +94,12 @@ def test_read_and_filter__returns_charge_link_periods_that_overlap_with_selected
 
     metering_point_periods = metering_point_periods_factory.create(
         spark,
-        default_data.create_metering_point_periods_row(
-            from_date=charge_link_from_date, to_date=charge_link_to_date
-        ),
+        default_data.create_metering_point_periods_row(from_date=charge_link_from_date, to_date=charge_link_to_date),
     )
 
     charge_link_periods = charge_link_periods_factory.create(
         spark,
-        default_data.create_charge_link_periods_row(
-            from_date=charge_link_from_date, to_date=charge_link_to_date
-        ),
+        default_data.create_charge_link_periods_row(from_date=charge_link_from_date, to_date=charge_link_to_date),
     )
     mock_repository = _get_repository_mock(metering_point_periods, charge_link_periods)
 
@@ -170,9 +161,7 @@ def test_read_and_filter__returns_only_selected_grid_area(
     actual_df = read_and_filter(
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
-        calculation_id_by_grid_area={
-            selected_grid_area_code: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
-        },
+        calculation_id_by_grid_area={selected_grid_area_code: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)},
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
         requesting_actor_id=DATAHUB_ADMINISTRATOR_ID,
@@ -180,9 +169,7 @@ def test_read_and_filter__returns_only_selected_grid_area(
     )
 
     # Assert
-    actual_grid_area_codes = (
-        actual_df.select(DataProductColumnNames.grid_area_code).distinct().collect()
-    )
+    actual_grid_area_codes = actual_df.select(DataProductColumnNames.grid_area_code).distinct().collect()
     assert len(actual_grid_area_codes) == 1
     assert actual_grid_area_codes[0][0] == selected_grid_area_code
 
@@ -231,9 +218,7 @@ def test_read_and_filter__returns_only_rows_from_selected_calculation_id(
     actual_df = read_and_filter(
         period_start=DEFAULT_FROM_DATE,
         period_end=DEFAULT_TO_DATE,
-        calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(selected_calculation_id)
-        },
+        calculation_id_by_grid_area={default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(selected_calculation_id)},
         energy_supplier_ids=None,
         requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
         requesting_actor_id=DATAHUB_ADMINISTRATOR_ID,
@@ -241,14 +226,9 @@ def test_read_and_filter__returns_only_rows_from_selected_calculation_id(
     )
 
     # Assert
-    actual_metering_point_ids = (
-        actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
-    )
+    actual_metering_point_ids = actual_df.select(DataProductColumnNames.metering_point_id).distinct().collect()
     assert len(actual_metering_point_ids) == 1
-    assert (
-        actual_metering_point_ids[0][DataProductColumnNames.metering_point_id]
-        == expected_metering_point_id
-    )
+    assert actual_metering_point_ids[0][DataProductColumnNames.metering_point_id] == expected_metering_point_id
 
 
 ENERGY_SUPPLIER_A = "1000000000000"
@@ -286,9 +266,7 @@ def test_read_and_filter__returns_data_for_expected_energy_suppliers(
                     metering_point_id=metering_point_id,
                 ),
             )
-            for energy_supplier_id, metering_point_id in zip(
-                ENERGY_SUPPLIERS_ABC, METERING_POINT_ID_ABC
-            )
+            for energy_supplier_id, metering_point_id in zip(ENERGY_SUPPLIERS_ABC, METERING_POINT_ID_ABC)
         ],
     )
     charge_link_periods = reduce(
@@ -317,23 +295,17 @@ def test_read_and_filter__returns_data_for_expected_energy_suppliers(
     )
 
     # Assert
-    assert set(
-        row[DataProductColumnNames.energy_supplier_id] for row in actual_df.collect()
-    ) == set(expected_energy_supplier_ids)
+    assert set(row[DataProductColumnNames.energy_supplier_id] for row in actual_df.collect()) == set(
+        expected_energy_supplier_ids
+    )
 
 
 @pytest.mark.parametrize(
     "charge_owner_id,is_tax,return_rows",
     [
-        pytest.param(
-            SYSTEM_OPERATOR_ID, False, True, id="system operator without tax: include"
-        ),
-        pytest.param(
-            SYSTEM_OPERATOR_ID, True, False, id="system operator with tax: exclude"
-        ),
-        pytest.param(
-            OTHER_ID, False, False, id="other charge owner without tax: exclude"
-        ),
+        pytest.param(SYSTEM_OPERATOR_ID, False, True, id="system operator without tax: include"),
+        pytest.param(SYSTEM_OPERATOR_ID, True, False, id="system operator with tax: exclude"),
+        pytest.param(OTHER_ID, False, False, id="other charge owner without tax: exclude"),
         pytest.param(OTHER_ID, True, False, id="other charge owner with tax: exclude"),
     ],
 )
@@ -387,9 +359,7 @@ def test_read_and_filter__when_system_operator__returns_expected_charge_link_per
             True,
             id="grid access provider without tax: include",
         ),
-        pytest.param(
-            OTHER_ID, False, False, id="other charge owner without tax: exclude"
-        ),
+        pytest.param(OTHER_ID, False, False, id="other charge owner without tax: exclude"),
         pytest.param(OTHER_ID, True, True, id="other charge owner with tax: include"),
     ],
 )
@@ -441,12 +411,8 @@ def test_read_and_filter__when_energy_supplier_changes_on_metering_point__return
     metering_point_periods = metering_point_periods_factory.create(
         spark,
         [
-            default_data.create_metering_point_periods_row(
-                energy_supplier_id="1", from_date=JAN_1ST, to_date=JAN_2ND
-            ),
-            default_data.create_metering_point_periods_row(
-                energy_supplier_id="2", from_date=JAN_2ND, to_date=JAN_3RD
-            ),
+            default_data.create_metering_point_periods_row(energy_supplier_id="1", from_date=JAN_1ST, to_date=JAN_2ND),
+            default_data.create_metering_point_periods_row(energy_supplier_id="2", from_date=JAN_2ND, to_date=JAN_3RD),
         ],
     )
     charge_link_periods = charge_link_periods_factory.create(

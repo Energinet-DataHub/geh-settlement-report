@@ -1,16 +1,15 @@
+import geh_settlement_report.domain.utils.map_to_csv_naming as mapping_dicts
 import pytest
-from pyspark.sql import SparkSession, functions as F
-from pyspark.sql.types import StructType, StructField, StringType
-
-from settlement_report_job.domain.utils.map_from_dict import map_from_dict
-from settlement_report_job.infrastructure.wholesale.data_values import (
-    SettlementMethodDataProductValue,
-    MeteringPointTypeDataProductValue,
-    ChargeTypeDataProductValue,
+from geh_settlement_report.domain.utils.map_from_dict import map_from_dict
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
+    ChargeTypeDataProductValue,
+    MeteringPointTypeDataProductValue,
+    SettlementMethodDataProductValue,
 )
-
-import settlement_report_job.domain.utils.map_to_csv_naming as mapping_dicts
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+from pyspark.sql.types import StringType, StructField, StructType
 
 
 @pytest.mark.parametrize(
@@ -90,11 +89,7 @@ def test_mapping_of_process_variant(
     df = spark.createDataFrame([[calculation_type.value]], ["calculation_type"])
 
     # Act
-    actual = df.select(
-        map_from_dict(mapping_dicts.CALCULATION_TYPES_TO_PROCESS_VARIANT)[
-            F.col("calculation_type")
-        ]
-    )
+    actual = df.select(map_from_dict(mapping_dicts.CALCULATION_TYPES_TO_PROCESS_VARIANT)[F.col("calculation_type")])
 
     # Assert
     assert actual.collect()[0][0] == expected_process_variant
@@ -140,9 +135,7 @@ def test_mapping_of_energy_business_process(
 
     # Act
     actual = df.select(
-        map_from_dict(mapping_dicts.CALCULATION_TYPES_TO_ENERGY_BUSINESS_PROCESS)[
-            F.col("calculation_type")
-        ]
+        map_from_dict(mapping_dicts.CALCULATION_TYPES_TO_ENERGY_BUSINESS_PROCESS)[F.col("calculation_type")]
     )
 
     # Assert
@@ -238,9 +231,7 @@ def test_mapping_of_metering_point_type(
     df = spark.createDataFrame([[metering_point_type.value]], ["metering_point_type"])
 
     # Act
-    actual = df.select(
-        map_from_dict(mapping_dicts.METERING_POINT_TYPES)[F.col("metering_point_type")]
-    )
+    actual = df.select(map_from_dict(mapping_dicts.METERING_POINT_TYPES)[F.col("metering_point_type")])
 
     # Assert
     assert actual.collect()[0][0] == expected_metering_point_type
@@ -270,9 +261,7 @@ def test_mapping_of_settlement_method(
     df = spark.createDataFrame([[settlement_method.value]], ["settlement_method"])
 
     # Act
-    actual = df.select(
-        map_from_dict(mapping_dicts.SETTLEMENT_METHODS)[F.col("settlement_method")]
-    )
+    actual = df.select(map_from_dict(mapping_dicts.SETTLEMENT_METHODS)[F.col("settlement_method")])
 
     # Assert
     assert actual.collect()[0][0] == expected_settlement_method

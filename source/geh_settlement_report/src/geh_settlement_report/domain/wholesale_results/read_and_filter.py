@@ -11,19 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from uuid import UUID
 from datetime import datetime
-
-from pyspark.sql import DataFrame, functions as F
+from uuid import UUID
 
 from geh_common.telemetry import Logger, use_span
-from settlement_report_job.domain.utils.factory_filters import (
-    filter_by_charge_owner_and_tax_depending_on_market_role,
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
+from geh_settlement_report.domain.utils.factory_filters import (
     filter_by_calculation_id_by_grid_area,
+    filter_by_charge_owner_and_tax_depending_on_market_role,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -41,19 +42,14 @@ def read_and_filter_from_view(
     repository: WholesaleRepository,
 ) -> DataFrame:
     df = repository.read_amounts_per_charge().where(
-        (F.col(DataProductColumnNames.time) >= period_start)
-        & (F.col(DataProductColumnNames.time) < period_end)
+        (F.col(DataProductColumnNames.time) >= period_start) & (F.col(DataProductColumnNames.time) < period_end)
     )
 
     if energy_supplier_ids is not None:
-        df = df.where(
-            F.col(DataProductColumnNames.energy_supplier_id).isin(energy_supplier_ids)
-        )
+        df = df.where(F.col(DataProductColumnNames.energy_supplier_id).isin(energy_supplier_ids))
 
     df = df.where(filter_by_calculation_id_by_grid_area(calculation_id_by_grid_area))
 
-    df = filter_by_charge_owner_and_tax_depending_on_market_role(
-        df, requesting_actor_market_role, requesting_actor_id
-    )
+    df = filter_by_charge_owner_and_tax_depending_on_market_role(df, requesting_actor_market_role, requesting_actor_id)
 
     return df

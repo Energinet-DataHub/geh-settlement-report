@@ -1,17 +1,18 @@
 from datetime import datetime
-import pytest
-from pyspark.sql import SparkSession
-import tests.test_factories.default_test_data_spec as default_data
-import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
-import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
-import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 
-from settlement_report_job.domain.time_series_points.system_operator_filter import (
+import pytest
+from geh_settlement_report.domain.time_series_points.system_operator_filter import (
     filter_time_series_points_on_charge_owner,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from pyspark.sql import SparkSession
+
+import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
+import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
+import tests.test_factories.default_test_data_spec as default_data
+import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
 
 
 @pytest.mark.parametrize(
@@ -54,23 +55,15 @@ def test_filter_time_series_points_on_charge_owner__returns_only_time_series_poi
     # Arrange
     charge_link_periods_df = charge_link_periods_factory.create(
         spark,
-        default_data.create_charge_link_periods_row(
-            from_date=charge_from_date, to_date=charge_to_date
-        ),
+        default_data.create_charge_link_periods_row(from_date=charge_from_date, to_date=charge_to_date),
     )
-    charge_price_information_periods_df = (
-        charge_price_information_periods_factory.create(
-            spark,
-            default_data.create_charge_price_information_periods_row(
-                from_date=charge_from_date, to_date=charge_to_date
-            ),
-        )
+    charge_price_information_periods_df = charge_price_information_periods_factory.create(
+        spark,
+        default_data.create_charge_price_information_periods_row(from_date=charge_from_date, to_date=charge_to_date),
     )
     time_series_points_df = time_series_points_factory.create(
         spark,
-        default_data.create_time_series_points_data_spec(
-            from_date=mp_from_date, to_date=mp_to_date
-        ),
+        default_data.create_time_series_points_data_spec(from_date=mp_from_date, to_date=mp_to_date),
     )
 
     # Act
@@ -116,13 +109,11 @@ def test_filter_time_series_points_on_charge_owner__returns_only_time_series_poi
     returns_data: bool,
 ) -> None:
     # Arrange
-    charge_price_information_periods_df = (
-        charge_price_information_periods_factory.create(
-            spark,
-            default_data.create_charge_price_information_periods_row(
-                calculation_id=calculation_id_charge_price_information,
-            ),
-        )
+    charge_price_information_periods_df = charge_price_information_periods_factory.create(
+        spark,
+        default_data.create_charge_price_information_periods_row(
+            calculation_id=calculation_id_charge_price_information,
+        ),
     )
     charge_link_periods_df = charge_link_periods_factory.create(
         spark,
@@ -154,30 +145,22 @@ def test_filter_time_series_points_on_charge_owner__returns_only_time_series_poi
     spark: SparkSession,
 ) -> None:
     # Arrange
-    charge_price_information_periods_df = (
-        charge_price_information_periods_factory.create(
-            spark,
-            default_data.create_charge_price_information_periods_row(),
-        )
+    charge_price_information_periods_df = charge_price_information_periods_factory.create(
+        spark,
+        default_data.create_charge_price_information_periods_row(),
     )
     charge_link_periods_df = charge_link_periods_factory.create(
         spark,
-        default_data.create_charge_link_periods_row(
-            metering_point_id="matching_metering_point_id"
-        ),
+        default_data.create_charge_link_periods_row(metering_point_id="matching_metering_point_id"),
     )
 
     time_series_points_df = time_series_points_factory.create(
         spark,
-        default_data.create_time_series_points_data_spec(
-            metering_point_id="matching_metering_point_id"
-        ),
+        default_data.create_time_series_points_data_spec(metering_point_id="matching_metering_point_id"),
     ).union(
         time_series_points_factory.create(
             spark,
-            default_data.create_time_series_points_data_spec(
-                metering_point_id="non_matching_metering_point_id"
-            ),
+            default_data.create_time_series_points_data_spec(metering_point_id="non_matching_metering_point_id"),
         )
     )
 
@@ -190,13 +173,8 @@ def test_filter_time_series_points_on_charge_owner__returns_only_time_series_poi
     )
 
     # Assert
-    assert (
-        actual.select(DataProductColumnNames.metering_point_id).distinct().count() == 1
-    )
-    assert (
-        actual.select(DataProductColumnNames.metering_point_id).distinct().first()[0]
-        == "matching_metering_point_id"
-    )
+    assert actual.select(DataProductColumnNames.metering_point_id).distinct().count() == 1
+    assert actual.select(DataProductColumnNames.metering_point_id).distinct().first()[0] == "matching_metering_point_id"
 
 
 def test_filter_time_series_points_on_charge_owner__when_multiple_links_matches_on_metering_point_id__returns_expected_number_of_time_series_points(
@@ -206,16 +184,12 @@ def test_filter_time_series_points_on_charge_owner__when_multiple_links_matches_
     charge_price_information_periods_df = (
         charge_price_information_periods_factory.create(
             spark,
-            default_data.create_charge_price_information_periods_row(
-                charge_code="code1"
-            ),
+            default_data.create_charge_price_information_periods_row(charge_code="code1"),
         )
     ).union(
         charge_price_information_periods_factory.create(
             spark,
-            default_data.create_charge_price_information_periods_row(
-                charge_code="code2"
-            ),
+            default_data.create_charge_price_information_periods_row(charge_code="code2"),
         )
     )
     charge_link_periods_df = charge_link_periods_factory.create(
@@ -256,16 +230,12 @@ def test_filter_time_series_points_on_charge_owner__when_charge_owner_is_not_sys
     charge_price_information_periods_df = (
         charge_price_information_periods_factory.create(
             spark,
-            default_data.create_charge_price_information_periods_row(
-                charge_owner_id=system_operator_id
-            ),
+            default_data.create_charge_price_information_periods_row(charge_owner_id=system_operator_id),
         )
     ).union(
         charge_price_information_periods_factory.create(
             spark,
-            default_data.create_charge_price_information_periods_row(
-                charge_owner_id=not_system_operator_id
-            ),
+            default_data.create_charge_price_information_periods_row(charge_owner_id=not_system_operator_id),
         )
     )
     charge_link_periods_df = charge_link_periods_factory.create(
@@ -286,15 +256,11 @@ def test_filter_time_series_points_on_charge_owner__when_charge_owner_is_not_sys
 
     time_series_points_df = time_series_points_factory.create(
         spark,
-        default_data.create_time_series_points_data_spec(
-            metering_point_id=system_operator_metering_point_id
-        ),
+        default_data.create_time_series_points_data_spec(metering_point_id=system_operator_metering_point_id),
     ).union(
         time_series_points_factory.create(
             spark,
-            default_data.create_time_series_points_data_spec(
-                metering_point_id=not_system_operator_metering_point_id
-            ),
+            default_data.create_time_series_points_data_spec(metering_point_id=not_system_operator_metering_point_id),
         )
     )
 
@@ -307,9 +273,7 @@ def test_filter_time_series_points_on_charge_owner__when_charge_owner_is_not_sys
     )
 
     # Assert
-    assert (
-        actual.select(DataProductColumnNames.metering_point_id).distinct().count() == 1
-    )
+    assert actual.select(DataProductColumnNames.metering_point_id).distinct().count() == 1
     assert (
         actual.select(DataProductColumnNames.metering_point_id).distinct().first()[0]
         == system_operator_metering_point_id
@@ -328,13 +292,9 @@ def test_filter_time_series_points_on_charge_owner__returns_only_time_series_poi
 ) -> None:
     # Arrange
     system_operator_id = "1234567890123"
-    charge_price_information_periods_df = (
-        charge_price_information_periods_factory.create(
-            spark,
-            default_data.create_charge_price_information_periods_row(
-                charge_owner_id=system_operator_id, is_tax=is_tax
-            ),
-        )
+    charge_price_information_periods_df = charge_price_information_periods_factory.create(
+        spark,
+        default_data.create_charge_price_information_periods_row(charge_owner_id=system_operator_id, is_tax=is_tax),
     )
     charge_link_periods_df = charge_link_periods_factory.create(
         spark,

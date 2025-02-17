@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 
@@ -20,13 +20,10 @@ def should_have_result_file_per_grid_area(
     args: SettlementReportArgs,
 ) -> bool:
     exactly_one_grid_area_from_calc_ids = (
-        args.calculation_id_by_grid_area is not None
-        and len(args.calculation_id_by_grid_area) == 1
+        args.calculation_id_by_grid_area is not None and len(args.calculation_id_by_grid_area) == 1
     )
 
-    exactly_one_grid_area_from_grid_area_codes = (
-        args.grid_area_codes is not None and len(args.grid_area_codes) == 1
-    )
+    exactly_one_grid_area_from_grid_area_codes = args.grid_area_codes is not None and len(args.grid_area_codes) == 1
 
     return (
         exactly_one_grid_area_from_calc_ids

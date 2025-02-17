@@ -2,20 +2,19 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from pyspark.sql import SparkSession, DataFrame
-
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
-    MeteringPointTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
+    MeteringPointTypeDataProductValue,
 )
-from settlement_report_job.infrastructure.wholesale.schemas.energy_v1 import energy_v1
-from settlement_report_job.infrastructure.wholesale.schemas.energy_per_es_v1 import (
+from geh_settlement_report.infrastructure.wholesale.schemas.energy_per_es_v1 import (
     energy_per_es_v1,
 )
+from geh_settlement_report.infrastructure.wholesale.schemas.energy_v1 import energy_v1
+from pyspark.sql import DataFrame, SparkSession
 
 
 @dataclass
@@ -46,9 +45,7 @@ class EnergyTestDataSpec:
 
 def _get_base_energy_rows_from_spec(data_spec: EnergyTestDataSpec):
     rows = []
-    resolution = (
-        timedelta(hours=1) if data_spec.resolution == "PT1H" else timedelta(minutes=15)
-    )
+    resolution = timedelta(hours=1) if data_spec.resolution == "PT1H" else timedelta(minutes=15)
     current_time = data_spec.from_date
     while current_time < data_spec.to_date:
         rows.append(

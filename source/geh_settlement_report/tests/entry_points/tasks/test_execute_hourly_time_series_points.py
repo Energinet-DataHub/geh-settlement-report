@@ -1,18 +1,17 @@
 import pytest
-from pyspark.sql import SparkSession
-
-from settlement_report_job.domain.utils.csv_column_names import (
+from geh_settlement_report.domain.utils.csv_column_names import (
     CsvColumnNames,
 )
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.tasks.task_type import TaskType
-from settlement_report_job.entry_points.tasks.time_series_points_task import (
+from geh_settlement_report.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.entry_points.tasks.time_series_points_task import (
     TimeSeriesPointsTask,
 )
-from settlement_report_job.infrastructure.paths import get_report_output_path
+from geh_settlement_report.infrastructure.paths import get_report_output_path
+from pyspark.sql import SparkSession
 from tests.assertion import assert_file_names_and_columns
 from tests.dbutils_fixture import DBUtilsFixture
 from tests.utils import cleanup_output_path, get_actual_files

@@ -13,24 +13,24 @@
 # limitations under the License.
 from datetime import datetime
 
-from pyspark.sql import DataFrame, functions as F
-
 from geh_common.telemetry import Logger, use_span
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
 
-from settlement_report_job.domain.utils.factory_filters import (
-    read_and_filter_by_latest_calculations,
-)
-from settlement_report_job.domain.utils.merge_periods import (
-    merge_connected_periods,
-)
-from settlement_report_job.domain.metering_point_periods.clamp_period import (
+from geh_settlement_report.domain.metering_point_periods.clamp_period import (
     clamp_to_selected_period,
 )
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.domain.utils.repository_filtering import (
+from geh_settlement_report.domain.utils.factory_filters import (
+    read_and_filter_by_latest_calculations,
+)
+from geh_settlement_report.domain.utils.merge_periods import (
+    merge_connected_periods,
+)
+from geh_settlement_report.domain.utils.repository_filtering import (
     read_filtered_metering_point_periods_by_grid_area_codes,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -55,24 +55,20 @@ def read_and_filter(
         energy_supplier_ids=energy_supplier_ids,
     )
 
-    metering_point_periods_daily = _explode_into_daily_period(
-        metering_point_periods, time_zone
+    metering_point_periods_daily = _explode_into_daily_period(metering_point_periods, time_zone)
+
+    metering_point_periods_from_latest_calculations = read_and_filter_by_latest_calculations(
+        df=metering_point_periods_daily,
+        grid_area_codes=grid_area_codes,
+        period_start=period_start,
+        period_end=period_end,
+        time_zone=time_zone,
+        time_column_name=DataProductColumnNames.from_date,
+        repository=repository,
     )
 
-    metering_point_periods_from_latest_calculations = (
-        read_and_filter_by_latest_calculations(
-            df=metering_point_periods_daily,
-            grid_area_codes=grid_area_codes,
-            period_start=period_start,
-            period_end=period_end,
-            time_zone=time_zone,
-            time_column_name=DataProductColumnNames.from_date,
-            repository=repository,
-        )
-    )
-
-    metering_point_periods_from_latest_calculations = (
-        metering_point_periods_from_latest_calculations.select(*select_columns)
+    metering_point_periods_from_latest_calculations = metering_point_periods_from_latest_calculations.select(
+        *select_columns
     )
 
     metering_point_periods_from_latest_calculations = merge_connected_periods(
@@ -92,9 +88,7 @@ def _explode_into_daily_period(df: DataFrame, time_zone: str) -> DataFrame:
         F.explode(
             F.sequence(
                 F.from_utc_timestamp(DataProductColumnNames.from_date, time_zone),
-                F.date_sub(
-                    F.from_utc_timestamp(DataProductColumnNames.to_date, time_zone), 1
-                ),
+                F.date_sub(F.from_utc_timestamp(DataProductColumnNames.to_date, time_zone), 1),
                 F.expr("interval 1 day"),
             )
         ),

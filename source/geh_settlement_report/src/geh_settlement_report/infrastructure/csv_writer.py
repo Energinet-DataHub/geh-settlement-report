@@ -17,17 +17,17 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from pyspark.sql import DataFrame, Window, functions as F
-
 from geh_common.telemetry import Logger, use_span
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.infrastructure.report_name_factory import FileNameFactory
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from pyspark.sql import DataFrame, Window
+from pyspark.sql import functions as F
+
+from geh_settlement_report.domain.utils.csv_column_names import EphemeralColumns
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.domain.utils.csv_column_names import EphemeralColumns
-from settlement_report_job.infrastructure.paths import get_report_output_path
-
+from geh_settlement_report.infrastructure.paths import get_report_output_path
+from geh_settlement_report.infrastructure.report_name_factory import FileNameFactory
 
 log = Logger(__name__)
 
@@ -126,9 +126,7 @@ def _write_files(
         list[str]: Headers for the csv file.
     """
     if EphemeralColumns.chunk_index in partition_columns:
-        partition_columns_without_chunk = [
-            col for col in partition_columns if col != EphemeralColumns.chunk_index
-        ]
+        partition_columns_without_chunk = [col for col in partition_columns if col != EphemeralColumns.chunk_index]
         w = Window().partitionBy(partition_columns_without_chunk).orderBy(order_by)
         chunk_index_col = F.ceil((F.row_number().over(w)) / F.lit(rows_per_file))
         df = df.withColumn(EphemeralColumns.chunk_index, chunk_index_col)
@@ -139,9 +137,7 @@ def _write_files(
     csv_writer_options = _get_csv_writer_options()
 
     if partition_columns:
-        df.write.mode("overwrite").options(**csv_writer_options).partitionBy(
-            partition_columns
-        ).csv(path)
+        df.write.mode("overwrite").options(**csv_writer_options).partitionBy(partition_columns).csv(path)
     else:
         df.write.mode("overwrite").options(**csv_writer_options).csv(path)
 
@@ -169,9 +165,7 @@ def _get_new_files(
     """
     new_files = []
 
-    file_info_list = _get_file_info_list(
-        spark_output_path=spark_output_path, partition_columns=partition_columns
-    )
+    file_info_list = _get_file_info_list(spark_output_path=spark_output_path, partition_columns=partition_columns)
 
     distinct_chunk_indices = set([chunk_index for _, _, chunk_index in file_info_list])
     include_chunk_index = len(distinct_chunk_indices) > 1
@@ -195,9 +189,7 @@ def _get_file_info_list(
 
     files = [f for f in Path(spark_output_path).rglob("*.csv")]
 
-    partition_by_grid_area = (
-        EphemeralColumns.grid_area_code_partitioning in partition_columns
-    )
+    partition_by_grid_area = EphemeralColumns.grid_area_code_partitioning in partition_columns
     partition_by_chunk_index = EphemeralColumns.chunk_index in partition_columns
 
     regex = spark_output_path
@@ -233,9 +225,7 @@ def _get_file_info_list(
 
 
 @use_span()
-def _merge_files(
-    dbutils: Any, new_files: list[TmpFile], headers: list[str]
-) -> list[str]:
+def _merge_files(dbutils: Any, new_files: list[TmpFile], headers: list[str]) -> list[str]:
     """Merges the new files and moves them to the final location.
 
     Args:

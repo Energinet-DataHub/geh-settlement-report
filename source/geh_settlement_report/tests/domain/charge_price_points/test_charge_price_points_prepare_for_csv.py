@@ -3,21 +3,20 @@ from datetime import datetime, timedelta
 from unittest.mock import Mock
 
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql import functions as F
-
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
 import tests.test_factories.default_test_data_spec as default_data
-from settlement_report_job.domain.charge_price_points.prepare_for_csv import (
+from geh_settlement_report.domain.charge_price_points.prepare_for_csv import (
     prepare_for_csv,
 )
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     ChargeResolutionDataProductValue,
 )
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import functions as F
 from tests.utils import Dates
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
@@ -44,9 +43,7 @@ def _get_repository_mock(
     mock_repository.read_charge_link_periods.return_value = charge_link_periods
     mock_repository.read_charge_price_points.return_value = charge_price_points
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -133,10 +130,7 @@ def test_when_resolution_is_hour_return_one_row_with_value_in_every_energy_price
     assert result_df.count() == 1
     result = result_df.collect()[0]
     for i in range(1, 25):
-        assert (
-            result[f"{CsvColumnNames.energy_price}{i}"]
-            == default_data.DEFAULT_CHARGE_PRICE + i - 1
-        )
+        assert result[f"{CsvColumnNames.energy_price}{i}"] == default_data.DEFAULT_CHARGE_PRICE + i - 1
     assert result[f"{CsvColumnNames.energy_price}25"] is None
 
 

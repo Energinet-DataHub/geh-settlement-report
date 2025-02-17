@@ -3,13 +3,12 @@ from unittest.mock import Mock
 from uuid import UUID
 
 import pytest
-from pyspark.sql import SparkSession
-
 import tests.test_factories.default_test_data_spec as default_data
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.wholesale_results.read_and_filter import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.wholesale_results.read_and_filter import (
     read_and_filter_from_view,
 )
+from pyspark.sql import SparkSession
 from tests.test_factories.amounts_per_charge_factory import create
 from tests.test_factories.default_test_data_spec import create_amounts_per_charge_row
 
@@ -55,11 +54,7 @@ def test_time_within_and_outside_of_date_range_scenarios(
     # Act
     actual = read_and_filter_from_view(
         energy_supplier_ids=ENERGY_SUPPLIER_IDS,
-        calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
-        },
+        calculation_id_by_grid_area={default_data.DEFAULT_GRID_AREA_CODE: UUID(default_data.DEFAULT_CALCULATION_ID)},
         period_start=args_start_date,
         period_end=args_end_date,
         requesting_actor_market_role=MarketRole.ENERGY_SUPPLIER,
@@ -108,11 +103,7 @@ def test_energy_supplier_ids_scenarios(
     # Act
     actual = read_and_filter_from_view(
         energy_supplier_ids=args_energy_supplier_ids,
-        calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
-        },
+        calculation_id_by_grid_area={default_data.DEFAULT_GRID_AREA_CODE: UUID(default_data.DEFAULT_CALCULATION_ID)},
         period_start=default_data.DEFAULT_FROM_DATE,
         period_end=default_data.DEFAULT_TO_DATE,
         requesting_actor_market_role=MarketRole.ENERGY_SUPPLIER,
@@ -157,9 +148,7 @@ def test_calculation_id_by_grid_area_scenarios(
     # Arrange
     df = create(
         spark,
-        create_amounts_per_charge_row(
-            calculation_id=default_data.DEFAULT_CALCULATION_ID, grid_area_code="804"
-        ),
+        create_amounts_per_charge_row(calculation_id=default_data.DEFAULT_CALCULATION_ID, grid_area_code="804"),
     )
     mock_repository = Mock()
     mock_repository.read_amounts_per_charge.return_value = df
@@ -230,11 +219,7 @@ def test_grid_access_provider_and_system_operator_scenarios(
     # Act
     actual = read_and_filter_from_view(
         energy_supplier_ids=ENERGY_SUPPLIER_IDS,
-        calculation_id_by_grid_area={
-            default_data.DEFAULT_GRID_AREA_CODE: UUID(
-                default_data.DEFAULT_CALCULATION_ID
-            )
-        },
+        calculation_id_by_grid_area={default_data.DEFAULT_GRID_AREA_CODE: UUID(default_data.DEFAULT_CALCULATION_ID)},
         period_start=default_data.DEFAULT_FROM_DATE,
         period_end=default_data.DEFAULT_TO_DATE,
         requesting_actor_market_role=args_requesting_actor_market_role,

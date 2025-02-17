@@ -1,14 +1,14 @@
 from datetime import datetime
 
 import pytest
-from pyspark.sql import SparkSession, functions as F
-
-from settlement_report_job.domain.utils.merge_periods import (
+from geh_settlement_report.domain.utils.merge_periods import (
     merge_connected_periods,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 
 JAN_1ST = datetime(2023, 12, 31, 23)
 JAN_2ND = datetime(2024, 1, 1, 23)
@@ -212,10 +212,7 @@ def test_merge_connecting_periods__when_overlap_but_difference_groups__returns_w
     # Arrange
     some_column_name = "some_column"
     df = spark.createDataFrame(
-        [
-            (some_column_value, from_date, to_date)
-            for some_column_value, from_date, to_date in periods
-        ],
+        [(some_column_value, from_date, to_date) for some_column_value, from_date, to_date in periods],
         [
             some_column_name,
             DataProductColumnNames.from_date,
@@ -229,9 +226,7 @@ def test_merge_connecting_periods__when_overlap_but_difference_groups__returns_w
     # Assert
     actual = actual.orderBy(DataProductColumnNames.from_date)
     assert actual.count() == len(expected_periods)
-    for i, (expected_some_column_value, expected_from, expected_to) in enumerate(
-        expected_periods
-    ):
+    for i, (expected_some_column_value, expected_from, expected_to) in enumerate(expected_periods):
         assert actual.collect()[i][some_column_name] == expected_some_column_value
         assert actual.collect()[i][DataProductColumnNames.from_date] == expected_from
         assert actual.collect()[i][DataProductColumnNames.to_date] == expected_to
@@ -276,10 +271,7 @@ def test_merge_connecting_periods__when_multiple_other_columns_and_no___returns_
     column_a = "column_a"
     column_b = "column_b"
     df = spark.createDataFrame(
-        [
-            (col_a_value, col_b_value, from_date, to_date)
-            for col_a_value, col_b_value, from_date, to_date in periods
-        ],
+        [(col_a_value, col_b_value, from_date, to_date) for col_a_value, col_b_value, from_date, to_date in periods],
         [
             column_a,
             column_b,

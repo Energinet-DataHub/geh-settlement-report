@@ -13,18 +13,18 @@
 # limitations under the License.
 import os
 import shutil
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.infrastructure.report_name_factory import (
-    MarketRoleInFileName,
-)
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.infrastructure import paths
+from geh_settlement_report.infrastructure import paths
+from geh_settlement_report.infrastructure.report_name_factory import (
+    MarketRoleInFileName,
+)
 
 
 class Dates:
@@ -48,9 +48,7 @@ def cleanup_output_path(settlement_reports_output_path: str) -> None:
         os.makedirs(settlement_reports_output_path)
 
 
-def get_actual_files(
-    report_data_type: ReportDataType, args: SettlementReportArgs
-) -> list[str]:
+def get_actual_files(report_data_type: ReportDataType, args: SettlementReportArgs) -> list[str]:
     path = paths.get_report_output_path(args)
     if not os.path.isdir(path):
         return []
@@ -91,9 +89,7 @@ def get_start_date(period_start: datetime) -> str:
 
 def get_end_date(period_end: datetime) -> str:
     time_zone_info = ZoneInfo(DEFAULT_TIME_ZONE)
-    return (period_end.astimezone(time_zone_info) - timedelta(days=1)).strftime(
-        "%d-%m-%Y"
-    )
+    return (period_end.astimezone(time_zone_info) - timedelta(days=1)).strftime("%d-%m-%Y")
 
 
 def get_market_role_in_file_name(

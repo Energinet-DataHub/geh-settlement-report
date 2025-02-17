@@ -1,17 +1,16 @@
 import pytest
-from pyspark.sql import SparkSession
-
-from settlement_report_job.domain.utils.csv_column_names import (
+from geh_settlement_report.domain.utils.csv_column_names import (
     CsvColumnNames,
 )
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.tasks.monthly_amounts_task import (
+from geh_settlement_report.entry_points.tasks.monthly_amounts_task import (
     MonthlyAmountsTask,
 )
-from settlement_report_job.infrastructure.paths import get_report_output_path
+from geh_settlement_report.infrastructure.paths import get_report_output_path
+from pyspark.sql import SparkSession
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
 from tests.dbutils_fixture import DBUtilsFixture
@@ -81,9 +80,7 @@ def test_execute_monthly_amounts__when_administrator_and_split_report_by_grid_ar
 ):
     args = standard_wholesale_fixing_scenario_datahub_admin_args
     args.split_report_by_grid_area = False
-    args.energy_supplier_ids = [
-        standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    ]
+    args.energy_supplier_ids = [standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]]
 
     # Arrange
     expected_columns = [

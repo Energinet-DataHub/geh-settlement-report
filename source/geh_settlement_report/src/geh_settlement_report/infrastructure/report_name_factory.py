@@ -1,9 +1,9 @@
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 
@@ -43,9 +43,7 @@ class FileNameFactory:
         ]:
             return self._create_result_filename(grid_area_code, chunk_index)
         else:
-            raise NotImplementedError(
-                f"Report data type {self.report_data_type} is not supported."
-            )
+            raise NotImplementedError(f"Report data type {self.report_data_type} is not supported.")
 
     def _create_result_filename(
         self,
@@ -62,9 +60,7 @@ class FileNameFactory:
             chunk_index,
         ]
 
-        filename_parts_without_none = [
-            part for part in filename_parts if part is not None
-        ]
+        filename_parts_without_none = [part for part in filename_parts if part is not None]
 
         return "_".join(filename_parts_without_none) + ".csv"
 
@@ -73,7 +69,6 @@ class FileNameFactory:
         grid_area_code: str | None,
         chunk_index: str | None,
     ) -> str:
-
         filename_parts = [
             self._get_pre_fix(),
             grid_area_code,
@@ -84,9 +79,7 @@ class FileNameFactory:
             chunk_index,
         ]
 
-        filename_parts_without_none = [
-            part for part in filename_parts if part is not None
-        ]
+        filename_parts_without_none = [part for part in filename_parts if part is not None]
 
         return "_".join(filename_parts_without_none) + ".csv"
 
@@ -96,9 +89,7 @@ class FileNameFactory:
 
     def _get_end_date(self) -> str:
         time_zone_info = ZoneInfo(self.args.time_zone)
-        return (
-            self.args.period_end.astimezone(time_zone_info) - timedelta(days=1)
-        ).strftime("%d-%m-%Y")
+        return (self.args.period_end.astimezone(time_zone_info) - timedelta(days=1)).strftime("%d-%m-%Y")
 
     def _get_pre_fix(self) -> str:
         if self.report_data_type == ReportDataType.TimeSeriesHourly:
@@ -117,21 +108,15 @@ class FileNameFactory:
             return "RESULTWHOLESALE"
         elif self.report_data_type == ReportDataType.MonthlyAmounts:
             return "RESULTMONTHLY"
-        raise NotImplementedError(
-            f"Report data type {self.report_data_type} is not supported."
-        )
+        raise NotImplementedError(f"Report data type {self.report_data_type} is not supported.")
 
     def _get_actor_id_in_file_name(self) -> str | None:
-
         if self.args.requesting_actor_market_role in [
             MarketRole.GRID_ACCESS_PROVIDER,
             MarketRole.ENERGY_SUPPLIER,
         ]:
             return self.args.requesting_actor_id
-        elif (
-            self.args.energy_supplier_ids is not None
-            and len(self.args.energy_supplier_ids) == 1
-        ):
+        elif self.args.energy_supplier_ids is not None and len(self.args.energy_supplier_ids) == 1:
             return self.args.energy_supplier_ids[0]
         return None
 

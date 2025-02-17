@@ -14,22 +14,22 @@
 from datetime import datetime
 from uuid import UUID
 
+from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame
 
-from geh_common.telemetry import Logger, use_span
-from settlement_report_job.domain.utils.join_metering_points_periods_and_charge_link_periods import (
+from geh_settlement_report.domain.utils.join_metering_points_periods_and_charge_link_periods import (
     join_metering_points_periods_and_charge_link_periods,
 )
-from settlement_report_job.domain.utils.merge_periods import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.merge_periods import (
     merge_connected_periods,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.domain.utils.repository_filtering import (
+from geh_settlement_report.domain.utils.repository_filtering import (
     read_charge_link_periods,
     read_metering_point_periods_by_calculation_ids,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -65,9 +65,7 @@ def read_and_filter(
         repository,
     )
 
-    charge_link_periods = charge_link_periods.select(
-        _get_select_columns(requesting_actor_market_role)
-    )
+    charge_link_periods = charge_link_periods.select(_get_select_columns(requesting_actor_market_role))
 
     charge_link_periods = merge_connected_periods(charge_link_periods)
 

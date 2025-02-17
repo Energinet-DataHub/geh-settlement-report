@@ -16,32 +16,32 @@ from functools import reduce
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import geh_settlement_report.domain.energy_results.order_by_columns as energy_order_by_columns
+import geh_settlement_report.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
 import pyspark.sql.functions as F
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-
-import settlement_report_job.domain.energy_results.order_by_columns as energy_order_by_columns
-import settlement_report_job.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
-import tests.test_factories.energy_factory as energy_factory
-import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
-from settlement_report_job.domain.energy_results.prepare_for_csv import (
+from geh_settlement_report.domain.energy_results.prepare_for_csv import (
     prepare_for_csv,
 )
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
-from settlement_report_job.domain.utils.market_role import (
+from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.domain.utils.market_role import (
     MarketRole,
 )
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.infrastructure import csv_writer
-from settlement_report_job.infrastructure.csv_writer import _write_files
-from settlement_report_job.infrastructure.paths import get_report_output_path
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure import csv_writer
+from geh_settlement_report.infrastructure.csv_writer import _write_files
+from geh_settlement_report.infrastructure.paths import get_report_output_path
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
+from pyspark.sql import DataFrame, SparkSession
+
+import tests.test_factories.energy_factory as energy_factory
+import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import (
     standard_wholesale_fixing_scenario_data_generator,
@@ -310,12 +310,8 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
         start_of_day=standard_wholesale_fixing_scenario_args.period_start,
         num_metering_points=20,
     )
-    df_prepared_time_series_points_consumption = time_series_points_factory.create(
-        spark, test_spec_consumption
-    )
-    df_prepared_time_series_points_production = time_series_points_factory.create(
-        spark, test_spec_production
-    )
+    df_prepared_time_series_points_consumption = time_series_points_factory.create(spark, test_spec_consumption)
+    df_prepared_time_series_points_production = time_series_points_factory.create(spark, test_spec_production)
     df_prepared_time_series_points = df_prepared_time_series_points_consumption.union(
         df_prepared_time_series_points_production
     ).orderBy(F.rand())
@@ -414,9 +410,7 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
         start_of_day=standard_wholesale_fixing_scenario_args.period_start,
         num_metering_points=30,
     )
-    df_prepared_time_series_points = time_series_points_factory.create(
-        spark, test_spec_consumption
-    )
+    df_prepared_time_series_points = time_series_points_factory.create(spark, test_spec_consumption)
 
     # Act
     result_files = csv_writer.write(
@@ -454,9 +448,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
         start_of_day=standard_wholesale_fixing_scenario_args.period_start,
         num_metering_points=30,
     )
-    df_prepared_time_series_points = time_series_points_factory.create(
-        spark, test_spec_consumption
-    )
+    df_prepared_time_series_points = time_series_points_factory.create(spark, test_spec_consumption)
 
     # Act
     result_files = csv_writer.write(
@@ -474,9 +466,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
     assert len(result_files) == expected_file_count
     file_name_components = result_files[0][:-4].split("_")
 
-    assert not file_name_components[
-        -1
-    ].isdigit(), (
+    assert not file_name_components[-1].isdigit(), (
         "A valid integer indicating a present chunk index was found when not expected!"
     )
 
@@ -517,9 +507,9 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
         file_name_components = result_file[:-4].split("_")
         chunk_id_if_present = file_name_components[-1]
 
-        assert (
-            not chunk_id_if_present.isdigit()
-        ), "A valid integer indicating a present chunk index was found when not expected!"
+        assert not chunk_id_if_present.isdigit(), (
+            "A valid integer indicating a present chunk index was found when not expected!"
+        )
 
 
 def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
@@ -543,9 +533,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
         "RESULTENERGY_804_02-01-2024_02-01-2024.csv",
     ]
 
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = {
         standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[
             0
@@ -557,9 +545,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
     standard_wholesale_fixing_scenario_args.split_report_by_grid_area = True
 
     df = prepare_for_csv(
-        energy_factory.create_energy_per_es_v1(
-            spark, create_energy_results_data_spec(grid_area_code="804")
-        ),
+        energy_factory.create_energy_per_es_v1(spark, create_energy_results_data_spec(grid_area_code="804")),
         standard_wholesale_fixing_scenario_args.split_report_by_grid_area,
         standard_wholesale_fixing_scenario_args.requesting_actor_market_role,
     )
@@ -606,9 +592,7 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
         "RESULTENERGY_flere-net_1000000000000_DDQ_02-01-2024_02-01-2024.csv",
     ]
 
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.ENERGY_SUPPLIER
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
     energy_supplier_id = "1000000000000"
     standard_wholesale_fixing_scenario_args.requesting_actor_id = energy_supplier_id
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = [energy_supplier_id]
@@ -617,15 +601,11 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
     df = prepare_for_csv(
         energy_factory.create_energy_per_es_v1(
             spark,
-            create_energy_results_data_spec(
-                grid_area_code="804", energy_supplier_id=energy_supplier_id
-            ),
+            create_energy_results_data_spec(grid_area_code="804", energy_supplier_id=energy_supplier_id),
         ).union(
             energy_factory.create_energy_per_es_v1(
                 spark,
-                create_energy_results_data_spec(
-                    grid_area_code="805", energy_supplier_id=energy_supplier_id
-                ),
+                create_energy_results_data_spec(grid_area_code="805", energy_supplier_id=energy_supplier_id),
             )
         ),
         False,
@@ -679,9 +659,7 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
         "RESULTENERGY_804_02-01-2024_02-01-2024_4.csv",
     ]
 
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = {
         standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[
             0
@@ -693,9 +671,7 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
     standard_wholesale_fixing_scenario_args.split_report_by_grid_area = False
     standard_wholesale_fixing_scenario_args.prevent_large_text_files = True
 
-    df = energy_factory.create_energy_per_es_v1(
-        spark, create_energy_results_data_spec(grid_area_code="804")
-    )
+    df = energy_factory.create_energy_per_es_v1(spark, create_energy_results_data_spec(grid_area_code="804"))
 
     df = prepare_for_csv(
         df,

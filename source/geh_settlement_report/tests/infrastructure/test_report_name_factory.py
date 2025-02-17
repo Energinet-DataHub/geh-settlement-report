@@ -2,17 +2,16 @@ import uuid
 from datetime import datetime
 
 import pytest
-from pyspark.sql import SparkSession
-
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.report_name_factory import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
+from geh_settlement_report.infrastructure.report_name_factory import (
     FileNameFactory,
     ReportDataType,
 )
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
+from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="function")
@@ -26,9 +25,7 @@ def default_settlement_report_args() -> SettlementReportArgs:
         period_start=datetime(2024, 6, 30, 22, 0, 0),
         period_end=datetime(2024, 7, 31, 22, 0, 0),
         calculation_type=CalculationType.WHOLESALE_FIXING,
-        calculation_id_by_grid_area={
-            "016": uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373")
-        },
+        calculation_id_by_grid_area={"016": uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373")},
         grid_area_codes=None,
         split_report_by_grid_area=True,
         prevent_large_text_files=False,
@@ -71,10 +68,7 @@ def test_create__when_energy_supplier__returns_expected_file_name(
     actual = sut.create(grid_area_code, chunk_index=None)
 
     # Assert
-    assert (
-        actual
-        == f"{expected_pre_fix}_{grid_area_code}_{energy_supplier_id}_DDQ_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"{expected_pre_fix}_{grid_area_code}_{energy_supplier_id}_DDQ_01-07-2024_31-07-2024.csv"
 
 
 def test_create__when_grid_access_provider__returns_expected_file_name(
@@ -94,10 +88,7 @@ def test_create__when_grid_access_provider__returns_expected_file_name(
     actual = sut.create(grid_area_code, chunk_index=None)
 
     # Assert
-    assert (
-        actual
-        == f"TSSD60_{grid_area_code}_{requesting_actor_id}_DDM_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"TSSD60_{grid_area_code}_{requesting_actor_id}_DDM_01-07-2024_31-07-2024.csv"
 
 
 @pytest.mark.parametrize(
@@ -238,10 +229,7 @@ def test_create__when_energy_supplier_requests_report_not_combined(
     actual = factory.create(grid_area_code="123", chunk_index=None)
 
     # Assert
-    assert (
-        actual
-        == f"{pre_fix}_123_{args.requesting_actor_id}_DDQ_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"{pre_fix}_123_{args.requesting_actor_id}_DDQ_01-07-2024_31-07-2024.csv"
 
 
 @pytest.mark.parametrize(
@@ -287,10 +275,7 @@ def test_create__when_energy_supplier_requests_report_combined(
     actual = factory.create(grid_area_code=None, chunk_index=None)
 
     # Assert
-    assert (
-        actual
-        == f"{pre_fix}_flere-net_{args.requesting_actor_id}_DDQ_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"{pre_fix}_flere-net_{args.requesting_actor_id}_DDQ_01-07-2024_31-07-2024.csv"
 
 
 @pytest.mark.parametrize(
@@ -333,10 +318,7 @@ def test_create__when_grid_access_provider_requests_report(
     actual = factory.create(grid_area_code="456", chunk_index=None)
 
     # Assert
-    assert (
-        actual
-        == f"{pre_fix}_456_{args.requesting_actor_id}_DDM_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"{pre_fix}_456_{args.requesting_actor_id}_DDM_01-07-2024_31-07-2024.csv"
 
 
 @pytest.mark.parametrize(
@@ -469,9 +451,7 @@ def test_create__when_datahub_administrator_requests_report_multi_grid_single_pr
     actual = factory.create(grid_area_code=None, chunk_index=None)
 
     # Assert
-    assert (
-        actual == f"{pre_fix}_flere-net_{energy_supplier_id}_01-07-2024_31-07-2024.csv"
-    )
+    assert actual == f"{pre_fix}_flere-net_{energy_supplier_id}_01-07-2024_31-07-2024.csv"
 
 
 @pytest.mark.parametrize(

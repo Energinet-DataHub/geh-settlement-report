@@ -16,10 +16,7 @@ import importlib.metadata
 from typing import Any
 
 import pytest
-from settlement_report_job.entry_points import entry_point as module
-from settlement_report_job.entry_points.entry_point import (
-    start_zip,
-)
+from geh_settlement_report.entry_points import entry_point as module
 
 # IMPORTANT:
 # If we add/remove tests here, we also update the "retry logic" in '.docker/entrypoint.sh',
@@ -29,17 +26,13 @@ from settlement_report_job.entry_points.entry_point import (
 def assert_entry_point_exists(entry_point_name: str) -> Any:
     # Load the entry point function from the installed wheel
     try:
-        entry_points = importlib.metadata.entry_points(
-            group="console_scripts", name=entry_point_name
-        )
+        entry_points = importlib.metadata.entry_points(group="console_scripts", name=entry_point_name)
 
         if not entry_points:
             assert False, f"The {entry_point_name} entry point was not found."
 
         # Filter for the specific entry point group and name
-        matching_entry_points = [
-            ep for ep in entry_points if ep.name == entry_point_name
-        ]
+        matching_entry_points = [ep for ep in entry_points if ep.name == entry_point_name]
 
         # Check if the module exists
         entry_point = matching_entry_points[0]  # Get the single entry point
@@ -50,9 +43,7 @@ def assert_entry_point_exists(entry_point_name: str) -> Any:
             module,
             function_name,
         ):
-            assert (
-                False
-            ), f"The entry point module function {function_name} does not exist in entry_point.py."
+            assert False, f"The entry point module function {function_name} does not exist in entry_point.py."
 
         importlib.import_module(full_module_path, function_name)
     except importlib.metadata.PackageNotFoundError:

@@ -1,6 +1,7 @@
-from pyspark.sql import DataFrame, functions as F
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
 
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -16,8 +17,7 @@ def filter_time_series_points_on_charge_owner(
     """
 
     charge_price_information_periods = charge_price_information_periods.where(
-        (~F.col(DataProductColumnNames.is_tax))
-        & (F.col(DataProductColumnNames.charge_owner_id) == system_operator_id)
+        (~F.col(DataProductColumnNames.is_tax)) & (F.col(DataProductColumnNames.charge_owner_id) == system_operator_id)
     )
 
     filtered_charge_link_periods = charge_link_periods.join(
@@ -38,10 +38,8 @@ def filter_time_series_points_on_charge_owner(
             == filtered_charge_link_periods[DataProductColumnNames.calculation_id],
             time_series_points[DataProductColumnNames.metering_point_id]
             == filtered_charge_link_periods[DataProductColumnNames.metering_point_id],
-            F.col(DataProductColumnNames.observation_time)
-            >= F.col(DataProductColumnNames.from_date),
-            F.col(DataProductColumnNames.observation_time)
-            < F.col(DataProductColumnNames.to_date),
+            F.col(DataProductColumnNames.observation_time) >= F.col(DataProductColumnNames.from_date),
+            F.col(DataProductColumnNames.observation_time) < F.col(DataProductColumnNames.to_date),
         ],
         how="leftsemi",
     )

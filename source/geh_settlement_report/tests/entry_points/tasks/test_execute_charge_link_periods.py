@@ -1,18 +1,17 @@
 import pytest
-from pyspark.sql import SparkSession
-
-from settlement_report_job.domain.utils.csv_column_names import (
+from geh_settlement_report.domain.utils.csv_column_names import (
     CsvColumnNames,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.tasks.charge_link_periods_task import (
+from geh_settlement_report.entry_points.tasks.charge_link_periods_task import (
     ChargeLinkPeriodsTask,
 )
-from settlement_report_job.infrastructure.paths import get_report_output_path
+from geh_settlement_report.infrastructure.paths import get_report_output_path
+from pyspark.sql import SparkSession
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
 from tests.dbutils_fixture import DBUtilsFixture
@@ -40,9 +39,7 @@ def test_execute_charge_link_periods__when_energy_supplier__returns_expected(
         CsvColumnNames.charge_link_from_date,
         CsvColumnNames.charge_link_to_date,
     ]
-    task = ChargeLinkPeriodsTask(
-        spark, dbutils, standard_wholesale_fixing_scenario_energy_supplier_args
-    )
+    task = ChargeLinkPeriodsTask(spark, dbutils, standard_wholesale_fixing_scenario_energy_supplier_args)
 
     # Act
     task.execute()
@@ -53,9 +50,7 @@ def test_execute_charge_link_periods__when_energy_supplier__returns_expected(
         args=standard_wholesale_fixing_scenario_energy_supplier_args,
     )
     assert_file_names_and_columns(
-        path=get_report_output_path(
-            standard_wholesale_fixing_scenario_energy_supplier_args
-        ),
+        path=get_report_output_path(standard_wholesale_fixing_scenario_energy_supplier_args),
         actual_files=actual_files,
         expected_columns=expected_columns,
         expected_file_names=expected_file_names,
@@ -84,9 +79,7 @@ def test_execute_charge_link_periods__when_grid_access_provider__returns_expecte
         CsvColumnNames.charge_link_from_date,
         CsvColumnNames.charge_link_to_date,
     ]
-    task = ChargeLinkPeriodsTask(
-        spark, dbutils, standard_wholesale_fixing_scenario_grid_access_provider_args
-    )
+    task = ChargeLinkPeriodsTask(spark, dbutils, standard_wholesale_fixing_scenario_grid_access_provider_args)
 
     # Act
     task.execute()
@@ -97,9 +90,7 @@ def test_execute_charge_link_periods__when_grid_access_provider__returns_expecte
         args=standard_wholesale_fixing_scenario_grid_access_provider_args,
     )
     assert_file_names_and_columns(
-        path=get_report_output_path(
-            standard_wholesale_fixing_scenario_grid_access_provider_args
-        ),
+        path=get_report_output_path(standard_wholesale_fixing_scenario_grid_access_provider_args),
         actual_files=actual_files,
         expected_columns=expected_columns,
         expected_file_names=expected_file_names,
@@ -121,9 +112,7 @@ def test_execute_charge_link_periods__when_system_operator_or_datahub_admin_with
     # Arrange
     args = standard_wholesale_fixing_scenario_args
     args.requesting_actor_market_role = market_role
-    energy_supplier_id = (
-        standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    )
+    energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
     args.energy_supplier_ids = [energy_supplier_id]
     expected_file_names = [
         f"CHARGELINK_804_{energy_supplier_id}_02-01-2024_02-01-2024.csv",

@@ -1,15 +1,14 @@
 from datetime import datetime
 from unittest.mock import Mock
 
-from pyspark.sql import DataFrame, SparkSession
-
 import tests.test_factories.default_test_data_spec as default_data
-from settlement_report_job.domain.metering_point_periods.read_and_filter_balance_fixing import (
+from geh_settlement_report.domain.metering_point_periods.read_and_filter_balance_fixing import (
     read_and_filter,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from pyspark.sql import DataFrame, SparkSession
 from tests.test_factories import (
     latest_calculations_factory,
     metering_point_periods_factory,
@@ -44,9 +43,7 @@ def _get_repository_mock(
         mock_repository.read_charge_link_periods.return_value = charge_link_periods
 
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -58,12 +55,8 @@ def test_read_and_filter__when_duplicate_metering_point_periods__returns_one_per
     metering_point_periods = metering_point_periods_factory.create(
         spark,
         [
-            default_data.create_metering_point_periods_row(
-                from_date=d.JAN_1ST, to_date=d.JAN_2ND
-            ),
-            default_data.create_metering_point_periods_row(
-                from_date=d.JAN_1ST, to_date=d.JAN_2ND
-            ),
+            default_data.create_metering_point_periods_row(from_date=d.JAN_1ST, to_date=d.JAN_2ND),
+            default_data.create_metering_point_periods_row(from_date=d.JAN_1ST, to_date=d.JAN_2ND),
         ],
     )
     latest_calculations = latest_calculations_factory.create(
@@ -74,9 +67,7 @@ def test_read_and_filter__when_duplicate_metering_point_periods__returns_one_per
             ),
         ],
     )
-    mock_repository = _get_repository_mock(
-        metering_point_periods, latest_calculations=latest_calculations
-    )
+    mock_repository = _get_repository_mock(metering_point_periods, latest_calculations=latest_calculations)
 
     # Act
     actual = read_and_filter(
@@ -249,16 +240,10 @@ def test_read_and_filter__when_calculation_overlap_in_time__returns_latest(
     # Assert
     assert actual.count() == 2
     assert (
-        actual.orderBy(DataProductColumnNames.from_date).collect()[0][
-            DataProductColumnNames.metering_point_id
-        ]
-        == "1"
+        actual.orderBy(DataProductColumnNames.from_date).collect()[0][DataProductColumnNames.metering_point_id] == "1"
     )
     assert (
-        actual.orderBy(DataProductColumnNames.from_date).collect()[1][
-            DataProductColumnNames.metering_point_id
-        ]
-        == "2"
+        actual.orderBy(DataProductColumnNames.from_date).collect()[1][DataProductColumnNames.metering_point_id] == "2"
     )
 
 

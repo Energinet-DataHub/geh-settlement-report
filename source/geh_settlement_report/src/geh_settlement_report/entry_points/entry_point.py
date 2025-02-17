@@ -17,21 +17,20 @@ import sys
 from argparse import Namespace
 from collections.abc import Callable
 
-from opentelemetry.trace import SpanKind
-
 import geh_common.telemetry.logging_configuration as config
 from geh_common.telemetry.span_recording import span_record_exception
-from settlement_report_job.entry_points.tasks import task_factory
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from opentelemetry.trace import SpanKind
+
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.job_args.settlement_report_job_args import (
-    parse_job_arguments,
+from geh_settlement_report.entry_points.job_args.settlement_report_job_args import (
     parse_command_line_arguments,
+    parse_job_arguments,
 )
-from settlement_report_job.entry_points.tasks.task_type import TaskType
-from settlement_report_job.entry_points.utils.get_dbutils import get_dbutils
-from settlement_report_job.infrastructure.spark_initializor import initialize_spark
+from geh_settlement_report.entry_points.tasks import task_factory
+from geh_settlement_report.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.infrastructure.spark_initializor import initialize_spark
 
 
 # The start_x() methods should only have its name updated in correspondence with the
@@ -74,9 +73,7 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    applicationinsights_connection_string = os.getenv(
-        "APPLICATIONINSIGHTS_CONNECTION_STRING"
-    )
+    applicationinsights_connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 
     start_task_with_deps(
         task_type=task_type,
@@ -100,9 +97,7 @@ def start_task_with_deps(
         extras={"Subsystem": "settlement-report-aggregations"},
     )
 
-    with config.get_tracer().start_as_current_span(
-        __name__, kind=SpanKind.SERVER
-    ) as span:
+    with config.get_tracer().start_as_current_span(__name__, kind=SpanKind.SERVER) as span:
         # Try/except added to enable adding custom fields to the exception as
         # the span attributes do not appear to be included in the exception.
         try:

@@ -1,20 +1,22 @@
 from datetime import datetime
 from uuid import UUID
-from pyspark.sql import DataFrame, Column, functions as F
 
 from geh_common.telemetry import Logger
-from settlement_report_job.domain.utils.csv_column_names import EphemeralColumns
-from settlement_report_job.domain.utils.get_start_of_day import (
+from pyspark.sql import Column, DataFrame
+from pyspark.sql import functions as F
+
+from geh_settlement_report.domain.utils.csv_column_names import EphemeralColumns
+from geh_settlement_report.domain.utils.get_start_of_day import (
     get_start_of_day,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.wholesale.column_names import (
-    DataProductColumnNames,
-)
-from settlement_report_job.infrastructure.repository import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.infrastructure.repository import (
     WholesaleRepository,
 )
-from settlement_report_job.infrastructure.wholesale.data_values.calculation_type import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
+    DataProductColumnNames,
+)
+from geh_settlement_report.infrastructure.wholesale.data_values.calculation_type import (
     CalculationTypeDataProductValue,
 )
 
@@ -31,10 +33,7 @@ def read_and_filter_by_latest_calculations(
     time_column_name: str | Column,
 ) -> DataFrame:
     latest_balance_fixing_calculations = repository.read_latest_calculations().where(
-        (
-            F.col(DataProductColumnNames.calculation_type)
-            == CalculationTypeDataProductValue.BALANCE_FIXING.value
-        )
+        (F.col(DataProductColumnNames.calculation_type) == CalculationTypeDataProductValue.BALANCE_FIXING.value)
         & (F.col(DataProductColumnNames.grid_area_code).isin(grid_area_codes))
         & (F.col(DataProductColumnNames.start_of_day) >= period_start)
         & (F.col(DataProductColumnNames.start_of_day) < period_end)
@@ -65,12 +64,9 @@ def filter_by_latest_calculations(
         df.join(
             latest_calculations,
             on=[
-                df[DataProductColumnNames.calculation_id]
-                == latest_calculations[DataProductColumnNames.calculation_id],
-                df[DataProductColumnNames.grid_area_code]
-                == latest_calculations[DataProductColumnNames.grid_area_code],
-                df[EphemeralColumns.start_of_day]
-                == latest_calculations[DataProductColumnNames.start_of_day],
+                df[DataProductColumnNames.calculation_id] == latest_calculations[DataProductColumnNames.calculation_id],
+                df[DataProductColumnNames.grid_area_code] == latest_calculations[DataProductColumnNames.grid_area_code],
+                df[EphemeralColumns.start_of_day] == latest_calculations[DataProductColumnNames.start_of_day],
             ],
             how="inner",
         )
@@ -108,8 +104,7 @@ def filter_by_charge_owner_and_tax_depending_on_market_role(
 ) -> DataFrame:
     if requesting_actor_market_role == MarketRole.SYSTEM_OPERATOR:
         df = df.where(
-            (F.col(DataProductColumnNames.charge_owner_id) == charge_owner_id)
-            & (~F.col(DataProductColumnNames.is_tax))
+            (F.col(DataProductColumnNames.charge_owner_id) == charge_owner_id) & (~F.col(DataProductColumnNames.is_tax))
         )
 
     if requesting_actor_market_role == MarketRole.GRID_ACCESS_PROVIDER:

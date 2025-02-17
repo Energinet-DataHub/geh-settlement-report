@@ -1,23 +1,22 @@
 from unittest.mock import Mock
 
 import pytest
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
-
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.monthly_amounts_per_charge_factory as monthly_amounts_per_charge_factory
 import tests.test_factories.total_monthly_amounts_factory as total_monthly_amounts_factory
-from settlement_report_job.domain.monthly_amounts.read_and_filter import (
+from geh_settlement_report.domain.monthly_amounts.read_and_filter import (
     _filter_monthly_amounts_per_charge,
     read_and_filter_from_view,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 from tests.data_seeding import (
     standard_wholesale_fixing_scenario_data_generator,
 )
@@ -56,57 +55,39 @@ def monthly_amounts_read_and_filter_mock_repository(
                 None,
             ]:
                 for is_tax in [True, False]:
-                    charge_owner_id_for_per_charge = (
-                        energy_supplier_id
-                        if charge_owner_id is None
-                        else charge_owner_id
-                    )
+                    charge_owner_id_for_per_charge = energy_supplier_id if charge_owner_id is None else charge_owner_id
 
-                    testing_spec_monthly_per_charge = (
-                        default_data.create_monthly_amounts_per_charge_row(
-                            energy_supplier_id=energy_supplier_id,
-                            calculation_id=DEFAULT_CALCULATION_ID,
-                            grid_area_code=grid_area,
-                            charge_owner_id=charge_owner_id_for_per_charge,
-                            is_tax=is_tax,
-                        )
+                    testing_spec_monthly_per_charge = default_data.create_monthly_amounts_per_charge_row(
+                        energy_supplier_id=energy_supplier_id,
+                        calculation_id=DEFAULT_CALCULATION_ID,
+                        grid_area_code=grid_area,
+                        charge_owner_id=charge_owner_id_for_per_charge,
+                        is_tax=is_tax,
                     )
-                    testing_spec_total_monthly = (
-                        default_data.create_total_monthly_amounts_row(
-                            energy_supplier_id=energy_supplier_id,
-                            calculation_id=DEFAULT_CALCULATION_ID,
-                            grid_area_code=grid_area,
-                            charge_owner_id=charge_owner_id,
-                        )
+                    testing_spec_total_monthly = default_data.create_total_monthly_amounts_row(
+                        energy_supplier_id=energy_supplier_id,
+                        calculation_id=DEFAULT_CALCULATION_ID,
+                        grid_area_code=grid_area,
+                        charge_owner_id=charge_owner_id,
                     )
 
                     if monthly_amounts_per_charge is None:
-                        monthly_amounts_per_charge = (
-                            monthly_amounts_per_charge_factory.create(
-                                spark, testing_spec_monthly_per_charge
-                            )
+                        monthly_amounts_per_charge = monthly_amounts_per_charge_factory.create(
+                            spark, testing_spec_monthly_per_charge
                         )
                     else:
                         monthly_amounts_per_charge = monthly_amounts_per_charge.union(
-                            monthly_amounts_per_charge_factory.create(
-                                spark, testing_spec_monthly_per_charge
-                            )
+                            monthly_amounts_per_charge_factory.create(spark, testing_spec_monthly_per_charge)
                         )
 
                     if total_monthly_amounts is None:
-                        total_monthly_amounts = total_monthly_amounts_factory.create(
-                            spark, testing_spec_total_monthly
-                        )
+                        total_monthly_amounts = total_monthly_amounts_factory.create(spark, testing_spec_total_monthly)
                     else:
                         total_monthly_amounts = total_monthly_amounts.union(
-                            total_monthly_amounts_factory.create(
-                                spark, testing_spec_total_monthly
-                            )
+                            total_monthly_amounts_factory.create(spark, testing_spec_total_monthly)
                         )
 
-    mock_repository.read_monthly_amounts_per_charge_v1.return_value = (
-        monthly_amounts_per_charge
-    )
+    mock_repository.read_monthly_amounts_per_charge_v1.return_value = monthly_amounts_per_charge
     mock_repository.read_total_monthly_amounts_v1.return_value = total_monthly_amounts
 
     return mock_repository
@@ -166,27 +147,12 @@ def test_read_and_filter_from_view__when_energy_supplier__returns_only_data_from
     # Assert
     assert set(expected_unordered_columns) == set(actual_df.columns)
     assert (
-        actual_df.where(
-            F.col(DataProductColumnNames.energy_supplier_id).isin(
-                [args.requesting_actor_id]
-            )
-        ).count()
-        > 0
+        actual_df.where(F.col(DataProductColumnNames.energy_supplier_id).isin([args.requesting_actor_id])).count() > 0
     )
     assert (
-        actual_df.where(
-            ~F.col(DataProductColumnNames.energy_supplier_id).isin(
-                [args.requesting_actor_id]
-            )
-        ).count()
-        == 0
+        actual_df.where(~F.col(DataProductColumnNames.energy_supplier_id).isin([args.requesting_actor_id])).count() == 0
     )
-    assert (
-        actual_df.select(F.col(DataProductColumnNames.charge_owner_id))
-        .distinct()
-        .count()
-        > 1
-    )
+    assert actual_df.select(F.col(DataProductColumnNames.charge_owner_id)).distinct().count() > 1
 
 
 def test_read_and_filter_from_view__when_datahub_administrator__returns_all_suppliers_and_charge_owners(
@@ -194,12 +160,8 @@ def test_read_and_filter_from_view__when_datahub_administrator__returns_all_supp
     monthly_amounts_read_and_filter_mock_repository: Mock,
 ) -> None:
     # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
-    standard_wholesale_fixing_scenario_args.requesting_actor_id = (
-        DATAHUB_ADMINISTRATOR_ID
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
+    standard_wholesale_fixing_scenario_args.requesting_actor_id = DATAHUB_ADMINISTRATOR_ID
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
     expected_unordered_columns = get_expected_unordered_columns()
 
@@ -211,15 +173,8 @@ def test_read_and_filter_from_view__when_datahub_administrator__returns_all_supp
 
     # Assert
     assert set(expected_unordered_columns) == set(actual_df.columns)
-    assert (
-        actual_df.select(F.col(DataProductColumnNames.energy_supplier_id)).count() > 1
-    )
-    assert (
-        actual_df.select(F.col(DataProductColumnNames.charge_owner_id))
-        .distinct()
-        .count()
-        > 1
-    )
+    assert actual_df.select(F.col(DataProductColumnNames.energy_supplier_id)).count() > 1
+    assert actual_df.select(F.col(DataProductColumnNames.charge_owner_id)).distinct().count() > 1
 
 
 @pytest.mark.parametrize(
@@ -236,20 +191,14 @@ def test_read_and_filter_from_view__when_grid_or_system_operator__returns_multip
     actor_id: str,
 ) -> None:
     # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        requesting_actor_market_role
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = requesting_actor_market_role
     standard_wholesale_fixing_scenario_args.requesting_actor_id = actor_id
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
 
     standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = dict(
-        list(
-            standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area.items()
-        )[:-1]
+        list(standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area.items())[:-1]
     )
-    targeted_grid_area = list(
-        standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area
-    )[0]
+    targeted_grid_area = list(standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area)[0]
 
     expected_unordered_columns = get_expected_unordered_columns()
 
@@ -262,24 +211,9 @@ def test_read_and_filter_from_view__when_grid_or_system_operator__returns_multip
     # Assert
     assert set(expected_unordered_columns) == set(actual_df.columns)
     assert actual_df.count() > 0
-    assert (
-        actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])
-        ).count()
-        > 0
-    )
-    assert (
-        actual_df.where(
-            ~F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])
-        ).count()
-        == 0
-    )
-    assert (
-        actual_df.select(F.col(DataProductColumnNames.energy_supplier_id))
-        .distinct()
-        .count()
-        > 1
-    )
+    assert actual_df.where(F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])).count() > 0
+    assert actual_df.where(~F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])).count() == 0
+    assert actual_df.select(F.col(DataProductColumnNames.energy_supplier_id)).distinct().count() > 1
 
 
 def test_filter_monthly_amounts_per_charge__when_grid_access_provider__returns_their_charges_and_correct_tax(
@@ -344,9 +278,7 @@ def test_filter_monthly_amounts_per_charge__when_grid_access_provider__returns_t
     # Assert
     assert actual_df.count() == expected_count
     assert (
-        actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])
-        ).count()
+        actual_df.where(F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])).count()
         == expected_count
     )
     assert actual_df.select(DataProductColumnNames.is_tax).distinct().count() == 2
@@ -414,12 +346,7 @@ def test_filter_monthly_amounts_per_charge__when_system_operator__returns_their_
     # Assert
     assert actual_df.count() == expected_count
     assert (
-        actual_df.where(
-            F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])
-        ).count()
+        actual_df.where(F.col(DataProductColumnNames.grid_area_code).isin([targeted_grid_area])).count()
         == expected_count
     )
-    assert (
-        actual_df.filter(~F.col(DataProductColumnNames.is_tax)).count()
-        == expected_count
-    )
+    assert actual_df.filter(~F.col(DataProductColumnNames.is_tax)).count() == expected_count

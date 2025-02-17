@@ -21,15 +21,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
-
-from settlement_report_job.entry_points.entry_point import (
+from geh_settlement_report.entry_points.entry_point import (
     start_task_with_deps,
 )
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from settlement_report_job.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.entry_points.tasks.task_type import TaskType
+
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
@@ -95,15 +95,11 @@ class TestWhenInvokedWithArguments:
         workspace_id = integration_test_configuration.get_analytics_workspace_id()
 
         def assert_logged():
-            actual = logs_client.query_workspace(
-                workspace_id, query, timespan=timedelta(minutes=5)
-            )
+            actual = logs_client.query_workspace(workspace_id, query, timespan=timedelta(minutes=5))
             assert_row_count(actual, 1)
 
         # Assert, but timeout if not succeeded
-        wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
-        )
+        wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
 
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
         self,
@@ -126,9 +122,7 @@ class TestWhenInvokedWithArguments:
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
         standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())
-        standard_wholesale_fixing_scenario_args.calculation_type = (
-            CalculationType.BALANCE_FIXING
-        )
+        standard_wholesale_fixing_scenario_args.calculation_type = CalculationType.BALANCE_FIXING
         standard_wholesale_fixing_scenario_args.grid_area_codes = [
             "8054"
         ]  # Should produce an error with balance fixing
@@ -173,48 +167,34 @@ class TestWhenInvokedWithArguments:
         workspace_id = integration_test_configuration.get_analytics_workspace_id()
 
         def assert_logged():
-            actual = logs_client.query_workspace(
-                workspace_id, query, timespan=timedelta(minutes=5)
-            )
+            actual = logs_client.query_workspace(workspace_id, query, timespan=timedelta(minutes=5))
             # There should be two counts, one from the arg_parser and one
             assert_row_count(actual, 1)
 
         # Assert, but timeout if not succeeded
-        wait_for_condition(
-            assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10)
-        )
+        wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
 
     @staticmethod
     def prepare_command_line_arguments(
         standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     ) -> None:
-        standard_wholesale_fixing_scenario_args.report_id = str(
-            uuid.uuid4()
-        )  # Ensure unique report id
+        standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())  # Ensure unique report id
         sys.argv = []
         sys.argv.append(
             "--entry-point=execute_wholesale_results"
         )  # Workaround as the parse command line arguments starts with the second argument
-        sys.argv.append(
-            f"--report-id={str(standard_wholesale_fixing_scenario_args.report_id)}"
-        )
+        sys.argv.append(f"--report-id={str(standard_wholesale_fixing_scenario_args.report_id)}")
         sys.argv.append(
             f"--period-start={str(standard_wholesale_fixing_scenario_args.period_start.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
         )
         sys.argv.append(
             f"--period-end={str(standard_wholesale_fixing_scenario_args.period_end.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
         )
-        sys.argv.append(
-            f"--calculation-type={str(standard_wholesale_fixing_scenario_args.calculation_type.value)}"
-        )
+        sys.argv.append(f"--calculation-type={str(standard_wholesale_fixing_scenario_args.calculation_type.value)}")
         sys.argv.append("--requesting-actor-market-role=datahub_administrator")
         sys.argv.append("--requesting-actor-id=1234567890123")
-        sys.argv.append(
-            f"--grid-area-codes={str(standard_wholesale_fixing_scenario_args.grid_area_codes)}"
-        )
-        sys.argv.append(
-            '--calculation-id-by-grid-area={"804": "bf6e1249-d4c2-4ec2-8ce5-4c7fe8756253"}'
-        )
+        sys.argv.append(f"--grid-area-codes={str(standard_wholesale_fixing_scenario_args.grid_area_codes)}")
+        sys.argv.append('--calculation-id-by-grid-area={"804": "bf6e1249-d4c2-4ec2-8ce5-4c7fe8756253"}')
 
 
 def wait_for_condition(callback: Callable, *, timeout: timedelta, step: timedelta):

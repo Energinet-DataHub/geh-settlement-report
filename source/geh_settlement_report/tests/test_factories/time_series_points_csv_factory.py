@@ -1,16 +1,15 @@
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-from pyspark.sql import SparkSession, DataFrame
-
-from settlement_report_job.domain.utils.csv_column_names import (
+from geh_settlement_report.domain.utils.csv_column_names import (
     CsvColumnNames,
     EphemeralColumns,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
-    MeteringPointTypeDataProductValue,
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
+    MeteringPointTypeDataProductValue,
 )
+from pyspark.sql import DataFrame, SparkSession
 
 DEFAULT_METERING_POINT_TYPE = MeteringPointTypeDataProductValue.CONSUMPTION
 DEFAULT_START_OF_DAY = datetime(2024, 1, 1, 23)
@@ -54,14 +53,9 @@ def create(
                     row[EphemeralColumns.grid_area_code_partitioning] = grid_area_code
 
                 for j in range(
-                    25
-                    if data_spec.resolution.value
-                    == MeteringPointResolutionDataProductValue.HOUR
-                    else 100
+                    25 if data_spec.resolution.value == MeteringPointResolutionDataProductValue.HOUR else 100
                 ):
-                    row[f"{CsvColumnNames.energy_quantity}{j + 1}"] = (
-                        data_spec.energy_quantity
-                    )
+                    row[f"{CsvColumnNames.energy_quantity}{j + 1}"] = data_spec.energy_quantity
                 rows.append(row)
 
     df = spark.createDataFrame(rows)

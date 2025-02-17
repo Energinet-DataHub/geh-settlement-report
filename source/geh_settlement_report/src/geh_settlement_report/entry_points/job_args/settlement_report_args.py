@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
 
 
 @dataclass

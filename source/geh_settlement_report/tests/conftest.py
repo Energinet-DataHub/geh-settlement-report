@@ -21,13 +21,13 @@ from typing import Callable, Generator
 import pytest
 import yaml
 from delta import configure_spark_with_delta_pip
-from pyspark.sql import SparkSession
-
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
+from pyspark.sql import SparkSession
+
 from tests.data_seeding import (
     standard_balance_fixing_scenario_data_generator,
     standard_wholesale_fixing_scenario_data_generator,
@@ -103,9 +103,7 @@ def standard_wholesale_fixing_scenario_args(
 def standard_wholesale_fixing_scenario_datahub_admin_args(
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ) -> SettlementReportArgs:
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.DATAHUB_ADMINISTRATOR
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
     return standard_wholesale_fixing_scenario_args
 
@@ -114,12 +112,8 @@ def standard_wholesale_fixing_scenario_datahub_admin_args(
 def standard_wholesale_fixing_scenario_energy_supplier_args(
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ) -> SettlementReportArgs:
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.ENERGY_SUPPLIER
-    )
-    energy_supplier_id = (
-        standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
+    energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
     standard_wholesale_fixing_scenario_args.requesting_actor_id = energy_supplier_id
     standard_wholesale_fixing_scenario_args.energy_supplier_ids = [energy_supplier_id]
     return standard_wholesale_fixing_scenario_args
@@ -129,9 +123,7 @@ def standard_wholesale_fixing_scenario_energy_supplier_args(
 def standard_wholesale_fixing_scenario_grid_access_provider_args(
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ) -> SettlementReportArgs:
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.GRID_ACCESS_PROVIDER
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
     standard_wholesale_fixing_scenario_args.requesting_actor_id = (
         standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITH_TAX
     )
@@ -143,9 +135,7 @@ def standard_wholesale_fixing_scenario_grid_access_provider_args(
 def standard_wholesale_fixing_scenario_system_operator_args(
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ) -> SettlementReportArgs:
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.SYSTEM_OPERATOR
-    )
+    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.SYSTEM_OPERATOR
     standard_wholesale_fixing_scenario_args.requesting_actor_id = (
         standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX
     )
@@ -180,9 +170,7 @@ def standard_balance_fixing_scenario_args(
 def standard_balance_fixing_scenario_grid_access_provider_args(
     standard_balance_fixing_scenario_args: SettlementReportArgs,
 ) -> SettlementReportArgs:
-    standard_balance_fixing_scenario_args.requesting_actor_market_role = (
-        MarketRole.GRID_ACCESS_PROVIDER
-    )
+    standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
     standard_balance_fixing_scenario_args.requesting_actor_id = (
         standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITH_TAX
     )
@@ -195,38 +183,20 @@ def standard_balance_fixing_scenario_data_written_to_delta(
     spark: SparkSession,
     input_database_location: str,
 ) -> None:
-    time_series_points_df = standard_balance_fixing_scenario_data_generator.create_metering_point_time_series(
-        spark
-    )
-    write_metering_point_time_series_to_delta_table(
-        spark, time_series_points_df, input_database_location
-    )
+    time_series_points_df = standard_balance_fixing_scenario_data_generator.create_metering_point_time_series(spark)
+    write_metering_point_time_series_to_delta_table(spark, time_series_points_df, input_database_location)
 
-    metering_point_periods = (
-        standard_balance_fixing_scenario_data_generator.create_metering_point_periods(
-            spark
-        )
-    )
-    write_metering_point_periods_to_delta_table(
-        spark, metering_point_periods, input_database_location
-    )
+    metering_point_periods = standard_balance_fixing_scenario_data_generator.create_metering_point_periods(spark)
+    write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
 
     energy_df = standard_balance_fixing_scenario_data_generator.create_energy(spark)
     write_energy_to_delta_table(spark, energy_df, input_database_location)
 
-    energy_per_es_df = (
-        standard_balance_fixing_scenario_data_generator.create_energy_per_es(spark)
-    )
+    energy_per_es_df = standard_balance_fixing_scenario_data_generator.create_energy_per_es(spark)
     write_energy_per_es_to_delta_table(spark, energy_per_es_df, input_database_location)
 
-    latest_calculations_by_day = (
-        standard_balance_fixing_scenario_data_generator.create_latest_calculations(
-            spark
-        )
-    )
-    write_latest_calculations_by_day_to_delta_table(
-        spark, latest_calculations_by_day, input_database_location
-    )
+    latest_calculations_by_day = standard_balance_fixing_scenario_data_generator.create_latest_calculations(spark)
+    write_latest_calculations_by_day_to_delta_table(spark, latest_calculations_by_day, input_database_location)
 
 
 @pytest.fixture(scope="session")
@@ -234,42 +204,20 @@ def standard_wholesale_fixing_scenario_data_written_to_delta(
     spark: SparkSession,
     input_database_location: str,
 ) -> None:
-    metering_point_periods = (
-        standard_wholesale_fixing_scenario_data_generator.create_metering_point_periods(
-            spark
-        )
-    )
-    write_metering_point_periods_to_delta_table(
-        spark, metering_point_periods, input_database_location
-    )
+    metering_point_periods = standard_wholesale_fixing_scenario_data_generator.create_metering_point_periods(spark)
+    write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
 
-    time_series_points = standard_wholesale_fixing_scenario_data_generator.create_metering_point_time_series(
-        spark
-    )
-    write_metering_point_time_series_to_delta_table(
-        spark, time_series_points, input_database_location
-    )
+    time_series_points = standard_wholesale_fixing_scenario_data_generator.create_metering_point_time_series(spark)
+    write_metering_point_time_series_to_delta_table(spark, time_series_points, input_database_location)
 
-    charge_link_periods = (
-        standard_wholesale_fixing_scenario_data_generator.create_charge_link_periods(
-            spark
-        )
-    )
-    write_charge_link_periods_to_delta_table(
-        spark, charge_link_periods, input_database_location
-    )
+    charge_link_periods = standard_wholesale_fixing_scenario_data_generator.create_charge_link_periods(spark)
+    write_charge_link_periods_to_delta_table(spark, charge_link_periods, input_database_location)
 
-    charge_price_points = (
-        standard_wholesale_fixing_scenario_data_generator.create_charge_price_points(
-            spark
-        )
-    )
-    write_charge_price_points_to_delta_table(
-        spark, charge_price_points, input_database_location
-    )
+    charge_price_points = standard_wholesale_fixing_scenario_data_generator.create_charge_price_points(spark)
+    write_charge_price_points_to_delta_table(spark, charge_price_points, input_database_location)
 
-    charge_price_information_periods = standard_wholesale_fixing_scenario_data_generator.create_charge_price_information_periods(
-        spark
+    charge_price_information_periods = (
+        standard_wholesale_fixing_scenario_data_generator.create_charge_price_information_periods(spark)
     )
     write_charge_price_information_periods_to_delta_table(
         spark, charge_price_information_periods, input_database_location
@@ -278,34 +226,18 @@ def standard_wholesale_fixing_scenario_data_written_to_delta(
     energy = standard_wholesale_fixing_scenario_data_generator.create_energy(spark)
     write_energy_to_delta_table(spark, energy, input_database_location)
 
-    energy_per_es = (
-        standard_wholesale_fixing_scenario_data_generator.create_energy_per_es(spark)
-    )
+    energy_per_es = standard_wholesale_fixing_scenario_data_generator.create_energy_per_es(spark)
     write_energy_per_es_to_delta_table(spark, energy_per_es, input_database_location)
 
-    amounts_per_charge = (
-        standard_wholesale_fixing_scenario_data_generator.create_amounts_per_charge(
-            spark
-        )
-    )
-    write_amounts_per_charge_to_delta_table(
-        spark, amounts_per_charge, input_database_location
-    )
+    amounts_per_charge = standard_wholesale_fixing_scenario_data_generator.create_amounts_per_charge(spark)
+    write_amounts_per_charge_to_delta_table(spark, amounts_per_charge, input_database_location)
 
     monthly_amounts_per_charge_df = standard_wholesale_fixing_scenario_data_generator.create_monthly_amounts_per_charge(
         spark
     )
-    write_monthly_amounts_per_charge_to_delta_table(
-        spark, monthly_amounts_per_charge_df, input_database_location
-    )
-    total_monthly_amounts_df = (
-        standard_wholesale_fixing_scenario_data_generator.create_total_monthly_amounts(
-            spark
-        )
-    )
-    write_total_monthly_amounts_to_delta_table(
-        spark, total_monthly_amounts_df, input_database_location
-    )
+    write_monthly_amounts_per_charge_to_delta_table(spark, monthly_amounts_per_charge_df, input_database_location)
+    total_monthly_amounts_df = standard_wholesale_fixing_scenario_data_generator.create_total_monthly_amounts(spark)
+    write_total_monthly_amounts_to_delta_table(spark, total_monthly_amounts_df, input_database_location)
 
 
 @pytest.fixture(scope="session")
@@ -440,9 +372,7 @@ def configure_dummy_logging() -> None:
 
     from geh_common.telemetry.logging_configuration import configure_logging
 
-    configure_logging(
-        cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name"
-    )
+    configure_logging(cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name")
 
 
 @pytest.fixture(scope="session")
@@ -475,9 +405,7 @@ def integration_test_configuration(tests_path: str) -> IntegrationTestConfigurat
             os.environ[key] = value
 
     if "AZURE_KEYVAULT_URL" in settings:
-        return IntegrationTestConfiguration(
-            azure_keyvault_url=settings["AZURE_KEYVAULT_URL"]
-        )
+        return IntegrationTestConfiguration(azure_keyvault_url=settings["AZURE_KEYVAULT_URL"])
 
     logging.error(
         f"Integration test configuration could not be loaded from {settings_file_path} or environment variables."

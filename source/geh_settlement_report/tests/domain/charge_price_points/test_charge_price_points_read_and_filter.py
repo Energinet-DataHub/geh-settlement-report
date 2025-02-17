@@ -4,17 +4,16 @@ from unittest.mock import Mock
 from uuid import UUID
 
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-
 import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
-from settlement_report_job.domain.charge_price_points.read_and_filter import (
+from geh_settlement_report.domain.charge_price_points.read_and_filter import (
     read_and_filter,
 )
-from settlement_report_job.domain.utils.market_role import MarketRole
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from pyspark.sql import DataFrame, SparkSession
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE
@@ -49,9 +48,7 @@ def _get_repository_mock(
     mock_repository.read_charge_link_periods.return_value = charge_link_periods
     mock_repository.read_charge_price_points.return_value = charge_price_points
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -349,14 +346,10 @@ def test_energy_supplier_ids_scenarios(
 
     metering_point_periods = metering_point_periods_factory.create(
         spark,
-        default_data.create_metering_point_periods_row(
-            energy_supplier_id=energy_supplier_id
-        ),
+        default_data.create_metering_point_periods_row(energy_supplier_id=energy_supplier_id),
     )
 
-    charge_link_periods = charge_link_periods_factory.create(
-        spark, default_data.create_charge_link_periods_row()
-    )
+    charge_link_periods = charge_link_periods_factory.create(spark, default_data.create_charge_link_periods_row())
 
     charge_price_points = charge_price_points_factory.create(
         spark,
@@ -430,23 +423,17 @@ def test_calculation_id_by_grid_area_scenarios(
 
     charge_link_periods = charge_link_periods_factory.create(
         spark,
-        default_data.create_charge_link_periods_row(
-            calculation_id=default_data.DEFAULT_CALCULATION_ID
-        ),
+        default_data.create_charge_link_periods_row(calculation_id=default_data.DEFAULT_CALCULATION_ID),
     )
 
     charge_price_points = charge_price_points_factory.create(
         spark,
-        default_data.create_charge_price_points_row(
-            calculation_id=default_data.DEFAULT_CALCULATION_ID
-        ),
+        default_data.create_charge_price_points_row(calculation_id=default_data.DEFAULT_CALCULATION_ID),
     )
 
     charge_price_information_periods = charge_price_information_periods_factory.create(
         spark,
-        default_data.create_charge_price_information_periods_row(
-            calculation_id=default_data.DEFAULT_CALCULATION_ID
-        ),
+        default_data.create_charge_price_information_periods_row(calculation_id=default_data.DEFAULT_CALCULATION_ID),
     )
 
     mock_repository = _get_repository_mock(

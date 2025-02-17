@@ -1,16 +1,15 @@
 from unittest.mock import Mock
 
-from pyspark.sql import DataFrame, SparkSession
-
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
-from settlement_report_job.domain.metering_point_periods.metering_point_periods_factory import (
+from geh_settlement_report.domain.metering_point_periods.metering_point_periods_factory import (
     create_metering_point_periods,
 )
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
+from pyspark.sql import DataFrame, SparkSession
 from tests.test_factories import latest_calculations_factory
 from tests.utils import Dates as d
 
@@ -29,9 +28,7 @@ def _get_repository_mock(
         mock_repository.read_charge_link_periods.return_value = charge_link_periods
 
     if charge_price_information_periods:
-        mock_repository.read_charge_price_information_periods.return_value = (
-            charge_price_information_periods
-        )
+        mock_repository.read_charge_price_information_periods.return_value = charge_price_information_periods
 
     return mock_repository
 
@@ -90,9 +87,7 @@ def test_create_metering_point_periods__when_and_metering_point_period_exceeds_s
     )
     metering_point_periods = input_metering_point_periods_factory.create(
         spark,
-        default_data.create_metering_point_periods_row(
-            from_date=d.JAN_1ST, to_date=d.JAN_4TH
-        ),
+        default_data.create_metering_point_periods_row(from_date=d.JAN_1ST, to_date=d.JAN_4TH),
     )
     mock_repository = _get_repository_mock(metering_point_periods, latest_calculations)
 

@@ -13,23 +13,24 @@
 # limitations under the License.
 from collections.abc import Callable
 
-from pyspark.sql import DataFrame, functions as F
-
 from geh_common.telemetry import Logger, use_span
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.infrastructure.wholesale.column_names import (
-    DataProductColumnNames,
-)
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.domain.utils.factory_filters import (
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
+from geh_settlement_report.domain.utils.factory_filters import (
+    filter_by_calculation_id_by_grid_area,
     filter_by_energy_supplier_ids,
     filter_by_grid_area_codes,
-    filter_by_calculation_id_by_grid_area,
     read_and_filter_by_latest_calculations,
+)
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.infrastructure.wholesale.column_names import (
+    DataProductColumnNames,
 )
 
 log = Logger(__name__)
@@ -46,12 +47,8 @@ def _get_view_read_function(
 
 
 @use_span()
-def read_and_filter_from_view(
-    args: SettlementReportArgs, repository: WholesaleRepository
-) -> DataFrame:
-    read_from_repository_func = _get_view_read_function(
-        args.requesting_actor_market_role, repository
-    )
+def read_and_filter_from_view(args: SettlementReportArgs, repository: WholesaleRepository) -> DataFrame:
+    read_from_repository_func = _get_view_read_function(args.requesting_actor_market_role, repository)
 
     df = read_from_repository_func().where(
         (F.col(DataProductColumnNames.time) >= args.period_start)
@@ -74,8 +71,6 @@ def read_and_filter_from_view(
         )
     elif args.calculation_id_by_grid_area:
         # args.calculation_id_by_grid_area should never be null when not BALANCE_FIXING.
-        df = df.where(
-            filter_by_calculation_id_by_grid_area(args.calculation_id_by_grid_area)
-        )
+        df = df.where(filter_by_calculation_id_by_grid_area(args.calculation_id_by_grid_area))
 
     return df

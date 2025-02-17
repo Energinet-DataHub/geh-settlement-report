@@ -1,29 +1,27 @@
 from typing import Any
 
+from geh_common.telemetry import use_span
 from pyspark.sql import SparkSession
 
-from settlement_report_job.infrastructure import csv_writer
-from settlement_report_job.infrastructure.repository import WholesaleRepository
-from settlement_report_job.domain.charge_price_points.charge_price_points_factory import (
+from geh_settlement_report.domain.charge_price_points.charge_price_points_factory import (
     create_charge_price_points,
 )
-from settlement_report_job.domain.utils.report_data_type import ReportDataType
-from settlement_report_job.domain.charge_price_points.order_by_columns import (
+from geh_settlement_report.domain.charge_price_points.order_by_columns import (
     order_by_columns,
 )
-from settlement_report_job.entry_points.tasks.task_base import (
-    TaskBase,
-)
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_common.telemetry import use_span
+from geh_settlement_report.entry_points.tasks.task_base import (
+    TaskBase,
+)
+from geh_settlement_report.infrastructure import csv_writer
+from geh_settlement_report.infrastructure.repository import WholesaleRepository
 
 
 class ChargePricePointsTask(TaskBase):
-    def __init__(
-        self, spark: SparkSession, dbutils: Any, args: SettlementReportArgs
-    ) -> None:
+    def __init__(self, spark: SparkSession, dbutils: Any, args: SettlementReportArgs) -> None:
         super().__init__(spark=spark, dbutils=dbutils, args=args)
 
     @use_span()
@@ -35,9 +33,7 @@ class ChargePricePointsTask(TaskBase):
             return
 
         repository = WholesaleRepository(self.spark, self.args.catalog_name)
-        charge_price_points = create_charge_price_points(
-            args=self.args, repository=repository
-        )
+        charge_price_points = create_charge_price_points(args=self.args, repository=repository)
 
         csv_writer.write(
             dbutils=self.dbutils,

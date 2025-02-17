@@ -1,6 +1,6 @@
-from pyspark.sql import SparkSession, functions as F
-
-from settlement_report_job.domain.utils.map_from_dict import map_from_dict
+from geh_settlement_report.domain.utils.map_from_dict import map_from_dict
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 
 
 def test_map_from_dict__when_applied_to_new_col__returns_df_with_new_col(

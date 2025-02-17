@@ -1,5 +1,5 @@
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.domain.utils.market_role import MarketRole
 
 
 def order_by_columns(requesting_actor_market_role: MarketRole) -> list[str]:

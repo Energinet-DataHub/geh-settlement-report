@@ -1,26 +1,24 @@
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from typing import Union, List
+from typing import List, Union
 
-from pyspark.sql import SparkSession, DataFrame
-
-
-from settlement_report_job.infrastructure.wholesale.column_names import (
+from geh_settlement_report.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from settlement_report_job.infrastructure.wholesale.data_values import (
+from geh_settlement_report.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
-    ChargeTypeDataProductValue,
     ChargeResolutionDataProductValue,
+    ChargeTypeDataProductValue,
     MeteringPointTypeDataProductValue,
 )
-from settlement_report_job.infrastructure.wholesale.data_values.settlement_method import (
+from geh_settlement_report.infrastructure.wholesale.data_values.settlement_method import (
     SettlementMethodDataProductValue,
 )
-from settlement_report_job.infrastructure.wholesale.schemas.amounts_per_charge_v1 import (
+from geh_settlement_report.infrastructure.wholesale.schemas.amounts_per_charge_v1 import (
     amounts_per_charge_v1,
 )
+from pyspark.sql import DataFrame, SparkSession
 
 
 @dataclass
@@ -75,9 +73,7 @@ def create(
             DataProductColumnNames.resolution: spec.resolution.value,
             DataProductColumnNames.quantity_unit: spec.quantity_unit,
             DataProductColumnNames.metering_point_type: spec.metering_point_type.value,
-            DataProductColumnNames.settlement_method: getattr(
-                spec.settlement_method, "value", None
-            ),
+            DataProductColumnNames.settlement_method: getattr(spec.settlement_method, "value", None),
             DataProductColumnNames.is_tax: spec.is_tax,
             DataProductColumnNames.currency: spec.currency,
             DataProductColumnNames.time: spec.time,

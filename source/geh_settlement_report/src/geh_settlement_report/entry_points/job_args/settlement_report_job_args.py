@@ -18,21 +18,21 @@ from argparse import Namespace
 
 import configargparse
 from configargparse import argparse
+from geh_common.telemetry import Logger, logging_configuration
 
-from settlement_report_job.entry_points.job_args.args_helper import (
+import geh_settlement_report.entry_points.job_args.environment_variables as env_vars
+from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.entry_points.job_args.args_helper import (
     valid_date,
     valid_energy_supplier_ids,
 )
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
-from settlement_report_job.infrastructure.paths import (
-    get_settlement_reports_output_path,
-)
-from geh_common.telemetry import Logger, logging_configuration
-from settlement_report_job.domain.utils.market_role import MarketRole
-from settlement_report_job.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-import settlement_report_job.entry_points.job_args.environment_variables as env_vars
+from geh_settlement_report.infrastructure.paths import (
+    get_settlement_reports_output_path,
+)
 
 
 def parse_command_line_arguments() -> Namespace:
@@ -53,9 +53,7 @@ def parse_job_arguments(
         )
 
         calculation_id_by_grid_area = (
-            _create_calculation_ids_by_grid_area_code(
-                job_args.calculation_id_by_grid_area
-            )
+            _create_calculation_ids_by_grid_area_code(job_args.calculation_id_by_grid_area)
             if job_args.calculation_type is not CalculationType.BALANCE_FIXING
             else None
         )
@@ -74,9 +72,7 @@ def parse_job_arguments(
             prevent_large_text_files=job_args.prevent_large_text_files,
             time_zone="Europe/Copenhagen",
             catalog_name=env_vars.get_catalog_name(),
-            settlement_reports_output_path=get_settlement_reports_output_path(
-                env_vars.get_catalog_name()
-            ),
+            settlement_reports_output_path=get_settlement_reports_output_path(env_vars.get_catalog_name()),
             include_basis_data=job_args.include_basis_data,
         )
 
@@ -98,18 +94,10 @@ def _parse_args_or_throw(command_line_args: list[str]) -> argparse.Namespace:
     p.add_argument("--requesting-actor-id", type=str, required=True)
     p.add_argument("--calculation-id-by-grid-area", type=str, required=False)
     p.add_argument("--grid-area-codes", type=str, required=False)
-    p.add_argument(
-        "--energy-supplier-ids", type=valid_energy_supplier_ids, required=False
-    )
-    p.add_argument(
-        "--split-report-by-grid-area", action="store_true"
-    )  # true if present, false otherwise
-    p.add_argument(
-        "--prevent-large-text-files", action="store_true"
-    )  # true if present, false otherwise
-    p.add_argument(
-        "--include-basis-data", action="store_true"
-    )  # true if present, false otherwise
+    p.add_argument("--energy-supplier-ids", type=valid_energy_supplier_ids, required=False)
+    p.add_argument("--split-report-by-grid-area", action="store_true")  # true if present, false otherwise
+    p.add_argument("--prevent-large-text-files", action="store_true")  # true if present, false otherwise
+    p.add_argument("--include-basis-data", action="store_true")  # true if present, false otherwise
 
     args, unknown_args = p.parse_known_args(args=command_line_args)
     if len(unknown_args):
@@ -128,9 +116,7 @@ def _create_grid_area_codes(grid_area_codes: str) -> list[str]:
     tokens = [token.strip() for token in grid_area_codes.strip("[]").split(",")]
 
     # Grid area codes must always consist of 3 digits
-    if any(
-        len(token) != 3 or any(c < "0" or c > "9" for c in token) for token in tokens
-    ):
+    if any(len(token) != 3 or any(c < "0" or c > "9" for c in token) for token in tokens):
         msg = "Grid area codes must consist of 3 digits"
         raise configargparse.ArgumentTypeError(msg)
 
@@ -141,9 +127,7 @@ def _create_calculation_ids_by_grid_area_code(json_str: str) -> dict[str, uuid.U
     try:
         calculation_id_by_grid_area = json.loads(json_str)
     except json.JSONDecodeError as e:
-        raise ValueError(
-            f"Failed to parse `calculation_id_by_grid_area` json format as dict[str, uuid]: {e}"
-        )
+        raise ValueError(f"Failed to parse `calculation_id_by_grid_area` json format as dict[str, uuid]: {e}")
 
     for grid_area, calculation_id in calculation_id_by_grid_area.items():
         try:
