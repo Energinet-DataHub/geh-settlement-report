@@ -88,7 +88,7 @@ class TestWhenInvokedWithArguments:
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.settlement_report_job.entry_points.job_args.settlement_report_job_args"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.entry_points.job_args.settlement_report_job_args"
         | count
         """
 
