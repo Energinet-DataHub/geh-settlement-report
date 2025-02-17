@@ -57,7 +57,7 @@ jobs:
     with:
       packages_directory: source
       tests_directory: tests
-      pytest_addopts: --ignore-glob='**/integration_tests/**'
+      pytest_addopts: --ignore-glob='**/integration_test/**'
       create_subsystem_release: true
   #
   # Reusable CI
@@ -66,7 +66,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@ci/python-cicd
     with:
       packages_directory: ${{ github.workspace }}
-      tests_directory: tests/integration_tests
+      tests_directory: tests/integration_test
       environment: AzureAuth
       azure_tenant_id: ${{ vars.integration_test_azure_tenant_id }}
       azure_subscription_id: ${{ vars.integration_test_azure_subscription_id }}
