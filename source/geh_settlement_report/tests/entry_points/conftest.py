@@ -12,7 +12,7 @@ def virtual_environment() -> Generator:
     activating the virtual environment from pytest."""
 
     # Create and activate the virtual environment
-    subprocess.call(["virtualenv", ".settlement-report-pytest"])
+    subprocess.call(["uv", "venv", ".settlement-report-pytest"])
     subprocess.call(
         "source .settlement-report-pytest/bin/activate",
         shell=True,
@@ -23,19 +23,22 @@ def virtual_environment() -> Generator:
 
     # Deactivate virtual environment upon test suite tear down
     subprocess.call("deactivate", shell=True, executable="/bin/bash")
+    subprocess.call(["rm", "-rf", ".settlement-report-pytest"])
 
 
 @pytest.fixture(scope="session")
-def installed_package(virtual_environment: Generator, settlement_report_job_container_path: str) -> None:
+def installed_package(
+    virtual_environment: Generator, settlement_report_job_container_path: str
+) -> None:
     """Ensures that the settlement report package is installed (after building it)."""
 
     # Build the package wheel
     os.chdir(settlement_report_job_container_path)
-    subprocess.call("python -m build --wheel", shell=True, executable="/bin/bash")
+    subprocess.call("uv build", shell=True, executable="/bin/bash")
 
     # Uninstall the package in case it was left by a cancelled test suite
     subprocess.call(
-        "pip uninstall -y package",
+        "uv pip uninstall geh_settlement_report",
         shell=True,
         executable="/bin/bash",
     )
@@ -43,7 +46,7 @@ def installed_package(virtual_environment: Generator, settlement_report_job_cont
     # Install wheel, which will also create console scripts for invoking
     # the entry points of the package
     subprocess.call(
-        f"pip install {settlement_report_job_container_path}/dist/opengeh_settlement_report-1.0-py3-none-any.whl",
+        f"uv pip install {settlement_report_job_container_path}/dist/geh_settlement_report*.whl",
         shell=True,
         executable="/bin/bash",
     )
