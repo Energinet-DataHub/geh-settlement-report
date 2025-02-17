@@ -64,11 +64,11 @@ class TestWhenInvokedWithArguments:
 
         # Act
         with patch(
-            "settlement_report_job.entry_points.tasks.task_factory.create",
+            "geh_settlement_report.entry_points.tasks.task_factory.create",
             task_factory_mock,
         ):
             with patch(
-                "settlement_report_job.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
                 return_value=None,
             ):
                 start_task_with_deps(
@@ -136,11 +136,11 @@ class TestWhenInvokedWithArguments:
         # Act
         with pytest.raises(SystemExit):
             with patch(
-                "settlement_report_job.entry_points.tasks.task_factory.create",
+                "geh_settlement_report.entry_points.tasks.task_factory.create",
                 task_factory_mock,
             ):
                 with patch(
-                    "settlement_report_job.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                    "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
                     return_value=None,
                 ):
                     start_task_with_deps(
