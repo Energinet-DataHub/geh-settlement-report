@@ -329,7 +329,7 @@ def test_when_parameters_for_wholesale__parses_parameters_from_contract(
 @pytest.mark.parametrize(
     "energy_supplier_ids_argument, expected_energy_suppliers_ids",
     [
-        ("[1234567890123]", ["1234567890123"]),
+        (["1234567890123"], ["1234567890123"]),
         ("[1234567890123]", ["1234567890123"]),
         ("[1234567890123, 2345678901234]", ["1234567890123", "2345678901234"]),
         ("[1234567890123,2345678901234]", ["1234567890123", "2345678901234"]),
@@ -344,15 +344,26 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
 ) -> None:
     # Arrange
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    print("SYS ARGS USED FOR INSTANTIATION 1:")
+    print(test_sys_args)
     test_sys_args = _substitute_energy_supplier_ids(
         test_sys_args, energy_supplier_ids_argument
     )
+    print("SYS ARGS USED FOR INSTANTIATION 2:")
+    print(test_sys_args)
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
             actual_args = SettlementReportArgs()
 
+    print("ACTUAL ARGS")
+    print(actual_args)
+
     # Assert
+    print("ACTUAL:")
+    print(actual_args.energy_supplier_ids)
+    print("EXPECTED:")
+    print(expected_energy_suppliers_ids)
     assert actual_args.energy_supplier_ids == expected_energy_suppliers_ids
 
 
