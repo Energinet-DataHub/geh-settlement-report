@@ -13,9 +13,12 @@
 # limitations under the License.
 import re
 import uuid
+import sys
+import os
 from datetime import datetime, timezone
 from unittest.mock import patch
 
+import pydantic
 import pytest
 
 from settlement_report_job.domain.utils.market_role import MarketRole
@@ -169,6 +172,7 @@ def test_when_parameters_for_wholesale__parses_parameters_from_contract(
     This test ensures that the settlement report job for wholesale calculations accepts
     the arguments that are provided by the client.
     """
+
     # Arrange
     with patch("sys.argv", sys_argv_from_contract_for_wholesale):
         with patch.dict("os.environ", job_environment_variables):
@@ -192,138 +196,128 @@ def test_when_parameters_for_wholesale__parses_parameters_from_contract(
     assert actual_args.include_basis_data is True
 
 
-# @pytest.mark.parametrize(
-#     "not_valid_calculation_id",
-#     [
-#         "not_valid",
-#         "",
-#         None,
-#         "c09b-4ee7-8c25-8dd56b564811",  # too short
-#     ],
-# )
-# def test_when_no_valid_calculation_id_for_grid_area__raises_uuid_value_error(
-#     job_environment_variables: dict,
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     not_valid_calculation_id: str,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#     pattern = r"--calculation-id-by-grid-area=(\{.*\})"
+@pytest.mark.parametrize(
+    "not_valid_calculation_id",
+    [
+        "not_valid",
+        "",
+        None,
+        "c09b-4ee7-8c25-8dd56b564811",  # too short
+    ],
+)
+def test_when_no_valid_calculation_id_for_grid_area__raises_uuid_value_error(
+    job_environment_variables: dict,
+    sys_argv_from_contract_for_wholesale: list[str],
+    not_valid_calculation_id: str,
+) -> None:
+    # Arrange
+    test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    pattern = r"--calculation-id-by-grid-area=(\{.*\})"
 
-#     for i, item in enumerate(test_sys_args):
-#         if re.search(pattern, item):
-#             test_sys_args[i] = re.sub(
-#                 pattern,
-#                 f'--calculation-id-by-grid-area={{"804": "{not_valid_calculation_id}"}}',  # noqa
-#                 item,
-#             )
-#             break
+    for i, item in enumerate(test_sys_args):
+        if re.search(pattern, item):
+            test_sys_args[i] = re.sub(
+                pattern,
+                f'--calculation-id-by-grid-area={{"804": "{not_valid_calculation_id}"}}',  # noqa
+                item,
+            )
+            break
 
-#     with patch("sys.argv", test_sys_args):
-#         with patch.dict("os.environ", job_environment_variables):
-#             with pytest.raises(ValueError) as exc_info:
-#                 command_line_args = parse_command_line_arguments()
-#                 # Act
-#                 parse_job_arguments(command_line_args)
+    with patch("sys.argv", test_sys_args):
+        with patch.dict("os.environ", job_environment_variables):
+            with pytest.raises(pydantic.ValidationError) as exc_info:
+                actual_args = SettlementReportArgs()
 
-#     # Assert
-#     assert "Calculation ID for grid area 804 is not a uuid" in str(exc_info.value)
+    # Assert
+    assert "Input should be a valid UUID" in str(exc_info.value)
 
 
-# @pytest.mark.parametrize(
-#     "prevent_large_text_files",
-#     [
-#         True,
-#         False,
-#     ],
-# )
-# def test_returns_expected_value_for_prevent_large_text_files(
-#     job_environment_variables: dict,
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     prevent_large_text_files: bool,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#     if not prevent_large_text_files:
-#         test_sys_args = [
-#             item
-#             for item in sys_argv_from_contract_for_wholesale
-#             if not item.startswith("--prevent-large-text-files")
-#         ]
+@pytest.mark.parametrize(
+    "prevent_large_text_files",
+    [
+        True,
+        False,
+    ],
+)
+def test_returns_expected_value_for_prevent_large_text_files(
+    job_environment_variables: dict,
+    sys_argv_from_contract_for_wholesale: list[str],
+    prevent_large_text_files: bool,
+) -> None:
+    # Arrange
+    test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    if not prevent_large_text_files:
+        test_sys_args = [
+            item
+            for item in sys_argv_from_contract_for_wholesale
+            if not item.startswith("--prevent-large-text-files")
+        ]
 
-#     with patch("sys.argv", test_sys_args):
-#         with patch.dict("os.environ", job_environment_variables):
-#             command_line_args = parse_command_line_arguments()
+    with patch("sys.argv", test_sys_args):
+        with patch.dict("os.environ", job_environment_variables):
+            print(sys.argv)
+            actual_args = SettlementReportArgs()
 
-#             # Act
-#             actual_args = parse_job_arguments(command_line_args)
-
-#     # Assert
-#     assert actual_args.prevent_large_text_files is prevent_large_text_files
+    # Assert
+    assert actual_args.prevent_large_text_files is prevent_large_text_files
 
 
-# @pytest.mark.parametrize(
-#     "split_report_by_grid_area",
-#     [
-#         True,
-#         False,
-#     ],
-# )
-# def test_returns_expected_value_for_split_report_by_grid_area(
-#     job_environment_variables: dict,
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     split_report_by_grid_area: bool,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#     if not split_report_by_grid_area:
-#         test_sys_args = [
-#             item
-#             for item in sys_argv_from_contract_for_wholesale
-#             if not item.startswith("--split-report-by-grid-area")
-#         ]
+@pytest.mark.parametrize(
+    "split_report_by_grid_area",
+    [
+        True,
+        False,
+    ],
+)
+def test_returns_expected_value_for_split_report_by_grid_area(
+    job_environment_variables: dict,
+    sys_argv_from_contract_for_wholesale: list[str],
+    split_report_by_grid_area: bool,
+) -> None:
+    # Arrange
+    test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    if not split_report_by_grid_area:
+        test_sys_args = [
+            item
+            for item in sys_argv_from_contract_for_wholesale
+            if not item.startswith("--split-report-by-grid-area")
+        ]
 
-#     with patch("sys.argv", test_sys_args):
-#         with patch.dict("os.environ", job_environment_variables):
-#             command_line_args = parse_command_line_arguments()
+    with patch("sys.argv", test_sys_args):
+        with patch.dict("os.environ", job_environment_variables):
+            actual_args = SettlementReportArgs()
 
-#             # Act
-#             actual_args = parse_job_arguments(command_line_args)
-
-#     # Assert
-#     assert actual_args.split_report_by_grid_area is split_report_by_grid_area
+    # Assert
+    assert actual_args.split_report_by_grid_area is split_report_by_grid_area
 
 
-# @pytest.mark.parametrize(
-#     "include_basis_data",
-#     [
-#         True,
-#         False,
-#     ],
-# )
-# def test_returns_expected_value_for_include_basis_data(
-#     job_environment_variables: dict,
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     include_basis_data: bool,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#     if not include_basis_data:
-#         test_sys_args = [
-#             item
-#             for item in sys_argv_from_contract_for_wholesale
-#             if not item.startswith("--include-basis-data")
-#         ]
+@pytest.mark.parametrize(
+    "include_basis_data",
+    [
+        True,
+        False,
+    ],
+)
+def test_returns_expected_value_for_include_basis_data(
+    job_environment_variables: dict,
+    sys_argv_from_contract_for_wholesale: list[str],
+    include_basis_data: bool,
+) -> None:
+    # Arrange
+    test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    if not include_basis_data:
+        test_sys_args = [
+            item
+            for item in sys_argv_from_contract_for_wholesale
+            if not item.startswith("--include-basis-data")
+        ]
 
-#     with patch("sys.argv", test_sys_args):
-#         with patch.dict("os.environ", job_environment_variables):
-#             command_line_args = parse_command_line_arguments()
+    with patch("sys.argv", test_sys_args):
+        with patch.dict("os.environ", job_environment_variables):
+            actual_args = SettlementReportArgs()
 
-#             # Act
-#             actual_args = parse_job_arguments(command_line_args)
-
-#     # Assert
-#     assert actual_args.include_basis_data is include_basis_data
+    # Assert
+    assert actual_args.include_basis_data is include_basis_data
 
 
 @pytest.mark.parametrize(
@@ -347,61 +341,45 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
 ) -> None:
     # Arrange
     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-    print("SYS ARGS USED FOR INSTANTIATION 1:")
-    print(test_sys_args)
     test_sys_args = _substitute_energy_supplier_ids(
         test_sys_args, energy_supplier_ids_argument
     )
-    print("SYS ARGS USED FOR INSTANTIATION 2:")
-    print(test_sys_args)
-
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
             actual_args = SettlementReportArgs()
 
-    print("ACTUAL ARGS")
-    print(actual_args)
-
-    print("ENERGY SUPPLIER IDs")
-    print(actual_args.energy_supplier_ids)
-
     # Assert
-    print("ACTUAL:")
-    print(actual_args.energy_supplier_ids)
-    print("EXPECTED:")
-    print(expected_energy_suppliers_ids)
     assert actual_args.energy_supplier_ids == expected_energy_suppliers_ids
 
 
-# @pytest.mark.parametrize(
-#     "energy_supplier_ids_argument",
-#     [
-#         "1234567890123",  # not a list
-#         "1234567890123 2345678901234",  # not a list
-#         "[123]",  # neither 13 nor 16 characters
-#         "[12345678901234]",  # neither 13 nor 16 characters
-#     ],
-# )
-# def test_when_invalid_energy_supplier_ids__raise_exception(
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     job_environment_variables: dict,
-#     energy_supplier_ids_argument: str,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#     test_sys_args = _substitute_energy_supplier_ids(
-#         test_sys_args, energy_supplier_ids_argument
-#     )
+@pytest.mark.parametrize(
+    "energy_supplier_ids_argument",
+    [
+        "1234567890123",  # not a list
+        "1234567890123 2345678901234",  # not a list
+        "[123]",  # neither 13 nor 16 characters
+        "[12345678901234]",  # neither 13 nor 16 characters
+    ],
+)
+def test_when_invalid_energy_supplier_ids__raise_exception(
+    sys_argv_from_contract_for_wholesale: list[str],
+    job_environment_variables: dict,
+    energy_supplier_ids_argument: str,
+) -> None:
+    # Arrange
+    test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+    test_sys_args = _substitute_energy_supplier_ids(
+        test_sys_args, energy_supplier_ids_argument
+    )
 
-#     with patch.dict("os.environ", job_environment_variables):
-#         with patch("sys.argv", test_sys_args):
-#             with pytest.raises(SystemExit) as error:
-#                 command_line_args = parse_command_line_arguments()
-#                 # Act
-#                 parse_job_arguments(command_line_args)
+    with patch.dict("os.environ", job_environment_variables):
+        with patch("sys.argv", test_sys_args):
+            # with pytest.raises(pydantic.ValidationError) as error:
+            actual_args = SettlementReportArgs()
+            print(actual_args)
 
-#     # Assert
-#     assert error.value.code != 0
+    # print("PRINTING")
+    # print(error)
 
 
 # def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(

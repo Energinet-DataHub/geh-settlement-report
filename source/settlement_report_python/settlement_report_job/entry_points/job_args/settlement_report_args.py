@@ -20,14 +20,14 @@ class SettlementReportArgs(PydanticParsingSettings):
     grid_area_codes: list[str] | None = None
     """ None if NOT balance fixing"""
     energy_supplier_ids: list[str] | None = None
-    split_report_by_grid_area: bool
-    prevent_large_text_files: bool
+    split_report_by_grid_area: bool = False  # implicit flag
+    prevent_large_text_files: bool = False  # implicit flag
     time_zone: str = "Europe/Copenhagen"
     catalog_name: str
     settlement_reports_output_path: str | None = None
 
     """The path to the folder where the settlement reports are stored."""
-    include_basis_data: bool
+    include_basis_data: bool = False  # implicit flag
 
     @field_validator("grid_area_codes")
     @classmethod
