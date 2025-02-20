@@ -84,7 +84,6 @@ def _start_task(task_type: TaskType) -> None:
     logging_settings = LoggingSettings(
         subsystem="settlement-report-aggregations",
         cloud_role_name="dbr-settlement-report",
-        orchestration_instance_id=uuid.uuid4(),  # Generate a random one until implemented in the CI
     )
     configure_logging(logging_settings=logging_settings)
     start_task_with_deps(task_type=task_type)
