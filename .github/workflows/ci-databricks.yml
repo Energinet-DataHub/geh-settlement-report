@@ -27,6 +27,7 @@ jobs:
     with:
       python_version: 3.11.7
       architecture: x64
+      operating_system: ubuntu-latest
       wheel_working_directory: ./source/settlement_report_python
       multiple_wheels: false
       should_include_assets: false
