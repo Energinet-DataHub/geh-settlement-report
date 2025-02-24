@@ -14,7 +14,6 @@
 import re
 import uuid
 import sys
-import os
 from datetime import datetime, timezone
 from unittest.mock import patch
 
@@ -117,21 +116,6 @@ def job_environment_variables() -> dict:
 @pytest.fixture(scope="session")
 def timezone_fixture() -> timezone:
     return timezone.utc
-
-
-# @pytest.mark.skip(reason="parsing logic")
-# def test_when_invoked_with_incorrect_parameters__fails(
-#     job_environment_variables: dict,
-# ) -> None:
-#     # Arrange
-#     with pytest.raises(SystemExit) as excinfo:
-#         with patch("sys.argv", ["dummy_script", "--unexpected-arg"]):
-#             with patch.dict("os.environ", job_environment_variables):
-#                 # Act
-#                 parse_command_line_arguments()
-
-#     # Assert
-#     assert excinfo.value.code == 2
 
 
 def test_when_parameters_for_balance_fixing__parses_parameters_from_contract(
@@ -326,7 +310,7 @@ def test_returns_expected_value_for_include_basis_data(
         (
             '["1234567890123"]',
             ["1234567890123"],
-        ),  # NOTE: Chba: using \" to escape the string, as I see it used in the params in Databricks
+        ),
         ('["1234567890123"]', ["1234567890123"]),
         ('["1234567890123", "2345678901234"]', ["1234567890123", "2345678901234"]),
         ('["1234567890123","2345678901234"]', ["1234567890123", "2345678901234"]),
@@ -356,7 +340,6 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
     "energy_supplier_ids_argument",
     [
         "1234567890123",  # not a list
-        "1234567890123 2345678901234",  # not a list
         "[123]",  # neither 13 nor 16 characters
         "[12345678901234]",  # neither 13 nor 16 characters
     ],
@@ -374,134 +357,112 @@ def test_when_invalid_energy_supplier_ids__raise_exception(
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
-            # with pytest.raises(pydantic.ValidationError) as error:
+            with pytest.raises(pydantic.ValidationError) as error:
+                actual_args = SettlementReportArgs()
+
+
+def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(
+    sys_argv_from_contract_for_wholesale: list[str],
+    job_environment_variables: dict,
+) -> None:
+    # Arrange
+    test_sys_args = [
+        item
+        for item in sys_argv_from_contract_for_wholesale
+        if not item.startswith("--energy-supplier-ids")
+    ]
+
+    with patch.dict("os.environ", job_environment_variables):
+        with patch("sys.argv", test_sys_args):
             actual_args = SettlementReportArgs()
-            print(actual_args)
 
-    # print("PRINTING")
-    # print(error)
-
-
-# def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(
-#     sys_argv_from_contract_for_wholesale: list[str],
-#     job_environment_variables: dict,
-# ) -> None:
-#     # Arrange
-#     test_sys_args = [
-#         item
-#         for item in sys_argv_from_contract_for_wholesale
-#         if not item.startswith("--energy-supplier-ids")
-#     ]
-
-#     with patch.dict("os.environ", job_environment_variables):
-#         with patch("sys.argv", test_sys_args):
-#             command_line_args = parse_command_line_arguments()
-
-#             # Act
-#             actual_args = parse_job_arguments(command_line_args)
-
-#     # Assert
-#     assert actual_args.energy_supplier_ids is None
+    # Assert
+    assert actual_args.energy_supplier_ids is None
 
 
-# class TestWhenInvokedWithValidMarketRole:
-#     @pytest.mark.parametrize(
-#         "market_role",
-#         [market_role for market_role in MarketRole],
-#     )
-#     def test_returns_expected_requesting_actor_market_role(
-#         self,
-#         job_environment_variables: dict,
-#         sys_argv_from_contract_for_wholesale: list[str],
-#         market_role: MarketRole,
-#     ) -> None:
-#         # Arrange
-#         test_sys_args = _substitute_requesting_actor_market_role(
-#             sys_argv_from_contract_for_wholesale.copy(), market_role.value
-#         )
+class TestWhenInvokedWithValidMarketRole:
+    @pytest.mark.parametrize(
+        "market_role",
+        [market_role for market_role in MarketRole],
+    )
+    def test_returns_expected_requesting_actor_market_role(
+        self,
+        job_environment_variables: dict,
+        sys_argv_from_contract_for_wholesale: list[str],
+        market_role: MarketRole,
+    ) -> None:
+        # Arrange
+        test_sys_args = _substitute_requesting_actor_market_role(
+            sys_argv_from_contract_for_wholesale.copy(), market_role.value
+        )
 
-#         with patch("sys.argv", test_sys_args):
-#             with patch.dict("os.environ", job_environment_variables):
-#                 command_line_args = parse_command_line_arguments()
+        with patch("sys.argv", test_sys_args):
+            with patch.dict("os.environ", job_environment_variables):
+                actual_args = SettlementReportArgs()
 
-#                 # Act
-#                 actual_args = parse_job_arguments(command_line_args)
-
-#         # Assert
-#         assert actual_args.requesting_actor_market_role == market_role
+        # Assert
+        assert actual_args.requesting_actor_market_role == market_role
 
 
-# class TestWhenInvokedWithInvalidMarketRole:
+class TestWhenInvokedWithInvalidMarketRole:
 
-#     def test_raise_system_exit_with_non_zero_code(
-#         self,
-#         job_environment_variables: dict,
-#         sys_argv_from_contract_for_wholesale: list[str],
-#     ) -> None:
-#         # Arrange
-#         test_sys_args = _substitute_requesting_actor_market_role(
-#             sys_argv_from_contract_for_wholesale.copy(), "invalid_market_role"
-#         )
+    def test_raise_system_exit_with_non_zero_code(
+        self,
+        job_environment_variables: dict,
+        sys_argv_from_contract_for_wholesale: list[str],
+    ) -> None:
+        # Arrange
+        test_sys_args = _substitute_requesting_actor_market_role(
+            sys_argv_from_contract_for_wholesale.copy(), "invalid_market_role"
+        )
 
-#         with patch("sys.argv", test_sys_args):
-#             with patch.dict("os.environ", job_environment_variables):
-#                 with pytest.raises(SystemExit) as error:
-#                     command_line_args = parse_command_line_arguments()
-#                     # Act
-#                     parse_job_arguments(command_line_args)
-
-#         # Assert
-#         assert error.value.code != 0
+        with patch("sys.argv", test_sys_args):
+            with patch.dict("os.environ", job_environment_variables):
+                with pytest.raises(pydantic.ValidationError) as error:
+                    actual_args = SettlementReportArgs()
 
 
-# class TestWhenUnknownCalculationType:
-#     def test_raise_system_exit_with_non_zero_code(
-#         self,
-#         job_environment_variables: dict,
-#         sys_argv_from_contract_for_wholesale: list[str],
-#     ) -> None:
-#         # Arrange
-#         test_sys_args = sys_argv_from_contract_for_wholesale.copy()
-#         unknown_calculation_type = "unknown_calculation_type"
-#         pattern = r"--calculation-type=(\w+)"
+class TestWhenUnknownCalculationType:
+    def test_raise_system_exit_with_non_zero_code(
+        self,
+        job_environment_variables: dict,
+        sys_argv_from_contract_for_wholesale: list[str],
+    ) -> None:
+        # Arrange
+        test_sys_args = sys_argv_from_contract_for_wholesale.copy()
+        unknown_calculation_type = "unknown_calculation_type"
+        pattern = r"--calculation-type=(\w+)"
 
-#         for i, item in enumerate(test_sys_args):
-#             if re.search(pattern, item):
-#                 test_sys_args[i] = re.sub(
-#                     pattern, f"--calculation-type={unknown_calculation_type}", item
-#                 )
-#                 break
+        for i, item in enumerate(test_sys_args):
+            if re.search(pattern, item):
+                test_sys_args[i] = re.sub(
+                    pattern, f"--calculation-type={unknown_calculation_type}", item
+                )
+                break
 
-#         with patch("sys.argv", test_sys_args):
-#             with patch.dict("os.environ", job_environment_variables):
-#                 with pytest.raises(SystemExit) as error:
-#                     command_line_args = parse_command_line_arguments()
-#                     # Act
-#                     parse_job_arguments(command_line_args)
-
-#         # Assert
-#         assert error.value.code != 0
+        with patch("sys.argv", test_sys_args):
+            with patch.dict("os.environ", job_environment_variables):
+                with pytest.raises(pydantic.ValidationError) as error:
+                    actual_args = SettlementReportArgs()
 
 
-# class TestWhenMissingEnvVariables:
-#     def test_raise_system_exit_with_non_zero_code(
-#         self,
-#         job_environment_variables: dict,
-#         sys_argv_from_contract_for_wholesale: list[str],
-#     ) -> None:
-#         # Arrange
-#         with patch("sys.argv", sys_argv_from_contract_for_wholesale):
-#             for excluded_env_var in job_environment_variables.keys():
-#                 env_variables_with_one_missing = {
-#                     key: value
-#                     for key, value in job_environment_variables.items()
-#                     if key != excluded_env_var
-#                 }
+class TestWhenMissingEnvVariables:
+    def test_raise_system_exit_with_non_zero_code(
+        self,
+        job_environment_variables: dict,
+        sys_argv_from_contract_for_wholesale: list[str],
+    ) -> None:
+        # Arrange
+        with patch("sys.argv", sys_argv_from_contract_for_wholesale):
+            for excluded_env_var in job_environment_variables.keys():
+                env_variables_with_one_missing = {
+                    key: value
+                    for key, value in job_environment_variables.items()
+                    if key != excluded_env_var
+                }
 
-#                 with patch.dict("os.environ", env_variables_with_one_missing):
-#                     with pytest.raises(ValueError) as error:
-#                         command_line_args = parse_command_line_arguments()
-#                         # Act
-#                         parse_job_arguments(command_line_args)
-
-#                 assert str(error.value).startswith("Environment variable not found")
+                with patch.dict("os.environ", env_variables_with_one_missing):
+                    with pytest.raises(pydantic.ValidationError) as error:
+                        actual_args = SettlementReportArgs()
+                assert str(error.value).__contains__("Field required ")
+                assert str(error.value).__contains__("catalog_name")

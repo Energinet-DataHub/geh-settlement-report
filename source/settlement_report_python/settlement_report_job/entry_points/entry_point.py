@@ -89,9 +89,7 @@ def _start_task(task_type: TaskType) -> None:
     start_task_with_deps(task_type=task_type)
 
 
-@start_trace(
-    initial_span_name="entry_point"
-)  # to mimic previous setup using (__name__)
+@start_trace()
 def start_task_with_deps(task_type: TaskType):
     add_extras(
         {"settlement_report_id": get_report_id_from_args()}
