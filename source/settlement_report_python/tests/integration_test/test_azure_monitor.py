@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import sys
 import time
 import uuid
@@ -34,6 +35,7 @@ class TestWhenInvokedWithArguments:
         self,
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
+        clean_up_logging,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -90,7 +92,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.settlement_report_job.entry_points.entry_point"
         | count
@@ -113,6 +115,7 @@ class TestWhenInvokedWithArguments:
         self,
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
+        clean_up_logging,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -138,7 +141,7 @@ class TestWhenInvokedWithArguments:
             updated_args, "--calculation-type", CalculationType.BALANCE_FIXING.value
         )
         if "--grid-area-codes" not in updated_args:
-            updated_args.extend(["--grid-area-codes", "[8054]"])
+            updated_args.extend(["--grid-area-codes", '["8054"]'])
 
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()
@@ -177,7 +180,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
         | where OuterMessage contains "Grid area codes must consist of 3 digits (100-999)"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count

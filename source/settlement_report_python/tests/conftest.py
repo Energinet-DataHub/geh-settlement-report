@@ -515,6 +515,24 @@ def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
         configure_logging(logging_settings=logging_settings, extras=None)
 
 
+@pytest.fixture(scope="function")
+def clean_up_logging():
+    """
+    Function that cleans up the Logging module prior to running integration tests, so logging can be reconfigured after use of configure_dummy_logging fixture
+    """
+    from geh_common.telemetry.logging_configuration import (
+        set_extras,
+        set_is_instrumented,
+        set_tracer,
+        set_tracer_name,
+    )
+
+    set_extras({})
+    set_is_instrumented(False)
+    set_tracer(None)
+    set_tracer_name("")
+
+
 @pytest.fixture(scope="session")
 def integration_test_configuration(tests_path: str) -> IntegrationTestConfiguration:
     """
