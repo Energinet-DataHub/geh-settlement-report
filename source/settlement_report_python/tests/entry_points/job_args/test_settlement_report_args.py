@@ -210,7 +210,7 @@ def test_when_no_valid_calculation_id_for_grid_area__raises_uuid_value_error(
     with patch("sys.argv", test_sys_args):
         with patch.dict("os.environ", job_environment_variables):
             with pytest.raises(pydantic.ValidationError) as exc_info:
-                actual_args = SettlementReportArgs()
+                SettlementReportArgs()
 
     # Assert
     assert "Input should be a valid UUID" in str(exc_info.value)
@@ -357,8 +357,8 @@ def test_when_invalid_energy_supplier_ids__raise_exception(
 
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
-            with pytest.raises(pydantic.ValidationError) as error:
-                actual_args = SettlementReportArgs()
+            with pytest.raises(pydantic.ValidationError):
+                SettlementReportArgs()
 
 
 def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(
@@ -418,8 +418,8 @@ class TestWhenInvokedWithInvalidMarketRole:
 
         with patch("sys.argv", test_sys_args):
             with patch.dict("os.environ", job_environment_variables):
-                with pytest.raises(pydantic.ValidationError) as error:
-                    actual_args = SettlementReportArgs()
+                with pytest.raises(pydantic.ValidationError):
+                    SettlementReportArgs()
 
 
 class TestWhenUnknownCalculationType:
@@ -442,8 +442,8 @@ class TestWhenUnknownCalculationType:
 
         with patch("sys.argv", test_sys_args):
             with patch.dict("os.environ", job_environment_variables):
-                with pytest.raises(pydantic.ValidationError) as error:
-                    actual_args = SettlementReportArgs()
+                with pytest.raises(pydantic.ValidationError):
+                    SettlementReportArgs()
 
 
 class TestWhenMissingEnvVariables:
@@ -463,6 +463,6 @@ class TestWhenMissingEnvVariables:
 
                 with patch.dict("os.environ", env_variables_with_one_missing):
                     with pytest.raises(pydantic.ValidationError) as error:
-                        actual_args = SettlementReportArgs()
+                        SettlementReportArgs()
                 assert str(error.value).__contains__("Field required ")
                 assert str(error.value).__contains__("catalog_name")

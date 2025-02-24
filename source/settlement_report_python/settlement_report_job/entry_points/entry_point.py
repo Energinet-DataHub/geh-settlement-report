@@ -90,7 +90,7 @@ def _start_task(task_type: TaskType) -> None:
 
 
 @start_trace()
-def start_task_with_deps(task_type: TaskType):
+def start_task_with_deps(task_type: TaskType) -> None:
     add_extras(
         {"settlement_report_id": get_report_id_from_args()}
     )  # Add extra before pydantic validation
@@ -102,7 +102,7 @@ def start_task_with_deps(task_type: TaskType):
     task.execute()
 
 
-def get_report_id_from_args() -> str:
+def get_report_id_from_args() -> str | None:
     """
     Checks if --report-id is part of sys.argv and returns its value.
 

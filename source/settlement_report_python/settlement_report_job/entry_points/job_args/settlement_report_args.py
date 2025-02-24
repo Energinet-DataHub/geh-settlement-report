@@ -31,7 +31,7 @@ class SettlementReportArgs(ApplicationSettings):
 
     @field_validator("grid_area_codes")
     @classmethod
-    def validate_grid_area_codes(cls, v):
+    def validate_grid_area_codes(cls, v) -> None:
         if v is None:
             return v
         if not all(
