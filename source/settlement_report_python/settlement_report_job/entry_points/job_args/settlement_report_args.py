@@ -38,7 +38,5 @@ class SettlementReportArgs(ApplicationSettings):
             isinstance(code, str) and code.isdigit() and 100 <= int(code) <= 999
             for code in v
         ):
-            raise ValueError(
-                "Grid area codes must be strings representing a three-digit number (100-999)."
-            )
+            raise ValueError("Grid area codes must consist of 3 digits (100-999).")
         return v
