@@ -50,14 +50,18 @@ jobs:
     uses: ./.github/workflows/ci-dotnet.yml
 
   ci_python:
+    name: Unit tests
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@ci/python-cicd
     with:
+      packages_directory: source
       create_subsystem_release: true
       pytest_addopts: --ignore-glob='**/integration_test/**'
 
   ci_python_integration:
+    name: Integration tests
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@ci/python-cicd
     with:
+      packages_directory: source
       tests_directory: tests/integration_test
       create_subsystem_release: true
       environment: AzureAuth

@@ -30,7 +30,6 @@ jobs:
   #
   # CD .NET
   #
-
   dotnet_promote_prerelease:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
@@ -41,6 +40,18 @@ jobs:
   #
   # CD Databricks
   #
+  cd_reusable:
+    name: Continuous Deployment
+    uses: Energinet-DataHub/.github/.github/workflows/python-uv-cd.yml@ci/python-cicd
+    with:
+      packages_directory: source
+      subsystem_name: common
+      notification_email: ada22214.energinet.onmicrosoft.com@emea.teams.ms # Settlement Report - Dev Test
+      sender_email: ${{ vars.email_internal_sender }}
+      dispatch_deployment_event: true
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      send_grid_api_key: ${{ secrets.sendgrid_instance_system_notifications_api_key }}
 
   databricks_promote_prerelease:
     needs: changes
@@ -53,7 +64,6 @@ jobs:
   # Dispatch deployment request
   # Only dispatch if there are changes to either dotnet or database migrations. No need to deploy if only C4 model views are updated.
   #
-
   dispatch_deploment_event:
     if: ${{ always() && !cancelled() && !failure() && (needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' || needs.changes.outputs.databricks == 'true') }}
     runs-on: ubuntu-latest
@@ -82,7 +92,6 @@ jobs:
   #
   # Send notification to teams channel if deployment dispatch failed
   #
-
   dispatch_failed:
     needs:
       [
