@@ -45,7 +45,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-cd.yml@ci/python-cicd
     with:
       packages_directory: source
-      subsystem_name: common
+      subsystem_name: settlement-report
       notification_email: ada22214.energinet.onmicrosoft.com@emea.teams.ms # Settlement Report - Dev Test
       sender_email: ${{ vars.email_internal_sender }}
       dispatch_deployment_event: true
