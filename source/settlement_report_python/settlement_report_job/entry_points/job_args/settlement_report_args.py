@@ -1,11 +1,13 @@
 import uuid
-from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Any, Annotated
 from pydantic import field_validator
+from pydantic_settings import NoDecode
 from geh_common.application.settings import ApplicationSettings
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
+
 from settlement_report_job.domain.utils.market_role import MarketRole
+import re
 
 
 class SettlementReportArgs(ApplicationSettings):
@@ -17,9 +19,9 @@ class SettlementReportArgs(ApplicationSettings):
     requesting_actor_id: str
     calculation_id_by_grid_area: dict[str, uuid.UUID] | None = None
     """ A dictionary containing grid area codes (keys) and calculation ids (values). None for balance fixing"""
-    grid_area_codes: list[str] | None = None
+    grid_area_codes: Annotated[list[str], NoDecode] | None = None
     """ None if NOT balance fixing"""
-    energy_supplier_ids: list[str] | None = None
+    energy_supplier_ids: Annotated[list[str], NoDecode] | None = None
     split_report_by_grid_area: bool = False  # implicit flag
     prevent_large_text_files: bool = False  # implicit flag
     time_zone: str = "Europe/Copenhagen"
@@ -29,7 +31,17 @@ class SettlementReportArgs(ApplicationSettings):
     """The path to the folder where the settlement reports are stored."""
     include_basis_data: bool = False  # implicit flag
 
-    @field_validator("grid_area_codes")
+    @field_validator("grid_area_codes", "energy_supplier_ids", mode="before")
+    @classmethod
+    def _validate_myvar(cls, value: Any) -> list[str] | None:
+        if not value:
+            return None
+        if isinstance(value, list):
+            return [str(item) for item in value]
+        else:
+            return re.findall(r"\d+", value)
+
+    @field_validator("grid_area_codes", mode="after")
     @classmethod
     def validate_grid_area_codes(cls, v: list[str] | None) -> list[str] | None:
         if v is None:
@@ -40,3 +52,16 @@ class SettlementReportArgs(ApplicationSettings):
         ):
             raise ValueError("Grid area codes must consist of 3 digits (100-999).")
         return v
+
+    @field_validator("energy_supplier_ids", mode="after")
+    @classmethod
+    def validate_energy_supplier_ids(cls, value: list[str] | None) -> list[str] | None:
+        if not value:
+            return None
+        if any(
+            (len(v) != 13 and len(v) != 16) or any(c < "0" or c > "9" for c in v)
+            for v in value
+        ):
+            msg = "Energy supplier IDs must consist of 13 or 16 digits"
+            raise ValueError(msg)
+        return value

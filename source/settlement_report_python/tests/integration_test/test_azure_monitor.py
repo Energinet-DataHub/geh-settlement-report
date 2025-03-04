@@ -141,7 +141,7 @@ class TestWhenInvokedWithArguments:
             updated_args, "--calculation-type", CalculationType.BALANCE_FIXING.value
         )
         if "--grid-area-codes" not in updated_args:
-            updated_args.extend(["--grid-area-codes", '["8054"]'])
+            updated_args.extend(["--grid-area-codes", "[8054]"])
 
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()

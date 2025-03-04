@@ -12,13 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uuid
-import os
-import sys
-from argparse import Namespace
-from collections.abc import Callable
 
-from opentelemetry.trace import SpanKind
+import sys
+
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry import Logger
 from geh_common.telemetry.logging_configuration import (
@@ -26,19 +22,15 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
     add_extras,
 )
-from geh_common.telemetry.span_recording import span_record_exception
 from settlement_report_job.entry_points.tasks import task_factory
 from settlement_report_job.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 
-# from settlement_report_job.entry_points.job_args.settlement_report_job_args import (
-#     parse_job_arguments,
-#     parse_command_line_arguments,
-# )
 from settlement_report_job.entry_points.tasks.task_type import TaskType
-from settlement_report_job.entry_points.utils.get_dbutils import get_dbutils
-from settlement_report_job.infrastructure.spark_initializor import initialize_spark
+from settlement_report_job.infrastructure.spark_initializor import (
+    initialize_spark,
+)
 
 
 # The start_x() methods should only have its name updated in correspondence with the
@@ -103,10 +95,10 @@ def start_task_with_deps(task_type: TaskType) -> None:
 
 
 def get_report_id_from_args() -> str | None:
-    """
-    Checks if --report-id is part of sys.argv and returns its value.
+    """Checks if --report-id is part of sys.argv and returns its value.
 
-    :return: The value of --report-id if found, otherwise None.
+    Returns:
+        str: The value of --report-id if found, otherwise None.
     """
     try:
         # Find the index of --report-id and return the next element

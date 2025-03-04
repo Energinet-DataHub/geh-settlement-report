@@ -25,21 +25,13 @@ def valid_date(s: str) -> datetime:
         raise configargparse.ArgumentTypeError(msg)
 
 
-def valid_energy_supplier_ids(s: str) -> list[str]:
-    if not s.startswith("[") or not s.endswith("]"):
-        msg = "Energy supplier IDs must be a list enclosed by an opening '[' and a closing ']'"
-        raise configargparse.ArgumentTypeError(msg)
-
-    # 1. Remove enclosing list characters 2. Split each id 3. Remove possibly enclosing spaces.
-    tokens = [token.strip() for token in s.strip("[]").split(",")]
+def valid_energy_supplier_ids(supplier_ids: list[str]) -> list[str]:
 
     # Energy supplier IDs must always consist of 13 or 16 digits
     if any(
-        (len(token) != 13 and len(token) != 16)
-        or any(c < "0" or c > "9" for c in token)
-        for token in tokens
+        (len(id) != 13 and len(id) != 16) or any(c < "0" or c > "9" for c in id)
+        for id in supplier_ids
     ):
         msg = "Energy supplier IDs must consist of 13 or 16 digits"
         raise configargparse.ArgumentTypeError(msg)
-
-    return tokens
+    return supplier_ids

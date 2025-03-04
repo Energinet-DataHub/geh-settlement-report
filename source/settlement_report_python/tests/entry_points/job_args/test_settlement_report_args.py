@@ -21,12 +21,6 @@ import pydantic
 import pytest
 
 from settlement_report_job.domain.utils.market_role import MarketRole
-
-# from settlement_report_job.entry_points.entry_point import (
-#     parse_job_arguments,
-#     parse_command_line_arguments,
-# )
-
 from settlement_report_job.entry_points.job_args.environment_variables import (
     EnvironmentVariable,
 )
@@ -213,7 +207,7 @@ def test_when_no_valid_calculation_id_for_grid_area__raises_uuid_value_error(
                 SettlementReportArgs()
 
     # Assert
-    assert "Input should be a valid UUID" in str(exc_info.value)
+    assert "Input should be a valid UUID" in str(exc_info.value), str(exc_info.value)
 
 
 @pytest.mark.parametrize(
@@ -239,7 +233,6 @@ def test_returns_expected_value_for_prevent_large_text_files(
 
     with patch("sys.argv", test_sys_args):
         with patch.dict("os.environ", job_environment_variables):
-            print(sys.argv)
             actual_args = SettlementReportArgs()
 
     # Assert
@@ -307,14 +300,11 @@ def test_returns_expected_value_for_include_basis_data(
 @pytest.mark.parametrize(
     "energy_supplier_ids_argument, expected_energy_suppliers_ids",
     [
-        (
-            '["1234567890123"]',
-            ["1234567890123"],
-        ),
-        ('["1234567890123"]', ["1234567890123"]),
-        ('["1234567890123", "2345678901234"]', ["1234567890123", "2345678901234"]),
-        ('["1234567890123","2345678901234"]', ["1234567890123", "2345678901234"]),
-        ('["1234567890123", "2345678901234"]', ["1234567890123", "2345678901234"]),
+        ("[1234567890123]", ["1234567890123"]),
+        ("[1234567890123]", ["1234567890123"]),
+        ("[1234567890123, 2345678901234]", ["1234567890123", "2345678901234"]),
+        ("[1234567890123,2345678901234]", ["1234567890123", "2345678901234"]),
+        ("[ 1234567890123,2345678901234 ]", ["1234567890123", "2345678901234"]),
     ],
 )
 def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplier_ids(
@@ -339,7 +329,6 @@ def test_when_energy_supplier_ids_are_specified__returns_expected_energy_supplie
 @pytest.mark.parametrize(
     "energy_supplier_ids_argument",
     [
-        "1234567890123",  # not a list
         "[123]",  # neither 13 nor 16 characters
         "[12345678901234]",  # neither 13 nor 16 characters
     ],
@@ -375,7 +364,6 @@ def test_when_no_energy_supplier_specified__returns_none_energy_supplier_ids(
     with patch.dict("os.environ", job_environment_variables):
         with patch("sys.argv", test_sys_args):
             actual_args = SettlementReportArgs()
-
     # Assert
     assert actual_args.energy_supplier_ids is None
 
@@ -464,5 +452,5 @@ class TestWhenMissingEnvVariables:
                 with patch.dict("os.environ", env_variables_with_one_missing):
                     with pytest.raises(pydantic.ValidationError) as error:
                         SettlementReportArgs()
-                assert str(error.value).__contains__("Field required ")
-                assert str(error.value).__contains__("catalog_name")
+                assert "Field required " in str(error.value)
+                assert "catalog_name" in str(error.value)

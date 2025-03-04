@@ -10,10 +10,10 @@
 --requesting-actor-market-role=energy_supplier
 # market-role values: datahub_administrator, energy_supplier, grid_access_provider, system_operator
 --requesting-actor-id=1234567890123
---grid-area-codes=["804", "805"]
+--grid-area-codes=[804, 805]
 
 # Optional parameters
---energy-supplier-ids=["1234567890123"]
+--energy-supplier-ids=[1234567890123]
 --split-report-by-grid-area
 --prevent-large-text-files
 --include-basis-data
