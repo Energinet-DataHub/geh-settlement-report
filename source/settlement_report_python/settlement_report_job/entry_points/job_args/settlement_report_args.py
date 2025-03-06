@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from typing import Any, Annotated
-from pydantic import field_validator
+from pydantic import Field, field_validator
 from pydantic_settings import NoDecode
 from geh_common.application.settings import ApplicationSettings
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
@@ -11,22 +11,28 @@ import re
 
 
 class SettlementReportArgs(ApplicationSettings):
-    report_id: str
-    period_start: datetime
-    period_end: datetime
-    calculation_type: CalculationType
-    requesting_actor_market_role: MarketRole
-    requesting_actor_id: str
-    calculation_id_by_grid_area: dict[str, uuid.UUID] | None = None
+    report_id: str = Field(init=False)
+    period_start: datetime = Field(init=False)
+    period_end: datetime = Field(init=False)
+    calculation_type: CalculationType = Field(init=False)
+    requesting_actor_market_role: MarketRole = Field(init=False)
+    requesting_actor_id: str = Field(init=False)
+    calculation_id_by_grid_area: dict[str, uuid.UUID] | None = Field(
+        init=False, default=None
+    )
     """ A dictionary containing grid area codes (keys) and calculation ids (values). None for balance fixing"""
-    grid_area_codes: Annotated[list[str], NoDecode] | None = None
+    grid_area_codes: Annotated[list[str], NoDecode] | None = Field(
+        init=False, default=None
+    )
     """ None if NOT balance fixing"""
-    energy_supplier_ids: Annotated[list[str], NoDecode] | None = None
-    split_report_by_grid_area: bool = False  # implicit flag
-    prevent_large_text_files: bool = False  # implicit flag
-    time_zone: str = "Europe/Copenhagen"
-    catalog_name: str
-    settlement_reports_output_path: str | None = None
+    energy_supplier_ids: Annotated[list[str], NoDecode] | None = Field(
+        init=False, default=None
+    )
+    split_report_by_grid_area: bool = Field(init=False, default=False)  # implicit flag
+    prevent_large_text_files: bool = Field(init=False, default=False)  # implicit flag
+    time_zone: str = Field(init=False, default="Europe/Copenhagen")
+    catalog_name: str = Field(init=False)
+    settlement_reports_output_path: str | None = Field(default=None)
 
     """The path to the folder where the settlement reports are stored."""
     include_basis_data: bool = False  # implicit flag

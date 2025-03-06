@@ -512,7 +512,7 @@ def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
         ),  # Patching call to configure_azure_monitor in order to not actually connect to app. insights.
     ):
         logging_settings = LoggingSettings()
-        configure_logging(logging_settings=logging_settings, extras=None)
+        configure_logging(logging_settings=logging_settings)
 
 
 @pytest.fixture(scope="function")

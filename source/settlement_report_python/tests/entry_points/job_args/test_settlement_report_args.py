@@ -112,6 +112,17 @@ def timezone_fixture() -> timezone:
     return timezone.utc
 
 
+def test_when_invoked_with_incorrect_parameters__fails(
+    job_environment_variables: dict,
+) -> None:
+    # Arrange
+    with pytest.raises(pydantic.ValidationError) as excinfo:
+        with patch("sys.argv", ["dummy_script", "--unexpected-arg"]):
+            with patch.dict("os.environ", job_environment_variables):
+                # Act
+                SettlementReportArgs()
+
+
 def test_when_parameters_for_balance_fixing__parses_parameters_from_contract(
     job_environment_variables: dict,
     sys_argv_from_contract_for_balance_fixing: list[str],
