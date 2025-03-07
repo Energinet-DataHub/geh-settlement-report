@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
+
 import sys
 import time
 import uuid
@@ -23,12 +23,9 @@ import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
 
 from geh_settlement_report.entry_points.entry_point import (
-    start_task_with_deps,
+    _start_task,
 )
 from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
 from geh_settlement_report.entry_points.tasks.task_type import TaskType
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
@@ -36,8 +33,9 @@ from tests.integration_test_configuration import IntegrationTestConfiguration
 class TestWhenInvokedWithArguments:
     def test_add_info_log_record_to_azure_monitor_with_expected_settings(
         self,
-        standard_wholesale_fixing_scenario_args: SettlementReportArgs,
         integration_test_configuration: IntegrationTestConfiguration,
+        script_args_fixture_integration_test,
+        clean_up_logging,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -54,27 +52,33 @@ class TestWhenInvokedWithArguments:
 
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
-        standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())
+        script_args = script_args_fixture_integration_test
+        new_report_id = str(uuid.uuid4())
+        updated_args = update_script_arg(script_args, "--report-id", new_report_id)
+
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()
         )
-        os.environ["CATALOG_NAME"] = "test_catalog"
+
         task_factory_mock = Mock()
-        self.prepare_command_line_arguments(standard_wholesale_fixing_scenario_args)
 
         # Act
         with patch(
             "geh_settlement_report.entry_points.tasks.task_factory.create",
             task_factory_mock,
         ):
-            with patch(
-                "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                return_value=None,
+            with (
+                patch(
+                    "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                    return_value=None,
+                ),
+                patch("sys.argv", updated_args),
+                patch.dict(
+                    "os.environ",
+                    {"APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string},
+                ),
             ):
-                start_task_with_deps(
-                    task_type=valid_task_type,
-                    applicationinsights_connection_string=applicationinsights_connection_string,
-                )
+                _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -87,8 +91,8 @@ class TestWhenInvokedWithArguments:
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
-        | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.entry_points.job_args.settlement_report_job_args"
+        | where Properties.settlement_report_id == "{new_report_id}"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.entry_points.entry_point"
         | count
         """
 
@@ -103,8 +107,9 @@ class TestWhenInvokedWithArguments:
 
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
         self,
-        standard_wholesale_fixing_scenario_args: SettlementReportArgs,
         integration_test_configuration: IntegrationTestConfiguration,
+        script_args_fixture_integration_test,
+        clean_up_logging,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -121,17 +126,17 @@ class TestWhenInvokedWithArguments:
 
         # Arrange
         valid_task_type = TaskType.TimeSeriesHourly
-        standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())
-        standard_wholesale_fixing_scenario_args.calculation_type = CalculationType.BALANCE_FIXING
-        standard_wholesale_fixing_scenario_args.grid_area_codes = [
-            "8054"
-        ]  # Should produce an error with balance fixing
+        script_args = script_args_fixture_integration_test  # Get the original fixture values
+        new_report_id = str(uuid.uuid4())
+        updated_args = update_script_arg(script_args, "--report-id", new_report_id)
+        updated_args = update_script_arg(updated_args, "--calculation-type", CalculationType.BALANCE_FIXING.value)
+        if "--grid-area-codes" not in updated_args:
+            updated_args.extend(["--grid-area-codes", "[8054]"])
+
         applicationinsights_connection_string = (
             integration_test_configuration.get_applicationinsights_connection_string()
         )
-        os.environ["CATALOG_NAME"] = "test_catalog"
         task_factory_mock = Mock()
-        self.prepare_command_line_arguments(standard_wholesale_fixing_scenario_args)
 
         # Act
         with pytest.raises(SystemExit):
@@ -139,14 +144,21 @@ class TestWhenInvokedWithArguments:
                 "geh_settlement_report.entry_points.tasks.task_factory.create",
                 task_factory_mock,
             ):
-                with patch(
-                    "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                    return_value=None,
+                with (
+                    patch(
+                        "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                        return_value=None,
+                    ),
+                    patch("sys.argv", updated_args),
+                    patch.dict(
+                        "os.environ",
+                        {
+                            "APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string,
+                            "CATALOG_NAME": "test_catalog",
+                        },
+                    ),
                 ):
-                    start_task_with_deps(
-                        task_type=valid_task_type,
-                        applicationinsights_connection_string=applicationinsights_connection_string,
-                    )
+                    _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -155,11 +167,11 @@ class TestWhenInvokedWithArguments:
         query = f"""
         AppExceptions
         | where AppRoleName == "dbr-settlement-report"
-        | where ExceptionType == "argparse.ArgumentTypeError"
-        | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
+        | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
+        | where OuterMessage contains "Grid area codes must consist of 3 digits (100-999)"
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
-        | where Properties.settlement_report_id == "{standard_wholesale_fixing_scenario_args.report_id}"
+        | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count
         """
@@ -174,27 +186,23 @@ class TestWhenInvokedWithArguments:
         # Assert, but timeout if not succeeded
         wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
 
-    @staticmethod
-    def prepare_command_line_arguments(
-        standard_wholesale_fixing_scenario_args: SettlementReportArgs,
-    ) -> None:
-        standard_wholesale_fixing_scenario_args.report_id = str(uuid.uuid4())  # Ensure unique report id
-        sys.argv = []
-        sys.argv.append(
-            "--entry-point=execute_wholesale_results"
-        )  # Workaround as the parse command line arguments starts with the second argument
-        sys.argv.append(f"--report-id={str(standard_wholesale_fixing_scenario_args.report_id)}")
-        sys.argv.append(
-            f"--period-start={str(standard_wholesale_fixing_scenario_args.period_start.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
-        )
-        sys.argv.append(
-            f"--period-end={str(standard_wholesale_fixing_scenario_args.period_end.strftime('%Y-%m-%dT%H:%M:%SZ'))}"
-        )
-        sys.argv.append(f"--calculation-type={str(standard_wholesale_fixing_scenario_args.calculation_type.value)}")
-        sys.argv.append("--requesting-actor-market-role=datahub_administrator")
-        sys.argv.append("--requesting-actor-id=1234567890123")
-        sys.argv.append(f"--grid-area-codes={str(standard_wholesale_fixing_scenario_args.grid_area_codes)}")
-        sys.argv.append('--calculation-id-by-grid-area={"804": "bf6e1249-d4c2-4ec2-8ce5-4c7fe8756253"}')
+
+def update_script_arg(args: list[str], param_name: str, new_value: str) -> list[str]:
+    """
+    Updates the value of a given parameter in the script arguments list.
+
+    :param args: List of script arguments.
+    :param param_name: The parameter to update (e.g., "--report-id").
+    :param new_value: The new value to replace the existing one.
+    :return: A new list with the updated parameter value.
+    """
+    updated_args = args[:]  # Copy the list to avoid modifying the original
+    try:
+        index = updated_args.index(param_name) + 1  # Find the parameter and get its value index
+        updated_args[index] = new_value  # Replace with the new value
+    except ValueError:
+        pass  # If the parameter isn't found, do nothing
+    return updated_args
 
 
 def wait_for_condition(callback: Callable, *, timeout: timedelta, step: timedelta):

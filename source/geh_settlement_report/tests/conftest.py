@@ -17,6 +17,7 @@ import shutil
 import uuid
 from pathlib import Path
 from typing import Callable, Generator
+from unittest import mock
 
 import pytest
 import yaml
@@ -367,13 +368,102 @@ def spark(
     session.stop()
 
 
+@pytest.fixture(scope="session")
+def env_args_fixture() -> dict[str, str]:
+    env_args = {
+        "CLOUD_ROLE_NAME": "test_role",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
+        "SUBSYSTEM": "test_subsystem",
+    }
+    return env_args
+
+
+@pytest.fixture(scope="session")
+def script_args_fixture() -> list[str]:
+    sys_argv = [
+        "program_name",
+        "--force_configuration",
+        "false",
+        "--orchestration-instance-id",
+        "4a540892-2c0a-46a9-9257-c4e13051d76a",
+    ]
+    return sys_argv
+
+
+@pytest.fixture(scope="function")
+def script_args_fixture_integration_test() -> list[str]:
+    sys_argv = [
+        "program_name",
+        "--force_configuration",
+        "false",
+        "--orchestration-instance-id",
+        str(uuid.uuid4()),
+        "--report-id",
+        str(uuid.uuid4()),
+        "--period-start",
+        "2024-01-01T23:00:00Z",
+        "--period-end",
+        "2024-01-02T23:00:00Z",
+        "--calculation-type",
+        "wholesale_fixing",
+        "--requesting-actor-market-role",
+        "system_operator",
+        "--requesting-actor-id",
+        "5790001330552",
+        "--calculation-id-by-grid-area",
+        f"804={uuid.uuid4()}",
+        "--split-report-by-grid-area",
+        "true",
+        "--prevent-large-text-files",
+        "false",
+        "--time-zone",
+        "Europe/Copenhagen",
+        "--catalog-name",
+        "spark_catalog",
+        "--settlement-reports-output-path",
+        "/workspaces/geh-settlement-report/source/settlement_report_python/tests/__data_lake__/master/settlement_reports_output",
+        "--include-basis-data",
+        "true",
+    ]
+    return sys_argv
+
+
 @pytest.fixture(autouse=True)
-def configure_dummy_logging() -> None:
+def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
-    from geh_common.telemetry.logging_configuration import configure_logging
+    from geh_common.telemetry.logging_configuration import (
+        LoggingSettings,
+        configure_logging,
+    )
 
-    configure_logging(cloud_role_name="any-cloud-role-name", tracer_name="any-tracer-name")
+    with (
+        mock.patch("sys.argv", script_args_fixture),
+        mock.patch.dict("os.environ", env_args_fixture, clear=False),
+        mock.patch(
+            "geh_common.telemetry.logging_configuration.configure_azure_monitor"
+        ),  # Patching call to configure_azure_monitor in order to not actually connect to app. insights.
+    ):
+        logging_settings = LoggingSettings()
+        configure_logging(logging_settings=logging_settings)
+
+
+@pytest.fixture(scope="function")
+def clean_up_logging():
+    """
+    Function that cleans up the Logging module prior to running integration tests, so logging can be reconfigured after use of configure_dummy_logging fixture
+    """
+    from geh_common.telemetry.logging_configuration import (
+        set_extras,
+        set_is_instrumented,
+        set_tracer,
+        set_tracer_name,
+    )
+
+    set_extras({})
+    set_is_instrumented(False)
+    set_tracer(None)
+    set_tracer_name("")
 
 
 @pytest.fixture(scope="session")
