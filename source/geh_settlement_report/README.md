@@ -15,7 +15,7 @@ The wheel exposes a set of entry points that are used in the Databricks for crea
 
 ## Project Structure
 
-The `settlement_report_job` contains the required code for creating the python wheel. The code is structured as follows:
+The `geh_settlement_report` contains the required code for creating the python wheel. The code is structured as follows:
 
 **entry_points/**:
 

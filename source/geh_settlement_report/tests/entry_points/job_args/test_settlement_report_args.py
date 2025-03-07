@@ -18,7 +18,6 @@ from unittest.mock import patch
 
 import pydantic
 import pytest
-from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 
 from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
