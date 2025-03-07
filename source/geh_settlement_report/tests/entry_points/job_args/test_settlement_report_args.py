@@ -24,6 +24,7 @@ from geh_settlement_report.entry_points.job_args.calculation_type import Calcula
 from geh_settlement_report.entry_points.job_args.environment_variables import (
     EnvironmentVariable,
 )
+from geh_settlement_report.entry_points.job_args.settlement_report_args import SettlementReportArgs
 
 DEFAULT_REPORT_ID = "12345678-9fc8-409a-a169-fbd49479d718"
 
