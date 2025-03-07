@@ -51,15 +51,15 @@ jobs:
 
   ci_python:
     name: Unit tests
-    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@ci/python-cicd
+    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
       packages_directory: source
-      create_subsystem_release: true
       pytest_addopts: --ignore-glob='**/integration_test/**'
+      create_subsystem_release: true
 
   ci_python_integration:
     name: Integration tests
-    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@ci/python-cicd
+    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
       packages_directory: source
       tests_directory: tests/integration_test
