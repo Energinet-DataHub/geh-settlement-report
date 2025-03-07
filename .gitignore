@@ -399,3 +399,6 @@ test_localsystem.txt
 **/*.egg-info/
 **/dist/
 **/build/
+
+# Ignore files that are related to integration test settings
+source/settlement_report_python/tests/integrationtest.local.settings.yml
