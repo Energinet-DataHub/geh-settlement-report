@@ -75,7 +75,7 @@ def _assert_args(args, args_dict, env_args):
         == env_args["SETTLEMENT_REPORTS_OUTPUT_PATH"]
     )
 
-    ### Differentiate between balance fixing and other calculation types
+    # Differentiate between balance fixing and other calculation types
     if args.calculation_type == CalculationType.BALANCE_FIXING:
         assert args.grid_area_codes == [
             str(i) for i in json.loads(args_dict["grid-area-codes"])
@@ -85,7 +85,7 @@ def _assert_args(args, args_dict, env_args):
             k: str(v) for k, v in args.calculation_id_by_grid_area.items()
         } == json.loads(args_dict["calculation-id-by-grid-area"])
 
-    ### Optional arguments
+    # Optional arguments
     if args.energy_supplier_ids:
         assert args.energy_supplier_ids == [
             str(v) for v in json.loads(args_dict.get("energy-supplier-ids"))
