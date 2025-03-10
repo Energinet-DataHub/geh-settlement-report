@@ -47,6 +47,7 @@ addopts = [
     "--cov-report=xml:coverage.xml",
     "--cov=geh_settlement_report",
     "-n=2",
+    "--dist=loadscope",
     "-ra",
     "-vv",
     "-s"

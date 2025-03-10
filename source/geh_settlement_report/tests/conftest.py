@@ -22,6 +22,7 @@ from unittest import mock
 import pytest
 import yaml
 from delta import configure_spark_with_delta_pip
+from pyspark import SparkConf
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.domain.utils.market_role import MarketRole
@@ -335,36 +336,70 @@ def settlement_report_job_container_path(source_path: str) -> Path:
 @pytest.fixture(scope="session")
 def spark(
     tests_path: str,
+    worker_id: str,
 ) -> Generator[SparkSession, None, None]:
     warehouse_location = f"{tests_path}/__spark-warehouse__"
 
-    session = configure_spark_with_delta_pip(
-        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)  # type: ignore
-        .config("spark.sql.streaming.schemaInference", True)
-        .config("spark.ui.showConsoleProgress", "false")
-        .config("spark.ui.enabled", "false")
-        .config("spark.ui.dagGraph.retainedRootRDDs", "1")
-        .config("spark.ui.retainedJobs", "1")
-        .config("spark.ui.retainedStages", "1")
-        .config("spark.ui.retainedTasks", "1")
-        .config("spark.sql.ui.retainedExecutions", "1")
-        .config("spark.worker.ui.retainedExecutors", "1")
-        .config("spark.worker.ui.retainedDrivers", "1")
-        .config("spark.default.parallelism", 1)
-        .config("spark.driver.memory", "2g")
-        .config("spark.executor.memory", "2g")
-        .config("spark.rdd.compress", False)
-        .config("spark.shuffle.compress", False)
-        .config("spark.shuffle.spill.compress", False)
-        .config("spark.sql.shuffle.partitions", 1)
-        .config("spark.dynamicAllocation.enabled", False)
-        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config(
-            "spark.sql.catalog.spark_catalog",
-            "org.apache.spark.sql.delta.catalog.DeltaCatalog",
-        )
-    ).getOrCreate()
+    spark_config = {
+        "spark.sql.warehouse.dir": warehouse_location,
+        "spark.sql.streaming.schemaInference": True,
+        "spark.ui.showConsoleProgress": "false",
+        "spark.ui.enabled": "false",
+        "spark.ui.dagGraph.retainedRootRDDs": "1",
+        "spark.ui.retainedJobs": "1",
+        "spark.ui.retainedStages": "1",
+        "spark.ui.retainedTasks": "1",
+        "spark.sql.ui.retainedExecutions": "1",
+        "spark.worker.ui.retainedExecutors": "1",
+        "spark.worker.ui.retainedDrivers": "1",
+        "spark.default.parallelism": 1,
+        "spark.driver.memory": "2g",
+        "spark.executor.memory": "2g",
+        "spark.rdd.compress": False,
+        "spark.shuffle.compress": False,
+        "spark.shuffle.spill.compress": False,
+        "spark.sql.shuffle.partitions": 1,
+        "spark.dynamicAllocation.enabled": False,
+        "spark.serializer": "org.apache.spark.serializer.KryoSerializer",
+        "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+        "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        "spark.local.dir": f"{tests_path}/__spark-temp__/{worker_id}",
+    }
+
+    conf = SparkConf().setAll([(key, value) for key, value in spark_config.items()])
+    session = (
+        configure_spark_with_delta_pip(SparkSession.Builder().config(conf=conf))
+        .appName(f"geh_settlement_report_{worker_id}")
+        .getOrCreate()
+    )
+
+    # session = configure_spark_with_delta_pip(
+    #     SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)  # type: ignore
+    #     .config("spark.sql.streaming.schemaInference", True)
+    #     .config("spark.ui.showConsoleProgress", "false")
+    #     .config("spark.ui.enabled", "false")
+    #     .config("spark.ui.dagGraph.retainedRootRDDs", "1")
+    #     .config("spark.ui.retainedJobs", "1")
+    #     .config("spark.ui.retainedStages", "1")
+    #     .config("spark.ui.retainedTasks", "1")
+    #     .config("spark.sql.ui.retainedExecutions", "1")
+    #     .config("spark.worker.ui.retainedExecutors", "1")
+    #     .config("spark.worker.ui.retainedDrivers", "1")
+    #     .config("spark.default.parallelism", 1)
+    #     .config("spark.driver.memory", "2g")
+    #     .config("spark.executor.memory", "2g")
+    #     .config("spark.rdd.compress", False)
+    #     .config("spark.shuffle.compress", False)
+    #     .config("spark.shuffle.spill.compress", False)
+    #     .config("spark.sql.shuffle.partitions", 1)
+    #     .config("spark.dynamicAllocation.enabled", False)
+    #     .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    #     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+    #     .config(
+    #         "spark.sql.catalog.spark_catalog",
+    #         "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+    #     )
+    # ).getOrCreate()
 
     yield session
     session.stop()
