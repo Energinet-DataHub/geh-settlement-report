@@ -70,11 +70,14 @@ class SettlementReportArgs(BaseSettings):
     def validate_grid_area_codes(cls, v: list[str] | None) -> list[str] | None:
         if v is None:
             return v
-        if not all(
-            isinstance(code, str) and code.isdigit() and 100 <= int(code) <= 999
-            for code in v
-        ):
-            raise ValueError("Grid area codes must consist of 3 digits (100-999).")
+        for code in v:
+            assert isinstance(code, str), (
+                f"Grid area codes must be strings, not {type(code)}"
+            )
+            if len(code) != 3 or not code.isdigit():
+                raise ValueError(
+                    f"Unknown grid area code: '{code}'. Grid area codes must consist of 3 digits (000-999)."
+                )
         return v
 
     @field_validator("energy_supplier_ids", mode="after")

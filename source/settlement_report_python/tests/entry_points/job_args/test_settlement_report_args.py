@@ -13,7 +13,6 @@
 # limitations under the License.
 import re
 import uuid
-import sys
 from datetime import datetime, timezone
 from unittest.mock import patch
 

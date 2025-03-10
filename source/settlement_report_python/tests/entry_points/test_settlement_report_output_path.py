@@ -167,3 +167,43 @@ def test_settlement_report_args_required_args_missing(
     monkeypatch.setattr(os, "environ", environment_variables)
     with pytest.raises(pydantic.ValidationError):
         SettlementReportArgs()
+
+
+@pytest.mark.parametrize(
+    ["reason", "args"],
+    [
+        (
+            "short_grid_area_code",
+            {
+                "report-id": "12345678-9fc8-409a-a169-fbd49479d718",
+                "period-start": "2022-05-31T22:00:00Z",
+                "period-end": "2022-06-01T22:00:00Z",
+                "calculation-type": "balance_fixing",
+                "requesting-actor-market-role": "energy_supplier",
+                "requesting-actor-id": "1234567890123",
+                "grid-area-codes": "[0, 805]",
+            },
+        ),
+        (
+            "long_grid_area_code",
+            {
+                "report-id": "12345678-9fc8-409a-a169-fbd49479d718",
+                "period-start": "2022-05-31T22:00:00Z",
+                "period-end": "2022-06-01T22:00:00Z",
+                "calculation-type": "balance_fixing",
+                "requesting-actor-market-role": "energy_supplier",
+                "requesting-actor-id": "1234567890123",
+                "grid-area-codes": "[012341, 805]",
+            },
+        ),
+    ],
+)
+def test_grid_area_code_validation(
+    reason, args, environment_variables: dict, monkeypatch: pytest.MonkeyPatch
+):
+    sys_args = [f"--{k}={v}" for k, v in args.items()]
+    monkeypatch.setattr(sys, "argv", ["settlement_report_job"] + sys_args)
+    monkeypatch.setattr(os, "environ", environment_variables)
+    with pytest.raises(pydantic.ValidationError) as e:
+        SettlementReportArgs()
+        assert "Unknown grid area code:" in str(e.value)
