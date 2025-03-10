@@ -14,6 +14,7 @@ class SettlementReportArgs(BaseSettings):
         cli_parse_args=True,
         cli_kebab_case=True,
         cli_implicit_flags=True,
+        cli_ignore_unknown_args=True,
         cli_prog_name="settlement_report_job",
     )
 
@@ -71,9 +72,9 @@ class SettlementReportArgs(BaseSettings):
         if v is None:
             return v
         for code in v:
-            assert isinstance(
-                code, str
-            ), f"Grid area codes must be strings, not {type(code)}"
+            assert isinstance(code, str), (
+                f"Grid area codes must be strings, not {type(code)}"
+            )
             if len(code) != 3 or not code.isdigit():
                 raise ValueError(
                     f"Unknown grid area code: '{code}'. Grid area codes must consist of 3 digits (000-999)."
