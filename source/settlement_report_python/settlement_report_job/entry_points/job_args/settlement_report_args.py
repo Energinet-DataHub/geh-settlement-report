@@ -1,22 +1,30 @@
 import uuid
 from datetime import datetime
 from typing import Any, Annotated
-from pydantic import Field, field_validator
-from pydantic_settings import NoDecode
-from geh_common.application.settings import ApplicationSettings
+from pydantic import Field, field_validator, model_validator
+from pydantic_settings import BaseSettings, NoDecode
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 
 from settlement_report_job.domain.utils.market_role import MarketRole
 import re
 
 
-class SettlementReportArgs(ApplicationSettings):
-    report_id: str = Field(init=False)
+class SettlementReportArgs(
+    BaseSettings,
+    cli_prog_name="settlement_report_job",
+    cli_parse_args=True,
+    cli_kebab_case=True,
+    cli_implicit_flags=True,
+):
+    report_id: uuid.UUID = Field(init=False)
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
     calculation_type: CalculationType = Field(init=False)
     requesting_actor_market_role: MarketRole = Field(init=False)
     requesting_actor_id: str = Field(init=False)
+    catalog_name: str = Field(init=False)
+    settlement_reports_output_path: str = Field(init=False)
+
     calculation_id_by_grid_area: dict[str, uuid.UUID] | None = Field(
         init=False, default=None
     )
@@ -28,14 +36,23 @@ class SettlementReportArgs(ApplicationSettings):
     energy_supplier_ids: Annotated[list[str], NoDecode] | None = Field(
         init=False, default=None
     )
-    split_report_by_grid_area: bool = Field(init=False, default=False)  # implicit flag
-    prevent_large_text_files: bool = Field(init=False, default=False)  # implicit flag
     time_zone: str = Field(init=False, default="Europe/Copenhagen")
-    catalog_name: str = Field(init=False)
-    settlement_reports_output_path: str | None = Field(default=None)
-
+    prevent_large_text_files: bool = False
+    split_report_by_grid_area: bool = False
     """The path to the folder where the settlement reports are stored."""
-    include_basis_data: bool = False  # implicit flag
+    include_basis_data: bool = False
+
+    @model_validator(mode="after")
+    def _validate_calculation_id_by_grid_area(self):
+        if self.calculation_type == CalculationType.BALANCE_FIXING:
+            if self.grid_area_codes is None:
+                raise ValueError("grid_area_codes must be a list for balance fixing")
+        elif self.calculation_type != CalculationType.BALANCE_FIXING:
+            if self.calculation_id_by_grid_area is None:
+                raise ValueError(
+                    "calculation_id_by_grid_area must be a dictionary for anything but balance fixing"
+                )
+        return self
 
     @field_validator("grid_area_codes", "energy_supplier_ids", mode="before")
     @classmethod
