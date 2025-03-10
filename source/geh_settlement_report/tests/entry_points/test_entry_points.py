@@ -16,8 +16,10 @@ import importlib.metadata
 from typing import Any
 
 import pytest
-
-from geh_settlement_report.entry_points import entry_point as module
+from settlement_report_job.entry_points import entry_point as module
+from settlement_report_job.entry_points.entry_point import (
+    get_report_id_from_args,
+)
 
 # IMPORTANT:
 # If we add/remove tests here, we also update the "retry logic" in '.docker/entrypoint.sh',
@@ -73,3 +75,24 @@ def test__installed_package__can_load_entry_point(
     entry_point_name: str,
 ) -> None:
     assert_entry_point_exists(entry_point_name)
+
+
+def test_get_report_id():
+    report_id = "1234"
+    assert get_report_id_from_args(["--report-id", report_id]) == report_id
+    assert get_report_id_from_args(["--report-id", report_id, "--other", "args"]) == report_id
+    assert get_report_id_from_args(["--other", "args", "--report-id", report_id]) == report_id
+
+
+def test_get_report_id_with_equals():
+    report_id = "1234"
+    assert get_report_id_from_args(["--report-id=" + report_id]) == report_id
+    assert get_report_id_from_args(["--report-id=" + report_id, "--other", "args"]) == report_id
+    assert get_report_id_from_args(["--other", "args", "--report-id=" + report_id]) == report_id
+
+
+def test_get_report_id_fails():
+    with pytest.raises(ValueError):
+        get_report_id_from_args([])
+    with pytest.raises(ValueError):
+        get_report_id_from_args(["--other", "args"])

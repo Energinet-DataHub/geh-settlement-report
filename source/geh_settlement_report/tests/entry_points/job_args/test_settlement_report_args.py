@@ -93,6 +93,7 @@ def sys_argv_from_contract_for_balance_fixing(
 def job_environment_variables() -> dict:
     return {
         EnvironmentVariable.CATALOG_NAME.name: "some_catalog",
+        "SETTLEMENT_REPORTS_OUTPUT_PATH": "/Volumes/catalog/wholesale_settlement_report_output/settlement_reports",
     }
 
 
