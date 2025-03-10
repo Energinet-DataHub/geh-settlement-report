@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import Any, Annotated
 from pydantic import Field, field_validator, model_validator
-from pydantic_settings import BaseSettings, NoDecode
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 from settlement_report_job.entry_points.job_args.calculation_type import CalculationType
 
 from settlement_report_job.domain.utils.market_role import MarketRole
@@ -12,10 +12,10 @@ import re
 class SettlementReportArgs(
     BaseSettings,
     cli_prog_name="settlement_report_job",
-    cli_parse_args=True,
-    cli_kebab_case=True,
-    cli_implicit_flags=True,
 ):
+    model_config = SettingsConfigDict(
+        cli_parse_args=True, cli_kebab_case=True, cli_implicit_flags=True
+    )
     report_id: uuid.UUID = Field(init=False)
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
