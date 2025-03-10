@@ -44,7 +44,7 @@ class SettlementReportArgs(BaseSettings):
     include_basis_data: bool = False
 
     @model_validator(mode="after")
-    def _validate_calculation_id_by_grid_area(self):
+    def _validate_calculation_id_by_grid_area(self) -> "SettlementReportArgs":
         if self.calculation_type == CalculationType.BALANCE_FIXING:
             if self.grid_area_codes is None:
                 raise ValueError("grid_area_codes must be a list for balance fixing")
