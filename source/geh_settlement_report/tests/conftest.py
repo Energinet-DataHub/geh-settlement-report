@@ -364,6 +364,7 @@ def spark(
         "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
         "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
         "spark.local.dir": f"{tests_path}/__spark-temp__/{worker_id}",
+        "spark.port.maxRetries": "30",
     }
 
     conf = SparkConf().setAll([(key, value) for key, value in spark_config.items()])
