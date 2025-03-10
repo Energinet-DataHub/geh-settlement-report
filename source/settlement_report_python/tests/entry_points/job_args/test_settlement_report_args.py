@@ -13,7 +13,6 @@
 # limitations under the License.
 import re
 import uuid
-import sys
 from datetime import datetime, timezone
 from unittest.mock import patch
 
@@ -104,6 +103,7 @@ def sys_argv_from_contract_for_balance_fixing(
 def job_environment_variables() -> dict:
     return {
         EnvironmentVariable.CATALOG_NAME.name: "some_catalog",
+        "SETTLEMENT_REPORTS_OUTPUT_PATH": "/Volumes/catalog/wholesale_settlement_report_output/settlement_reports",
     }
 
 
@@ -404,7 +404,6 @@ class TestWhenInvokedWithValidMarketRole:
 
 
 class TestWhenInvokedWithInvalidMarketRole:
-
     def test_raise_system_exit_with_non_zero_code(
         self,
         job_environment_variables: dict,

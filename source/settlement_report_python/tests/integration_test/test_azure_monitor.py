@@ -178,7 +178,7 @@ class TestWhenInvokedWithArguments:
         AppExceptions
         | where AppRoleName == "dbr-settlement-report"
         | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
-        | where OuterMessage contains "Grid area codes must consist of 3 digits (100-999)"
+        | where OuterMessage contains "Unknown grid area code"
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{new_report_id}"
