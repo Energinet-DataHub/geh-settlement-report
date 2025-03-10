@@ -280,7 +280,7 @@ def settlement_report_path(source_path: str) -> Path:
 
 
 @pytest.fixture(scope="session")
-def contracts_path(settlement_report_path: str) -> str:
+def contracts_path(settlement_report_path: Path) -> Path:
     """
     Returns the source/contract folder path.
     Please note that this only works if current folder haven't been changed prior using
@@ -322,7 +322,7 @@ def tests_path(settlement_report_path: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def settlement_report_job_container_path(source_path: str) -> str:
+def settlement_report_job_container_path(source_path: str) -> Path:
     """
     Returns the <repo-root>/source folder path.
     Please note that this only works if current folder haven't been changed prior using
@@ -339,7 +339,7 @@ def spark(
     warehouse_location = f"{tests_path}/__spark-warehouse__"
 
     session = configure_spark_with_delta_pip(
-        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)
+        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)  # type: ignore
         .config("spark.sql.streaming.schemaInference", True)
         .config("spark.ui.showConsoleProgress", "false")
         .config("spark.ui.enabled", "false")
@@ -357,6 +357,8 @@ def spark(
         .config("spark.shuffle.compress", False)
         .config("spark.shuffle.spill.compress", False)
         .config("spark.sql.shuffle.partitions", 1)
+        .config("spark.dynamicAllocation.enabled", False)
+        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
         .config(
             "spark.sql.catalog.spark_catalog",
