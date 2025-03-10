@@ -90,7 +90,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
             $"--requesting-actor-market-role={MapMarketRole(marketRole)}",
             $"--requesting-actor-id={actorGln}",
             request.Filter.CalculationType == CalculationType.BalanceFixing
-                ? $"--grid-area-codes=[{string.Join(",", request.Filter.GridAreas.Select(x => x.Key))}]"
+                ? $"--grid-area-codes=[{string.Join(",", request.Filter.GridAreas.Select(x => $"\"{x.Key}\""))}]"
                 : $"--calculation-id-by-grid-area={gridAreas}",
         };
 
