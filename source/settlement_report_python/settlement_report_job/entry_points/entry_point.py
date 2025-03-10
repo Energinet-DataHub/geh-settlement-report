@@ -94,7 +94,7 @@ def start_task_with_deps(task_type: TaskType) -> None:
     task.execute()
 
 
-def get_report_id_from_args(args=sys.argv) -> str:
+def get_report_id_from_args(args: list[str] = sys.argv) -> str:
     """Checks if --report-id is part of sys.argv and returns its value.
 
     Returns:
