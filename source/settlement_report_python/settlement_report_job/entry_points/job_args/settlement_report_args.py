@@ -9,13 +9,14 @@ from settlement_report_job.domain.utils.market_role import MarketRole
 import re
 
 
-class SettlementReportArgs(
-    BaseSettings,
-    cli_prog_name="settlement_report_job",
-):
+class SettlementReportArgs(BaseSettings):
     model_config = SettingsConfigDict(
-        cli_parse_args=True, cli_kebab_case=True, cli_implicit_flags=True
+        cli_parse_args=True,
+        cli_kebab_case=True,
+        cli_implicit_flags=True,
+        cli_prog_name="settlement_report_job",
     )
+
     report_id: uuid.UUID = Field(init=False)
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
