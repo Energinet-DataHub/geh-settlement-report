@@ -50,9 +50,9 @@ def assert_entry_point_exists(entry_point_name: str) -> Any:
             module,
             function_name,
         ):
-            assert False, (
-                f"The entry point module function {function_name} does not exist in entry_point.py."
-            )
+            assert (
+                False
+            ), f"The entry point module function {function_name} does not exist in entry_point.py."
 
         importlib.import_module(full_module_path, function_name)
     except importlib.metadata.PackageNotFoundError:
