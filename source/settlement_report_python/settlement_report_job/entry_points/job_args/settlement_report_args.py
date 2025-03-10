@@ -57,7 +57,7 @@ class SettlementReportArgs(BaseSettings):
 
     @field_validator("grid_area_codes", "energy_supplier_ids", mode="before")
     @classmethod
-    def _validate_myvar(cls, value: Any) -> list[str] | None:
+    def _convert_grid_area_codes(cls, value: Any) -> list[str] | None:
         if not value:
             return None
         if isinstance(value, list):
