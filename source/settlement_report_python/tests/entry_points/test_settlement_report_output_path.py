@@ -64,7 +64,7 @@ def _args_to_dict(args):
 
 
 def _assert_args(args, args_dict, env_args):
-    assert str(args.report_id) == args_dict["report-id"]
+    assert args.report_id == args_dict["report-id"]
     assert args.period_start == datetime.fromisoformat(args_dict["period-start"])
     assert args.period_end == datetime.fromisoformat(args_dict["period-end"])
     assert args.requesting_actor_market_role == MarketRole.ENERGY_SUPPLIER

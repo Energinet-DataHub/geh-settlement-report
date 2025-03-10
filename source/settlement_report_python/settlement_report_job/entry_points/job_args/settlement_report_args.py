@@ -17,7 +17,7 @@ class SettlementReportArgs(BaseSettings):
         cli_prog_name="settlement_report_job",
     )
 
-    report_id: uuid.UUID = Field(init=False)
+    report_id: str = Field(init=False)
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
     calculation_type: CalculationType = Field(init=False)
