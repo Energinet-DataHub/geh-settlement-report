@@ -16,8 +16,9 @@ import importlib.metadata
 from typing import Any
 
 import pytest
-from settlement_report_job.entry_points import entry_point as module
-from settlement_report_job.entry_points.entry_point import (
+
+from geh_settlement_report.entry_points import entry_point as module
+from geh_settlement_report.entry_points.entry_point import (
     get_report_id_from_args,
 )
 
