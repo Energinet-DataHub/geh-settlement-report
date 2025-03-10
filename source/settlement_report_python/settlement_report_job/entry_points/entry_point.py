@@ -84,7 +84,7 @@ def _start_task(task_type: TaskType) -> None:
 @start_trace()
 def start_task_with_deps(task_type: TaskType) -> None:
     add_extras(
-        {"settlement_report_id": get_report_id_from_args()}
+        {"settlement_report_id": get_report_id_from_args(sys.argv)}
     )  # Add extra before pydantic validation
     args = SettlementReportArgs()
     logger = Logger(__name__)
@@ -94,16 +94,19 @@ def start_task_with_deps(task_type: TaskType) -> None:
     task.execute()
 
 
-def get_report_id_from_args() -> str | None:
+def get_report_id_from_args(args) -> str | None:
     """Checks if --report-id is part of sys.argv and returns its value.
 
     Returns:
         str: The value of --report-id if found, otherwise None.
     """
-    try:
-        # Find the index of --report-id and return the next element
-        index = sys.argv.index("--report-id") + 1
-        return sys.argv[index] if index < len(sys.argv) else None
-    except ValueError:
-        # If --report-id is not found, return None
-        return None
+    for i, arg in enumerate(args):
+        if arg.startswith("--report-id"):
+            if "=" in arg:
+                return arg.split("=")[1]
+            else:
+                if i + 1 <= len(args):
+                    return args[i + 1]
+    raise ValueError(
+        f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}"
+    )
