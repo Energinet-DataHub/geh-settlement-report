@@ -100,7 +100,12 @@ class TestWhenInvokedWithArguments:
 
         def assert_logged():
             actual = logs_client.query_workspace(workspace_id, query, timespan=timedelta(minutes=5))
-            assert_row_count(actual, 1)
+            err_msg = f"The expected log record was not found in Azure Monitor using query:\n{query}"
+            assert_row_count(
+                actual,
+                1,
+                error_message=err_msg,
+            )
 
         # Assert, but timeout if not succeeded
         wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
@@ -180,8 +185,9 @@ class TestWhenInvokedWithArguments:
 
         def assert_logged():
             actual = logs_client.query_workspace(workspace_id, query, timespan=timedelta(minutes=5))
+            err_msg = f"The expected log record was not found in Azure Monitor using query:\n{query}"
             # There should be two counts, one from the arg_parser and one
-            assert_row_count(actual, 1)
+            assert_row_count(actual, 1, error_message=err_msg)
 
         # Assert, but timeout if not succeeded
         wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
@@ -229,10 +235,10 @@ def wait_for_condition(callback: Callable, *, timeout: timedelta, step: timedelt
             print(f"Condition not met after {elapsed_ms} ms. Retrying...")  # noqa
 
 
-def assert_row_count(actual, expected_count):
+def assert_row_count(actual, expected_count, error_message=None):
     actual = cast(LogsQueryResult, actual)
     table = actual.tables[0]
     row = table.rows[0]
     value = row["Count"]
     count = cast(int, value)
-    assert count == expected_count
+    assert count == expected_count, error_message
