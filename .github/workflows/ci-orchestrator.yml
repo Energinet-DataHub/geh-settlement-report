@@ -49,12 +49,26 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
 
-  ci_databricks:
-    needs: [changes, ci_docker]
-    if: ${{ needs.changes.outputs.databricks == 'true' }}
-    uses: ./.github/workflows/ci-databricks.yml
+  ci_python:
+    name: Unit tests
+    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
-      image_tag: ${{ needs.ci_docker.outputs.image_tag }}
+      packages_directory: source
+      pytest_addopts: --ignore-glob='**/integration_test/**'
+      create_subsystem_release: true
+
+  ci_python_integration:
+    name: Integration tests
+    uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
+    with:
+      packages_directory: source
+      tests_directory: tests/integration_test
+      create_subsystem_release: true
+      environment: AzureAuth
+      azure_tenant_id: ${{ vars.integration_test_azure_tenant_id }}
+      azure_subscription_id: ${{ vars.integration_test_azure_subscription_id }}
+      azure_spn_id: ${{ vars.integration_test_azure_spn_id_oidc }}
+      azure_keyvault_url: ${{ vars.integration_test_azure_keyvault_url }}
 
   render_c4model_views:
     needs: changes
@@ -69,7 +83,6 @@ jobs:
   #
   # Branch policy status check
   #
-
   allow_merge_ci_orchestrator:
     runs-on: ubuntu-latest
     needs:
@@ -77,7 +90,8 @@ jobs:
         changes,
         ci_base,
         ci_dotnet,
-        ci_databricks,
+        ci_python,
+        ci_python_integration,
         render_c4model_views,
       ]
     if: |
