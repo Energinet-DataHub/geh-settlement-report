@@ -1,11 +1,10 @@
 import uuid
 from datetime import datetime
+from geh_common.application import GridAreaCodes
 from typing import Annotated
 
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
-
-from geh_common.application import GridAreaCodes
 
 from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
