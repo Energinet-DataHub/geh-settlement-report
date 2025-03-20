@@ -206,40 +206,43 @@ def standard_wholesale_fixing_scenario_data_written_to_delta(
     spark: SparkSession,
     input_database_location: str,
 ) -> None:
-    metering_point_periods = standard_wholesale_fixing_scenario_data_generator.create_metering_point_periods(spark)
-    write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        metering_point_periods = standard_wholesale_fixing_scenario_data_generator.create_metering_point_periods(spark)
+        write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
 
-    time_series_points = standard_wholesale_fixing_scenario_data_generator.create_metering_point_time_series(spark)
-    write_metering_point_time_series_to_delta_table(spark, time_series_points, input_database_location)
+        time_series_points = standard_wholesale_fixing_scenario_data_generator.create_metering_point_time_series(spark)
+        write_metering_point_time_series_to_delta_table(spark, time_series_points, input_database_location)
 
-    charge_link_periods = standard_wholesale_fixing_scenario_data_generator.create_charge_link_periods(spark)
-    write_charge_link_periods_to_delta_table(spark, charge_link_periods, input_database_location)
+        charge_link_periods = standard_wholesale_fixing_scenario_data_generator.create_charge_link_periods(spark)
+        write_charge_link_periods_to_delta_table(spark, charge_link_periods, input_database_location)
 
-    charge_price_points = standard_wholesale_fixing_scenario_data_generator.create_charge_price_points(spark)
-    write_charge_price_points_to_delta_table(spark, charge_price_points, input_database_location)
+        charge_price_points = standard_wholesale_fixing_scenario_data_generator.create_charge_price_points(spark)
+        write_charge_price_points_to_delta_table(spark, charge_price_points, input_database_location)
 
-    charge_price_information_periods = (
-        standard_wholesale_fixing_scenario_data_generator.create_charge_price_information_periods(spark)
-    )
-    write_charge_price_information_periods_to_delta_table(
-        spark, charge_price_information_periods, input_database_location
-    )
+        charge_price_information_periods = (
+            standard_wholesale_fixing_scenario_data_generator.create_charge_price_information_periods(spark)
+        )
+        write_charge_price_information_periods_to_delta_table(
+            spark, charge_price_information_periods, input_database_location
+        )
 
-    energy = standard_wholesale_fixing_scenario_data_generator.create_energy(spark)
-    write_energy_to_delta_table(spark, energy, input_database_location)
+        energy = standard_wholesale_fixing_scenario_data_generator.create_energy(spark)
+        write_energy_to_delta_table(spark, energy, input_database_location)
 
-    energy_per_es = standard_wholesale_fixing_scenario_data_generator.create_energy_per_es(spark)
-    write_energy_per_es_to_delta_table(spark, energy_per_es, input_database_location)
+        energy_per_es = standard_wholesale_fixing_scenario_data_generator.create_energy_per_es(spark)
+        write_energy_per_es_to_delta_table(spark, energy_per_es, input_database_location)
 
-    amounts_per_charge = standard_wholesale_fixing_scenario_data_generator.create_amounts_per_charge(spark)
-    write_amounts_per_charge_to_delta_table(spark, amounts_per_charge, input_database_location)
+        amounts_per_charge = standard_wholesale_fixing_scenario_data_generator.create_amounts_per_charge(spark)
+        write_amounts_per_charge_to_delta_table(spark, amounts_per_charge, input_database_location)
 
-    monthly_amounts_per_charge_df = standard_wholesale_fixing_scenario_data_generator.create_monthly_amounts_per_charge(
-        spark
-    )
-    write_monthly_amounts_per_charge_to_delta_table(spark, monthly_amounts_per_charge_df, input_database_location)
-    total_monthly_amounts_df = standard_wholesale_fixing_scenario_data_generator.create_total_monthly_amounts(spark)
-    write_total_monthly_amounts_to_delta_table(spark, total_monthly_amounts_df, input_database_location)
+        monthly_amounts_per_charge_df = (
+            standard_wholesale_fixing_scenario_data_generator.create_monthly_amounts_per_charge(spark)
+        )
+        write_monthly_amounts_per_charge_to_delta_table(spark, monthly_amounts_per_charge_df, input_database_location)
+        total_monthly_amounts_df = standard_wholesale_fixing_scenario_data_generator.create_total_monthly_amounts(spark)
+        write_total_monthly_amounts_to_delta_table(spark, total_monthly_amounts_df, input_database_location)
 
 
 @pytest.fixture(scope="session")
