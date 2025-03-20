@@ -37,38 +37,41 @@ def test_execute_quarterly_time_series_points__when_energy_supplier__returns_exp
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    args = standard_wholesale_fixing_scenario_args
-    args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
-    energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    args.requesting_actor_id = energy_supplier_id
-    args.energy_supplier_ids = [energy_supplier_id]
-    expected_file_names = [
-        f"TSSD15_804_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
-        f"TSSD15_805_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_wholesale_fixing_scenario_args
+        args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
+        energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
+        args.requesting_actor_id = energy_supplier_id
+        args.energy_supplier_ids = [energy_supplier_id]
+        expected_file_names = [
+            f"TSSD15_804_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
+            f"TSSD15_805_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 def test_execute_quarterly_time_series_points__when_grid_access_provider__returns_expected(
@@ -77,36 +80,39 @@ def test_execute_quarterly_time_series_points__when_grid_access_provider__return
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    args = standard_wholesale_fixing_scenario_args
-    args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
-    args.energy_supplier_ids = None
-    expected_file_names = [
-        f"TSSD15_804_{args.requesting_actor_id}_DDM_02-01-2024_02-01-2024.csv",
-        f"TSSD15_805_{args.requesting_actor_id}_DDM_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_wholesale_fixing_scenario_args
+        args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
+        args.energy_supplier_ids = None
+        expected_file_names = [
+            f"TSSD15_804_{args.requesting_actor_id}_DDM_02-01-2024_02-01-2024.csv",
+            f"TSSD15_805_{args.requesting_actor_id}_DDM_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 @pytest.mark.parametrize(
@@ -120,38 +126,41 @@ def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_a
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
 ):
-    # Arrange
-    args = standard_wholesale_fixing_scenario_args
-    args.requesting_actor_market_role = market_role
-    energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    args.energy_supplier_ids = [energy_supplier_id]
-    expected_file_names = [
-        f"TSSD15_804_{energy_supplier_id}_02-01-2024_02-01-2024.csv",
-        f"TSSD15_805_{energy_supplier_id}_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.energy_supplier_id,
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_wholesale_fixing_scenario_args
+        args.requesting_actor_market_role = market_role
+        energy_supplier_id = standard_wholesale_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
+        args.energy_supplier_ids = [energy_supplier_id]
+        expected_file_names = [
+            f"TSSD15_804_{energy_supplier_id}_02-01-2024_02-01-2024.csv",
+            f"TSSD15_805_{energy_supplier_id}_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.energy_supplier_id,
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 @pytest.mark.parametrize(
@@ -165,37 +174,40 @@ def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_a
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
 ):
-    # Arrange
-    args = standard_wholesale_fixing_scenario_args
-    args.requesting_actor_market_role = market_role
-    args.energy_supplier_ids = None
-    expected_file_names = [
-        "TSSD15_804_02-01-2024_02-01-2024.csv",
-        "TSSD15_805_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.energy_supplier_id,
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_wholesale_fixing_scenario_args
+        args.requesting_actor_market_role = market_role
+        args.energy_supplier_ids = None
+        expected_file_names = [
+            "TSSD15_804_02-01-2024_02-01-2024.csv",
+            "TSSD15_805_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.energy_supplier_id,
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 def test_execute_quarterly_time_series_points__when_include_basis_data_false__returns_no_file_paths(
@@ -204,20 +216,23 @@ def test_execute_quarterly_time_series_points__when_include_basis_data_false__re
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    args = standard_wholesale_fixing_scenario_args
-    args.include_basis_data = False
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_wholesale_fixing_scenario_args
+        args.include_basis_data = False
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=args,
-    )
-    assert actual_files is None or len(actual_files) == 0
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=args,
+        )
+        assert actual_files is None or len(actual_files) == 0
 
 
 def test_execute_quarterly_time_series_points__when_energy_supplier_and_balance_fixing__returns_expected(
@@ -226,35 +241,38 @@ def test_execute_quarterly_time_series_points__when_energy_supplier_and_balance_
     standard_balance_fixing_scenario_args: SettlementReportArgs,
     standard_balance_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    args = standard_balance_fixing_scenario_args
-    args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
-    energy_supplier_id = standard_balance_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
-    args.requesting_actor_id = energy_supplier_id
-    args.energy_supplier_ids = [energy_supplier_id]
-    expected_file_names = [
-        f"TSSD15_804_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
-        f"TSSD15_805_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
-    task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        args = standard_balance_fixing_scenario_args
+        args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
+        energy_supplier_id = standard_balance_fixing_scenario_data_generator.ENERGY_SUPPLIER_IDS[0]
+        args.requesting_actor_id = energy_supplier_id
+        args.energy_supplier_ids = [energy_supplier_id]
+        expected_file_names = [
+            f"TSSD15_804_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
+            f"TSSD15_805_{energy_supplier_id}_DDQ_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 101)]
+        task = TimeSeriesPointsTask(spark, dbutils, args, TaskType.TimeSeriesQuarterly)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesQuarterly,
-        args=args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesQuarterly,
+            args=args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
