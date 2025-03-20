@@ -33,41 +33,44 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario__return
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
-    standard_wholesale_fixing_scenario_args.energy_supplier_ids = ["1000000000000"]
-    expected_columns = [
-        CsvColumnNames.grid_area_code,
-        CsvColumnNames.energy_supplier_id,
-        CsvColumnNames.calculation_type,
-        CsvColumnNames.time,
-        CsvColumnNames.resolution,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.settlement_method,
-        CsvColumnNames.energy_quantity,
-    ]
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
+        standard_wholesale_fixing_scenario_args.energy_supplier_ids = ["1000000000000"]
+        expected_columns = [
+            CsvColumnNames.grid_area_code,
+            CsvColumnNames.energy_supplier_id,
+            CsvColumnNames.calculation_type,
+            CsvColumnNames.time,
+            CsvColumnNames.resolution,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.settlement_method,
+            CsvColumnNames.energy_quantity,
+        ]
 
-    expected_file_names = [
-        "RESULTENERGY_804_1000000000000_02-01-2024_02-01-2024.csv",
-        "RESULTENERGY_805_1000000000000_02-01-2024_02-01-2024.csv",
-    ]
-    task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
+        expected_file_names = [
+            "RESULTENERGY_804_1000000000000_02-01-2024_02-01-2024.csv",
+            "RESULTENERGY_805_1000000000000_02-01-2024_02-01-2024.csv",
+        ]
+        task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.EnergyResults,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(standard_wholesale_fixing_scenario_args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.EnergyResults,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(standard_wholesale_fixing_scenario_args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 def test_execute_energy_results__when_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
@@ -76,48 +79,51 @@ def test_execute_energy_results__when_split_report_by_grid_area_is_false__return
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
-    standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = {
-        standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[
-            0
-        ]: standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area[
-            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
+        standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area = {
+            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[
+                0
+            ]: standard_wholesale_fixing_scenario_args.calculation_id_by_grid_area[
+                standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]
+            ]
+        }
+        standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
+        standard_wholesale_fixing_scenario_args.split_report_by_grid_area = True
+        expected_columns = [
+            CsvColumnNames.grid_area_code,
+            CsvColumnNames.energy_supplier_id,
+            CsvColumnNames.calculation_type,
+            CsvColumnNames.time,
+            CsvColumnNames.resolution,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.settlement_method,
+            CsvColumnNames.energy_quantity,
         ]
-    }
-    standard_wholesale_fixing_scenario_args.energy_supplier_ids = None
-    standard_wholesale_fixing_scenario_args.split_report_by_grid_area = True
-    expected_columns = [
-        CsvColumnNames.grid_area_code,
-        CsvColumnNames.energy_supplier_id,
-        CsvColumnNames.calculation_type,
-        CsvColumnNames.time,
-        CsvColumnNames.resolution,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.settlement_method,
-        CsvColumnNames.energy_quantity,
-    ]
 
-    expected_file_names = [
-        "RESULTENERGY_804_02-01-2024_02-01-2024.csv",
-    ]
-    task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
+        expected_file_names = [
+            "RESULTENERGY_804_02-01-2024_02-01-2024.csv",
+        ]
+        task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.EnergyResults,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(standard_wholesale_fixing_scenario_args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.EnergyResults,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(standard_wholesale_fixing_scenario_args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_access__returns_expected_number_of_files_and_content(
@@ -126,41 +132,44 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_ac
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
-    standard_wholesale_fixing_scenario_args.requesting_actor_id = "1234567890123"
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
+        standard_wholesale_fixing_scenario_args.requesting_actor_id = "1234567890123"
 
-    expected_columns = [
-        CsvColumnNames.grid_area_code,
-        CsvColumnNames.calculation_type,
-        CsvColumnNames.time,
-        CsvColumnNames.resolution,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.settlement_method,
-        CsvColumnNames.energy_quantity,
-    ]
+        expected_columns = [
+            CsvColumnNames.grid_area_code,
+            CsvColumnNames.calculation_type,
+            CsvColumnNames.time,
+            CsvColumnNames.resolution,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.settlement_method,
+            CsvColumnNames.energy_quantity,
+        ]
 
-    expected_file_names = [
-        "RESULTENERGY_804_1234567890123_DDM_02-01-2024_02-01-2024.csv",
-        "RESULTENERGY_805_1234567890123_DDM_02-01-2024_02-01-2024.csv",
-    ]
-    task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
+        expected_file_names = [
+            "RESULTENERGY_804_1234567890123_DDM_02-01-2024_02-01-2024.csv",
+            "RESULTENERGY_805_1234567890123_DDM_02-01-2024_02-01-2024.csv",
+        ]
+        task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.EnergyResults,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(standard_wholesale_fixing_scenario_args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.EnergyResults,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(standard_wholesale_fixing_scenario_args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
 
 
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_energy_supplier__returns_expected_number_of_files_and_content(
@@ -169,38 +178,41 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario_energy_
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
-    standard_wholesale_fixing_scenario_args.requesting_actor_id = "1000000000000"
-    standard_wholesale_fixing_scenario_args.energy_supplier_ids = ["1000000000000"]
-    expected_columns = [
-        CsvColumnNames.grid_area_code,
-        CsvColumnNames.calculation_type,
-        CsvColumnNames.time,
-        CsvColumnNames.resolution,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.settlement_method,
-        CsvColumnNames.energy_quantity,
-    ]
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
+        standard_wholesale_fixing_scenario_args.requesting_actor_id = "1000000000000"
+        standard_wholesale_fixing_scenario_args.energy_supplier_ids = ["1000000000000"]
+        expected_columns = [
+            CsvColumnNames.grid_area_code,
+            CsvColumnNames.calculation_type,
+            CsvColumnNames.time,
+            CsvColumnNames.resolution,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.settlement_method,
+            CsvColumnNames.energy_quantity,
+        ]
 
-    expected_file_names = [
-        "RESULTENERGY_804_1000000000000_DDQ_02-01-2024_02-01-2024.csv",
-        "RESULTENERGY_805_1000000000000_DDQ_02-01-2024_02-01-2024.csv",
-    ]
-    task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
+        expected_file_names = [
+            "RESULTENERGY_804_1000000000000_DDQ_02-01-2024_02-01-2024.csv",
+            "RESULTENERGY_805_1000000000000_DDQ_02-01-2024_02-01-2024.csv",
+        ]
+        task = EnergyResultsTask(spark, dbutils, standard_wholesale_fixing_scenario_args)
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.EnergyResults,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(standard_wholesale_fixing_scenario_args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.EnergyResults,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(standard_wholesale_fixing_scenario_args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )

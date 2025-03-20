@@ -185,20 +185,23 @@ def standard_balance_fixing_scenario_data_written_to_delta(
     spark: SparkSession,
     input_database_location: str,
 ) -> None:
-    time_series_points_df = standard_balance_fixing_scenario_data_generator.create_metering_point_time_series(spark)
-    write_metering_point_time_series_to_delta_table(spark, time_series_points_df, input_database_location)
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        time_series_points_df = standard_balance_fixing_scenario_data_generator.create_metering_point_time_series(spark)
+        write_metering_point_time_series_to_delta_table(spark, time_series_points_df, input_database_location)
 
-    metering_point_periods = standard_balance_fixing_scenario_data_generator.create_metering_point_periods(spark)
-    write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
+        metering_point_periods = standard_balance_fixing_scenario_data_generator.create_metering_point_periods(spark)
+        write_metering_point_periods_to_delta_table(spark, metering_point_periods, input_database_location)
 
-    energy_df = standard_balance_fixing_scenario_data_generator.create_energy(spark)
-    write_energy_to_delta_table(spark, energy_df, input_database_location)
+        energy_df = standard_balance_fixing_scenario_data_generator.create_energy(spark)
+        write_energy_to_delta_table(spark, energy_df, input_database_location)
 
-    energy_per_es_df = standard_balance_fixing_scenario_data_generator.create_energy_per_es(spark)
-    write_energy_per_es_to_delta_table(spark, energy_per_es_df, input_database_location)
+        energy_per_es_df = standard_balance_fixing_scenario_data_generator.create_energy_per_es(spark)
+        write_energy_per_es_to_delta_table(spark, energy_per_es_df, input_database_location)
 
-    latest_calculations_by_day = standard_balance_fixing_scenario_data_generator.create_latest_calculations(spark)
-    write_latest_calculations_by_day_to_delta_table(spark, latest_calculations_by_day, input_database_location)
+        latest_calculations_by_day = standard_balance_fixing_scenario_data_generator.create_latest_calculations(spark)
+        write_latest_calculations_by_day_to_delta_table(spark, latest_calculations_by_day, input_database_location)
 
 
 @pytest.fixture(scope="session")
