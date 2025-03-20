@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from geh_common.application import GridAreaCodes
 from typing import Annotated
 
+from geh_common.application import GridAreaCodes
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
