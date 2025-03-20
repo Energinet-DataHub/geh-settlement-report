@@ -1,6 +1,7 @@
+import re
 import uuid
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
 from geh_common.application import GridAreaCodes
 from pydantic import Field, field_validator, model_validator
@@ -48,6 +49,17 @@ class SettlementReportArgs(BaseSettings):
             if self.calculation_id_by_grid_area is None:
                 raise ValueError("calculation_id_by_grid_area must be a dictionary for anything but balance fixing")
         return self
+
+    @field_validator("energy_supplier_ids", mode="before")
+    @classmethod
+    def _convert_energy_supplier_ids(cls, value: Any) -> list[str] | None:
+        if not value:
+            return None
+        if isinstance(value, list):
+            return [str(item) for item in value]
+        else:
+            return re.findall(r"\d+", value)
+
 
     @field_validator("energy_supplier_ids", mode="after")
     @classmethod
