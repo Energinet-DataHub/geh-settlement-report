@@ -35,36 +35,39 @@ def test_execute_hourly_time_series_points__when_standard_wholesale_fixing_scena
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
-    # Arrange
-    expected_file_names = [
-        "TSSD60_804_02-01-2024_02-01-2024.csv",
-        "TSSD60_805_02-01-2024_02-01-2024.csv",
-    ]
-    expected_columns = [
-        CsvColumnNames.energy_supplier_id,
-        CsvColumnNames.metering_point_id,
-        CsvColumnNames.metering_point_type,
-        CsvColumnNames.time,
-    ] + [f"ENERGYQUANTITY{i}" for i in range(1, 26)]
-    task = TimeSeriesPointsTask(
-        spark,
-        dbutils,
-        standard_wholesale_fixing_scenario_args,
-        TaskType.TimeSeriesHourly,
-    )
+    with pytest.MonkeyPatch.context() as ctx:
+        ctx.setenv("DATABASE_NAME_WHOLESALE_BASIS", "wholesale_basis_data")
+        ctx.setenv("DATABASE_NAME_WHOLESALE_RESULTS", "wholesale_results")
+        # Arrange
+        expected_file_names = [
+            "TSSD60_804_02-01-2024_02-01-2024.csv",
+            "TSSD60_805_02-01-2024_02-01-2024.csv",
+        ]
+        expected_columns = [
+            CsvColumnNames.energy_supplier_id,
+            CsvColumnNames.metering_point_id,
+            CsvColumnNames.metering_point_type,
+            CsvColumnNames.time,
+        ] + [f"ENERGYQUANTITY{i}" for i in range(1, 26)]
+        task = TimeSeriesPointsTask(
+            spark,
+            dbutils,
+            standard_wholesale_fixing_scenario_args,
+            TaskType.TimeSeriesHourly,
+        )
 
-    # Act
-    task.execute()
+        # Act
+        task.execute()
 
-    # Assert
-    actual_files = get_actual_files(
-        report_data_type=ReportDataType.TimeSeriesHourly,
-        args=standard_wholesale_fixing_scenario_args,
-    )
-    assert_file_names_and_columns(
-        path=get_report_output_path(standard_wholesale_fixing_scenario_args),
-        actual_files=actual_files,
-        expected_columns=expected_columns,
-        expected_file_names=expected_file_names,
-        spark=spark,
-    )
+        # Assert
+        actual_files = get_actual_files(
+            report_data_type=ReportDataType.TimeSeriesHourly,
+            args=standard_wholesale_fixing_scenario_args,
+        )
+        assert_file_names_and_columns(
+            path=get_report_output_path(standard_wholesale_fixing_scenario_args),
+            actual_files=actual_files,
+            expected_columns=expected_columns,
+            expected_file_names=expected_file_names,
+            spark=spark,
+        )
