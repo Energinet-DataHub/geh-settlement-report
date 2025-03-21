@@ -193,4 +193,4 @@ def test_grid_area_code_validation(reason, args, environment_variables: dict, mo
     monkeypatch.setattr(os, "environ", environment_variables)
     with pytest.raises(pydantic.ValidationError) as e:
         SettlementReportArgs()
-        assert "Unknown grid area code:" in str(e.value)
+        assert "Unexpected grid area code:" in str(e.value)

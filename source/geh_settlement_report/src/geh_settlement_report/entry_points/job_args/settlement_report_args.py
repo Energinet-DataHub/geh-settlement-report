@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from typing import Annotated, Any
 
+from geh_common.application import GridAreaCodes
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
@@ -30,7 +31,7 @@ class SettlementReportArgs(BaseSettings):
 
     calculation_id_by_grid_area: dict[str, uuid.UUID] | None = Field(init=False, default=None)
     """ A dictionary containing grid area codes (keys) and calculation ids (values). None for balance fixing"""
-    grid_area_codes: Annotated[list[str], NoDecode] | None = Field(init=False, default=None)
+    grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
     """ None if NOT balance fixing"""
     energy_supplier_ids: Annotated[list[str], NoDecode] | None = Field(init=False, default=None)
     time_zone: str = Field(init=False, default="Europe/Copenhagen")
@@ -49,28 +50,15 @@ class SettlementReportArgs(BaseSettings):
                 raise ValueError("calculation_id_by_grid_area must be a dictionary for anything but balance fixing")
         return self
 
-    @field_validator("grid_area_codes", "energy_supplier_ids", mode="before")
+    @field_validator("energy_supplier_ids", mode="before")
     @classmethod
-    def _convert_grid_area_codes(cls, value: Any) -> list[str] | None:
+    def _convert_energy_supplier_ids(cls, value: Any) -> list[str] | None:
         if not value:
             return None
         if isinstance(value, list):
             return [str(item) for item in value]
         else:
             return re.findall(r"\d+", value)
-
-    @field_validator("grid_area_codes", mode="after")
-    @classmethod
-    def validate_grid_area_codes(cls, v: list[str] | None) -> list[str] | None:
-        if v is None:
-            return v
-        for code in v:
-            assert isinstance(code, str), f"Grid area codes must be strings, not {type(code)}"
-            if len(code) != 3 or not code.isdigit():
-                raise ValueError(
-                    f"Unknown grid area code: '{code}'. Grid area codes must consist of 3 digits (000-999)."
-                )
-        return v
 
     @field_validator("energy_supplier_ids", mode="after")
     @classmethod
