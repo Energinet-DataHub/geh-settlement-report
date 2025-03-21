@@ -60,7 +60,6 @@ class SettlementReportArgs(BaseSettings):
         else:
             return re.findall(r"\d+", value)
 
-
     @field_validator("energy_supplier_ids", mode="after")
     @classmethod
     def validate_energy_supplier_ids(cls, value: list[str] | None) -> list[str] | None:
