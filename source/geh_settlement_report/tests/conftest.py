@@ -433,7 +433,6 @@ def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
     from geh_common.telemetry.logging_configuration import (
-        LoggingSettings,
         configure_logging,
     )
 
@@ -444,8 +443,7 @@ def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
             "geh_common.telemetry.logging_configuration.configure_azure_monitor"
         ),  # Patching call to configure_azure_monitor in order to not actually connect to app. insights.
     ):
-        logging_settings = LoggingSettings()
-        configure_logging(logging_settings=logging_settings)
+        configure_logging(cloud_role_name="unknown", subsystem="geh-settlement-report")
 
 
 @pytest.fixture(scope="function")

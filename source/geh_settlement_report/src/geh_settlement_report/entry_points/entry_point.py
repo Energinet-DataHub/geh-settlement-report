@@ -18,7 +18,6 @@ import sys
 from geh_common.telemetry import Logger
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logging_configuration import (
-    LoggingSettings,
     add_extras,
     configure_logging,
 )
@@ -71,11 +70,7 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    logging_settings = LoggingSettings(
-        subsystem="settlement-report-aggregations",
-        cloud_role_name="dbr-settlement-report",
-    )
-    configure_logging(logging_settings=logging_settings)
+    configure_logging(subsystem="settlement-report-aggregations", cloud_role_name="dbr-settlement-report")
     start_task_with_deps(task_type=task_type)
 
 
