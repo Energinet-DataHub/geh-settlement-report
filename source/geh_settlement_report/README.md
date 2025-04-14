@@ -30,7 +30,7 @@ Contains the core business logic and rules. This folder is divided into multiple
 
 **infrastructure/**:
 
-Implementations for accessing and storing data for settlement reports. This means things like accessing delta tables/view (repository), writing csv and generating the zip file.
+Implementations for accessing and storing data for settlement reports. This means things like accessing delta tables/view (repository), writing csv and generating the zip files.
 
 ## Using the wheel in Databricks
 
