@@ -43,7 +43,6 @@ jobs:
   cd_python:
     name: Continuous Deployment
     needs: [changes]
-    if: ${{ needs.changes.outputs.dotnet != 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-cd.yml@v14
     with:
       packages_directory: source
