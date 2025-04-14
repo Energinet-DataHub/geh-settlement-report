@@ -23,7 +23,7 @@ Handles interactions with the outside world. It contains the entry points and ar
 
 **domain/**:
 
-Contains the core business logic and rules. This folder is divided into subfolders: - one for each report type (e.g. metering point periods, time series points and energy results). Logic for preparing settlement reports data is implemented here. Here are some of the key responsibilities that is implemented for each type of settlement report data:
+Contains the core business logic and rules. This folder is divided into multiple subfolders: - one for each report type (e.g. metering point periods, time series points and energy results). Logic for preparing settlement reports data is implemented here. Here are some of the key responsibilities that is implemented for each type of settlement report data:
 
 - filter input data based on the given parameters
 - transform the input data into the desired format for csv: columns, data types, ordering etc.
