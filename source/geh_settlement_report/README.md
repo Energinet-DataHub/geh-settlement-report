@@ -4,7 +4,7 @@
 
 ## Overview
 
-The `settlement_report` folder contains all the relevant code for creating and testing the python wheel, which is used in the Databricks Job(s) for creating settlement reports.
+The `geh_settlement_report` folder contains all the relevant code for creating and testing the python wheel, which is used in the Databricks Job(s) for creating settlement reports.
 
 The wheel's responsibility is to:
 
