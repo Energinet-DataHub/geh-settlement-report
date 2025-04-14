@@ -1,6 +1,6 @@
 [project]
 name = "geh-settlement-report"
-version = "0.1.0"
+version = "1.0.0"
 description = "Library for creating settlement reports"
 readme = "README.md"
 requires-python = ">=3.11"

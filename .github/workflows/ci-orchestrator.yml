@@ -50,7 +50,7 @@ jobs:
     uses: ./.github/workflows/ci-dotnet.yml
 
   ci_python:
-    name: Unit tests
+    name: Unit tests and build packages
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
       packages_directory: source
