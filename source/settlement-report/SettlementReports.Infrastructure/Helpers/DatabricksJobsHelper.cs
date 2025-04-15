@@ -151,7 +151,8 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
                 or RunTerminationCode.DRIVER_ERROR
                 or RunTerminationCode.CLOUD_FAILURE
                 or RunTerminationCode.CLUSTER_ERROR
-                or RunTerminationCode.RUN_EXECUTION_ERROR)
+                or RunTerminationCode.RUN_EXECUTION_ERROR
+                or RunTerminationCode.LIBRARY_INSTALLATION_ERROR)
         {
             return JobRunStatus.Failed;
         }
