@@ -39,7 +39,7 @@ RUN sed -i 's/\r$//' $HOME/scripts/install-asdf.sh \
 
 
 # Install asdf
-RUN ./$HOME/scripts/install-asdf.sh $ASDF_VERSION \
+RUN $HOME/scripts/install-asdf.sh $ASDF_VERSION \
   && echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> $HOME/.bashrc \
   && echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> $HOME/.zshrc
 
