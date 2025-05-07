@@ -31,11 +31,7 @@ ENV USER=vscode \
 # Add tool-versions and startup script
 COPY --chown=${USER}:${USER} .tool-versions $HOME/.tool-versions
 COPY --chown=${USER}:${USER} .devcontainer/scripts $HOME/scripts
-
-# Fixing line endings on windows
-RUN sed -i 's/\r$//' $HOME/scripts/install-asdf.sh \
-  && sed -i 's/\r$//' $HOME/scripts/post-create.sh \
-  && chmod +x $HOME/scripts/*
+RUN chmod +x $HOME/scripts/*
 
 
 # Install asdf
