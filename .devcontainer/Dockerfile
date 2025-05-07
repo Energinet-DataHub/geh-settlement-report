@@ -32,7 +32,6 @@ COPY --chown=${USER}:${USER} .tool-versions $HOME/.tool-versions
 COPY --chown=${USER}:${USER} .devcontainer/scripts $HOME/scripts
 RUN chmod +x $HOME/scripts/*
 
-
 # Install asdf
 RUN $HOME/scripts/install-asdf.sh $ASDF_VERSION \
   && echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> $HOME/.bashrc \
