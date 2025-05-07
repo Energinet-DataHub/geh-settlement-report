@@ -76,7 +76,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          'source/Reports.SubsystemTests/Reports.SubsystemTests.csproj' \
+          'source\settlement-report\Reports.SubsystemTests/Reports.SubsystemTests.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
