@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "legacy", "legacy", "{DA1A30
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{92E7938D-A590-44A7-9720-DCA505366390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.SubsystemTests", "source\settlement-report\SettlementReports.SubsystemTests\SettlementReports.SubsystemTests.csproj", "{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{323D0FB4-7D5C-4C44-8C52-C629766750F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,5 +99,6 @@ Global
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D} = {92E7938D-A590-44A7-9720-DCA505366390}
 		{323D0FB4-7D5C-4C44-8C52-C629766750F8} = {9805FFFF-9C74-4E1F-9FE8-0423C9469E33}
 		{DA1A3074-1719-45B5-BECE-703B9AA1F9CB} = {9805FFFF-9C74-4E1F-9FE8-0423C9469E33}
+		{D5BC9EB6-79AB-40A5-8FE3-171EB378E658} = {92E7938D-A590-44A7-9720-DCA505366390}
 	EndGlobalSection
 EndGlobal
