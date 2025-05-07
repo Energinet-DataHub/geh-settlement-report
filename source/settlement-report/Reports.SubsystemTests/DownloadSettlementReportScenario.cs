@@ -14,7 +14,7 @@
 
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.SubsystemTests;
+namespace Energinet.DataHub.Reports.SubsystemTests;
 
 public class DownloadSettlementReportScenario
 {

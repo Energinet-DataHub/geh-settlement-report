@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "legacy", "legacy", "{DA1A30
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{92E7938D-A590-44A7-9720-DCA505366390}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.SubsystemTests", "source\settlement-report\SettlementReports.SubsystemTests\SettlementReports.SubsystemTests.csproj", "{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.SubsystemTests", "source\settlement-report\Reports.SubsystemTests\Reports.SubsystemTests.csproj", "{D5BC9EB6-79AB-40A5-8FE3-171EB378E658}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
