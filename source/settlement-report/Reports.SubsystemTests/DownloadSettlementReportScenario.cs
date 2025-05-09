@@ -61,13 +61,13 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
                 { "102", null },
             },
             PeriodStart: Instant.FromUtc(2022, 1, 1, 23, 0, 0).ToDateTimeOffset(),
-            PeriodEnd: Instant.FromUtc(2022, 1, 3, 23,0, 0).ToDateTimeOffset(),
+            PeriodEnd: Instant.FromUtc(2022, 1, 3, 23, 0, 0).ToDateTimeOffset(),
             CalculationType: CalculationType.BalanceFixing,
             EnergySupplier: null,
             CsvFormatLocale: null);
 
         _fixture.SettlementReportRequestDto = new SettlementReportRequestDto(
-            SplitReportPerGridArea: true ,
+            SplitReportPerGridArea: true,
             PreventLargeTextFiles: true,
             IncludeBasisData: true,
             IncludeMonthlyAmount: false,

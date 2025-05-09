@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit.Abstractions;
@@ -26,12 +27,11 @@ public class SettlementReportFixture
     }
 
     public TestDiagnosticsLogger Logger { get; }
-    
-    public SettlementReportRequestDto SettlementReportRequestDto { get; set; }
+
+    public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
 
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
         Logger.TestOutputHelper = testOutputHelper;
     }
-
 }
