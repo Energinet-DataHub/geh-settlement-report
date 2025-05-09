@@ -27,7 +27,6 @@ ENV USER=vscode \
     RUFF_CACHE_DIR=/home/vscode/.cache/ruff \
     PYTHONPYCACHEPREFIX=/home/vscode/.cache/pycache
 
-
 # Add tool-versions and startup script
 COPY --chown=${USER}:${USER} .tool-versions $HOME/.tool-versions
 COPY --chown=${USER}:${USER} .devcontainer/scripts $HOME/scripts
