@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="7.2.1" />
         <PackageReference Include="Energinet.DataHub.Core.TestCommon" Version="7.3.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />

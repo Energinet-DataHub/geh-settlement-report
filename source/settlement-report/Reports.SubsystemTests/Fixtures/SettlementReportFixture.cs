@@ -25,11 +25,15 @@ public class SettlementReportFixture
     {
         Logger = new TestDiagnosticsLogger();
 
+        Configuration = new SettlementReportSubsystemTestConfiguration();
+
         var httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri();
+        httpClient.BaseAddress = new Uri(Configuration.BaseAddress);
 
         SettlementReportClient = new SettlementReportClient(httpClient);
     }
+
+    public SettlementReportSubsystemTestConfiguration Configuration { get; }
 
     public TestDiagnosticsLogger Logger { get; }
 
