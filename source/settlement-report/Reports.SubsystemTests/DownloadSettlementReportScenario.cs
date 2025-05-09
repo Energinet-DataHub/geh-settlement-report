@@ -51,9 +51,9 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
         return Task.CompletedTask;
     }
 
-    [SubsystemFact]
+    [Fact]
     [ScenarioStep(1)]
-    public void Given_ValidRequestCalculatedEnergyTimeSeriesRequest()
+    public void Given_ValidSettlementReportRequestDto()
     {
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
@@ -72,5 +72,14 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
             IncludeBasisData: true,
             IncludeMonthlyAmount: false,
             Filter: filter);
+    }
+
+    [Fact]
+    [ScenarioStep(2)]
+    public async Task AndGiven_SettlementReportRequestIsSent()
+    {
+        await _fixture.SettlementReportClient.RequestAsync(
+            _fixture.SettlementReportRequestDto,
+            CancellationToken.None);
     }
 }

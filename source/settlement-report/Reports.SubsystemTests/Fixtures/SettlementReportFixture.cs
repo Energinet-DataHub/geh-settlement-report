@@ -24,11 +24,19 @@ public class SettlementReportFixture
     public SettlementReportFixture()
     {
         Logger = new TestDiagnosticsLogger();
+
+        var httpClient = new HttpClient();
+        httpClient.BaseAddress = new Uri();
+
+        SettlementReportClient = new SettlementReportClient(httpClient);
     }
 
     public TestDiagnosticsLogger Logger { get; }
 
+    [NotNull]
     public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
+
+    public SettlementReportClient SettlementReportClient { get; }
 
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
