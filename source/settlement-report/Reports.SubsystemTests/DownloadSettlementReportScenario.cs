@@ -12,19 +12,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
+using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
+using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
+using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using NodaTime;
+using NodaTime.Text;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Reports.SubsystemTests;
 
-public class DownloadSettlementReportScenario
+[TestCaseOrderer(
+    ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
+    ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
+public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFixture>,
+    IAsyncLifetime
 {
-    public DownloadSettlementReportScenario()
+    private readonly SettlementReportFixture _fixture;
+
+    public DownloadSettlementReportScenario(
+        SettlementReportFixture fixture,
+        ITestOutputHelper testOutputHelper)
     {
+        _fixture = fixture;
+        _fixture.SetTestOutputHelper(testOutputHelper);
     }
 
-    [Fact]
-    public void DummyTest()
+    public Task InitializeAsync()
     {
-        Assert.True(true);
+        return Task.CompletedTask;
+    }
+
+    public Task DisposeAsync()
+    {
+        _fixture.SetTestOutputHelper(null);
+        return Task.CompletedTask;
+    }
+
+    [SubsystemFact]
+    [ScenarioStep(1)]
+    public void Given_ValidRequestCalculatedEnergyTimeSeriesRequest()
+    {
+        var filter = new SettlementReportRequestFilterDto(
+            GridAreas: new Dictionary<string, CalculationId?>
+            {
+                { "102", null },
+            },
+            PeriodStart: Instant.FromUtc(2022, 1, 1, 23, 0, 0).ToDateTimeOffset(),
+            PeriodEnd: Instant.FromUtc(2022, 1, 3, 23,0, 0).ToDateTimeOffset(),
+            CalculationType: CalculationType.BalanceFixing,
+            EnergySupplier: null,
+            CsvFormatLocale: null);
+
+        _fixture.SettlementReportRequestDto = new SettlementReportRequestDto(
+            SplitReportPerGridArea: true ,
+            PreventLargeTextFiles: true,
+            IncludeBasisData: true,
+            IncludeMonthlyAmount: false,
+            Filter: filter);
     }
 }
