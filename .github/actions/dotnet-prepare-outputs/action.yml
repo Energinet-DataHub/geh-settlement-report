@@ -71,3 +71,13 @@ runs:
           --no-restore \
           --configuration Release \
           --output '${{ inputs.output_path }}\functions\settlement-reports'
+
+    - name: Publish subsystem tests
+      shell: bash
+      run: |
+        dotnet publish \
+          'source\settlement-report\Reports.SubsystemTests/Reports.SubsystemTests.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.output_path }}/subsystemtests/'
