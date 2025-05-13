@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Xunit;
 using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 
-public class SettlementReportFixture
+public class SettlementReportFixture : IAsyncLifetime
 {
     public SettlementReportFixture()
     {
@@ -28,7 +31,7 @@ public class SettlementReportFixture
         Configuration = new SettlementReportSubsystemTestConfiguration();
 
         var httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri(Configuration.BaseAddress);
+        httpClient.BaseAddress = new Uri(Configuration.WebApiBaseAddress);
 
         SettlementReportClient = new SettlementReportClient(httpClient);
     }
@@ -40,7 +43,20 @@ public class SettlementReportFixture
     [NotNull]
     public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
 
-    public SettlementReportClient SettlementReportClient { get; }
+    /// <summary>
+    /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
+    /// </summary>
+    public SettlementReportClient SettlementReportClient { get; private set; }
+
+    public async Task InitializeAsync()
+    {
+        SettlementReportClient = await WebApiClientFactory.CreateSettlementReportClientAsync(Configuration);
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {

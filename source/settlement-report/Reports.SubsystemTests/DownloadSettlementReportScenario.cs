@@ -51,7 +51,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
         return Task.CompletedTask;
     }
 
-    [Fact]
+    [SubsystemFact]
     [ScenarioStep(1)]
     public void Given_ValidSettlementReportRequestDto()
     {
@@ -74,7 +74,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
             Filter: filter);
     }
 
-    [Fact]
+    [SubsystemFact]
     [ScenarioStep(2)]
     public async Task AndGiven_SettlementReportRequestIsSent()
     {
