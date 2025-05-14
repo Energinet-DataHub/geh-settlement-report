@@ -44,9 +44,7 @@ public sealed class SettlementReportClient : ISettlementReportClient
             Encoding.UTF8,
             "application/json");
 
-        var responseMessage = _apiHttpClient.SendAsync(request, cancellationToken);
-
-        using var response = await responseMessage;
+        using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
