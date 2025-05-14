@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Azure.Messaging.ServiceBus;
-using Azure.Messaging.ServiceBus.Administration;
+using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit;
@@ -48,6 +47,33 @@ public class SettlementReportFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         SettlementReportClient = await WebApiClientFactory.CreateSettlementReportClientAsync(Configuration);
+    }
+
+    /// <summary>
+    /// Wait for the report generation to complete or fail.
+    /// </summary>
+    /// <returns>IsCompletedOrFailed: True if the report generation completed or failed; otherwise false.</returns>
+    public async Task<(bool IsCompletedOrFailed, RequestedSettlementReportDto? ReportRequest)> WaitForReportGenerationCompletedOrFailedAsync(
+        JobRunId jobRunId,
+        TimeSpan waitTimeLimit)
+    {
+        var delay = TimeSpan.FromSeconds(30);
+
+        RequestedSettlementReportDto? reportRequest = null;
+
+        var isCompletedOrFailed = await Awaiter.TryWaitUntilConditionAsync(
+            async () =>
+            {
+                var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
+                reportRequest = reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
+                return reportRequest is not null && reportRequest.Status == SettlementReportStatus.Completed;
+            },
+            waitTimeLimit,
+            delay);
+
+        // DiagnosticMessageSink.WriteDiagnosticMessage(
+        // $"Wait for calculation with id '{calculationId}' to be completed/failed finished with '{nameof(isCompletedOrFailed)}={isCompletedOrFailed}', '{nameof(calculation.OrchestrationState)}={calculation?.OrchestrationState}'.");
+        return (isCompletedOrFailed, reportRequest);
     }
 
     public Task DisposeAsync()

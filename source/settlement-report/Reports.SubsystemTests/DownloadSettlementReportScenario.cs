@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -80,6 +81,23 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
             _fixture.SettlementReportRequestDto,
             CancellationToken.None);
 
+        // Assert
+        Assert.NotNull(jobRunId);
         _fixture.JobRunId = jobRunId;
+    }
+
+    [SubsystemFact]
+    [ScenarioStep(3)]
+    public async Task Then_ReportGenerationIsCompletedWithinWaitTime()
+    {
+        var (isCompletedOrFailed, reportRequest) = await _fixture.WaitForReportGenerationCompletedOrFailedAsync(
+            _fixture.JobRunId!,
+            TimeSpan.FromMinutes(15));
+
+        // Assert
+        using var assertionScope = new AssertionScope();
+        Assert.True(isCompletedOrFailed);
+        Assert.NotNull(reportRequest);
+        Assert.Equal(SettlementReportStatus.Completed, reportRequest.Status);
     }
 }
