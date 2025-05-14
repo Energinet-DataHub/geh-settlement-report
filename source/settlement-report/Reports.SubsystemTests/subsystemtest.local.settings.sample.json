@@ -1,0 +1,16 @@
+﻿{
+  // Settings can be overridden per environment in CD workflows.
+  // Use this on developer machine to toggle tests while developing them.
+  // Should be set 'false' using an environment variable on the build agent, to run these after deployment.
+  "SUBSYSTEMFACT_SKIP": false,
+  // B2C information that allows us to retrieve an access token from tests:
+  "DH_E2E_USERNAME": "<user name>",
+  "DH_E2E_PASSWORD": "<user password, get this from the platform team>",
+  "B2C_ROPC_AUTH_URL": "<url>",
+  "B2C_FRONTEND_APP_ID": "<app id>",
+  "B2C_BACKEND_BFF_APP_SCOPE": "<app scope>",
+  "TOKEN_BASEADDRESS": "<Address of endpoint that can get valid internal token with correct permissions>",
+  "SHARED_KEYVAULT_NAME": "<shared keyvault name>",
+  "INTERNAL_KEYVAULT_NAME": "<internal keyvault name>",,
+  "WEBAPI_BASEADDRESS": "<webapi base address>",
+}
