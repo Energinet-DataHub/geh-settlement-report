@@ -17,7 +17,6 @@ using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -57,10 +56,10 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
             {
-                { "102", null },
+                { "543", null },
             },
-            PeriodStart: Instant.FromUtc(2022, 1, 1, 23, 0, 0).ToDateTimeOffset(),
-            PeriodEnd: Instant.FromUtc(2022, 1, 3, 23, 0, 0).ToDateTimeOffset(),
+            PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
+            PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero),
             CalculationType: CalculationType.BalanceFixing,
             EnergySupplier: null,
             CsvFormatLocale: null);
@@ -77,8 +76,10 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
     [ScenarioStep(2)]
     public async Task AndGiven_SettlementReportRequestIsSent()
     {
-        await _fixture.SettlementReportClient.RequestAsync(
+        var jobRunId = await _fixture.SettlementReportClient.RequestAsync(
             _fixture.SettlementReportRequestDto,
             CancellationToken.None);
+
+        _fixture.JobRunId = jobRunId;
     }
 }

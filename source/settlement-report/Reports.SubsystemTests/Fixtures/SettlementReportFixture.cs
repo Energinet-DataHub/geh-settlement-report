@@ -39,6 +39,8 @@ public class SettlementReportFixture : IAsyncLifetime
     /// </summary>
     public SettlementReportClient SettlementReportClient { get; private set; } = null!;
 
+    public JobRunId? JobRunId { get; set; } = null;
+
     private SettlementReportSubsystemTestConfiguration Configuration { get; }
 
     private TestDiagnosticsLogger Logger { get; }

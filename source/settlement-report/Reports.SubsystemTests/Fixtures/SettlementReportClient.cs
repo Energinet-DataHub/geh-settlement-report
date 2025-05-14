@@ -14,7 +14,6 @@
 
 using System.Net.Http.Json;
 using System.Text;
-using Energinet.DataHub.Reports.SubsystemTests.Fixtures.Identity;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Newtonsoft.Json;
 
@@ -31,7 +30,7 @@ public sealed class SettlementReportClient : ISettlementReportClient
         _apiHttpClient = apiHttpClient;
     }
 
-    public async Task RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
+    public async Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
     {
         if (IsPeriodAcrossMonths(requestDto.Filter))
         {
@@ -49,6 +48,10 @@ public sealed class SettlementReportClient : ISettlementReportClient
 
         using var response = await responseMessage;
         response.EnsureSuccessStatusCode();
+
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        var jobRunId = JsonConvert.DeserializeObject<long>(responseContent);
+        return new JobRunId(jobRunId);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
