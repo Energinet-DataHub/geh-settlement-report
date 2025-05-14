@@ -11,6 +11,6 @@
   "B2C_BACKEND_BFF_APP_SCOPE": "<app scope>",
   "TOKEN_BASEADDRESS": "<Address of endpoint that can get valid internal token with correct permissions>",
   "SHARED_KEYVAULT_NAME": "<shared keyvault name>",
-  "INTERNAL_KEYVAULT_NAME": "<internal keyvault name>",,
-  "WEBAPI_BASEADDRESS": "<webapi base address>",
+  "INTERNAL_KEYVAULT_NAME": "<internal keyvault name>",
+  "WEBAPI_BASEADDRESS": "<webapi base address>"
 }
