@@ -23,4 +23,10 @@
       <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="subsystemtest.local.settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
