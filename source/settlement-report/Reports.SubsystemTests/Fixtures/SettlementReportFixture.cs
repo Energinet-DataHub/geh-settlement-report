@@ -29,16 +29,7 @@ public class SettlementReportFixture : IAsyncLifetime
         Logger = new TestDiagnosticsLogger();
 
         Configuration = new SettlementReportSubsystemTestConfiguration();
-
-        var httpClient = new HttpClient();
-        httpClient.BaseAddress = new Uri(Configuration.WebApiBaseAddress);
-
-        SettlementReportClient = new SettlementReportClient(httpClient);
     }
-
-    public SettlementReportSubsystemTestConfiguration Configuration { get; }
-
-    public TestDiagnosticsLogger Logger { get; }
 
     [NotNull]
     public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
@@ -46,7 +37,11 @@ public class SettlementReportFixture : IAsyncLifetime
     /// <summary>
     /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
     /// </summary>
-    public SettlementReportClient SettlementReportClient { get; private set; }
+    public SettlementReportClient SettlementReportClient { get; private set; } = null!;
+
+    private SettlementReportSubsystemTestConfiguration Configuration { get; }
+
+    private TestDiagnosticsLogger Logger { get; }
 
     public async Task InitializeAsync()
     {

@@ -54,7 +54,7 @@ public sealed class B2CUserTokenAuthenticationClient : IDisposable
     }
 
     /// <summary>
-    /// Aquire an access token for the configured user.
+    /// Acquire an access token for the configured user.
     /// </summary>
     /// <returns>Access token.</returns>
     public async Task<string> AcquireAccessTokenAsync()

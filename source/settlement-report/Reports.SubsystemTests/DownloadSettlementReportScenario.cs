@@ -18,7 +18,6 @@ using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using NodaTime;
-using NodaTime.Text;
 using Xunit;
 using Xunit.Abstractions;
 
