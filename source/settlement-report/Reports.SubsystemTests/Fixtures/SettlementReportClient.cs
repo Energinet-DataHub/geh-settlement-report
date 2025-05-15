@@ -20,7 +20,7 @@ using Newtonsoft.Json;
 namespace Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 
 // TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
-public sealed class SettlementReportClient : ISettlementReportClient
+internal sealed class SettlementReportClient : ISettlementReportClient
 {
     private readonly HttpClient _apiHttpClient;
 
