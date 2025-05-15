@@ -66,7 +66,7 @@ public class SettlementReportFixture : IAsyncLifetime
             {
                 var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
                 reportRequest = reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
-                return reportRequest is not null && reportRequest.Status == SettlementReportStatus.Completed;
+                return reportRequest is not null && (reportRequest.Status == SettlementReportStatus.Completed || reportRequest.Status == SettlementReportStatus.Failed);
             },
             waitTimeLimit,
             delay);
