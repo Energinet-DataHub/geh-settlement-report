@@ -19,9 +19,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 
-public class SettlementReportSubsystemTestConfiguration : SubsystemTestConfiguration
+public class ReportsSubsystemTestConfiguration : SubsystemTestConfiguration
 {
-    public SettlementReportSubsystemTestConfiguration()
+    public ReportsSubsystemTestConfiguration()
     {
         var sharedKeyVaultName = Root.GetValue<string>("SHARED_KEYVAULT_NAME")
                                 ?? throw new NullReferenceException($"Missing configuration value for SHARED_KEYVAULT_NAME");

@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures.Identity;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Fixtures;
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
-public static class WebApiClientFactory
+public static class SettlementReportClientFactory
 {
-    public static async Task<SettlementReportClient> CreateSettlementReportClientAsync(SettlementReportSubsystemTestConfiguration configuration)
+    public static async Task<ISettlementReportClient> CreateSettlementReportClientAsync(ReportsSubsystemTestConfiguration configuration)
     {
         var httpClient = new HttpClient
         {

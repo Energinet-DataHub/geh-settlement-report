@@ -15,11 +15,12 @@
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Fixtures;
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
 public class SettlementReportFixture : IAsyncLifetime
 {
@@ -27,7 +28,7 @@ public class SettlementReportFixture : IAsyncLifetime
     {
         Logger = new TestDiagnosticsLogger();
 
-        Configuration = new SettlementReportSubsystemTestConfiguration();
+        Configuration = new ReportsSubsystemTestConfiguration();
     }
 
     [NotNull]
@@ -36,17 +37,17 @@ public class SettlementReportFixture : IAsyncLifetime
     /// <summary>
     /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
     /// </summary>
-    public SettlementReportClient SettlementReportClient { get; private set; } = null!;
+    public ISettlementReportClient SettlementReportClient { get; private set; } = null!;
 
     public JobRunId? JobRunId { get; set; } = null;
 
-    private SettlementReportSubsystemTestConfiguration Configuration { get; }
+    private ReportsSubsystemTestConfiguration Configuration { get; }
 
     private TestDiagnosticsLogger Logger { get; }
 
     public async Task InitializeAsync()
     {
-        SettlementReportClient = await WebApiClientFactory.CreateSettlementReportClientAsync(Configuration);
+        SettlementReportClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
     }
 
     /// <summary>
