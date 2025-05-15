@@ -75,7 +75,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
 
     [SubsystemFact]
     [ScenarioStep(2)]
-    public async Task AndGiven_SettlementReportRequestIsSent()
+    public async Task When_SettlementReportRequestIsSent()
     {
         var jobRunId = await _fixture.SettlementReportClient.RequestAsync(
             _fixture.SettlementReportRequestDto,
