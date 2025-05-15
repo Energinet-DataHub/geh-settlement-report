@@ -26,17 +26,17 @@ namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport;
 [TestCaseOrderer(
     ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
     ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
-public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFixture>,
+public class DownloadSettlementReportScenario : IClassFixture<SettlementReportScenarioFixture>,
     IAsyncLifetime
 {
-    private readonly SettlementReportFixture _fixture;
+    private readonly SettlementReportScenarioFixture _scenarioFixture;
 
     public DownloadSettlementReportScenario(
-        SettlementReportFixture fixture,
+        SettlementReportScenarioFixture scenarioFixture,
         ITestOutputHelper testOutputHelper)
     {
-        _fixture = fixture;
-        _fixture.SetTestOutputHelper(testOutputHelper);
+        _scenarioFixture = scenarioFixture;
+        _scenarioFixture.SetTestOutputHelper(testOutputHelper);
     }
 
     public Task InitializeAsync()
@@ -46,7 +46,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
 
     public Task DisposeAsync()
     {
-        _fixture.SetTestOutputHelper(null);
+        _scenarioFixture.SetTestOutputHelper(null);
         return Task.CompletedTask;
     }
 
@@ -65,7 +65,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
             EnergySupplier: null,
             CsvFormatLocale: null);
 
-        _fixture.SettlementReportRequestDto = new SettlementReportRequestDto(
+        _scenarioFixture.SettlementReportScenarioState.SettlementReportRequestDto = new SettlementReportRequestDto(
             SplitReportPerGridArea: true,
             PreventLargeTextFiles: true,
             IncludeBasisData: true,
@@ -77,21 +77,21 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportFi
     [ScenarioStep(2)]
     public async Task When_SettlementReportRequestIsSent()
     {
-        var jobRunId = await _fixture.SettlementReportClient.RequestAsync(
-            _fixture.SettlementReportRequestDto,
+        var jobRunId = await _scenarioFixture.SettlementReportClient.RequestAsync(
+            _scenarioFixture.SettlementReportScenarioState.SettlementReportRequestDto!,
             CancellationToken.None);
 
         // Assert
         Assert.NotNull(jobRunId);
-        _fixture.JobRunId = jobRunId;
+        _scenarioFixture.SettlementReportScenarioState.JobRunId = jobRunId;
     }
 
     [SubsystemFact]
     [ScenarioStep(3)]
     public async Task Then_ReportGenerationIsCompletedWithinWaitTime()
     {
-        var (isCompletedOrFailed, reportRequest) = await _fixture.WaitForReportGenerationCompletedOrFailedAsync(
-            _fixture.JobRunId!,
+        var (isCompletedOrFailed, reportRequest) = await _scenarioFixture.WaitForReportGenerationCompletedOrFailedAsync(
+            _scenarioFixture.SettlementReportScenarioState.JobRunId!,
             TimeSpan.FromMinutes(15));
 
         // Assert

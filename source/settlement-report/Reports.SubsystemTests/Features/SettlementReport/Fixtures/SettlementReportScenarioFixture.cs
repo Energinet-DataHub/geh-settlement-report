@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit;
@@ -22,24 +22,22 @@ using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
-public class SettlementReportFixture : IAsyncLifetime
+public class SettlementReportScenarioFixture : IAsyncLifetime
 {
-    public SettlementReportFixture()
+    public SettlementReportScenarioFixture()
     {
         Logger = new TestDiagnosticsLogger();
 
         Configuration = new ReportsSubsystemTestConfiguration();
+        SettlementReportScenarioState = new SettlementReportScenarioState();
     }
-
-    [NotNull]
-    public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
 
     /// <summary>
     /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
     /// </summary>
     public ISettlementReportClient SettlementReportClient { get; private set; } = null!;
 
-    public JobRunId? JobRunId { get; set; } = null;
+    public SettlementReportScenarioState SettlementReportScenarioState { get; }
 
     private ReportsSubsystemTestConfiguration Configuration { get; }
 
