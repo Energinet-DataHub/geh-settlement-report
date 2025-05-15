@@ -26,10 +26,7 @@ public class ReportsSubsystemTestConfiguration : SubsystemTestConfiguration
         var sharedKeyVaultName = Root.GetValue<string>("SHARED_KEYVAULT_NAME")
                                 ?? throw new NullReferenceException($"Missing configuration value for SHARED_KEYVAULT_NAME");
 
-        var internalKeyVaultName = Root.GetValue<string>("INTERNAL_KEYVAULT_NAME")
-                                ?? throw new NullReferenceException($"Missing configuration value for INTERNAL_KEYVAULT_NAME");
-
-        var keyVaultConfiguration = GetKeyVaultConfiguration(sharedKeyVaultName, internalKeyVaultName);
+        var keyVaultConfiguration = GetKeyVaultConfiguration(sharedKeyVaultName);
 
         WebApiBaseAddress = keyVaultConfiguration.GetValue<string>("app-settlement-report-webapi-base-url")
             ?? throw new ArgumentNullException(nameof(WebApiBaseAddress), $"Missing configuration value for {nameof(WebApiBaseAddress)}");
@@ -47,14 +44,12 @@ public class ReportsSubsystemTestConfiguration : SubsystemTestConfiguration
     /// <summary>
     /// Build configuration for loading settings from key vault secrets.
     /// </summary>
-    private IConfigurationRoot GetKeyVaultConfiguration(string sharedKeyVaultName, string internalKeyVaultName)
+    private IConfigurationRoot GetKeyVaultConfiguration(string sharedKeyVaultName)
     {
         var sharedKeyVaultUrl = $"https://{sharedKeyVaultName}.vault.azure.net/";
-        var internalKeyVaultUrl = $"https://{internalKeyVaultName}.vault.azure.net/";
 
         return new ConfigurationBuilder()
             .AddAuthenticatedAzureKeyVault(sharedKeyVaultUrl)
-            .AddAuthenticatedAzureKeyVault(internalKeyVaultUrl)
             .Build();
     }
 }
