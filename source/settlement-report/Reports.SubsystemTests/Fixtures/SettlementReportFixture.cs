@@ -71,8 +71,6 @@ public class SettlementReportFixture : IAsyncLifetime
             waitTimeLimit,
             delay);
 
-        // DiagnosticMessageSink.WriteDiagnosticMessage(
-        // $"Wait for calculation with id '{calculationId}' to be completed/failed finished with '{nameof(isCompletedOrFailed)}={isCompletedOrFailed}', '{nameof(calculation.OrchestrationState)}={calculation?.OrchestrationState}'.");
         return (isCompletedOrFailed, reportRequest);
     }
 
