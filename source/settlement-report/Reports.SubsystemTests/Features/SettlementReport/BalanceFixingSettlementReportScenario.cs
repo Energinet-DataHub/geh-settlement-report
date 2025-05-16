@@ -26,12 +26,12 @@ namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport;
 [TestCaseOrderer(
     ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
     ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
-public class DownloadSettlementReportScenario : IClassFixture<SettlementReportScenarioFixture>,
+public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementReportScenarioFixture>,
     IAsyncLifetime
 {
     private readonly SettlementReportScenarioFixture _scenarioFixture;
 
-    public DownloadSettlementReportScenario(
+    public BalanceFixingSettlementReportScenario(
         SettlementReportScenarioFixture scenarioFixture,
         ITestOutputHelper testOutputHelper)
     {
@@ -52,7 +52,7 @@ public class DownloadSettlementReportScenario : IClassFixture<SettlementReportSc
 
     [SubsystemFact]
     [ScenarioStep(1)]
-    public void Given_ValidSettlementReportRequestDto()
+    public void Given_ValidSettlementReportRequest()
     {
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
