@@ -54,13 +54,14 @@ public class WholesaleFixingSettlementReportScenario : IClassFixture<SettlementR
     [ScenarioStep(1)]
     public void Given_ValidSettlementReportRequestDto()
     {
+        // NOTE: These parameters match an existing calculation from the delta tables to ensure we get data (if no data, the Databricks job fails)
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
             {
-                { "804", null },
+                { "804", _scenarioFixture.Configuration.ExistingWholesaleFixingCalculationId },
             },
-            PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
-            PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero),
+            PeriodStart: new DateTimeOffset(2023, 1, 31, 23, 0, 0, TimeSpan.Zero),
+            PeriodEnd: new DateTimeOffset(2023, 2, 28, 23, 0, 0, TimeSpan.Zero),
             CalculationType: CalculationType.WholesaleFixing,
             EnergySupplier: null,
             CsvFormatLocale: null);

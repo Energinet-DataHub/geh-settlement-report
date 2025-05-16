@@ -28,7 +28,7 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
     {
         Logger = new TestDiagnosticsLogger();
 
-        Configuration = new ReportsSubsystemTestConfiguration();
+        Configuration = new SettlementReportSubsystemTestConfiguration();
         SettlementReportScenarioState = new SettlementReportScenarioState();
     }
 
@@ -39,7 +39,7 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
 
     public SettlementReportScenarioState SettlementReportScenarioState { get; }
 
-    private ReportsSubsystemTestConfiguration Configuration { get; }
+    public SettlementReportSubsystemTestConfiguration Configuration { get; }
 
     private TestDiagnosticsLogger Logger { get; }
 
