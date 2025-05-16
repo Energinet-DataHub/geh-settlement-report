@@ -52,9 +52,8 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
 
     [SubsystemFact]
     [ScenarioStep(1)]
-    public void Given_ValidSettlementReportRequestDto()
+    public void Given_ValidSettlementReportRequest()
     {
-        // NOTE: These parameters match an existing calculation from the delta tables to ensure we get data (if no data, the Databricks job fails)
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
             {
