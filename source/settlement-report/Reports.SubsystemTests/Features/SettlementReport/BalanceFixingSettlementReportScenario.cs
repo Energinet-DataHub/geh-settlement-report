@@ -100,4 +100,20 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
         Assert.NotNull(reportRequest);
         Assert.Equal(SettlementReportStatus.Completed, reportRequest.Status);
     }
+
+    [SubsystemFact]
+    [ScenarioStep(4)]
+    public async Task AndThen_ReportCanBeDownloaded()
+    {
+        // Arrange
+        var reportRequest = await _scenarioFixture.GetReportRequestByJobRunIdAsync(_scenarioFixture.SettlementReportScenarioState.JobRunId!);
+        Assert.NotNull(reportRequest);
+
+        // Act
+        var stream = await _scenarioFixture.SettlementReportClient.DownloadAsync(reportRequest.RequestId!, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(stream);
+        Assert.True(stream.Length > 0, "The downloaded file is empty.");
+    }
 }

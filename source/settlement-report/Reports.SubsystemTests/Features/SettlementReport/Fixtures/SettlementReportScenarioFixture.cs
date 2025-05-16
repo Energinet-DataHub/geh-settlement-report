@@ -48,6 +48,11 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
         SettlementReportClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
     }
 
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
     /// <summary>
     /// Wait for the report generation to complete or fail.
     /// </summary>
@@ -63,9 +68,8 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
         var isCompletedOrFailed = await Awaiter.TryWaitUntilConditionAsync(
             async () =>
             {
-                var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
-                reportRequest = reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
-                return reportRequest is not null && (reportRequest.Status == SettlementReportStatus.Completed || reportRequest.Status == SettlementReportStatus.Failed);
+                reportRequest = await GetReportRequestByJobRunIdAsync(jobRunId);
+                return reportRequest?.Status is SettlementReportStatus.Completed or SettlementReportStatus.Failed;
             },
             waitTimeLimit,
             delay);
@@ -73,13 +77,14 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
         return (isCompletedOrFailed, reportRequest);
     }
 
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
         Logger.TestOutputHelper = testOutputHelper;
+    }
+
+    public async Task<RequestedSettlementReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
+    {
+        var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
+        return reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
     }
 }
