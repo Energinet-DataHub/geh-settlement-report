@@ -25,6 +25,8 @@ create_monthly_amounts = "geh_settlement_report.entry_points.entry_point:start_m
 create_wholesale_results = "geh_settlement_report.entry_points.entry_point:start_wholesale_results"
 create_zip = "geh_settlement_report.entry_points.entry_point:start_zip"
 
+execute_measurements_report = "geh_settlement_report.entry_points.entry_point:create_measurements_report"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
