@@ -26,12 +26,12 @@ namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport;
 [TestCaseOrderer(
     ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
     ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
-public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementReportScenarioFixture>,
+public class WholesaleFixingSettlementReportScenario : IClassFixture<SettlementReportScenarioFixture>,
     IAsyncLifetime
 {
     private readonly SettlementReportScenarioFixture _scenarioFixture;
 
-    public BalanceFixingSettlementReportScenario(
+    public WholesaleFixingSettlementReportScenario(
         SettlementReportScenarioFixture scenarioFixture,
         ITestOutputHelper testOutputHelper)
     {
@@ -52,16 +52,17 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
 
     [SubsystemFact]
     [ScenarioStep(1)]
-    public void Given_ValidSettlementReportRequest()
+    public void Given_ValidSettlementReportRequestDto()
     {
+        // NOTE: These parameters match an existing calculation from the delta tables to ensure we get data (if no data, the Databricks job fails)
         var filter = new SettlementReportRequestFilterDto(
             GridAreas: new Dictionary<string, CalculationId?>
             {
-                { "543", null },
+                { "804", _scenarioFixture.Configuration.ExistingWholesaleFixingCalculationId },
             },
-            PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
-            PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero),
-            CalculationType: CalculationType.BalanceFixing,
+            PeriodStart: new DateTimeOffset(2023, 1, 31, 23, 0, 0, TimeSpan.Zero),
+            PeriodEnd: new DateTimeOffset(2023, 2, 28, 23, 0, 0, TimeSpan.Zero),
+            CalculationType: CalculationType.WholesaleFixing,
             EnergySupplier: null,
             CsvFormatLocale: null);
 
