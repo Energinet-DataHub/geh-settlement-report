@@ -32,7 +32,7 @@ public static class DatabricksExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddDatabricksSqlStatementExecution(configuration);
+        services.AddDatabricksSqlStatementExecution(configuration, TokenProvider.ServicePrincipalTokenProvider);
 
         return services;
     }
