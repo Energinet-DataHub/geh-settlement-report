@@ -12,19 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Xunit;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.Reports.SubsystemTests;
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
 
-public class DownloadSettlementReportScenario
+public class SettlementReportScenarioState
 {
-    public DownloadSettlementReportScenario()
-    {
-    }
+    public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
 
-    [Fact]
-    public void DummyTest()
-    {
-        Assert.True(true);
-    }
+    public JobRunId? JobRunId { get; set; }
 }
