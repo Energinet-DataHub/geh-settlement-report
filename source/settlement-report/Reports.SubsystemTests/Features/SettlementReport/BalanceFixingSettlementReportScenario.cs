@@ -103,7 +103,7 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
 
     [SubsystemFact]
     [ScenarioStep(4)]
-    public async Task AndThen_ReportCanBeDownloaded()
+    public async Task AndThen_ReportCanBeDownloadedAndIsNotEmpty()
     {
         // Arrange
         var reportRequest = await _scenarioFixture.GetReportRequestByJobRunIdAsync(_scenarioFixture.SettlementReportScenarioState.JobRunId!);
