@@ -114,6 +114,8 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
 
         // Assert
         Assert.NotNull(stream);
-        Assert.True(stream.Length > 0, "The downloaded file is empty.");
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        Assert.True(memoryStream.Length > 0, "The downloaded file is empty.");
     }
 }
