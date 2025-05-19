@@ -1,6 +1,7 @@
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
+from geh_settlement_report.domain.utils.csv_column_names import EphemeralColumns
 from geh_settlement_report.domain.utils.market_role import MarketRole
 from geh_settlement_report.domain.utils.report_data_type import ReportDataType
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
@@ -23,11 +24,7 @@ class FileNameFactory:
         self.report_data_type = report_data_type
         self.args = args
 
-    def create(
-        self,
-        grid_area_code: str | None,
-        chunk_index: str | None,
-    ) -> str:
+    def create(self, _, partitions: dict[str, str]) -> str:
         if self.report_data_type in {
             ReportDataType.TimeSeriesHourly,
             ReportDataType.TimeSeriesQuarterly,
@@ -35,21 +32,19 @@ class FileNameFactory:
             ReportDataType.ChargeLinks,
             ReportDataType.ChargePricePoints,
         }:
-            return self._create_basis_data_filename(grid_area_code, chunk_index)
+            return self._create_basis_data_filename(partitions)
         if self.report_data_type in [
             ReportDataType.EnergyResults,
             ReportDataType.WholesaleResults,
             ReportDataType.MonthlyAmounts,
         ]:
-            return self._create_result_filename(grid_area_code, chunk_index)
+            return self._create_result_filename(partitions)
         else:
             raise NotImplementedError(f"Report data type {self.report_data_type} is not supported.")
 
-    def _create_result_filename(
-        self,
-        grid_area_code: str | None,
-        chunk_index: str | None,
-    ) -> str:
+    def _create_result_filename(self, partitions: dict[str, str]) -> str:
+        grid_area_code = partitions.get(EphemeralColumns.grid_area_code_partitioning)
+        chunk_index = partitions.get(EphemeralColumns.chunk_index)
         filename_parts = [
             self._get_pre_fix(),
             grid_area_code if grid_area_code is not None else "flere-net",
@@ -64,11 +59,9 @@ class FileNameFactory:
 
         return "_".join(filename_parts_without_none) + ".csv"
 
-    def _create_basis_data_filename(
-        self,
-        grid_area_code: str | None,
-        chunk_index: str | None,
-    ) -> str:
+    def _create_basis_data_filename(self, partitions: dict[str, str]) -> str:
+        grid_area_code = partitions.get(EphemeralColumns.grid_area_code_partitioning)
+        chunk_index = partitions.get(EphemeralColumns.chunk_index)
         filename_parts = [
             self._get_pre_fix(),
             grid_area_code,
