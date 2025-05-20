@@ -441,8 +441,8 @@ wheels = [
 
 [[package]]
 name = "geh-common"
-version = "5.9.4"
-source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.9.4_174#700c57365b7d807f237222c71add2bc315dc43d1" }
+version = "5.10.0"
+source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.10.0_174#c52303ea1575a28794a9faa4e2f1620db87f94d8" }
 dependencies = [
     { name = "azure-core" },
     { name = "azure-identity" },
@@ -487,7 +487,7 @@ requires-dist = [
     { name = "azure-monitor-opentelemetry", specifier = "==1.6.7" },
     { name = "configargparse", specifier = "==1.5.3" },
     { name = "delta-spark", specifier = "==3.3.0" },
-    { name = "geh-common", git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.9.4_174" },
+    { name = "geh-common", git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.10.0_174" },
     { name = "pyspark", specifier = "==3.5.3" },
     { name = "python-dateutil", specifier = "==2.8.2" },
 ]

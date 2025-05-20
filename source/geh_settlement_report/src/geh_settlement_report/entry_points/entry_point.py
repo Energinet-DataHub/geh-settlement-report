@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 from geh_common.databricks.get_dbutils import get_dbutils
-from geh_common.tasks.ZipTask import zip_dir
+from geh_common.tasks.ZipTask import create_zip_file
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logger import Logger
 from geh_common.telemetry.logging_configuration import (
@@ -126,7 +126,7 @@ def start_measurements_report() -> None:
         Path(f).write_text('a,b\n1, "a"')
     logger.info(f"Files to zip: {files}")
     dbutils = get_dbutils(spark)
-    zip_file = zip_dir(result_dir, dbutils, tmpdir)
+    zip_file = create_zip_file(result_dir, dbutils, tmpdir)
     shutil.rmtree(result_dir)
     shutil.rmtree(tmpdir)
     logger.info(f"Finished creating '{zip_file}'")
