@@ -16,6 +16,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Models;
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
+// TODO BJM: Move all types specific to report type "settlement" to subfolder
 public sealed record RequestedSettlementReportDto(
     SettlementReportRequestId RequestId,
     CalculationType CalculationType,

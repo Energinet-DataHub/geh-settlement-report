@@ -14,4 +14,5 @@
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
+// TODO BJM: Rename to ReportRequstIdDto and reuse it for all report types
 public sealed record SettlementReportRequestId(string Id);
