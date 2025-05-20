@@ -14,6 +14,7 @@
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
+// TODO BJM: Rename to ReportStatus
 public enum SettlementReportStatus
 {
     InProgress,

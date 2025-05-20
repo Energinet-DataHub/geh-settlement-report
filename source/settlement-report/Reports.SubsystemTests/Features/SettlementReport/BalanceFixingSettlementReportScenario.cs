@@ -110,7 +110,7 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
         Assert.NotNull(reportRequest);
 
         // Act
-        var stream = await _scenarioFixture.SettlementReportClient.DownloadAsync(reportRequest.RequestId!, CancellationToken.None);
+        var stream = await _scenarioFixture.SettlementReportClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
 
         // Assert
         Assert.NotNull(stream);
