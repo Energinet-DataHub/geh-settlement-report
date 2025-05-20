@@ -15,7 +15,6 @@
 using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
-using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,7 +27,7 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
     {
         Logger = new TestDiagnosticsLogger();
 
-        Configuration = new ReportsSubsystemTestConfiguration();
+        Configuration = new SettlementReportSubsystemTestConfiguration();
         SettlementReportScenarioState = new SettlementReportScenarioState();
     }
 
@@ -39,13 +38,18 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
 
     public SettlementReportScenarioState SettlementReportScenarioState { get; }
 
-    private ReportsSubsystemTestConfiguration Configuration { get; }
+    public SettlementReportSubsystemTestConfiguration Configuration { get; }
 
     private TestDiagnosticsLogger Logger { get; }
 
     public async Task InitializeAsync()
     {
         SettlementReportClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -63,9 +67,8 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
         var isCompletedOrFailed = await Awaiter.TryWaitUntilConditionAsync(
             async () =>
             {
-                var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
-                reportRequest = reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
-                return reportRequest is not null && (reportRequest.Status == SettlementReportStatus.Completed || reportRequest.Status == SettlementReportStatus.Failed);
+                reportRequest = await GetReportRequestByJobRunIdAsync(jobRunId);
+                return reportRequest?.Status is SettlementReportStatus.Completed or SettlementReportStatus.Failed;
             },
             waitTimeLimit,
             delay);
@@ -73,13 +76,14 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
         return (isCompletedOrFailed, reportRequest);
     }
 
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
         Logger.TestOutputHelper = testOutputHelper;
+    }
+
+    public async Task<RequestedSettlementReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
+    {
+        var reportRequests = await SettlementReportClient.GetAsync(CancellationToken.None);
+        return reportRequests.FirstOrDefault(x => x.JobId is not null && x.JobId.Id == jobRunId.Id);
     }
 }

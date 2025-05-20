@@ -15,8 +15,8 @@
 
 import sys
 
-from geh_common.telemetry import Logger
 from geh_common.telemetry.decorators import start_trace
+from geh_common.telemetry.logger import Logger
 from geh_common.telemetry.logging_configuration import (
     add_extras,
     configure_logging,
@@ -102,3 +102,7 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
                 if i + 1 <= len(args):
                     return args[i + 1]
     raise ValueError(f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}")
+
+
+def create_measurements_report() -> None:
+    raise NotImplementedError("This function is not yet implemented")

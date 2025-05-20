@@ -17,5 +17,6 @@
   "B2C_FRONTEND_APP_ID": "<app id>",
   "B2C_BACKEND_BFF_APP_SCOPE": "<app scope>",
   "TOKEN_BASEADDRESS": "<Address of endpoint that can get valid internal token with correct permissions>",
-  "SHARED_KEYVAULT_NAME": "<shared keyvault name>"
+  "SHARED_KEYVAULT_NAME": "<shared keyvault name>",
+  "EXISTING_WHOLESALE_FIXING_CALCULATION_ID": "<calculation id of an exising wholesale calculation>"
 }
