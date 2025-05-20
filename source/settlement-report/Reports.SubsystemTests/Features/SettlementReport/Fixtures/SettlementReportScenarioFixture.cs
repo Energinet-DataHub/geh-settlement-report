@@ -15,7 +15,6 @@
 using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
-using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Xunit;
 using Xunit.Abstractions;
