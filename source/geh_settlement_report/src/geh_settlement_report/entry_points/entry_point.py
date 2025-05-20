@@ -13,8 +13,12 @@
 # limitations under the License.
 
 
+import shutil
 import sys
+from pathlib import Path
 
+from geh_common.databricks.get_dbutils import get_dbutils
+from geh_common.tasks.ZipTask import zip_dir
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logger import Logger
 from geh_common.telemetry.logging_configuration import (
@@ -104,5 +108,20 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
     raise ValueError(f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}")
 
 
-def create_measurements_report() -> None:
-    raise NotImplementedError("This function is not yet implemented")
+def start_measurements_report() -> None:
+    spark = initialize_spark()
+    logger = Logger(__name__)
+    logger.info("Starting measurements report")
+    result_dir = Path("my-zip")
+    result_dir.mkdir(parents=True, exist_ok=True)
+    tmpdir = Path("tmp")
+    files = [result_dir / "file1.csv", result_dir / "file2.csv", result_dir / "file3.csv"]
+    for f in files:
+        logger.info(f"Processing file: {f}")
+        Path(f).write_text('a,b\n1, "a"')
+    logger.info(f"Files to zip: {files}")
+    dbutils = get_dbutils(spark)
+    zip_file = zip_dir(result_dir, dbutils, tmpdir)
+    shutil.rmtree(result_dir)
+    shutil.rmtree(tmpdir)
+    logger.info(f"Finished creating '{zip_file}'")
