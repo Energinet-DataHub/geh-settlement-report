@@ -1,5 +1,6 @@
 ﻿using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SettlementReports.WebAPI.Controllers;
@@ -11,6 +12,7 @@ public class MeasurementsReportsController
 {
     [HttpPost]
     [Route("RequestMeasurementsReport")]
+    [Authorize]
     [EnableRevision(activityName: "RequestMeasurementsReportAPI", entityType: typeof(MeasurementsReportRequestDto))]
     public ActionResult<long> RequestMeasurementsReport([FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
