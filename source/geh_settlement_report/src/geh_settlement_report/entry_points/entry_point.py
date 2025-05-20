@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -109,10 +110,14 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
 
 
 def start_measurements_report() -> None:
+    if os.getenv("DATABRICKS_RUNTIME_VERSION") is not None:
+        volume_path = "/Volumes/ctl_shres_d_we_002/settlement_reports_output/measurements_reports"
+    else:
+        volume_path = Path(".")
     spark = initialize_spark()
     logger = Logger(__name__)
     logger.info("Starting measurements report")
-    result_dir = Path("my-zip")
+    result_dir = volume_path / "my-zip"
     result_dir.mkdir(parents=True, exist_ok=True)
     tmpdir = Path("tmp")
     files = [result_dir / "file1.csv", result_dir / "file2.csv", result_dir / "file3.csv"]
