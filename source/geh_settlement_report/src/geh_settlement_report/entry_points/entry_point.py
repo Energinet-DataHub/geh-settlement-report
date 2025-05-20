@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import os
 import shutil
 import sys
 from pathlib import Path
@@ -27,6 +26,7 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 
+from geh_settlement_report.entry_points.job_args.measurements_report_args import MeasurementsReportArgs
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
@@ -110,14 +110,11 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
 
 
 def start_measurements_report() -> None:
-    if os.getenv("DATABRICKS_RUNTIME_VERSION") is not None:
-        volume_path = "/Volumes/ctl_shres_d_we_002/settlement_reports_output/measurements_reports"
-    else:
-        volume_path = Path(".")
+    args = MeasurementsReportArgs()
     spark = initialize_spark()
     logger = Logger(__name__)
     logger.info("Starting measurements report")
-    result_dir = volume_path / "my-zip"
+    result_dir = Path(args.output_path) / args.report_id
     result_dir.mkdir(parents=True, exist_ok=True)
     tmpdir = Path("tmp")
     files = [result_dir / "file1.csv", result_dir / "file2.csv", result_dir / "file3.csv"]
