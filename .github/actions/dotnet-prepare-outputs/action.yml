@@ -36,7 +36,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\Orchestration.SettlementReports\Orchestration.SettlementReports.csproj' \
+          '.\source\dotnet\Orchestration.SettlementReports\Orchestration.SettlementReports.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -46,7 +46,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj' \
+          '.\source\dotnet\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -56,7 +56,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\DatabaseMigration\DatabaseMigration.csproj' \
+          '.\source\dotnet\DatabaseMigration\DatabaseMigration.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -66,7 +66,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '.\source\settlement-report\SettlementReports.Function\SettlementReports.Function.csproj' \
+          '.\source\dotnet\SettlementReports.Function\SettlementReports.Function.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
@@ -76,7 +76,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          'source\settlement-report\Reports.SubsystemTests/Reports.SubsystemTests.csproj' \
+          'source\dotnet\Reports.SubsystemTests/Reports.SubsystemTests.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
