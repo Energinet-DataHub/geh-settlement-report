@@ -23,6 +23,8 @@ name: Detect changes
 on:
   workflow_call:
     outputs:
+      nuget_packages:
+        value: ${{ jobs.changes.outputs.nuget_packages }}
       dotnet:
         value: ${{ jobs.changes.outputs.dotnet }}
       render_c4model_views:
@@ -54,6 +56,11 @@ jobs:
               - '.github/workflows/ci-dotnet.yml'
               - '.github/actions/dotnet-*/**'
               - 'source/settlement-report/!(DatabaseMigration/**)**'
+            nuget-packages:
+              - 'docs/Measurements.Client/**'
+              - 'source/dotnet/Reports.Client*/**'
+              - 'source/dotnet/Reports.Abstractions*/**'
+              - '.github/workflows/reports-client-bundle-publish.yml'
             db_migrations:
               - 'source/settlement-report/DatabaseMigration/**'
             render_c4model_views:

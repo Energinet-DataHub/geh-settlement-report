@@ -49,6 +49,11 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
 
+  ci_packages:
+    needs: changes
+    if: ${{ needs.changes.outputs.nuget-packages == 'true' }}
+    uses: ./.github/workflows/reports-client-bundle-publish.yml
+
   ci_python:
     name: Unit tests and build packages
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
