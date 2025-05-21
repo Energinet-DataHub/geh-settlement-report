@@ -15,6 +15,7 @@ def mock_dbutils(monkeypatch):
     return MockDBUtils()
 
 
+@pytest.fixture
 def default_measurements_report_args(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(
         sys,
