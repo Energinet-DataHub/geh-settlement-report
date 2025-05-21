@@ -33,7 +33,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         _jobsApiClient = jobsApiClient;
     }
 
-    public async Task<JobRunId> RunSettlementReportsJobAsync(
+    public async Task<JobRunId> RunJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
         ReportRequestId reportId,
