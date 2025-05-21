@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-public enum SettlementReportStatus
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
+
+public class SettlementReportScenarioState
 {
-    InProgress,
-    Completed,
-    Failed,
-    Canceled,
+    public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
+
+    public JobRunId? JobRunId { get; set; }
 }

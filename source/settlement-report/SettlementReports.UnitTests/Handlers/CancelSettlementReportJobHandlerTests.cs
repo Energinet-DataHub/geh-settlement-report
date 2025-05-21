@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -49,7 +50,7 @@ public class CancelSettlementReportJobHandlerTests
                 CalculationType.WholesaleFixing,
                 null,
                 null));
-        var settlementReportRequestId = new SettlementReportRequestId($"{Random.Shared.NextInt64()}");
+        var settlementReportRequestId = new ReportRequestId($"{Random.Shared.NextInt64()}");
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         var userId = Guid.NewGuid();
 
@@ -102,7 +103,7 @@ public class CancelSettlementReportJobHandlerTests
                 CalculationType.WholesaleFixing,
                 null,
                 null));
-        var settlementReportRequestId = new SettlementReportRequestId($"{Random.Shared.NextInt64()}");
+        var settlementReportRequestId = new ReportRequestId($"{Random.Shared.NextInt64()}");
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         var userId = Guid.NewGuid();
 
@@ -154,7 +155,7 @@ public class CancelSettlementReportJobHandlerTests
                 CalculationType.WholesaleFixing,
                 null,
                 null));
-        var settlementReportRequestId = new SettlementReportRequestId($"{Random.Shared.NextInt64()}");
+        var settlementReportRequestId = new ReportRequestId($"{Random.Shared.NextInt64()}");
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         var userId = Guid.NewGuid();
 
@@ -205,7 +206,7 @@ public class CancelSettlementReportJobHandlerTests
                 CalculationType.WholesaleFixing,
                 null,
                 null));
-        var settlementReportRequestId = new SettlementReportRequestId($"{Random.Shared.NextInt64()}");
+        var settlementReportRequestId = new ReportRequestId($"{Random.Shared.NextInt64()}");
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         var userId = Guid.NewGuid();
 

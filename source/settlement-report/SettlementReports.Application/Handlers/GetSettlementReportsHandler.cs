@@ -18,6 +18,7 @@ using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
@@ -86,7 +87,7 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
               new Dictionary<string, CalculationId?>();
 
         return new RequestedSettlementReportDto(
-            new SettlementReportRequestId(report.RequestId),
+            new ReportRequestId(report.RequestId),
             report.CalculationType,
             report.PeriodStart.ToDateTimeOffset(),
             report.PeriodEnd.ToDateTimeOffset(),

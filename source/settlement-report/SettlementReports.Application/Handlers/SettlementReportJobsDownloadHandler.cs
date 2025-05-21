@@ -32,7 +32,7 @@ public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsD
     }
 
     public async Task<Stream> DownloadReportAsync(
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         Guid actorId,
         bool isMultitenancy)
     {

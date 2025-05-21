@@ -15,6 +15,7 @@
 using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
@@ -32,7 +33,7 @@ public sealed class SettlementReportInitializeHandler : ISettlementReportInitial
         Guid userId,
         Guid actorId,
         bool hideReport,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request)
     {
         var settlementReport = new Model.SettlementReport(SystemClock.Instance, userId, actorId, hideReport, requestId, request);
@@ -44,7 +45,7 @@ public sealed class SettlementReportInitializeHandler : ISettlementReportInitial
         Guid actorId,
         bool hideReport,
         JobRunId jobId,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request)
     {
         var settlementReport = new Model.SettlementReport(SystemClock.Instance, userId, actorId, hideReport, jobId, requestId, request);

@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-public sealed record SettlementReportRequestDto(
-    bool SplitReportPerGridArea,
-    bool PreventLargeTextFiles,
-    bool IncludeBasisData,
-    bool IncludeMonthlyAmount,
-    SettlementReportRequestFilterDto Filter,
-    string? ActorNumberOverride = null,
-    MarketRole? MarketRoleOverride = null);
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
+
+public class SettlementReportScenarioState
+{
+    public SettlementReportRequestDto? SettlementReportRequestDto { get; set; }
+
+    public JobRunId? JobRunId { get; set; }
+}

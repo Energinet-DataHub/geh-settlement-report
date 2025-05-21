@@ -11,7 +11,7 @@ dependencies = [
     "python-dateutil==2.8.2",
     "azure-monitor-opentelemetry==1.6.7",
     "azure-core==1.30.0",
-    "geh_common @ git+https://git@github.com/Energinet-DataHub/opengeh-python-packages@geh_common_5.7.0#subdirectory=source/geh_common",
+    "geh_common @ git+https://git@github.com/Energinet-DataHub/opengeh-python-packages@geh_common_5.9.0#subdirectory=source/geh_common",
 ]
 
 [project.scripts]
@@ -24,6 +24,8 @@ create_energy_results = "geh_settlement_report.entry_points.entry_point:start_en
 create_monthly_amounts = "geh_settlement_report.entry_points.entry_point:start_monthly_amounts"
 create_wholesale_results = "geh_settlement_report.entry_points.entry_point:start_wholesale_results"
 create_zip = "geh_settlement_report.entry_points.entry_point:start_zip"
+
+execute_measurements_report = "geh_settlement_report.entry_points.entry_point:create_measurements_report"
 
 [build-system]
 requires = ["hatchling"]

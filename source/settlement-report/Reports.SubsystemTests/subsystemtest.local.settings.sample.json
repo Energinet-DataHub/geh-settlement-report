@@ -1,0 +1,22 @@
+﻿{
+  // These settings are for dev_002 or dev_003.
+  //
+  //
+  // To run subsystem tests locally
+  // - Make a copy of this file and rename it to `subsystemtest.local.settings.json` and insert proper values
+  //   It's however easier to get the copy from the dh3secrets repo
+  // - Use VPN
+  // - Execute the command `az login` in the container terminal
+  //   Make sure to use your xxx-aadadmin@energinet.dk account and select the proper
+  //   subscription corresponding to the settings in the subsystemtest.local.settings.json file
+  "SUBSYSTEMFACT_SKIP": false,
+  // B2C information that allows us to retrieve an access token from tests:
+  "DH_E2E_USERNAME": "<user name>",
+  "DH_E2E_PASSWORD": "<user password, get this from the platform team>",
+  "B2C_ROPC_AUTH_URL": "<url>",
+  "B2C_FRONTEND_APP_ID": "<app id>",
+  "B2C_BACKEND_BFF_APP_SCOPE": "<app scope>",
+  "TOKEN_BASEADDRESS": "<Address of endpoint that can get valid internal token with correct permissions>",
+  "SHARED_KEYVAULT_NAME": "<shared keyvault name>",
+  "EXISTING_WHOLESALE_FIXING_CALCULATION_ID": "<calculation id of an exising wholesale calculation>"
+}

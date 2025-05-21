@@ -15,7 +15,11 @@
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
   "workspaceFolder": "/workspace/source/geh_settlement_report",
   "remoteUser": "vscode",
-  "postCreateCommand": "~/scripts/post-create.sh ~",
+  "postCreateCommand": {
+    "fixAsdfVolumePerms": "sudo chown -R $(whoami): /home/vscode/.asdf",
+    "fixCacheVolumePerms": "sudo chown -R $(whoami): /home/vscode/.cache",
+    "installDependencies": "~/scripts/post-create.sh ~"
+  },
   "postStartCommand": "uv sync",
   "mounts": [
     // We want to reuse asdf cache across containers

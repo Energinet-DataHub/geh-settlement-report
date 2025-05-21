@@ -18,5 +18,5 @@ namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 
 public interface IUpdateFailedSettlementReportsHandler
 {
-    Task UpdateFailedReportAsync(SettlementReportRequestId failedReportId);
+    Task UpdateFailedReportAsync(ReportRequestId failedReportId);
 }

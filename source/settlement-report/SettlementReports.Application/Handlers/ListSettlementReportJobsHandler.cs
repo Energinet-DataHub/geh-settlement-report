@@ -17,6 +17,7 @@ using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
@@ -57,7 +58,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         var results = new List<RequestedSettlementReportDto>();
         foreach (var settlementReportDto in settlementReports)
         {
-            if (settlementReportDto.Status != SettlementReportStatus.Completed)
+            if (settlementReportDto.Status != ReportStatus.Completed)
             {
                 var jobResult = await _jobHelper.GetSettlementReportsJobWithStatusAndEndTimeAsync(settlementReportDto.JobId!.Id)
                     .ConfigureAwait(false);
@@ -133,15 +134,15 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
             .ConfigureAwait(false);
     }
 
-    private SettlementReportStatus MapFromJobStatus(JobRunStatus status)
+    private ReportStatus MapFromJobStatus(JobRunStatus status)
     {
         return status switch
         {
-            JobRunStatus.Running => SettlementReportStatus.InProgress,
-            JobRunStatus.Queued => SettlementReportStatus.InProgress,
-            JobRunStatus.Completed => SettlementReportStatus.Completed,
-            JobRunStatus.Canceled => SettlementReportStatus.Canceled,
-            JobRunStatus.Failed => SettlementReportStatus.Failed,
+            JobRunStatus.Running => ReportStatus.InProgress,
+            JobRunStatus.Queued => ReportStatus.InProgress,
+            JobRunStatus.Completed => ReportStatus.Completed,
+            JobRunStatus.Canceled => ReportStatus.Canceled,
+            JobRunStatus.Failed => ReportStatus.Failed,
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, null),
         };
     }
