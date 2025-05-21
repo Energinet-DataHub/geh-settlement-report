@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Xunit;
 
@@ -43,7 +44,7 @@ public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<
     public async Task CombineAsync_GivenSeveralFiles_ReturnsCompressedReport()
     {
         // Arrange
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var inputFiles = new GeneratedSettlementReportFileDto[]
         {
             new(requestId, new("fileA.csv", false), "fileA_0.csv"),
@@ -81,7 +82,7 @@ public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<
     public async Task CombineAsync_GivenSeveralChunks_ReturnsCombinedFile()
     {
         // Arrange
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var inputFiles = new GeneratedSettlementReportFileDto[]
         {
             new(requestId, new("target_file.csv", false) { FileOffset = 0 }, "fileA_0.csv"),
@@ -118,7 +119,7 @@ public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<
         // Arrange
         const int largeTextFileThreshold = 1_000_000;
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var inputFiles = new GeneratedSettlementReportFileDto[]
         {
             new(requestId, new("target_file.csv", true) { ChunkOffset = 0 }, "fileA_0.csv"),

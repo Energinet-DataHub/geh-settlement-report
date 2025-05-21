@@ -16,4 +16,4 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 
-public sealed record SettlementReportHttpResponse(SettlementReportRequestId RequestId);
+public sealed record SettlementReportHttpResponse(ReportRequestId RequestId);

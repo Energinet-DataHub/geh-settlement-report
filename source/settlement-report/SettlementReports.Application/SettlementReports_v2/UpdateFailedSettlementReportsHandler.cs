@@ -26,7 +26,7 @@ public sealed class UpdateFailedSettlementReportsHandler : IUpdateFailedSettleme
         _repository = repository;
     }
 
-    public async Task UpdateFailedReportAsync(SettlementReportRequestId failedReportId)
+    public async Task UpdateFailedReportAsync(ReportRequestId failedReportId)
     {
         var request = await _repository
             .GetAsync(failedReportId.Id)

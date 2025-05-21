@@ -17,6 +17,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Extensions;
 using DbFunctions = Energinet.DataHub.SettlementReport.Infrastructure.Experimental.DatabricksSqlQueryableExtensions.Functions;

@@ -21,6 +21,7 @@ using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Databricks.Client;
@@ -129,7 +130,7 @@ public class SettlementReportsController
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [EnableRevision(activityName: "DownloadSettlementReportAPI", entityType: typeof(RequestedSettlementReportDto))]
-    public async Task<ActionResult> DownloadFileAsync([FromBody] SettlementReportRequestId requestId)
+    public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId requestId)
     {
         try
         {
@@ -152,7 +153,7 @@ public class SettlementReportsController
     [Route("cancel")]
     [Authorize(Roles = "settlement-reports:manage")]
     [EnableRevision(activityName: "CancelSettlementReportAPI")]
-    public async Task<ActionResult> CancelSettlementReport([FromBody] SettlementReportRequestId requestId)
+    public async Task<ActionResult> CancelSettlementReport([FromBody] ReportRequestId requestId)
     {
         try
         {

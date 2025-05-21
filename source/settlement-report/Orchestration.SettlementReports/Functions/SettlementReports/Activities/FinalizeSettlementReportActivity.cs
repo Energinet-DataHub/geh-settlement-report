@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.Azure.Functions.Worker;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Activities;

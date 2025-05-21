@@ -19,6 +19,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime.Extensions;
 using Xunit;

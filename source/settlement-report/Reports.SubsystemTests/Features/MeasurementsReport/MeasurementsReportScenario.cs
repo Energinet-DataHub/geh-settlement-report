@@ -1,7 +1,7 @@
 ﻿using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
 using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.Fixtures;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Xunit;
 using Xunit.Abstractions;
 

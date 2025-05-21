@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using Xunit;
 
@@ -52,7 +53,7 @@ public class RequestSettlementReportHandlerTests
         var jobHelperMock = new Mock<IDatabricksJobsHelper>();
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         jobHelperMock
-            .Setup(x => x.RunSettlementReportsJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<SettlementReportRequestId>(), It.IsAny<string>()))
+            .Setup(x => x.RunSettlementReportsJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(jobRunId);
 
         var command = new RequestSettlementReportCommand(request, Guid.NewGuid(), Guid.NewGuid(), true, "1233", MarketRole.EnergySupplier);

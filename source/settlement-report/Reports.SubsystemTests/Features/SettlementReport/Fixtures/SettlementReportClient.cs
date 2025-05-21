@@ -15,6 +15,7 @@
 using System.Net.Http.Json;
 using System.Text;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
@@ -65,7 +66,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
 
-    public async Task<Stream> DownloadAsync(SettlementReportRequestId requestId, CancellationToken cancellationToken)
+    public async Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/download");
         request.Content = new StringContent(
@@ -80,7 +81,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         return await response.Content.ReadAsStreamAsync(cancellationToken);
     }
 
-    public async Task CancelAsync(SettlementReportRequestId requestId, CancellationToken cancellationToken)
+    public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/cancel");
 

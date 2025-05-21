@@ -30,7 +30,7 @@ public sealed class SettlementReportDownloadHandler : ISettlementReportDownloadH
         _repository = repository;
     }
 
-    public async Task DownloadReportAsync(SettlementReportRequestId requestId, Func<Stream> outputStreamProvider, Guid actorId, bool isMultitenancy)
+    public async Task DownloadReportAsync(ReportRequestId requestId, Func<Stream> outputStreamProvider, Guid actorId, bool isMultitenancy)
     {
         var report = await _repository
             .GetAsync(requestId.Id)

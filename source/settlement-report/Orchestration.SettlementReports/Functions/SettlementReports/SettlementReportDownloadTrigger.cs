@@ -46,7 +46,7 @@ internal sealed class SettlementReportDownloadTrigger
     public async Task SettlementReportDownload(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
         HttpRequestData req,
-        [FromBody] SettlementReportRequestId settlementReportRequestId,
+        [FromBody] ReportRequestId reportRequestId,
         FunctionContext executionContext)
     {
         try
@@ -60,12 +60,12 @@ internal sealed class SettlementReportDownloadTrigger
                         occurredOn: SystemClock.Instance.GetCurrentInstant(),
                         activity: "SettlementReportDownload",
                         origin: nameof(SettlementReportDownloadTrigger),
-                        payload: settlementReportRequestId.Id))
+                        payload: reportRequestId.Id))
                 .ConfigureAwait(false);
 
             await _settlementReportDownloadHandler
                 .DownloadReportAsync(
-                    settlementReportRequestId,
+                    reportRequestId,
                     () =>
                     {
                         var response = req.CreateResponse(HttpStatusCode.OK);

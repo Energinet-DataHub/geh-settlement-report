@@ -18,11 +18,11 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public interface ISettlementReportFileRepository
 {
-    Task<Stream> OpenForReadingAsync(SettlementReportRequestId reportRequestId, string fileName);
+    Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName);
 
-    Task<Stream> OpenForWritingAsync(SettlementReportRequestId reportRequestId, string fileName);
+    Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName);
 
-    Task DeleteAsync(SettlementReportRequestId reportRequestId, string fileName);
+    Task DeleteAsync(ReportRequestId reportRequestId, string fileName);
 
-    Task DownloadAsync(SettlementReportRequestId reportRequestId, string fileName, Stream downloadStream);
+    Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream);
 }

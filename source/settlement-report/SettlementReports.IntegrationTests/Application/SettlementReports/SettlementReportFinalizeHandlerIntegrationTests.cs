@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementRe
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
@@ -76,7 +77,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task FinalizeAsync_WithInputFiles_RemovesInputFiles()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var inputFiles = new GeneratedSettlementReportFileDto[]
         {
             new(requestId, new("fileA.csv", true), "fileA_0.csv"),
@@ -111,7 +112,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task FinalizeAsync_CompletesReportRequest()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
 
         var generatedSettlementReport = new GeneratedSettlementReportDto(
             requestId,
@@ -128,7 +129,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
         // Assert
         await using var dbContextAct = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         var completedRequest = await dbContextAct.SettlementReports.SingleAsync(r => r.RequestId == requestId.Id);
-        Assert.Equal(SettlementReportStatus.Completed, completedRequest.Status);
+        Assert.Equal(ReportStatus.Completed, completedRequest.Status);
         Assert.Equal(_instant, completedRequest.EndedDateTime);
     }
 

@@ -18,6 +18,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 
@@ -35,7 +36,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
     public async Task<JobRunId> RunSettlementReportsJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        SettlementReportRequestId reportId,
+        ReportRequestId reportId,
         string actorGln)
     {
         var job = await GetSettlementReportsJobAsync(GetJobName(request.Filter.CalculationType)).ConfigureAwait(false);
@@ -77,7 +78,7 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
         return await _jobsApiClient.Jobs.Get(settlementJob.JobId).ConfigureAwait(false);
     }
 
-    private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, SettlementReportRequestId reportId, string actorGln)
+    private RunParameters CreateParameters(SettlementReportRequestDto request, MarketRole marketRole, ReportRequestId reportId, string actorGln)
     {
         var gridAreas = $"{{{string.Join(", ", request.Filter.GridAreas.Select(c => $"\"{c.Key}\": \"{(c.Value is null ? string.Empty : c.Value?.Id)}\""))}}}";
 

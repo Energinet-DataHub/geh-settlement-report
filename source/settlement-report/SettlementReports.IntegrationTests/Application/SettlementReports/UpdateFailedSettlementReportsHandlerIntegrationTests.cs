@@ -19,6 +19,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -41,7 +42,7 @@ public sealed class UpdateFailedSettlementReportsHandlerIntegrationTests : TestB
     [Fact]
     public async Task UpdateFailedReportAsync_UpdatesReportStatus()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var settlementReportRequest = new SettlementReportRequestDto(
             false,
             false,
@@ -65,6 +66,6 @@ public sealed class UpdateFailedSettlementReportsHandlerIntegrationTests : TestB
         // Assert
         await using var dbContextAssert = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
         var actualReport = await dbContextAssert.SettlementReports.SingleAsync(r => r.RequestId == requestId.Id);
-        Assert.Equal(SettlementReportStatus.Failed, actualReport.Status);
+        Assert.Equal(ReportStatus.Failed, actualReport.Status);
     }
 }

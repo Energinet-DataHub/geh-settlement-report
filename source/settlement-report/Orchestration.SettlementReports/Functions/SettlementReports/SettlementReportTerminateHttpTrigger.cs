@@ -49,7 +49,7 @@ internal sealed class SettlementReportTerminateHttpTrigger
     public async Task<HttpResponseData> TerminateSettlementReport(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
         HttpRequestData req,
-        [FromBody] SettlementReportRequestId settlementReportRequestId,
+        [FromBody] ReportRequestId reportRequestId,
         [DurableClient] DurableTaskClient client,
         FunctionContext executionContext)
     {
@@ -62,10 +62,10 @@ internal sealed class SettlementReportTerminateHttpTrigger
                     occurredOn: SystemClock.Instance.GetCurrentInstant(),
                     activity: "TerminateSettlementReport",
                     origin: nameof(SettlementReportTerminateHttpTrigger),
-                    payload: settlementReportRequestId.Id))
+                    payload: reportRequestId.Id))
             .ConfigureAwait(false);
 
-        var settlementReport = (await _getSettlementReportsHandler.GetAsync().ConfigureAwait(false)).FirstOrDefault(x => x.RequestId == settlementReportRequestId);
+        var settlementReport = (await _getSettlementReportsHandler.GetAsync().ConfigureAwait(false)).FirstOrDefault(x => x.RequestId == reportRequestId);
 
         if (settlementReport is null)
             return req.CreateResponse(HttpStatusCode.NotFound);
@@ -83,7 +83,7 @@ internal sealed class SettlementReportTerminateHttpTrigger
         }
 
         await _updateFailedSettlementReportsHandler
-            .UpdateFailedReportAsync(settlementReportRequestId)
+            .UpdateFailedReportAsync(reportRequestId)
             .ConfigureAwait(false);
 
         return req.CreateResponse(HttpStatusCode.OK);
