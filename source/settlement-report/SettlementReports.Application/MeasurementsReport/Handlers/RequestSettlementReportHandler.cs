@@ -15,14 +15,14 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
 
     public async Task<JobRunId> HandleAsync(RequestMeasurementsReportCommand request)
     {
-        return await StartReportAsync(request, request.ActorGln).ConfigureAwait(false);
+        return await StartReportAsync(request).ConfigureAwait(false);
     }
 
-    private async Task<JobRunId> StartReportAsync(RequestMeasurementsReportCommand request, string requestActorGln)
+    private async Task<JobRunId> StartReportAsync(RequestMeasurementsReportCommand request)
     {
         var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId).ConfigureAwait(false);
 
         // Eventually the report will be added to the database here
         return runId;

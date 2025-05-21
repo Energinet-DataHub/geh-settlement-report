@@ -33,12 +33,10 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
 
     public async Task<JobRunId> RunJobAsync(
         MeasurementsReportRequestDto request,
-        MarketRole marketRole,
-        ReportRequestId reportId,
-        string actorGln)
+        ReportRequestId reportId)
     {
         var job = await GetJobAsync(DatabricksJobNames.MeasurementsReport).ConfigureAwait(false);
-        var runParameters = CreateParameters(request, marketRole, reportId, actorGln);
+        var runParameters = CreateParameters(request, reportId);
 
         var runId = await _jobsApiClient.Jobs.RunNow(job.JobId, runParameters).ConfigureAwait(false);
         return new JobRunId(runId);
@@ -55,7 +53,7 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
         return await _jobsApiClient.Jobs.Get(settlementJob.JobId).ConfigureAwait(false);
     }
 
-    private RunParameters CreateParameters(MeasurementsReportRequestDto request, MarketRole marketRole, ReportRequestId reportId, string actorGln)
+    private RunParameters CreateParameters(MeasurementsReportRequestDto request, ReportRequestId reportId)
     {
         var gridAreas = string.Join(", ", request.Filter.GridAreas);
 
@@ -65,23 +63,8 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
             $"--grid-areas={gridAreas}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
-            $"--requesting-actor-market-role={MapMarketRole(marketRole)}",
-            $"--requesting-actor-id={actorGln}",
         };
 
         return RunParameters.CreatePythonParams(jobParameters);
-    }
-
-    // TODO BJM: Share with SettlementReportDatabricksJobsHelper
-    private static string MapMarketRole(MarketRole marketRole)
-    {
-        return marketRole switch
-        {
-            MarketRole.EnergySupplier => "energy_supplier",
-            MarketRole.DataHubAdministrator => "datahub_administrator",
-            MarketRole.GridAccessProvider => "grid_access_provider",
-            MarketRole.SystemOperator => "system_operator",
-            _ => throw new ArgumentOutOfRangeException(nameof(marketRole), marketRole, $"Market role \"{marketRole}\" not supported in report generation"),
-        };
     }
 }

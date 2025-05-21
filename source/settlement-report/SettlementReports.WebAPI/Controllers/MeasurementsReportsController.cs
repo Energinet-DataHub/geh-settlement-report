@@ -1,15 +1,11 @@
 ﻿using System.Net.Mime;
-using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SettlementReports.WebAPI.Controllers.Mappers;
 
 namespace SettlementReports.WebAPI.Controllers;
 
@@ -18,34 +14,21 @@ namespace SettlementReports.WebAPI.Controllers;
 public class MeasurementsReportsController
     : ControllerBase
 {
-    private readonly IUserContext<FrontendUser> _userContext;
     private readonly IRequestMeasurementsReportJobHandler _requestMeasurementsReportJobHandler;
 
-    public MeasurementsReportsController(
-        IUserContext<FrontendUser> userContext,
-        IRequestMeasurementsReportJobHandler requestMeasurementsReportJobHandler)
+    public MeasurementsReportsController(IRequestMeasurementsReportJobHandler requestMeasurementsReportJobHandler)
     {
-        _userContext = userContext;
         _requestMeasurementsReportJobHandler = requestMeasurementsReportJobHandler;
     }
 
     [HttpPost]
-    [Route("RequestMeasurementsReport")]
+    [Route("request")]
     [Authorize]
     [EnableRevision("RequestMeasurementsReportAPI", typeof(MeasurementsReportRequestDto))]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto reportRequest)
     {
-        var actorNumber = _userContext.CurrentUser.Actor.ActorNumber;
-        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
-
-        var requestCommand = new RequestMeasurementsReportCommand(
-            reportRequest,
-            _userContext.CurrentUser.UserId,
-            _userContext.CurrentUser.Actor.ActorId,
-            _userContext.CurrentUser.MultiTenancy,
-            actorNumber,
-            marketRole);
+        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
 
         var result = await _requestMeasurementsReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -55,10 +38,10 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    [EnableRevision("ListSettlementReportsAPI", typeof(RequestedSettlementReportDto))]
-    public IEnumerable<RequestedSettlementReportDto> ListSettlementReports()
+    [EnableRevision("ListMeasurementsReportsAPI", typeof(RequestedMeasurementsReportDto))]
+    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
     {
-        return new List<RequestedSettlementReportDto>();
+        return new List<RequestedMeasurementsReportDto>();
     }
 
     [HttpPost]
@@ -66,7 +49,7 @@ public class MeasurementsReportsController
     [Authorize]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
-    [EnableRevision("DownloadSettlementReportAPI", typeof(RequestedSettlementReportDto))]
+    [EnableRevision("DownloadMeasurementsReportAPI", typeof(RequestedMeasurementsReportDto))]
     public ActionResult DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
         using var stream = new MemoryStream();
@@ -76,8 +59,8 @@ public class MeasurementsReportsController
     [HttpPost]
     [Route("cancel")]
     [Authorize]
-    [EnableRevision("CancelSettlementReportAPI")]
-    public ActionResult CancelSettlementReport([FromBody] ReportRequestId reportId)
+    [EnableRevision("CancelMeasurementsReportAPI")]
+    public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
     {
         return NoContent();
     }
