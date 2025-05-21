@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementRe
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Microsoft.EntityFrameworkCore;
@@ -69,13 +70,13 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
     [Fact]
     public async Task GetAsync_MultiTenancy_ReturnsAllRows()
     {
-        var expectedReports = new List<SettlementReportRequestId>();
+        var expectedReports = new List<ReportRequestId>();
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
 
         for (var i = 0; i < 5; i++)
         {
-            var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+            var requestId = new ReportRequestId(Guid.NewGuid().ToString());
             expectedReports.Add(requestId);
             await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(Guid.NewGuid(), Guid.NewGuid(), requestId));
         }
@@ -95,7 +96,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
     [Fact]
     public async Task GetAsync_SingleUser_ReturnsOwnRows()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var targetUserId = Guid.NewGuid();
         var targetActorId = Guid.NewGuid();
         var requestId2 = Guid.NewGuid();
@@ -105,13 +106,13 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
 
-        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(targetUserId, Guid.NewGuid(), new SettlementReportRequestId(notUsersRequest1.ToString())));
-        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(targetUserId, Guid.NewGuid(), new SettlementReportRequestId(notUsersRequest2.ToString())));
+        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(targetUserId, Guid.NewGuid(), new ReportRequestId(notUsersRequest1.ToString())));
+        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(targetUserId, Guid.NewGuid(), new ReportRequestId(notUsersRequest2.ToString())));
 
         await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(targetUserId, targetActorId, requestId));
 
-        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(Guid.NewGuid(), targetActorId, new SettlementReportRequestId(requestId2.ToString())));
-        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(Guid.NewGuid(), targetActorId, new SettlementReportRequestId(requestId3.ToString())));
+        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(Guid.NewGuid(), targetActorId, new ReportRequestId(requestId2.ToString())));
+        await dbContext.SettlementReports.AddAsync(CreateMockedSettlementReport(Guid.NewGuid(), targetActorId, new ReportRequestId(requestId3.ToString())));
 
         await dbContext.SaveChangesAsync();
 
@@ -120,8 +121,8 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
 
         // Assert
         Assert.Equal(3, items.Count);
-        Assert.DoesNotContain(items, item => item.RequestId == new SettlementReportRequestId(notUsersRequest1.ToString()));
-        Assert.DoesNotContain(items, item => item.RequestId == new SettlementReportRequestId(notUsersRequest2.ToString()));
+        Assert.DoesNotContain(items, item => item.RequestId == new ReportRequestId(notUsersRequest1.ToString()));
+        Assert.DoesNotContain(items, item => item.RequestId == new ReportRequestId(notUsersRequest2.ToString()));
         Assert.Collection(
             Enumerable.Reverse(items),
             item => Assert.Equal(targetActorId, item.RequestedByActorId),
@@ -146,7 +147,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var report = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
             clockMock.Object,
             Guid.NewGuid(),
@@ -181,7 +182,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var report = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
             clockMock.Object,
             Guid.NewGuid(),
@@ -218,7 +219,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
         Assert.False(await blobClient.GetBlobClient(blobName).ExistsAsync());
     }
 
-    private SettlementReport.Application.SettlementReports_v2.SettlementReport CreateMockedSettlementReport(Guid userId, Guid actorId, SettlementReportRequestId requestId)
+    private SettlementReport.Application.SettlementReports_v2.SettlementReport CreateMockedSettlementReport(Guid userId, Guid actorId, ReportRequestId requestId)
     {
         return new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
     }

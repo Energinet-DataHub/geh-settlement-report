@@ -15,6 +15,7 @@
 using System.Text.Json;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime;
 using NodaTime.Extensions;
 
@@ -52,7 +53,7 @@ public sealed class SettlementReport
 
     public string GridAreas { get; init; } = null!;
 
-    public SettlementReportStatus Status { get; private set; }
+    public ReportStatus Status { get; private set; }
 
     public string? BlobFileName { get; private set; }
 
@@ -65,7 +66,7 @@ public sealed class SettlementReport
         Guid userId,
         Guid actorId,
         bool hideReport,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request)
     {
         RequestId = requestId.Id;
@@ -73,7 +74,7 @@ public sealed class SettlementReport
         ActorId = actorId;
         IsHiddenFromActor = hideReport;
         CreatedDateTime = clock.GetCurrentInstant();
-        Status = SettlementReportStatus.InProgress;
+        Status = ReportStatus.InProgress;
         CalculationType = request.Filter.CalculationType;
         ContainsBasisData = request.IncludeBasisData;
         PeriodStart = request.Filter.PeriodStart.ToInstant();
@@ -91,7 +92,7 @@ public sealed class SettlementReport
         Guid actorId,
         bool hideReport,
         JobRunId jobRunId,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request)
     {
         RequestId = requestId.Id;
@@ -100,7 +101,7 @@ public sealed class SettlementReport
         ActorId = actorId;
         IsHiddenFromActor = hideReport;
         CreatedDateTime = clock.GetCurrentInstant();
-        Status = SettlementReportStatus.InProgress;
+        Status = ReportStatus.InProgress;
         CalculationType = request.Filter.CalculationType;
         ContainsBasisData = request.IncludeBasisData;
         PeriodStart = request.Filter.PeriodStart.ToInstant();
@@ -120,21 +121,21 @@ public sealed class SettlementReport
 
     public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
     {
-        Status = SettlementReportStatus.Completed;
+        Status = ReportStatus.Completed;
         BlobFileName = generatedSettlementReport.ReportFileName;
         EndedDateTime = clock.GetCurrentInstant();
     }
 
-    public void MarkAsCompleted(IClock clock, SettlementReportRequestId requestId, DateTimeOffset? endTime)
+    public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
     {
-        Status = SettlementReportStatus.Completed;
+        Status = ReportStatus.Completed;
         BlobFileName = requestId.Id + ".zip";
         EndedDateTime = endTime?.ToInstant() ?? clock.GetCurrentInstant();
     }
 
     public void MarkAsFailed()
     {
-        Status = SettlementReportStatus.Failed;
+        Status = ReportStatus.Failed;
     }
 
     public void MarkAsNotificationSent()
@@ -144,6 +145,6 @@ public sealed class SettlementReport
 
     public void MarkAsCanceled()
     {
-        Status = SettlementReportStatus.Canceled;
+        Status = ReportStatus.Canceled;
     }
 }

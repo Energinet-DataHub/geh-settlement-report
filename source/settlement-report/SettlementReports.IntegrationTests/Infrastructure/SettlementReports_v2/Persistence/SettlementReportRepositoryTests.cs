@@ -16,6 +16,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -58,7 +59,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             Guid.NewGuid(),
             false,
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         // act
@@ -106,7 +107,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             Guid.NewGuid(),
             false,
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         await using var writeContext = _databaseManager.CreateDbContext();
@@ -197,7 +198,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             expectedRequest.ActorId,
             true,
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
 
         await using var context = _databaseManager.CreateDbContext();
@@ -267,7 +268,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             expectedRequest.ActorId,
             true,
             new JobRunId(Random.Shared.NextInt64()),
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
         await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
@@ -275,7 +276,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             expectedRequest.ActorId,
             true,
             new JobRunId(Random.Shared.NextInt64()),
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
 
         await using var context = _databaseManager.CreateDbContext();
@@ -301,9 +302,9 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 Guid.NewGuid(),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
-                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -315,9 +316,9 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 Guid.NewGuid(),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
-                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -343,9 +344,9 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 Guid.NewGuid(),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
-                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
             return request;
         });
         var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
@@ -356,9 +357,9 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 Guid.NewGuid(),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
-                new SettlementReportRequestId(Guid.NewGuid().ToString()),
+                new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new SettlementReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -401,7 +402,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             Guid.NewGuid(),
             false,
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         if (createReport != null)
@@ -438,7 +439,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             Guid.NewGuid(),
             false,
             new JobRunId(Random.Shared.NextInt64()),
-            new SettlementReportRequestId(Guid.NewGuid().ToString()),
+            new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
 
         if (createReport != null)

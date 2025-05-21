@@ -16,6 +16,7 @@ using System.IO.Compression;
 using System.Text;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
@@ -30,7 +31,7 @@ public sealed class SettlementReportFromFilesHandler : ISettlementReportFromFile
     }
 
     public async Task<GeneratedSettlementReportDto> CombineAsync(
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         IReadOnlyCollection<GeneratedSettlementReportFileDto> generatedFiles)
     {
         var reportFileName = "Report.zip";

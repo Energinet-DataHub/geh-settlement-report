@@ -17,5 +17,5 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 namespace Energinet.DataHub.SettlementReport.Application.Commands;
 
 public sealed record CancelSettlementReportCommand(
-    SettlementReportRequestId RequestId,
+    ReportRequestId RequestId,
     Guid UserId);

@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 
-public sealed record ScatterSettlementReportFilesInput(SettlementReportRequestId RequestId, SettlementReportRequestDto Request, SettlementReportRequestedByActor ActorInfo);
+public sealed record ScatterSettlementReportFilesInput(ReportRequestId RequestId, SettlementReportRequestDto Request, SettlementReportRequestedByActor ActorInfo);
