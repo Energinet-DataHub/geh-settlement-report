@@ -49,18 +49,6 @@ public static class StorageExtensions
                 serviceProvider =>
                 {
                     var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
-                    return new BlobServiceClient(blobSettings.Value.StorageAccountUri, new DefaultAzureCredential());
-                },
-                serviceProvider =>
-                {
-                    var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
-                    return new AzureBlobStorageHealthCheckOptions { ContainerName = blobSettings.Value.StorageContainerName };
-                },
-                "SettlementReportBlobStorage")
-            .AddAzureBlobStorage(
-                serviceProvider =>
-                {
-                    var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
                     return new BlobServiceClient(blobSettings.Value.StorageAccountForJobsUri, new DefaultAzureCredential());
                 },
                 serviceProvider =>
