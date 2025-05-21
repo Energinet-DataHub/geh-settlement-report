@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -114,7 +115,7 @@ internal sealed class SettlementReportRequestTrigger
             .ScheduleNewOrchestrationInstanceAsync(nameof(SettlementReportOrchestration.OrchestrateSettlementReport), new SettlementReportRequestInput(settlementReportRequest, actorInfo))
             .ConfigureAwait(false);
 
-        var requestId = new SettlementReportRequestId(instanceId);
+        var requestId = new ReportRequestId(instanceId);
 
         await _settlementReportInitializeHandler
             .InitializeAsync(

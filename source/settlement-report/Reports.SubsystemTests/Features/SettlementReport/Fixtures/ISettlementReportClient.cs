@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
@@ -40,10 +41,10 @@ public interface ISettlementReportClient
     /// Downloads the settlement report with the specified id.
     /// </summary>
     /// <returns>The stream to the report.</returns>
-    public Task<Stream> DownloadAsync(SettlementReportRequestId requestId, CancellationToken cancellationToken);
+    public Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Cancels the settlement report with the specified id.
     /// </summary>
-    public Task CancelAsync(SettlementReportRequestId requestId, CancellationToken cancellationToken);
+    public Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken);
 }

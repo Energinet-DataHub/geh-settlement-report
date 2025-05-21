@@ -19,6 +19,7 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -99,7 +100,7 @@ internal sealed class SettlementReportListHttpTrigger
         {
             var updatedReport = settlementReport;
 
-            if (settlementReport.Status == SettlementReportStatus.InProgress && settlementReport.JobId == null)
+            if (settlementReport.Status == ReportStatus.InProgress && settlementReport.JobId == null)
             {
                 var instanceInfo = await durableTaskClient
                     .GetInstanceAsync(settlementReport.RequestId.Id, getInputsAndOutputs: true)
@@ -120,7 +121,7 @@ internal sealed class SettlementReportListHttpTrigger
                         .UpdateFailedReportAsync(settlementReport.RequestId)
                         .ConfigureAwait(false);
 
-                    updatedReport = settlementReport with { Status = SettlementReportStatus.Failed };
+                    updatedReport = settlementReport with { Status = ReportStatus.Failed };
                 }
                 else
                 {

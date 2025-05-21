@@ -15,6 +15,7 @@
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
@@ -32,7 +33,7 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
     }
 
     public async Task<IEnumerable<SettlementReportFileRequestDto>> RequestReportAsync(
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto reportRequest,
         SettlementReportRequestedByActor actorInfo)
     {
@@ -120,7 +121,7 @@ public sealed class SettlementReportRequestHandler : ISettlementReportRequestHan
     }
 
     private async Task<IReadOnlyCollection<SettlementReportFileRequestDto>> ScatterFileAsync(
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto reportRequest,
         SettlementReportRequestedByActor actorInfo,
         SettlementReportFileContent fileContent,
