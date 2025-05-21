@@ -20,6 +20,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementRe
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using NodaTime;
@@ -65,7 +66,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task DownloadAsync_ReturnsStream()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         await MakeTestFileAsync(requestId);
 
         var generatedSettlementReport = new GeneratedSettlementReportDto(
@@ -94,7 +95,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task DownloadAsync_NoAccess_ThrowsException()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         await MakeTestFileAsync(requestId);
 
         var generatedSettlementReport = new GeneratedSettlementReportDto(
@@ -121,7 +122,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task DownloadAsync_AsFAS_ReturnsStream()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         await MakeTestFileAsync(requestId);
 
         var generatedSettlementReport = new GeneratedSettlementReportDto(
@@ -151,7 +152,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
     [Fact]
     public async Task DownloadAsync_HiddenReport_ThrowsException()
     {
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         await MakeTestFileAsync(requestId);
 
         var generatedSettlementReport = new GeneratedSettlementReportDto(
@@ -174,7 +175,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         await Assert.ThrowsAsync<InvalidOperationException>(() => Sut.DownloadReportAsync(requestId, () => downloadStream, actorId, false));
     }
 
-    private Task MakeTestFileAsync(SettlementReportRequestId requestId)
+    private Task MakeTestFileAsync(ReportRequestId requestId)
     {
         var containerClient = _settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
         var blobClient = containerClient.GetBlobClient($"settlement-reports/{requestId.Id}/Report.zip");

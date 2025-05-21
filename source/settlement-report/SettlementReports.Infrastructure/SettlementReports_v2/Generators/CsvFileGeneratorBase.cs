@@ -17,6 +17,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;
 

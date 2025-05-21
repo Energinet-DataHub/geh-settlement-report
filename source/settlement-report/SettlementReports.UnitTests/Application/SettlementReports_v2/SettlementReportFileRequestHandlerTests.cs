@@ -15,6 +15,7 @@
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -28,7 +29,7 @@ public class SettlementReportFileRequestHandlerTests
     private readonly Instant _endDate = Instant.FromUtc(2022, 1, 31, 0, 0, 0);
     private readonly string _fileName = "FILENAME";
     private readonly string _glnNumber = "123456789";
-    private readonly SettlementReportRequestId _requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+    private readonly ReportRequestId _requestId = new ReportRequestId(Guid.NewGuid().ToString());
 
     [Fact]
     public async Task RequestFile_ForEnergySupplier_GLNShouldAppearInFilename()
@@ -41,7 +42,7 @@ public class SettlementReportFileRequestHandlerTests
 
         settlementReportFileGeneratorFactory.Setup(x => x.Create(It.IsAny<SettlementReportFileContent>()))
             .Returns(settlementReportFileGenerator.Object);
-        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<SettlementReportRequestId>(), It.IsAny<string>()))
+        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(memoryStream);
 
         var filter = new SettlementReportRequestFilterDto(
@@ -86,7 +87,7 @@ public class SettlementReportFileRequestHandlerTests
 
         settlementReportFileGeneratorFactory.Setup(x => x.Create(It.IsAny<SettlementReportFileContent>()))
             .Returns(settlementReportFileGenerator.Object);
-        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<SettlementReportRequestId>(), It.IsAny<string>()))
+        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(memoryStream);
 
         var filter = new SettlementReportRequestFilterDto(
@@ -134,7 +135,7 @@ public class SettlementReportFileRequestHandlerTests
 
         settlementReportFileGeneratorFactory.Setup(x => x.Create(It.IsAny<SettlementReportFileContent>()))
             .Returns(settlementReportFileGenerator.Object);
-        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<SettlementReportRequestId>(), It.IsAny<string>()))
+        settlementReportFileRepository.Setup(x => x.OpenForWritingAsync(It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(memoryStream);
 
         var filter = new SettlementReportRequestFilterDto(

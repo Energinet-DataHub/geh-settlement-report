@@ -2,6 +2,7 @@
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,7 @@ public class MeasurementsReportsController
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     [EnableRevision("DownloadSettlementReportAPI", typeof(RequestedSettlementReportDto))]
-    public ActionResult DownloadFileAsync([FromBody] SettlementReportRequestId requestId)
+    public ActionResult DownloadFileAsync([FromBody] ReportRequestId requestId)
     {
         using var stream = new MemoryStream();
         return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
@@ -47,7 +48,7 @@ public class MeasurementsReportsController
     [Route("cancel")]
     [Authorize]
     [EnableRevision("CancelSettlementReportAPI")]
-    public ActionResult CancelSettlementReport([FromBody] SettlementReportRequestId requestId)
+    public ActionResult CancelSettlementReport([FromBody] ReportRequestId requestId)
     {
         return NoContent();
     }

@@ -52,7 +52,7 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
             {
                 await _settlementReportFileRepository
                     .DeleteAsync(
-                        new SettlementReportRequestId(settlementReport.RequestId),
+                        new ReportRequestId(settlementReport.RequestId),
                         settlementReport.BlobFileName)
                     .ConfigureAwait(false);
             }
@@ -71,7 +71,7 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
             .GetCurrentInstant()
             .Minus(TimeSpan.FromDays(7).ToDuration());
 
-        return settlementReport.Status != SettlementReportStatus.InProgress &&
+        return settlementReport.Status != ReportStatus.InProgress &&
                settlementReport.CreatedDateTime <= cutOffPeriod;
     }
 }

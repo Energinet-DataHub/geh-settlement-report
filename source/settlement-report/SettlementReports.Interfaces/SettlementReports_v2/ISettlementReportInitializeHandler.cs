@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 
@@ -22,7 +23,7 @@ public interface ISettlementReportInitializeHandler
         Guid userId,
         Guid actorId,
         bool hideReport,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request);
 
     Task InitializeFromJobAsync(
@@ -30,6 +31,6 @@ public interface ISettlementReportInitializeHandler
         Guid actorId,
         bool hideReport,
         JobRunId jobId,
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto request);
 }

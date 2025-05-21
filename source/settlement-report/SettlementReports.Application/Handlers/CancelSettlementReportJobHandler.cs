@@ -48,7 +48,7 @@ public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJo
             throw new InvalidOperationException("UserId does not match. Only the user that started the report can cancel it.");
         }
 
-        if (report.Status is not SettlementReportStatus.InProgress)
+        if (report.Status is not ReportStatus.InProgress)
         {
             throw new InvalidOperationException($"Can't cancel a report with status: {report.Status}");
         }

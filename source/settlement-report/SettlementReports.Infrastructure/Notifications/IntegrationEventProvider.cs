@@ -46,7 +46,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
         }
     }
 
-    private Task<IntegrationEvent> CreateAsync(Application.SettlementReports_v2.SettlementReport reportForNotification, SettlementReportStatus status)
+    private Task<IntegrationEvent> CreateAsync(Application.SettlementReports_v2.SettlementReport reportForNotification, ReportStatus status)
     {
         ArgumentNullException.ThrowIfNull(reportForNotification);
 
@@ -60,8 +60,8 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
             {
                 ReasonIdentifier = status switch
                 {
-                    SettlementReportStatus.Completed => "SettlementReportReadyForDownload",
-                    SettlementReportStatus.Failed => "SettlementReportFailed",
+                    ReportStatus.Completed => "SettlementReportReadyForDownload",
+                    ReportStatus.Failed => "SettlementReportFailed",
                     _ => throw new InvalidOperationException("Sending notification for settlement report with status other than Completed or Failed is not supported"),
                 },
                 TargetActorId = reportForNotification.ActorId.ToString(),
