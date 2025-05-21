@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 
 public sealed record MeasurementsReportRequestDto(
     MeasurementsReportRequestFilterDto Filter,
