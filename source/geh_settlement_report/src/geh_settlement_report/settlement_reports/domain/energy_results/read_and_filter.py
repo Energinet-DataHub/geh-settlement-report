@@ -17,19 +17,19 @@ from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
-from geh_settlement_report.domain.utils.factory_filters import (
+from geh_settlement_report.settlement_reports.domain.utils.factory_filters import (
     filter_by_calculation_id_by_grid_area,
     filter_by_energy_supplier_ids,
     filter_by_grid_area_codes,
     read_and_filter_by_latest_calculations,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.infrastructure.repository import WholesaleRepository
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 

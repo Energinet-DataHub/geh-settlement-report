@@ -1,4 +1,4 @@
-from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import CsvColumnNames
 
 
 def order_by_columns() -> list[str]:

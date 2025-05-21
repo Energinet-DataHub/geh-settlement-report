@@ -24,9 +24,9 @@ import yaml
 from delta import configure_spark_with_delta_pip
 from pyspark.sql import SparkSession
 
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from tests.constants import PROJECT_PATH

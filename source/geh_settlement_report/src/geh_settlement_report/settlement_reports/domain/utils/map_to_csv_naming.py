@@ -11,13 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
     ChargeTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values.settlement_method import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values.settlement_method import (
     SettlementMethodDataProductValue,
 )
 

@@ -14,16 +14,16 @@
 
 from pyspark.sql import DataFrame
 
-from geh_settlement_report.domain.charge_link_periods.prepare_for_csv import (
+from geh_settlement_report.settlement_reports.domain.charge_link_periods.prepare_for_csv import (
     prepare_for_csv,
 )
-from geh_settlement_report.domain.charge_link_periods.read_and_filter import (
+from geh_settlement_report.settlement_reports.domain.charge_link_periods.read_and_filter import (
     read_and_filter,
 )
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
 
 
 def create_charge_link_periods(

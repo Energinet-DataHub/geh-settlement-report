@@ -22,11 +22,11 @@ from unittest.mock import Mock, patch
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
 
-from geh_settlement_report.entry_points.entry_point import (
+from geh_settlement_report.settlement_reports.entry_points.entry_point import (
     _start_task,
 )
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.settlement_reports.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.entry_points.tasks.task_type import TaskType
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 

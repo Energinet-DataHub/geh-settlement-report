@@ -17,20 +17,20 @@ from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
-from geh_settlement_report.domain.metering_point_periods.clamp_period import (
+from geh_settlement_report.settlement_reports.domain.metering_point_periods.clamp_period import (
     clamp_to_selected_period,
 )
-from geh_settlement_report.domain.utils.factory_filters import (
+from geh_settlement_report.settlement_reports.domain.utils.factory_filters import (
     read_and_filter_by_latest_calculations,
 )
-from geh_settlement_report.domain.utils.merge_periods import (
+from geh_settlement_report.settlement_reports.domain.utils.merge_periods import (
     merge_connected_periods,
 )
-from geh_settlement_report.domain.utils.repository_filtering import (
+from geh_settlement_report.settlement_reports.domain.utils.repository_filtering import (
     read_filtered_metering_point_periods_by_grid_area_codes,
 )
-from geh_settlement_report.infrastructure.repository import WholesaleRepository
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 

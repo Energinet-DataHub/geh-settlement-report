@@ -13,7 +13,7 @@
 # limitations under the License.
 from pyspark.sql import DataFrame, SparkSession
 
-from geh_settlement_report.infrastructure.wholesale.database_definitions import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.database_definitions import (
     WholesaleBasisDataDatabase,
     WholesaleResultsDatabase,
 )

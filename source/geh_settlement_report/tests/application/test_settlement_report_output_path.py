@@ -8,9 +8,9 @@ from pathlib import Path
 import pydantic
 import pytest
 
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.entry_points.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from tests import PROJECT_PATH

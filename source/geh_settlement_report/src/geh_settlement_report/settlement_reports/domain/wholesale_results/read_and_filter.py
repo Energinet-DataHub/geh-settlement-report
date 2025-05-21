@@ -18,13 +18,13 @@ from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
-from geh_settlement_report.domain.utils.factory_filters import (
+from geh_settlement_report.settlement_reports.domain.utils.factory_filters import (
     filter_by_calculation_id_by_grid_area,
     filter_by_charge_owner_and_tax_depending_on_market_role,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.infrastructure.repository import WholesaleRepository
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
