@@ -28,7 +28,7 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
 
     public SettlementReportDatabaseContext() { }
 
-    public DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; init; } = null!;
+    public DbSet<Application.Model.SettlementReport> SettlementReports { get; init; } = null!;
 
     public DbSet<GridAreaOwnerEntity> GridAreaOwners { get; init; } = null!;
 

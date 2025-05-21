@@ -12,16 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+namespace Energinet.DataHub.SettlementReport.Application.Services;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-
-public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.Model.SettlementReport>
+public interface IRemoveExpiredSettlementReports
 {
-    public void Configure(EntityTypeBuilder<Application.Model.SettlementReport> builder)
-    {
-        builder.ToTable("SettlementReport");
-        builder.HasKey(e => e.Id);
-    }
+    Task RemoveExpiredAsync(IList<Model.SettlementReport> settlementReports);
 }

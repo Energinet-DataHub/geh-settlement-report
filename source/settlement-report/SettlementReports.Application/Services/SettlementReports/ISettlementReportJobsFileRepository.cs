@@ -12,16 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+namespace Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-
-public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.Model.SettlementReport>
+public interface ISettlementReportJobsFileRepository
 {
-    public void Configure(EntityTypeBuilder<Application.Model.SettlementReport> builder)
-    {
-        builder.ToTable("SettlementReport");
-        builder.HasKey(e => e.Id);
-    }
+    Task<Stream> DownloadAsync(string blobFileName);
 }

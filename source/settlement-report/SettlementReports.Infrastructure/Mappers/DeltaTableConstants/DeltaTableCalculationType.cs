@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Mappers.DeltaTableConstants;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-
-public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.Model.SettlementReport>
+public static class DeltaTableCalculationType
 {
-    public void Configure(EntityTypeBuilder<Application.Model.SettlementReport> builder)
-    {
-        builder.ToTable("SettlementReport");
-        builder.HasKey(e => e.Id);
-    }
+    public const string Aggregation = "aggregation";
+    public const string BalanceFixing = "balance_fixing";
+    public const string WholesaleFixing = "wholesale_fixing";
+    public const string FirstCorrectionSettlement = "first_correction_settlement";
+    public const string SecondCorrectionSettlement = "second_correction_settlement";
+    public const string ThirdCorrectionSettlement = "third_correction_settlement";
 }

@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
@@ -25,11 +26,8 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,29 +50,7 @@ public static class CalculationResultsExtensions
         services.AddDatabricksSqlStatementForApplication(configuration);
 
         // Settlement Reports
-        services.AddScoped<ISettlementReportRequestHandler, SettlementReportRequestHandler>();
-        services.AddScoped<ISettlementReportFileRequestHandler, SettlementReportFileRequestHandler>();
-        services.AddScoped<ISettlementReportFromFilesHandler, SettlementReportFromFilesHandler>();
-        services.AddScoped<ISettlementReportFinalizeHandler, SettlementReportFinalizeHandler>();
-        services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
-
-        services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
-        services.AddScoped<ISettlementReportDownloadHandler, SettlementReportDownloadHandler>();
-        services.AddScoped<IUpdateFailedSettlementReportsHandler, UpdateFailedSettlementReportsHandler>();
-
-        services.AddScoped<ISettlementReportDatabricksContext, SettlementReportDatabricksContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
-        services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
-        services.AddScoped<ISettlementReportFileGeneratorFactory, SettlementReportFileGeneratorFactory>();
-        services.AddScoped<ISettlementReportWholesaleRepository, SettlementReportWholesaleRepository>();
-        services.AddScoped<ISettlementReportEnergyResultRepository, SettlementReportEnergyResultRepository>();
-        services.AddScoped<ISettlementReportMeteringPointTimeSeriesResultRepository, SettlementReportMeteringPointTimeSeriesResultRepository>();
-        services.AddScoped<ISettlementReportChargeLinkPeriodsRepository, SettlementReportChargeLinkPeriodsRepository>();
-        services.AddScoped<ISettlementReportMeteringPointMasterDataRepository, SettlementReportMeteringPointMasterDataRepository>();
-        services.AddScoped<ISettlementReportMonthlyAmountRepository, SettlementReportMonthlyAmountRepository>();
-        services.AddScoped<ILatestCalculationVersionRepository, LatestCalculationVersionRepository>();
-        services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
-        services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
         services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddSettlementReportBlobStorage();

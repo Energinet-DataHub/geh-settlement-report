@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.SettlementReport.Infrastructure.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;

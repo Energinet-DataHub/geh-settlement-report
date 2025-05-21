@@ -15,6 +15,7 @@
 using System.Collections.ObjectModel;
 using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
@@ -57,7 +58,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Application.Model.SettlementReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
@@ -110,7 +111,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Application.Model.SettlementReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
@@ -162,7 +163,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Application.Model.SettlementReport(
                 clockMock.Object,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -213,7 +214,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Application.Model.SettlementReport(
                 clockMock.Object,
                 Guid.NewGuid(),
                 Guid.NewGuid(),

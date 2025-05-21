@@ -16,4 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SettlementReports\" />
+  </ItemGroup>
 </Project>
