@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
 
 public enum SettlementReportFileContent
 {

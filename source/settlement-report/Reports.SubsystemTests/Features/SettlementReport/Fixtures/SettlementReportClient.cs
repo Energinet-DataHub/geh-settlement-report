@@ -14,8 +14,8 @@
 
 using System.Net.Http.Json;
 using System.Text;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;

@@ -12,9 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport.Interfaces;
 
-public sealed record GeneratedSettlementReportDto(
-    SettlementReportRequestId RequestId,
-    string ReportFileName,
-    IEnumerable<GeneratedSettlementReportFileDto> TemporaryFiles);
+public interface IGetSettlementReportsHandler
+{
+    Task<IEnumerable<RequestedSettlementReportDto>> GetAsync();
+
+    Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(Guid actorId);
+
+    Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync();
+
+    Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync(Guid actorId);
+}

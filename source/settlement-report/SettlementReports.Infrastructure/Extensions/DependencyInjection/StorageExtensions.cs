@@ -15,7 +15,6 @@
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using HealthChecks.Azure.Storage.Blobs;

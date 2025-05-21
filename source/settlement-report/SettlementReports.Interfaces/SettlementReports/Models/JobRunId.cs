@@ -1,3 +1,3 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 
 public sealed record JobRunId(long Id);

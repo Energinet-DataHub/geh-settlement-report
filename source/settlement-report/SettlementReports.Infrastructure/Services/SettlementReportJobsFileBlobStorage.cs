@@ -14,7 +14,6 @@
 
 using Azure.Storage.Blobs;
 using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
 

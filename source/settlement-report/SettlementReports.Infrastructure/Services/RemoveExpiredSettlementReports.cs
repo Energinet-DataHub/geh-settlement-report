@@ -14,8 +14,7 @@
 
 using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 using NodaTime;
 using NodaTime.Extensions;
 
@@ -58,7 +57,7 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
             .GetCurrentInstant()
             .Minus(TimeSpan.FromDays(7).ToDuration());
 
-        return settlementReport.Status != SettlementReportStatus.InProgress &&
+        return settlementReport.Status != ReportStatus.InProgress &&
                settlementReport.CreatedDateTime <= cutOffPeriod;
     }
 }

@@ -21,7 +21,7 @@ using Google.Protobuf.WellKnownTypes;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.Persistence;
 
 public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
 {

@@ -14,8 +14,8 @@
 
 using System.Text.Json;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
 using NodaTime;
 using NodaTime.Extensions;
 
@@ -117,13 +117,6 @@ public sealed class SettlementReport
     // ReSharper disable once UnusedMember.Local
     private SettlementReport()
     {
-    }
-
-    public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
-    {
-        Status = ReportStatus.Completed;
-        BlobFileName = generatedSettlementReport.ReportFileName;
-        EndedDateTime = clock.GetCurrentInstant();
     }
 
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
