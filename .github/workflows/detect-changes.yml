@@ -57,7 +57,7 @@ jobs:
               - '.github/actions/dotnet-*/**'
               - 'source/settlement-report/!(DatabaseMigration/**)**'
             nuget-packages:
-              - 'docs/Measurements.Client/**'
+              - 'docs/Reports.Client/**'
               - 'source/dotnet/Reports.Client*/**'
               - 'source/dotnet/Reports.Abstractions*/**'
               - '.github/workflows/reports-client-bundle-publish.yml'
