@@ -17,13 +17,17 @@ import time
 import uuid
 from datetime import timedelta
 from typing import Callable, cast
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
 
 from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.application.tasks import task_factory
 from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
+from geh_settlement_report.settlement_reports.application.tasks.time_series_points_task import (
+    TimeSeriesPointsTask,
+)
 from geh_settlement_report.settlement_reports.entry_point import (
     _start_task,
 )
@@ -36,6 +40,7 @@ class TestWhenInvokedWithArguments:
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
         clean_up_logging,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -62,23 +67,13 @@ class TestWhenInvokedWithArguments:
 
         task_factory_mock = Mock()
 
+        monkeypatch.setattr(task_factory, "create", task_factory_mock)
+        monkeypatch.setattr(TimeSeriesPointsTask, "execute", lambda _: None)
+        monkeypatch.setattr(sys, "argv", updated_args)
+        monkeypatch.setenv("APPLICATIONINSIGHTS_CONNECTION_STRING", applicationinsights_connection_string)
+
         # Act
-        with patch(
-            "geh_settlement_report.settlement_reports.application.tasks.task_factory.create",
-            task_factory_mock,
-        ):
-            with (
-                patch(
-                    "geh_settlement_report.settlement_reports.application.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                    return_value=None,
-                ),
-                patch("sys.argv", updated_args),
-                patch.dict(
-                    "os.environ",
-                    {"APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string},
-                ),
-            ):
-                _start_task(task_type=valid_task_type)
+        _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -92,7 +87,7 @@ class TestWhenInvokedWithArguments:
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{new_report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report..settlement_reports.entry_point"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.settlement_reports.entry_point"
         | count
         """
 
@@ -115,6 +110,7 @@ class TestWhenInvokedWithArguments:
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
         clean_up_logging,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -144,26 +140,14 @@ class TestWhenInvokedWithArguments:
         task_factory_mock = Mock()
 
         # Act
+        monkeypatch.setattr(task_factory, "create", task_factory_mock)
+        monkeypatch.setattr(TimeSeriesPointsTask, "execute", lambda _: None)
+        monkeypatch.setattr(sys, "argv", updated_args)
+        monkeypatch.setenv("APPLICATIONINSIGHTS_CONNECTION_STRING", applicationinsights_connection_string)
+        monkeypatch.setenv("CATALOG_NAME", "test_catalog")
+
         with pytest.raises(SystemExit):
-            with patch(
-                "geh_settlement_report.settlement_reports.application.tasks.task_factory.create",
-                task_factory_mock,
-            ):
-                with (
-                    patch(
-                        "geh_settlement_report.settlement_reports.application.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                        return_value=None,
-                    ),
-                    patch("sys.argv", updated_args),
-                    patch.dict(
-                        "os.environ",
-                        {
-                            "APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string,
-                            "CATALOG_NAME": "test_catalog",
-                        },
-                    ),
-                ):
-                    _start_task(task_type=valid_task_type)
+            _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
