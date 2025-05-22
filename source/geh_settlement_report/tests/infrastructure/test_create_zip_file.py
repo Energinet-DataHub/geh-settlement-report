@@ -3,7 +3,7 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-from geh_settlement_report.infrastructure.create_zip_file import create_zip_file
+from geh_settlement_report.settlement_reports.infrastructure.create_zip_file import create_zip_file
 
 
 def test_create_zip_file__when_dbutils_is_none__raise_exception():

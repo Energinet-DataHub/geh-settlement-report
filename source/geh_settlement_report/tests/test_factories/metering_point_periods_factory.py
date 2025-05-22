@@ -3,18 +3,18 @@ from datetime import datetime
 
 from pyspark.sql import DataFrame, SparkSession
 
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values.settlement_method import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values.settlement_method import (
     SettlementMethodDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.schemas import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.schemas import (
     metering_point_periods_v1,
 )
 

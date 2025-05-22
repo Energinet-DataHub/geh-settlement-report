@@ -9,17 +9,17 @@ from pyspark.sql.types import DecimalType
 
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
-from geh_settlement_report.domain.time_series_points.prepare_for_csv import (
+from geh_settlement_report.settlement_reports.domain.time_series_points.prepare_for_csv import (
     prepare_for_csv,
 )
-from geh_settlement_report.domain.utils.csv_column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import (
     CsvColumnNames,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
 )
 
