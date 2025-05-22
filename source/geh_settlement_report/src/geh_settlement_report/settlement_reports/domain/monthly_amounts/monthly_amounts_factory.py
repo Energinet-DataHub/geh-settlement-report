@@ -14,6 +14,9 @@
 
 from pyspark.sql import DataFrame
 
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
 from geh_settlement_report.settlement_reports.domain.monthly_amounts.prepare_for_csv import (
     prepare_for_csv,
 )
@@ -22,9 +25,6 @@ from geh_settlement_report.settlement_reports.domain.monthly_amounts.read_and_fi
 )
 from geh_settlement_report.settlement_reports.domain.utils.settlement_report_args_utils import (
     should_have_result_file_per_grid_area,
-)
-from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
-    SettlementReportArgs,
 )
 from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
 
