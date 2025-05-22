@@ -22,11 +22,11 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.settlement_reports.entry_points.tasks import task_factory
-from geh_settlement_report.settlement_reports.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.settlement_reports.application.tasks import task_factory
+from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
 from geh_settlement_report.settlement_reports.infrastructure.spark_initializor import initialize_spark
 
 

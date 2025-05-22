@@ -19,12 +19,12 @@ from unittest.mock import patch
 import pydantic
 import pytest
 
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.job_args.environment_variables import (
+from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.application.job_args.environment_variables import (
     EnvironmentVariable,
 )
-from geh_settlement_report.entry_points.job_args.settlement_report_args import SettlementReportArgs
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import SettlementReportArgs
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
 
 DEFAULT_REPORT_ID = "12345678-9fc8-409a-a169-fbd49479d718"
 

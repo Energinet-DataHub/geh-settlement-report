@@ -9,13 +9,13 @@ from pyspark.sql import functions as F
 
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.energy_factory as energy_factory
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
 from geh_settlement_report.settlement_reports.domain.energy_results.read_and_filter import (
     read_and_filter_from_view,
 )
 from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
 from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )

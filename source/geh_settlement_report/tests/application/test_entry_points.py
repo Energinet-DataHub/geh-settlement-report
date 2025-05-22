@@ -17,8 +17,8 @@ from typing import Any
 
 import pytest
 
-from geh_settlement_report.settlement_reports.entry_points import entry_point as module
-from geh_settlement_report.settlement_reports.entry_points.entry_point import (
+from geh_settlement_report.settlement_reports import entry_point as module
+from geh_settlement_report.settlement_reports.entry_point import (
     get_report_id_from_args,
 )
 

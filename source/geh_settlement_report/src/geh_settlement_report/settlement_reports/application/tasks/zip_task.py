@@ -3,10 +3,10 @@ from typing import Any
 from geh_common.telemetry import use_span
 from pyspark.sql import SparkSession
 
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.settlement_reports.entry_points.tasks.task_base import TaskBase
+from geh_settlement_report.settlement_reports.application.tasks.task_base import TaskBase
 from geh_settlement_report.settlement_reports.infrastructure.create_zip_file import create_zip_file
 from geh_settlement_report.settlement_reports.infrastructure.paths import get_report_output_path
 

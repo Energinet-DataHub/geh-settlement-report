@@ -4,7 +4,7 @@ from typing import Any
 from geh_common.telemetry import Logger
 from pyspark.sql import SparkSession
 
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 

@@ -4,13 +4,13 @@ from pyspark.sql import DataFrame, SparkSession
 
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as input_metering_point_periods_factory
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
 from geh_settlement_report.settlement_reports.domain.metering_point_periods.metering_point_periods_factory import (
     create_metering_point_periods,
 )
 from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import CsvColumnNames
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
 from tests.test_factories import latest_calculations_factory
 from tests.utils import Dates as d
 

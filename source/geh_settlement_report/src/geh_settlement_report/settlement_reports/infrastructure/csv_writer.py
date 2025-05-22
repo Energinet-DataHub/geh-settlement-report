@@ -21,11 +21,11 @@ from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame, Window
 from pyspark.sql import functions as F
 
-from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import EphemeralColumns
-from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import EphemeralColumns
+from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
 from geh_settlement_report.settlement_reports.infrastructure.paths import get_report_output_path
 from geh_settlement_report.settlement_reports.infrastructure.report_name_factory import FileNameFactory
 

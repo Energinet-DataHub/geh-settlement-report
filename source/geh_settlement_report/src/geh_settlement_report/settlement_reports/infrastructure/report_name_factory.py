@@ -1,11 +1,11 @@
 from datetime import timedelta
 from zoneinfo import ZoneInfo
 
-from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
-from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
 
 
 class MarketRoleInFileName:

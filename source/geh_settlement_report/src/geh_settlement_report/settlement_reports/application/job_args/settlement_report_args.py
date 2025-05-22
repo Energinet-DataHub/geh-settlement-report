@@ -7,8 +7,8 @@ from geh_common.application import GridAreaCodes
 from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
+from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
 from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
-from geh_settlement_report.settlement_reports.entry_points.job_args.calculation_type import CalculationType
 
 
 class SettlementReportArgs(BaseSettings):

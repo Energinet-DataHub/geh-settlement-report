@@ -3,6 +3,10 @@ from typing import Any
 from geh_common.telemetry import use_span
 from pyspark.sql import SparkSession
 
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
+from geh_settlement_report.settlement_reports.application.tasks.task_base import TaskBase
 from geh_settlement_report.settlement_reports.domain.energy_results.energy_results_factory import (
     create_energy_results,
 )
@@ -11,10 +15,6 @@ from geh_settlement_report.settlement_reports.domain.energy_results.order_by_col
 )
 from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
 from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.settlement_reports.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
-from geh_settlement_report.settlement_reports.entry_points.tasks.task_base import TaskBase
 from geh_settlement_report.settlement_reports.infrastructure import csv_writer
 from geh_settlement_report.settlement_reports.infrastructure.repository import WholesaleRepository
 
