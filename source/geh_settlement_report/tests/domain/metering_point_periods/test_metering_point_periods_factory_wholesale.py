@@ -73,8 +73,6 @@ def test_create_metering_point_periods__when_datahub_admin__returns_expected_val
     )
 
     # Assert
-    print(actual.collect())
-    print(expected)
     assert actual.count() == 1
     assert actual.collect()[0].asDict() == expected
 
