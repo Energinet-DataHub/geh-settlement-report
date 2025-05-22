@@ -64,12 +64,12 @@ class TestWhenInvokedWithArguments:
 
         # Act
         with patch(
-            "geh_settlement_report.entry_points.tasks.task_factory.create",
+            "geh_settlement_report.settlement_reports.application.tasks.task_factory.create",
             task_factory_mock,
         ):
             with (
                 patch(
-                    "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                    "geh_settlement_report.settlement_reports.application.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
                     return_value=None,
                 ),
                 patch("sys.argv", updated_args),
@@ -92,7 +92,7 @@ class TestWhenInvokedWithArguments:
         | where OperationId != "00000000000000000000000000000000"
         | where Properties.Subsystem == "settlement-report-aggregations"
         | where Properties.settlement_report_id == "{new_report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.entry_points.entry_point"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report..settlement_reports.entry_point"
         | count
         """
 
@@ -146,12 +146,12 @@ class TestWhenInvokedWithArguments:
         # Act
         with pytest.raises(SystemExit):
             with patch(
-                "geh_settlement_report.entry_points.tasks.task_factory.create",
+                "geh_settlement_report.settlement_reports.application.tasks.task_factory.create",
                 task_factory_mock,
             ):
                 with (
                     patch(
-                        "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
+                        "geh_settlement_report.settlement_reports.application.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
                         return_value=None,
                     ),
                     patch("sys.argv", updated_args),
