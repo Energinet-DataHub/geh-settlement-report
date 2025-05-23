@@ -53,6 +53,11 @@ env:
   BASE_SHA: ${{ (github.event_name == 'workflow_dispatch') && 'main' || '' }}
   # Necessary to manage Azure resources from automated tests
   AZURE_KEYVAULT_URL: ${{ vars.integration_test_azure_keyvault_url }}
+  # Set value used by 'AzuriteManager'
+  #  Use 'AzuriteBlobFolderPath' for TestCommon version 4.2.0 and lower
+  AzuriteBlobFolderPath: ${{ github.workspace }}\node_modules\.bin\
+  #  Use 'AzuriteFolderPath' for TestCommon version 4.3.0 and higher
+  AzuriteFolderPath: ${{ github.workspace }}\node_modules\.bin\
 
 jobs:
   build_and_publish:
