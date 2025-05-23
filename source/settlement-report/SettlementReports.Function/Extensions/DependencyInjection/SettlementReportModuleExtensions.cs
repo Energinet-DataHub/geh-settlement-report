@@ -60,7 +60,7 @@ public static class SettlementReportModuleExtensions
         ]);
 
         // settlement report services
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportJobHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
@@ -68,13 +68,8 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddSettlementReportBlobStorage();
-
-        // measurements reports services
-        services.AddScoped<IRequestMeasurementsReportJobHandler, RequestMeasurementsReportHandler>();
-        services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
 
         // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(
