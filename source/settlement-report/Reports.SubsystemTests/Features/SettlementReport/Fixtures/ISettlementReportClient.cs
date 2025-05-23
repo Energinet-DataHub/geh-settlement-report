@@ -32,6 +32,12 @@ public interface ISettlementReportClient
     public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Requests generation of a new settlement report.
+    /// </summary>
+    /// <returns>The job id.</returns>
+    public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets a list of all settlement reports visible to the current user.
     /// </summary>
     /// <returns>A list of settlement reports.</returns>

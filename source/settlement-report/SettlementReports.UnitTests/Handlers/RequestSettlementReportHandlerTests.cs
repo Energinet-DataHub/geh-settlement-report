@@ -54,7 +54,7 @@ public class RequestSettlementReportHandlerTests
         var jobHelperMock = new Mock<IDatabricksJobsHelper>();
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         jobHelperMock
-            .Setup(x => x.RunSettlementReportsJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))
+            .Setup(x => x.RunJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(jobRunId);
 
         var command = new RequestSettlementReportCommand(request, Guid.NewGuid(), Guid.NewGuid(), true, "1233", MarketRole.EnergySupplier);

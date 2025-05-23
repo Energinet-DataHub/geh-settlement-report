@@ -18,9 +18,12 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.Set
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 
+// TODO BJM:
+// - Rename to include "SettlementReport" in the name (and remove it from method names)
+// - Why is it a "helper" and why is Databricks-specific stuff in the interfaces project?
 public interface IDatabricksJobsHelper
 {
-    Task<JobRunId> RunSettlementReportsJobAsync(
+    Task<JobRunId> RunJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
         ReportRequestId reportId,

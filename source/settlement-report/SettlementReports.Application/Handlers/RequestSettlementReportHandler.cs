@@ -86,7 +86,7 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
     {
         var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
 
         await _settlementReportInitializeHandler
             .InitializeFromJobAsync(
