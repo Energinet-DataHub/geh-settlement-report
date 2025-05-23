@@ -35,8 +35,8 @@ on:
     branches:
       - main
     paths:
-      - source/settlement-reports/Reports.Client/**
-      - source/settlement-reports/Reports.Abstractions/**
+      - source/settlement-report/Reports.Client/**
+      - source/settlement-report/Reports.Abstractions/**
       - .github/workflows/reports-client-bundle-publish.yml
   # Build, test, pack
   # Executed if any NuGet package folder or build scripts has changed;
