@@ -14,8 +14,13 @@
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
+/// <summary>
+/// These names are defined in infrastructure.
+/// </summary>
+// TODO BJM: Move out of settlement report specific folder
 public static class DatabricksJobNames
 {
     public const string BalanceFixing = "SettlementReportBalanceFixing";
     public const string Wholesale = "SettlementReportWholesaleCalculations";
+    public const string MeasurementsReport = "MeasurementsReport";
 }
