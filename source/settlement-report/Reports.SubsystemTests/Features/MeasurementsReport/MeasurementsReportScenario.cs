@@ -48,4 +48,18 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
             ActorNumberOverride: null,
             MarketRoleOverride: null);
     }
+
+    [SubsystemFact]
+    [ScenarioStep(2)]
+    public async Task When_SettlementReportRequestIsSent()
+    {
+        // Act
+        var jobRunId = await _scenarioFixture.ReportsClient.RequestAsync(
+            _scenarioFixture.ScenarioState.MeasurementsReportRequestDto!,
+            CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(jobRunId);
+        _scenarioFixture.ScenarioState.JobRunId = jobRunId;
+    }
 }
