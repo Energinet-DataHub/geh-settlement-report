@@ -13,13 +13,14 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 
 public interface ISettlementReportRequestHandler
 {
     Task<IEnumerable<SettlementReportFileRequestDto>> RequestReportAsync(
-        SettlementReportRequestId requestId,
+        ReportRequestId requestId,
         SettlementReportRequestDto reportRequest,
         SettlementReportRequestedByActor actorInfo);
 }

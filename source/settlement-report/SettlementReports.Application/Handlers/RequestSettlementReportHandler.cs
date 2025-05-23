@@ -18,6 +18,7 @@ using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
@@ -82,7 +83,7 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
 
     private async Task<JobRunId> StartReportAsync(RequestSettlementReportCommand request, string requestActorGln)
     {
-        var reportId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
         var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
 

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 
@@ -21,7 +22,7 @@ public interface IDatabricksJobsHelper
     Task<JobRunId> RunSettlementReportsJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        SettlementReportRequestId reportId,
+        ReportRequestId reportId,
         string actorGln);
 
     Task<JobRunWithStatusAndEndTime> GetSettlementReportsJobWithStatusAndEndTimeAsync(long runId);

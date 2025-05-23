@@ -27,35 +27,35 @@ public sealed class SettlementReportFileBlobStorage : ISettlementReportFileRepos
         _blobContainerClient = blobContainerClient;
     }
 
-    public Task<Stream> OpenForReadingAsync(SettlementReportRequestId reportRequestId, string fileName)
+    public Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName)
     {
         var blobName = GetBlobName(reportRequestId, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         return blobClient.OpenReadAsync(bufferSize: 25 * 1024 * 1024);
     }
 
-    public async Task DownloadAsync(SettlementReportRequestId reportRequestId, string fileName, Stream downloadStream)
+    public async Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream)
     {
         var blobName = GetBlobName(reportRequestId, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
     }
 
-    public Task<Stream> OpenForWritingAsync(SettlementReportRequestId reportRequestId, string fileName)
+    public Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName)
     {
         var blobName = GetBlobName(reportRequestId, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         return blobClient.OpenWriteAsync(true);
     }
 
-    public Task DeleteAsync(SettlementReportRequestId reportRequestId, string fileName)
+    public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
     {
         var blobName = GetBlobName(reportRequestId, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         return blobClient.DeleteIfExistsAsync();
     }
 
-    private static string GetBlobName(SettlementReportRequestId reportRequestId, string fileName)
+    private static string GetBlobName(ReportRequestId reportRequestId, string fileName)
     {
         return string.Join('/', "settlement-reports", reportRequestId.Id, fileName);
     }

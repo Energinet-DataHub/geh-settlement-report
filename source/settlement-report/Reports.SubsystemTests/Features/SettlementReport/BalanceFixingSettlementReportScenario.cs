@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Abstractions;
@@ -98,7 +99,7 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
         using var assertionScope = new AssertionScope();
         Assert.True(isCompletedOrFailed);
         Assert.NotNull(reportRequest);
-        Assert.Equal(SettlementReportStatus.Completed, reportRequest.Status);
+        Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 
     [SubsystemFact]
@@ -110,7 +111,7 @@ public class BalanceFixingSettlementReportScenario : IClassFixture<SettlementRep
         Assert.NotNull(reportRequest);
 
         // Act
-        var stream = await _scenarioFixture.SettlementReportClient.DownloadAsync(reportRequest.RequestId!, CancellationToken.None);
+        var stream = await _scenarioFixture.SettlementReportClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
 
         // Assert
         Assert.NotNull(stream);

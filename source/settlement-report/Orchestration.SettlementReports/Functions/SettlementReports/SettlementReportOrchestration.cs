@@ -15,6 +15,7 @@
 using Azure;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Exceptions;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Activities;
 using Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Functions.SettlementReports.Model;
 using Microsoft.Azure.Functions.Worker;
@@ -39,7 +40,7 @@ internal sealed class SettlementReportOrchestration
             return "Error: No input specified.";
         }
 
-        var requestId = new SettlementReportRequestId(context.InstanceId);
+        var requestId = new ReportRequestId(context.InstanceId);
         var scatterInput = new ScatterSettlementReportFilesInput(requestId, settlementReportRequest.Request, settlementReportRequest.ActorInfo);
 
         var dataSourceExceptionHandler = TaskOptions.FromRetryHandler(retryContext => HandleDataSourceExceptions(

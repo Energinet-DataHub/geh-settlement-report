@@ -18,6 +18,7 @@ using CsvHelper.TypeConversion;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Resolution = Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults.Resolution;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;

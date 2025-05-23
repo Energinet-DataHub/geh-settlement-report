@@ -18,5 +18,5 @@ namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
 public interface ISettlementReportJobsDownloadHandler
 {
-    Task<Stream> DownloadReportAsync(SettlementReportRequestId requestId, Guid actorId, bool isMultitenancy);
+    Task<Stream> DownloadReportAsync(ReportRequestId requestId, Guid actorId, bool isMultitenancy);
 }

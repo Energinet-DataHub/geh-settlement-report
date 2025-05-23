@@ -21,6 +21,7 @@ using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Statements;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -120,7 +121,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             SettlementReportFileContent.EnergyResult,
@@ -172,7 +173,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             SettlementReportFileContent.ChargeLinksPeriods,
@@ -242,7 +243,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             content,
@@ -290,7 +291,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             SettlementReportFileContent.MeteringPointMasterData,
@@ -346,7 +347,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             SettlementReportFileContent.MeteringPointMasterData,
@@ -404,7 +405,7 @@ public sealed class SettlementReportFileRequestHandlerIntegrationTests : TestBas
             null,
             null);
 
-        var requestId = new SettlementReportRequestId(Guid.NewGuid().ToString());
+        var requestId = new ReportRequestId(Guid.NewGuid().ToString());
         var fileRequest = new SettlementReportFileRequestDto(
             requestId,
             SettlementReportFileContent.MonthlyAmount,
