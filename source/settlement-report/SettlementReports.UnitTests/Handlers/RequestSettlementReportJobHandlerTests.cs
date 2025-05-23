@@ -26,7 +26,7 @@ using Xunit;
 
 namespace Energinet.DataHub.SettlementReport.UnitTests.Handlers;
 
-public class RequestSettlementReportHandlerTests
+public class RequestSettlementReportJobHandlerTests
 {
     [Fact]
     public async Task Handle_ValidRequest_ReturnsJobId()
@@ -53,11 +53,11 @@ public class RequestSettlementReportHandlerTests
         var jobHelperMock = new Mock<IDatabricksJobsHelper>();
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         jobHelperMock
-            .Setup(x => x.RunSettlementReportsJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))
+            .Setup(x => x.RunJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))
             .ReturnsAsync(jobRunId);
 
         var command = new RequestSettlementReportCommand(request, Guid.NewGuid(), Guid.NewGuid(), true, "1233", MarketRole.EnergySupplier);
-        var handler = new RequestSettlementReportHandler(jobHelperMock.Object, initializerMock.Object, new Mock<IGridAreaOwnerRepository>().Object);
+        var handler = new RequestSettlementReportJobHandler(jobHelperMock.Object, initializerMock.Object, new Mock<IGridAreaOwnerRepository>().Object);
 
         // Act
         var result = await handler.HandleAsync(command);

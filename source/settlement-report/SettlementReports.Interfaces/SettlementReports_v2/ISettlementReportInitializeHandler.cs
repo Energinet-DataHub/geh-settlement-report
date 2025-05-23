@@ -17,6 +17,8 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 
+// TODO BJM: This is a vague name not conveying the purpose of the interface.
+//           Segregate a factory instead and then replace usages with both using the factory and the repository directly?
 public interface ISettlementReportInitializeHandler
 {
     Task InitializeAsync(

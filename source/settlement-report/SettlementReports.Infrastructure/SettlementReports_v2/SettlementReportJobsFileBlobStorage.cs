@@ -35,6 +35,6 @@ public sealed class SettlementReportJobsFileBlobStorage : ISettlementReportJobsF
 
     private static string GetBlobName(string fileName)
     {
-        return string.Join('/', "reports", fileName);
+        return string.Join('/', "settlementreports", fileName);
     }
 }

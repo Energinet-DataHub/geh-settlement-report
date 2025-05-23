@@ -17,6 +17,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.
 
 namespace Energinet.DataHub.SettlementReport.Application.Commands;
 
+// TODO BJM: Move all settlement report stuff in application to subfolder
 public sealed record RequestSettlementReportCommand(
     SettlementReportRequestDto RequestDto,
     Guid UserId,

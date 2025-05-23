@@ -23,13 +23,13 @@ using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;
 
-public sealed class RequestSettlementReportHandler : IRequestSettlementReportJobHandler
+public sealed class RequestSettlementReportJobHandler : IRequestSettlementReportJobHandler
 {
     private readonly IDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
     private readonly IGridAreaOwnerRepository _gridAreaOwnerRepository;
 
-    public RequestSettlementReportHandler(
+    public RequestSettlementReportJobHandler(
         IDatabricksJobsHelper jobHelper,
         ISettlementReportInitializeHandler settlementReportInitializeHandler,
         IGridAreaOwnerRepository gridAreaOwnerRepository)
@@ -85,7 +85,7 @@ public sealed class RequestSettlementReportHandler : IRequestSettlementReportJob
     {
         var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunSettlementReportsJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
 
         await _settlementReportInitializeHandler
             .InitializeFromJobAsync(
