@@ -51,7 +51,7 @@ jobs:
 
   ci_packages:
     needs: changes
-    if: ${{ needs.changes.outputs.nuget-packages == 'true' }}
+    if: ${{ needs.changes.outputs.nuget_packages == 'true' }}
     uses: ./.github/workflows/reports-client-bundle-publish.yml
 
   ci_python:
