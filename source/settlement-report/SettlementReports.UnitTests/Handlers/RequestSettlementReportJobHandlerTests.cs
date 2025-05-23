@@ -50,7 +50,7 @@ public class RequestSettlementReportJobHandlerTests
                 null,
                 null));
         var initializerMock = new Mock<ISettlementReportPersistenceService>();
-        var jobHelperMock = new Mock<IDatabricksJobsHelper>();
+        var jobHelperMock = new Mock<ISettlementReportDatabricksJobsHelper>();
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         jobHelperMock
             .Setup(x => x.RunJobAsync(It.IsAny<SettlementReportRequestDto>(), It.IsAny<MarketRole>(), It.IsAny<ReportRequestId>(), It.IsAny<string>()))

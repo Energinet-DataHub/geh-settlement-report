@@ -23,13 +23,13 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handl
 
 public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsHandler
 {
-    private readonly IDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportDatabricksJobsHelper _jobHelper;
     private readonly IGetSettlementReportsHandler _getSettlementReportsHandler;
     private readonly ISettlementReportRepository _repository;
     private readonly IClock _clock;
 
     public ListSettlementReportJobsHandler(
-        IDatabricksJobsHelper jobHelper,
+        ISettlementReportDatabricksJobsHelper jobHelper,
         IGetSettlementReportsHandler getSettlementReportsHandler,
         ISettlementReportRepository repository,
         IClock clock)
@@ -59,7 +59,7 @@ public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsH
         {
             if (settlementReportDto.Status != ReportStatus.Completed)
             {
-                var jobResult = await _jobHelper.GetSettlementReportsJobWithStatusAndEndTimeAsync(settlementReportDto.JobId!.Id)
+                var jobResult = await _jobHelper.GetJobRunAsync(settlementReportDto.JobId!.Id)
                     .ConfigureAwait(false);
                 switch (jobResult.Status)
                 {

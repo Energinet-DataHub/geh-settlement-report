@@ -67,7 +67,7 @@ public class CancelSettlementReportJobHandlerTests
                 settlementReportRequestId,
                 request);
 
-        var jobHelperMock = new Mock<IDatabricksJobsHelper>();
+        var jobHelperMock = new Mock<ISettlementReportDatabricksJobsHelper>();
         var repository = new Mock<ISettlementReportRepository>();
         repository
             .Setup(x => x.GetAsync(settlementReportRequestId.Id))
@@ -121,7 +121,7 @@ public class CancelSettlementReportJobHandlerTests
                 request);
         settlementReport.MarkAsFailed();
 
-        var jobHelperMock = new Mock<IDatabricksJobsHelper>();
+        var jobHelperMock = new Mock<ISettlementReportDatabricksJobsHelper>();
         var repository = new Mock<ISettlementReportRepository>();
         repository
             .Setup(x => x.GetAsync(settlementReportRequestId.Id))
@@ -172,7 +172,7 @@ public class CancelSettlementReportJobHandlerTests
                 settlementReportRequestId,
                 request);
 
-        var jobHelperMock = new Mock<IDatabricksJobsHelper>();
+        var jobHelperMock = new Mock<ISettlementReportDatabricksJobsHelper>();
         var repository = new Mock<ISettlementReportRepository>();
         repository
             .Setup(x => x.GetAsync(settlementReportRequestId.Id))
@@ -222,7 +222,7 @@ public class CancelSettlementReportJobHandlerTests
                 settlementReportRequestId,
                 request);
 
-        var jobHelperMock = new Mock<IDatabricksJobsHelper>();
+        var jobHelperMock = new Mock<ISettlementReportDatabricksJobsHelper>();
         var repository = new Mock<ISettlementReportRepository>();
         repository
             .Setup(x => x.GetAsync(settlementReportRequestId.Id))

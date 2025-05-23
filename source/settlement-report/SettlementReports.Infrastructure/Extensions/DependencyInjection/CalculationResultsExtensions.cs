@@ -76,7 +76,7 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
         services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
+        services.AddScoped<ISettlementReportDatabricksJobsHelper, SettlementReportDatabricksJobsHelper>();
         services.AddSettlementReportBlobStorage();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddDbContext<SettlementReportDatabaseContext>(

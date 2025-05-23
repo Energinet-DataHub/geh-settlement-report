@@ -25,12 +25,12 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handl
 
 public sealed class RequestSettlementReportJobHandler : IRequestSettlementReportJobHandler
 {
-    private readonly IDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportPersistenceService _settlementReportPersistenceService;
     private readonly IGridAreaOwnerRepository _gridAreaOwnerRepository;
 
     public RequestSettlementReportJobHandler(
-        IDatabricksJobsHelper jobHelper,
+        ISettlementReportDatabricksJobsHelper jobHelper,
         ISettlementReportPersistenceService settlementReportPersistenceService,
         IGridAreaOwnerRepository gridAreaOwnerRepository)
     {

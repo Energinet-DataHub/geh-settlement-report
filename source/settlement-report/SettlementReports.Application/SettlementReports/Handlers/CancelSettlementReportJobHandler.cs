@@ -21,11 +21,11 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handl
 
 public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJobHandler
 {
-    private readonly IDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportRepository _repository;
 
     public CancelSettlementReportJobHandler(
-        IDatabricksJobsHelper jobHelper,
+        ISettlementReportDatabricksJobsHelper jobHelper,
         ISettlementReportRepository repository)
     {
         _jobHelper = jobHelper;
@@ -53,6 +53,6 @@ public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJo
             throw new InvalidOperationException($"Can't cancel a report with status: {report.Status}");
         }
 
-        await _jobHelper.CancelSettlementReportJobAsync(report.JobId.Value).ConfigureAwait(false);
+        await _jobHelper.CancelAsync(report.JobId.Value).ConfigureAwait(false);
     }
 }
