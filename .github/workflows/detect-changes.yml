@@ -59,7 +59,7 @@ jobs:
               - 'source/settlement-report/!(DatabaseMigration/**)**'
             nuget_packages:
               - 'docs/Reports.Client/**'
-              - 'source/settlement-reports/Reports.Client*/**'
+              - 'source/settlement-report/Reports.Client*/**'
               - 'source/settlement-reports/Reports.Abstractions*/**'
               - '.github/workflows/reports-client-bundle-publish.yml'
             db_migrations:
