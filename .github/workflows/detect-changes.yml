@@ -38,6 +38,7 @@ jobs:
     # Set job outputs to values from filter step
     outputs:
       dotnet: ${{ steps.filter.outputs.dotnet }}
+      nuget_packages: ${{ steps.filter_nuget.outputs.nuget_packages }}
       render_c4model_views: ${{ steps.filter.outputs.render_c4model_views }}
       db_migrations: ${{ steps.filter.outputs.db_migrations }}
     steps:

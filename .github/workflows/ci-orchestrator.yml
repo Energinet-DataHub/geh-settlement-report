@@ -49,10 +49,12 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
 
-  ci_packages:
+  ci_nuget:
     needs: changes
     if: ${{ needs.changes.outputs.nuget_packages == 'true' }}
     uses: ./.github/workflows/reports-client-bundle-publish.yml
+    name: Build NuGet packages
+    secrets: inherit
 
   ci_python:
     name: Unit tests and build packages
