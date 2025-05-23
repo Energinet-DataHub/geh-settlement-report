@@ -17,6 +17,7 @@ using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
@@ -58,8 +59,8 @@ public static class SettlementReportModuleExtensions
             GridAreaOwnershipAssigned.Descriptor,
         ]);
 
-        // general services
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
+        // settlement report services
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportJobHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
@@ -67,7 +68,6 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddSettlementReportBlobStorage();
 
