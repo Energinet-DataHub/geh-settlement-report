@@ -97,6 +97,7 @@ jobs:
         changes,
         ci_base,
         ci_dotnet,
+        ci_nuget,
         ci_python,
         ci_python_integration,
         render_c4model_views,
