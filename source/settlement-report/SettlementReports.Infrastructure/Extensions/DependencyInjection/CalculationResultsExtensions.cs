@@ -56,7 +56,7 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportFileRequestHandler, SettlementReportFileRequestHandler>();
         services.AddScoped<ISettlementReportFromFilesHandler, SettlementReportFromFilesHandler>();
         services.AddScoped<ISettlementReportFinalizeHandler, SettlementReportFinalizeHandler>();
-        services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
+        services.AddScoped<ISettlementReportPersistenceService, SettlementReportPersistenceService>();
 
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
         services.AddScoped<ISettlementReportDownloadHandler, SettlementReportDownloadHandler>();

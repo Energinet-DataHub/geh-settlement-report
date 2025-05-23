@@ -49,7 +49,7 @@ public class RequestSettlementReportJobHandlerTests
                 CalculationType.WholesaleFixing,
                 null,
                 null));
-        var initializerMock = new Mock<ISettlementReportInitializeHandler>();
+        var initializerMock = new Mock<ISettlementReportPersistenceService>();
         var jobHelperMock = new Mock<IDatabricksJobsHelper>();
         var jobRunId = new JobRunId(Random.Shared.NextInt64());
         jobHelperMock

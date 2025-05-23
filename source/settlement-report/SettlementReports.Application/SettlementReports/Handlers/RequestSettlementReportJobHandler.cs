@@ -26,16 +26,16 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handl
 public sealed class RequestSettlementReportJobHandler : IRequestSettlementReportJobHandler
 {
     private readonly IDatabricksJobsHelper _jobHelper;
-    private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
+    private readonly ISettlementReportPersistenceService _settlementReportPersistenceService;
     private readonly IGridAreaOwnerRepository _gridAreaOwnerRepository;
 
     public RequestSettlementReportJobHandler(
         IDatabricksJobsHelper jobHelper,
-        ISettlementReportInitializeHandler settlementReportInitializeHandler,
+        ISettlementReportPersistenceService settlementReportPersistenceService,
         IGridAreaOwnerRepository gridAreaOwnerRepository)
     {
         _jobHelper = jobHelper;
-        _settlementReportInitializeHandler = settlementReportInitializeHandler;
+        _settlementReportPersistenceService = settlementReportPersistenceService;
         _gridAreaOwnerRepository = gridAreaOwnerRepository;
     }
 
@@ -87,8 +87,8 @@ public sealed class RequestSettlementReportJobHandler : IRequestSettlementReport
 
         var runId = await _jobHelper.RunJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
 
-        await _settlementReportInitializeHandler
-            .InitializeFromJobAsync(
+        await _settlementReportPersistenceService
+            .PersistAsync(
                 request.UserId,
                 request.ActorId,
                 request.IsFas,
