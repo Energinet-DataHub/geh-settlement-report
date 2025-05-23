@@ -11,10 +11,10 @@ import tests.test_factories.charge_price_information_periods_factory as charge_p
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
-from geh_settlement_report.domain.charge_price_points.read_and_filter import (
+from geh_settlement_report.settlement_reports.domain.charge_price_points.read_and_filter import (
     read_and_filter,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

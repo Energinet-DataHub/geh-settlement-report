@@ -10,11 +10,11 @@ import tests.test_factories.charge_link_periods_factory as charge_link_periods_f
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
-from geh_settlement_report.domain.metering_point_periods.read_and_filter_wholesale import (
+from geh_settlement_report.settlement_reports.domain.metering_point_periods.read_and_filter_wholesale import (
     read_and_filter,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 from tests.utils import Dates as d
