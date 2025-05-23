@@ -105,4 +105,4 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
 
 
 def create_measurements_report() -> None:
-    raise NotImplementedError("This function is not yet implemented")
+    pass
