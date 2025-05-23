@@ -58,6 +58,8 @@ env:
   AzuriteBlobFolderPath: ${{ github.workspace }}\node_modules\.bin\
   #  Use 'AzuriteFolderPath' for TestCommon version 4.3.0 and higher
   AzuriteFolderPath: ${{ github.workspace }}\node_modules\.bin\
+  # Overrides settings in 'functionhost.settings.json'
+  FunctionAppHostPath: ${{ github.workspace }}\node_modules\azure-functions-core-tools\bin\func.dll
 
 jobs:
   build_and_publish:
@@ -99,12 +101,12 @@ jobs:
       - name: Pack Reports.Client project
         uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v14
         with:
-          project_path: ./source/settlement-reports/Reports.Client/Reports.Client.csproj
+          project_path: ./source/settlement-report/Reports.Client/Reports.Client.csproj
 
       - name: Pack Reports.Abstractions project
         uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v14
         with:
-          project_path: ./source/settlement-reports/Reports.Abstractions/Reports.Abstractions.csproj
+          project_path: ./source/settlement-report/Reports.Abstractions/Reports.Abstractions.csproj
       - name: Package content or build has changed for Reports.Client or Reports.Abstractions
         id: changed-content-client
         uses: tj-actions/changed-files@v45
