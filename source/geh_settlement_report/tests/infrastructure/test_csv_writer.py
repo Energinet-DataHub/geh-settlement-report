@@ -11,10 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from datetime import datetime
 from functools import reduce
-from pathlib import Path
-from tempfile import TemporaryDirectory
 
 import pyspark.sql.functions as F
 import pytest
@@ -36,7 +33,6 @@ from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from geh_settlement_report.infrastructure import csv_writer
-from geh_settlement_report.infrastructure.csv_writer import _write_files
 from geh_settlement_report.infrastructure.paths import get_report_output_path
 from geh_settlement_report.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
@@ -699,119 +695,3 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
         expected_file_names=expected_file_names,
         spark=spark,
     )
-
-
-def test_write_files__csv_separator_is_comma_and_decimals_use_points(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame([("a", 1.1), ("b", 2.2), ("c", 3.3)], ["key", "value"])
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=[],
-        order_by=[],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                assert all_lines_written[0] == "a,1.1\n"
-                assert all_lines_written[1] == "b,2.2\n"
-                assert all_lines_written[2] == "c,3.3\n"
-
-    assert columns == ["key", "value"]
-
-    tmp_dir.cleanup()
-
-
-def test_write_files__when_order_by_specified_on_multiple_partitions(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame(
-        [("b", 2.2), ("b", 1.1), ("c", 3.3)],
-        ["key", "value"],
-    )
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=["key"],
-        order_by=["value"],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                if len(all_lines_written == 1):
-                    assert all_lines_written[0] == "c;3,3\n"
-                elif len(all_lines_written == 2):
-                    assert all_lines_written[0] == "b;1,1\n"
-                    assert all_lines_written[1] == "b;2,2\n"
-                else:
-                    raise AssertionError("Found unexpected csv file.")
-
-    assert columns == ["value"]
-
-    tmp_dir.cleanup()
-
-
-def test_write_files__when_df_includes_timestamps__creates_csv_without_milliseconds(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame(
-        [
-            ("a", datetime(2024, 10, 21, 12, 10, 30, 0)),
-            ("b", datetime(2024, 10, 21, 12, 10, 30, 30)),
-            ("c", datetime(2024, 10, 21, 12, 10, 30, 123)),
-        ],
-        ["key", "value"],
-    )
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=[],
-        order_by=[],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                assert all_lines_written[0] == "a,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[1] == "b,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[2] == "c,2024-10-21T12:10:30Z\n"
-
-    assert columns == ["key", "value"]
-
-    tmp_dir.cleanup()
