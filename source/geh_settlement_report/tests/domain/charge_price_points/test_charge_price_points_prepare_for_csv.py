@@ -8,14 +8,14 @@ from pyspark.sql import functions as F
 
 import tests.test_factories.charge_price_points_factory as charge_price_points_factory
 import tests.test_factories.default_test_data_spec as default_data
-from geh_settlement_report.domain.charge_price_points.prepare_for_csv import (
+from geh_settlement_report.settlement_reports.domain.charge_price_points.prepare_for_csv import (
     prepare_for_csv,
 )
-from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     ChargeResolutionDataProductValue,
 )
 from tests.utils import Dates
