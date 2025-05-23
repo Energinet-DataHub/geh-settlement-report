@@ -51,7 +51,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
 
     [SubsystemFact]
     [ScenarioStep(2)]
-    public async Task When_SettlementReportRequestIsSent()
+    public async Task When_ReportRequestIsSent()
     {
         // Act
         var jobRunId = await _scenarioFixture.ReportsClient.RequestAsync(
