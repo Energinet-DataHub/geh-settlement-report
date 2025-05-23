@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from geh_common.tasks.ZipTask import write_csv_files
+from geh_common.infrastructure.write_csv import write_csv_files
 from geh_common.telemetry import Logger, use_span
 from pyspark.sql import DataFrame
 

@@ -18,7 +18,7 @@ import sys
 from pathlib import Path
 
 from geh_common.databricks.get_dbutils import get_dbutils
-from geh_common.tasks.ZipTask import create_zip_file
+from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logger import Logger
 from geh_common.telemetry.logging_configuration import (
