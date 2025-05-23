@@ -1,5 +1,5 @@
 ﻿using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 
 namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 

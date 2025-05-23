@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
 using Newtonsoft.Json;
 
