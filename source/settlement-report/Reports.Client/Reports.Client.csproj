@@ -25,8 +25,8 @@
           and in Visual Studio package manager view.
         -->
         <PackageDescription>
-            [Release Notes](https://github.com/Energinet-DataHub/geh-process-manager/blob/master/docs/Reports.Client/ReleaseNotes/ReleaseNotes.md)
-            [Documentation](https://github.com/Energinet-DataHub/geh-process-manager/blob/master/docs/Reports.Client/Documentation.md)
+            [Release Notes](https://github.com/Energinet-DataHub/geh-settlement-reports/blob/master/docs/Reports.Client/ReleaseNotes/ReleaseNotes.md)
+            [Documentation](https://github.com/Energinet-DataHub/geh-settlement-reports/blob/master/docs/Reports.Client/Documentation.md)
         </PackageDescription>
         <Description>Library containing a client to communicate with the Settlement Report subsyste, in Energinet DataHub.</Description>
         <PackageTags>energinet;datahub</PackageTags>
