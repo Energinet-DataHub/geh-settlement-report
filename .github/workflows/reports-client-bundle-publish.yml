@@ -116,8 +116,8 @@ jobs:
         with:
           base_sha: ${{ env.BASE_SHA }}
           files: |
-            source/settlement-reports/Reports.Client/**/*.*
-            source/settlement-reports/Reports.Abstractions/**/*.*
+            source/settlement-report/Reports.Client/**/*.*
+            source/settlement-report/Reports.Abstractions/**/*.*
             .github/workflows/reports-client-bundle-publish.yml
 
       - name: List all changed files for Reports.Client or Reports.Abstractions
@@ -135,7 +135,7 @@ jobs:
           push_packages: ${{ env.TRIGGERED_BY_PR_COMMIT == 'false' && steps.changed-content-client.outputs.any_changed == 'true' }}
           content_changed: ${{ steps.changed-content-client.outputs.any_changed }}
           nuget_token: ${{ secrets.nuget_token }}
-          nupkg_recurse_path: source/settlement-reports/Reports.Client
+          nupkg_recurse_path: source/settlement-report/Reports.Client
 
       - name: Assert version of Reports.Abstractions NuGet package and push it to NuGet.org
         uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v14
@@ -143,4 +143,4 @@ jobs:
           push_packages: ${{ env.TRIGGERED_BY_PR_COMMIT == 'false' && steps.changed-content-client.outputs.any_changed == 'true' }}
           content_changed: ${{ steps.changed-content-client.outputs.any_changed }}
           nuget_token: ${{ secrets.nuget_token }}
-          nupkg_recurse_path: source/settlement-reports/Reports.Abstractions
+          nupkg_recurse_path: source/settlement-report/Reports.Abstractions
