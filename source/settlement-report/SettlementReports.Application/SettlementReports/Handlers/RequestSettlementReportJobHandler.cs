@@ -12,30 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Model;
 using Energinet.DataHub.SettlementReport.Application.Services;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime.Extensions;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
 public sealed class RequestSettlementReportJobHandler : IRequestSettlementReportJobHandler
 {
-    private readonly IDatabricksJobsHelper _jobHelper;
-    private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
+    private readonly ISettlementReportDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportPersistenceService _settlementReportPersistenceService;
     private readonly IGridAreaOwnerRepository _gridAreaOwnerRepository;
 
     public RequestSettlementReportJobHandler(
-        IDatabricksJobsHelper jobHelper,
-        ISettlementReportInitializeHandler settlementReportInitializeHandler,
+        ISettlementReportDatabricksJobsHelper jobHelper,
+        ISettlementReportPersistenceService settlementReportPersistenceService,
         IGridAreaOwnerRepository gridAreaOwnerRepository)
     {
         _jobHelper = jobHelper;
-        _settlementReportInitializeHandler = settlementReportInitializeHandler;
+        _settlementReportPersistenceService = settlementReportPersistenceService;
         _gridAreaOwnerRepository = gridAreaOwnerRepository;
     }
 
@@ -87,8 +87,8 @@ public sealed class RequestSettlementReportJobHandler : IRequestSettlementReport
 
         var runId = await _jobHelper.RunJobAsync(request.RequestDto, request.MarketRole, reportId, requestActorGln).ConfigureAwait(false);
 
-        await _settlementReportInitializeHandler
-            .InitializeFromJobAsync(
+        await _settlementReportPersistenceService
+            .PersistAsync(
                 request.UserId,
                 request.ActorId,
                 request.IsFas,

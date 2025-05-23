@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
 public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJobHandler
 {
-    private readonly IDatabricksJobsHelper _jobHelper;
+    private readonly ISettlementReportDatabricksJobsHelper _jobHelper;
     private readonly ISettlementReportRepository _repository;
 
     public CancelSettlementReportJobHandler(
-        IDatabricksJobsHelper jobHelper,
+        ISettlementReportDatabricksJobsHelper jobHelper,
         ISettlementReportRepository repository)
     {
         _jobHelper = jobHelper;
@@ -53,6 +53,6 @@ public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJo
             throw new InvalidOperationException($"Can't cancel a report with status: {report.Status}");
         }
 
-        await _jobHelper.CancelSettlementReportJobAsync(report.JobId.Value).ConfigureAwait(false);
+        await _jobHelper.CancelAsync(report.JobId.Value).ConfigureAwait(false);
     }
 }

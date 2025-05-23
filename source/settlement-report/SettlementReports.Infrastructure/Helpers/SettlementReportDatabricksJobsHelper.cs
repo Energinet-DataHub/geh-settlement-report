@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application;
 using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
@@ -24,11 +24,11 @@ using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 
-public class DatabricksJobsHelper : IDatabricksJobsHelper
+public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJobsHelper
 {
     private readonly IJobsApiClient _jobsApiClient;
 
-    public DatabricksJobsHelper(IJobsApiClient jobsApiClient)
+    public SettlementReportDatabricksJobsHelper(IJobsApiClient jobsApiClient)
     {
         _jobsApiClient = jobsApiClient;
     }
@@ -36,22 +36,22 @@ public class DatabricksJobsHelper : IDatabricksJobsHelper
     public async Task<JobRunId> RunJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        ReportRequestId reportId,
+        ReportRequestId reportRequestId,
         string actorGln)
     {
         var job = await GetSettlementReportsJobAsync(GetJobName(request.Filter.CalculationType)).ConfigureAwait(false);
-        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportId, actorGln)).ConfigureAwait(false));
+        return new JobRunId(await _jobsApiClient.Jobs.RunNow(job.JobId, CreateParameters(request, marketRole, reportRequestId, actorGln)).ConfigureAwait(false));
     }
 
-    public async Task<JobRunWithStatusAndEndTime> GetSettlementReportsJobWithStatusAndEndTimeAsync(long runId)
+    public async Task<JobRunWithStatusAndEndTime> GetJobRunAsync(long jobRunId)
     {
-        var jobRun = await _jobsApiClient.Jobs.RunsGet(runId, false).ConfigureAwait(false);
+        var jobRun = await _jobsApiClient.Jobs.RunsGet(jobRunId, false).ConfigureAwait(false);
         return new JobRunWithStatusAndEndTime(ConvertJobStatus(jobRun.Item1), jobRun.Item1.EndTime);
     }
 
-    public Task CancelSettlementReportJobAsync(long runId)
+    public Task CancelAsync(long jobRunId)
     {
-        return _jobsApiClient.Jobs.RunsCancel(runId);
+        return _jobsApiClient.Jobs.RunsCancel(jobRunId);
     }
 
     private string GetJobName(CalculationType calculationType)
