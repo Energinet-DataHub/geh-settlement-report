@@ -17,9 +17,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 
-public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.SettlementReports_v2.SettlementReport>
+public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.Model.SettlementReport>
 {
-    public void Configure(EntityTypeBuilder<Application.SettlementReports_v2.SettlementReport> builder)
+    public void Configure(EntityTypeBuilder<Application.Model.SettlementReport> builder)
     {
         builder.ToTable("SettlementReport");
         builder.HasKey(e => e.Id);

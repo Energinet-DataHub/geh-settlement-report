@@ -1,5 +1,5 @@
 ﻿using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 
 namespace SettlementReports.WebAPI.Controllers.Mappers;
 

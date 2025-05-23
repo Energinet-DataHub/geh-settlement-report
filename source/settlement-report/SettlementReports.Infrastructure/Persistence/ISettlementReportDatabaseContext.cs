@@ -18,7 +18,7 @@ namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 
 public interface ISettlementReportDatabaseContext
 {
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
+    DbSet<Application.Model.SettlementReport> SettlementReports { get; }
 
     DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
 

@@ -16,9 +16,10 @@ using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.Model;
 using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport.Interfaces;
 using NodaTime.Extensions;
 
 namespace Energinet.DataHub.SettlementReport.Application.Handlers;

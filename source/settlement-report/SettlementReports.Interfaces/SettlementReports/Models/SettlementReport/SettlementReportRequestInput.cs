@@ -1,0 +1,5 @@
+﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models.SettlementReport;
+
+namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+
+public sealed record SettlementReportRequestInput(SettlementReportRequestDto Request, SettlementReportRequestedByActor ActorInfo);

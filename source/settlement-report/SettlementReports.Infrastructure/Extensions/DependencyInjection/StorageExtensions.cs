@@ -14,9 +14,9 @@
 
 using Azure.Identity;
 using Azure.Storage.Blobs;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.Options;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using HealthChecks.Azure.Storage.Blobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -32,16 +32,6 @@ public static class StorageExtensions
             .BindConfiguration(SettlementReportStorageOptions.SectionName)
             .ValidateDataAnnotations();
 
-        services.AddScoped<ISettlementReportFileRepository, SettlementReportFileBlobStorage>(serviceProvider =>
-        {
-            var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
-
-            var blobContainerUri = new Uri(blobSettings.StorageAccountUri, blobSettings.StorageContainerName);
-            var blobContainerClient = new BlobContainerClient(blobContainerUri, new DefaultAzureCredential());
-
-            return new SettlementReportFileBlobStorage(blobContainerClient);
-        });
-
         services.AddScoped<ISettlementReportJobsFileRepository, SettlementReportJobsFileBlobStorage>(serviceProvider =>
         {
             var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
@@ -55,18 +45,6 @@ public static class StorageExtensions
         // Health checks
         services
             .AddHealthChecks()
-            .AddAzureBlobStorage(
-                serviceProvider =>
-                {
-                    var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
-                    return new BlobServiceClient(blobSettings.Value.StorageAccountUri, new DefaultAzureCredential());
-                },
-                serviceProvider =>
-                {
-                    var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
-                    return new AzureBlobStorageHealthCheckOptions { ContainerName = blobSettings.Value.StorageContainerName };
-                },
-                "SettlementReportBlobStorage")
             .AddAzureBlobStorage(
                 serviceProvider =>
                 {

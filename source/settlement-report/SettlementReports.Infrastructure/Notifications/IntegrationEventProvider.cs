@@ -14,8 +14,8 @@
 
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Publisher;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
@@ -46,7 +46,7 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
         }
     }
 
-    private Task<IntegrationEvent> CreateAsync(Application.SettlementReports_v2.SettlementReport reportForNotification, ReportStatus status)
+    private Task<IntegrationEvent> CreateAsync(Application.Model.SettlementReport reportForNotification, ReportStatus status)
     {
         ArgumentNullException.ThrowIfNull(reportForNotification);
 
