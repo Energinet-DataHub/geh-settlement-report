@@ -15,24 +15,12 @@
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 
-// TODO BJM: This is a vague name not conveying the purpose of the interface.
-//           Segregate a factory instead and then replace usages with both using the factory and the repository directly?
-public interface ISettlementReportInitializeHandler
-{
-    Task InitializeAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        ReportRequestId requestId,
-        SettlementReportRequestDto request);
-
-    Task InitializeFromJobAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
-        JobRunId jobId,
-        ReportRequestId requestId,
-        SettlementReportRequestDto request);
-}
+public sealed record RequestSettlementReportCommand(
+    SettlementReportRequestDto RequestDto,
+    Guid UserId,
+    Guid ActorId,
+    bool IsFas,
+    string ActorGln,
+    MarketRole MarketRole);

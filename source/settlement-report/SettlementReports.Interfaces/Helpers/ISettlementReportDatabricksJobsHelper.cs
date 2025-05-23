@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 
-public interface IRequestSettlementReportJobHandler
+public interface ISettlementReportDatabricksJobsHelper
 {
-    /// <summary>
-    /// Request a settlement report job
-    /// </summary>
-    /// <param name="request">An object containing the parameters of for the report request</param>
-    /// <returns>A JobRunId value representing the run id of the requested settlement report.</returns>
-    Task<JobRunId> HandleAsync(RequestSettlementReportCommand request);
+    Task<JobRunId> RunJobAsync(
+        SettlementReportRequestDto request,
+        MarketRole marketRole,
+        ReportRequestId reportRequestId,
+        string actorGln);
+
+    Task<JobRunWithStatusAndEndTime> GetJobRunAsync(long jobRunId);
+
+    Task CancelAsync(long jobRunId);
 }

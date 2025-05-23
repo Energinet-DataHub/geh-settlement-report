@@ -19,16 +19,16 @@ using NodaTime;
 
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
-public sealed class SettlementReportInitializeHandler : ISettlementReportInitializeHandler
+public sealed class SettlementReportPersistenceService : ISettlementReportPersistenceService
 {
     private readonly ISettlementReportRepository _repository;
 
-    public SettlementReportInitializeHandler(ISettlementReportRepository repository)
+    public SettlementReportPersistenceService(ISettlementReportRepository repository)
     {
         _repository = repository;
     }
 
-    public Task InitializeAsync(
+    public Task PersistAsync(
         Guid userId,
         Guid actorId,
         bool hideReport,
@@ -39,7 +39,7 @@ public sealed class SettlementReportInitializeHandler : ISettlementReportInitial
         return _repository.AddOrUpdateAsync(settlementReport);
     }
 
-    public Task InitializeFromJobAsync(
+    public Task PersistAsync(
         Guid userId,
         Guid actorId,
         bool hideReport,

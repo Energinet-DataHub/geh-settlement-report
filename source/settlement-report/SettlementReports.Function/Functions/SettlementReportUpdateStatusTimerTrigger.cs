@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Communication.Publisher;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
 namespace SettlementReports.Function.Functions;

@@ -32,16 +32,16 @@ namespace Energinet.DataHub.SettlementReport.Orchestration.SettlementReports.Fun
 internal sealed class SettlementReportRequestTrigger
 {
     private readonly IUserContext<FrontendUser> _userContext;
-    private readonly ISettlementReportInitializeHandler _settlementReportInitializeHandler;
+    private readonly ISettlementReportPersistenceService _settlementReportPersistenceService;
     private readonly IRevisionLogClient _revisionLogClient;
 
     public SettlementReportRequestTrigger(
         IUserContext<FrontendUser> userContext,
-        ISettlementReportInitializeHandler settlementReportInitializeHandler,
+        ISettlementReportPersistenceService settlementReportPersistenceService,
         IRevisionLogClient revisionLogClient)
     {
         _userContext = userContext;
-        _settlementReportInitializeHandler = settlementReportInitializeHandler;
+        _settlementReportPersistenceService = settlementReportPersistenceService;
         _revisionLogClient = revisionLogClient;
     }
 
@@ -117,8 +117,8 @@ internal sealed class SettlementReportRequestTrigger
 
         var requestId = new ReportRequestId(instanceId);
 
-        await _settlementReportInitializeHandler
-            .InitializeAsync(
+        await _settlementReportPersistenceService
+            .PersistAsync(
                 _userContext.CurrentUser.UserId,
                 _userContext.CurrentUser.Actor.ActorId,
                 _userContext.CurrentUser.MultiTenancy,
