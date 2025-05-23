@@ -56,7 +56,7 @@ jobs:
               - '.github/workflows/ci-dotnet.yml'
               - '.github/actions/dotnet-*/**'
               - 'source/settlement-report/!(DatabaseMigration/**)**'
-            nuget-packages:
+            nuget_packages:
               - 'docs/Reports.Client/**'
               - 'source/settlement-reports/Reports.Client*/**'
               - 'source/settlement-reports/Reports.Abstractions*/**'
