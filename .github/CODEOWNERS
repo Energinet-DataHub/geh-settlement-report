@@ -1,7 +1,7 @@
-* @Energinet-DataHub/Mandalorian
+* @Energinet-DataHub/team-raccoons @Energinet-DataHub/Mandalorian 
 
-/.github/actions @Energinet-DataHub/TeamFusion @Energinet-DataHub/Mandalorian
-/.github/workflows @Energinet-DataHub/TeamFusion @Energinet-DataHub/Mandalorian
+/.github/actions @Energinet-DataHub/TeamFusion @Energinet-DataHub/Mandalorian @Energinet-DataHub/team-raccoons
+/.github/workflows @Energinet-DataHub/TeamFusion @Energinet-DataHub/Mandalorian @Energinet-DataHub/team-raccoons
 /.github/workflows/CODEOWNERS @Energinet-DataHub/TeamFusion
 /.github/workflows/ci-orchestrator.yml @Energinet-DataHub/TeamFusion
 /.github/workflows/cd.yml @Energinet-DataHub/TeamFusion
