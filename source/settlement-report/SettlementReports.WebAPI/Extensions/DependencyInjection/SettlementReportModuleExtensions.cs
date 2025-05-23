@@ -37,7 +37,6 @@ public static class SettlementReportModuleExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        // TODO BJM: Some service registrations are duplicated in the function project. Consider refactoring to avoid duplication.
         // general services
         services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
 
