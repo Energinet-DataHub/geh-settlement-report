@@ -13,10 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 
-public interface ISettlementReportJobsDownloadHandler
-{
-    Task<Stream> DownloadReportAsync(ReportRequestId requestId, Guid actorId, bool isMultitenancy);
-}
+// TODO BJM: Move all settlement report stuff in application to subfolder
+public sealed record RequestSettlementReportCommand(
+    SettlementReportRequestDto RequestDto,
+    Guid UserId,
+    Guid ActorId,
+    bool IsFas,
+    string ActorGln,
+    MarketRole MarketRole);

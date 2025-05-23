@@ -19,7 +19,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
 public sealed class ListSettlementReportJobsHandler : IListSettlementReportJobsHandler
 {

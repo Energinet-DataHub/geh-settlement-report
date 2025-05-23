@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Collections.ObjectModel;
-using Energinet.DataHub.SettlementReport.Application.Commands;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;

@@ -15,7 +15,7 @@
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
 public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsDownloadHandler
 {

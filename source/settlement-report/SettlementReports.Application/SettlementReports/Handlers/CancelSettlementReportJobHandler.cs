@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Commands;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
 public sealed class CancelSettlementReportJobHandler : ICancelSettlementReportJobHandler
 {
