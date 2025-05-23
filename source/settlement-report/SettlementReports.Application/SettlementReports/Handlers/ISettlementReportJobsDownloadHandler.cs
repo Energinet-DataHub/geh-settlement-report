@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-/// <summary>
-/// These names are defined in infrastructure.
-/// </summary>
-// TODO BJM: Move out of settlement report specific folder
-public static class DatabricksJobNames
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+
+public interface ISettlementReportJobsDownloadHandler
 {
-    public const string BalanceFixing = "SettlementReportBalanceFixing";
-    public const string Wholesale = "SettlementReportWholesaleCalculations";
-    public const string MeasurementsReport = "MeasurementsReport";
+    Task<Stream> DownloadReportAsync(ReportRequestId requestId, Guid actorId, bool isMultitenancy);
 }

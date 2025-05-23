@@ -16,8 +16,8 @@ using Azure.Identity;
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
@@ -56,7 +56,7 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportFileRequestHandler, SettlementReportFileRequestHandler>();
         services.AddScoped<ISettlementReportFromFilesHandler, SettlementReportFromFilesHandler>();
         services.AddScoped<ISettlementReportFinalizeHandler, SettlementReportFinalizeHandler>();
-        services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
+        services.AddScoped<ISettlementReportPersistenceService, SettlementReportPersistenceService>();
 
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
         services.AddScoped<ISettlementReportDownloadHandler, SettlementReportDownloadHandler>();
@@ -76,7 +76,7 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
         services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
+        services.AddScoped<ISettlementReportDatabricksJobsHelper, SettlementReportDatabricksJobsHelper>();
         services.AddSettlementReportBlobStorage();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddDbContext<SettlementReportDatabaseContext>(

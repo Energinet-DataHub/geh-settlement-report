@@ -14,9 +14,8 @@
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 
-public interface ISettlementReportJobsDownloadHandler
-{
-    Task<Stream> DownloadReportAsync(ReportRequestId requestId, Guid actorId, bool isMultitenancy);
-}
+public sealed record CancelSettlementReportCommand(
+    ReportRequestId RequestId,
+    Guid UserId);
