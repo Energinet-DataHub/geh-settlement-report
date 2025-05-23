@@ -28,7 +28,7 @@
             [Release Notes](https://github.com/Energinet-DataHub/geh-settlement-reports/blob/master/docs/Reports.Client/ReleaseNotes/ReleaseNotes.md)
             [Documentation](https://github.com/Energinet-DataHub/geh-settlement-reports/blob/master/docs/Reports.Client/Documentation.md)
         </PackageDescription>
-        <Description>Library containing a client to communicate with the Settlement Report subsyste, in Energinet DataHub.</Description>
+        <Description>Library containing a client to communicate with the Settlement Report subsystem, in Energinet DataHub.</Description>
         <PackageTags>energinet;datahub</PackageTags>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
