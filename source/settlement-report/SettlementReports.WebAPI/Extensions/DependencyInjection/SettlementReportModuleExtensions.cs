@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Application.Services.SettlementReports;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
@@ -36,8 +37,12 @@ public static class SettlementReportModuleExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
+        // TODO BJM: Some service registrations are duplicated in the function project. Consider refactoring to avoid duplication.
         // general services
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
+        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
+
+        // settlement report services
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportJobHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
@@ -45,11 +50,13 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
         services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddScoped<ICancelSettlementReportJobHandler, CancelSettlementReportJobHandler>();
-        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
         services.AddSettlementReportBlobStorage();
+
+        // measurements reports services
+        services.AddScoped<IRequestMeasurementsReportJobHandler, RequestMeasurementsReportJobHandler>();
+        services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
 
         // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(

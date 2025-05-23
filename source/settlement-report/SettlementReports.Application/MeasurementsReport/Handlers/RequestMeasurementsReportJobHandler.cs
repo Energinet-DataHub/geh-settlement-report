@@ -4,11 +4,11 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports.Models;
 
 namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 
-public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportJobHandler
+public sealed class RequestMeasurementsReportJobHandler : IRequestMeasurementsReportJobHandler
 {
     private readonly IMeasurementsReportDatabricksJobsHelper _jobHelper;
 
-    public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper)
+    public RequestMeasurementsReportJobHandler(IMeasurementsReportDatabricksJobsHelper jobHelper)
     {
         _jobHelper = jobHelper;
     }

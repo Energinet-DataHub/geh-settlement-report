@@ -28,7 +28,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
     {
-        return RequestAsync(requestDto, "measurements-reports/RequestSettlementReport", cancellationToken);
+        return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
