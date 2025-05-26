@@ -14,7 +14,6 @@
 import logging
 import os
 import shutil
-import sys
 import uuid
 from pathlib import Path
 from typing import Callable, Generator
@@ -401,7 +400,7 @@ def script_args_fixture_integration_test() -> list[str]:
 
 
 @pytest.fixture(autouse=True)
-def configure_dummy_logging(monkeypatch: pytest.MonkeyPatch) -> None:
+def configure_dummy_logging(monkeypatch: pytest.MonkeyPatch):
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
     env = {
@@ -409,18 +408,13 @@ def configure_dummy_logging(monkeypatch: pytest.MonkeyPatch) -> None:
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
         "SUBSYSTEM": "test_subsystem",
     }
-    argv = [
-        "program_name",
-        "--force_configuration",
-        "false",
-        "--orchestration-instance-id",
-        "4a540892-2c0a-46a9-9257-c4e13051d76a",
-    ]
 
-    monkeypatch.setattr(os, "environ", env)
-    monkeypatch.setattr(sys, "argv", argv)
-    monkeypatch.setattr(geh_common.telemetry.logging_configuration, "configure_logging", lambda *args, **kwargs: None)
-    configure_logging(cloud_role_name=env["CLOUD_ROLE_NAME"], subsystem=env["SUBSYSTEM"])
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(os, "environ", env)
+        mp.setattr(geh_common.telemetry.logging_configuration, "configure_azure_monitor", lambda *args, **kwargs: None)
+        mp.setattr(geh_common.telemetry.logging_configuration, "get_is_instrumented", lambda *args, **kwargs: False)
+        configure_logging(cloud_role_name="test_role", subsystem="test_subsystem")
+        yield
 
 
 @pytest.fixture(scope="function")
