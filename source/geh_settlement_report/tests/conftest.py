@@ -386,8 +386,8 @@ def script_args_fixture_integration_test() -> list[str]:
     return sys_argv
 
 
-@pytest.fixture(autouse=True)
-def configure_dummy_logging(monkeypatch: pytest.MonkeyPatch):
+@pytest.fixture
+def dummy_logging(monkeypatch: pytest.MonkeyPatch):
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
     env = {
@@ -404,7 +404,7 @@ def configure_dummy_logging(monkeypatch: pytest.MonkeyPatch):
         yield
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def clean_up_logging():
     """
     Function that cleans up the Logging module prior to running integration tests, so logging can be reconfigured after use of configure_dummy_logging fixture

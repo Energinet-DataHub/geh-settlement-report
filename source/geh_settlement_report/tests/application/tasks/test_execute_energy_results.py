@@ -30,6 +30,7 @@ def reset_task_values(settlement_reports_output_path: str):
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario__returns_expected_number_of_files_and_content(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -73,6 +74,7 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario__return
 def test_execute_energy_results__when_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -123,6 +125,7 @@ def test_execute_energy_results__when_split_report_by_grid_area_is_false__return
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_access__returns_expected_number_of_files_and_content(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -166,6 +169,7 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_ac
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_energy_supplier__returns_expected_number_of_files_and_content(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):

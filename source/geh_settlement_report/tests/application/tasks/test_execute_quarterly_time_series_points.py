@@ -34,6 +34,7 @@ def reset_task_values(settlement_reports_output_path: str):
 def test_execute_quarterly_time_series_points__when_energy_supplier__returns_expected(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -74,6 +75,7 @@ def test_execute_quarterly_time_series_points__when_energy_supplier__returns_exp
 def test_execute_quarterly_time_series_points__when_grid_access_provider__returns_expected(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -116,6 +118,7 @@ def test_execute_quarterly_time_series_points__when_grid_access_provider__return
 def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_admin_with_one_energy_supplier_id__returns_expected(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
@@ -161,6 +164,7 @@ def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_a
 def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_admin_with_none_energy_supplier_id__returns_expected(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
@@ -201,6 +205,7 @@ def test_execute_quarterly_time_series_points__when_system_operator_or_datahub_a
 def test_execute_quarterly_time_series_points__when_include_basis_data_false__returns_no_file_paths(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -223,6 +228,7 @@ def test_execute_quarterly_time_series_points__when_include_basis_data_false__re
 def test_execute_quarterly_time_series_points__when_energy_supplier_and_balance_fixing__returns_expected(
     spark: SparkSession,
     dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_balance_fixing_scenario_args: SettlementReportArgs,
     standard_balance_fixing_scenario_data_written_to_delta: None,
 ):

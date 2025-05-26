@@ -42,5 +42,9 @@ def default_measurements_report_args(monkeypatch: pytest.MonkeyPatch):
     return MeasurementsReportArgs()
 
 
-def test_start_measurements_report(default_measurements_report_args, mock_dbutils):
+def test_start_measurements_report(
+    default_measurements_report_args,
+    mock_dbutils,
+    dummy_logging: None,
+):
     start_measurements_report()
