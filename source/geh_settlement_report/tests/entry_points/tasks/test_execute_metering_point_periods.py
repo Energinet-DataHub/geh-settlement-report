@@ -1,4 +1,5 @@
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.domain.utils.csv_column_names import (
@@ -15,7 +16,6 @@ from geh_settlement_report.entry_points.tasks.metering_point_periods_task import
 from geh_settlement_report.infrastructure.paths import get_report_output_path
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.utils import (
     cleanup_output_path,
     get_actual_files,
@@ -70,7 +70,7 @@ def _get_expected_columns(requesting_actor_market_role: MarketRole) -> list[str]
 
 def test_execute_metering_point_periods__when_energy_supplier__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -109,7 +109,7 @@ def test_execute_metering_point_periods__when_energy_supplier__returns_expected(
 
 def test_execute_metering_point_periods__when_grid_access_provider__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_grid_access_provider_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -150,7 +150,7 @@ def test_execute_metering_point_periods__when_grid_access_provider__returns_expe
 )
 def test_execute_metering_point_periods__when_system_operator_or_datahub_admin_with_one_energy_supplier_id__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
@@ -193,7 +193,7 @@ def test_execute_metering_point_periods__when_system_operator_or_datahub_admin_w
 )
 def test_execute_metering_point_periods__when_system_operator_or_datahub_admin_with_none_energy_supplier_id__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
@@ -231,7 +231,7 @@ def test_execute_metering_point_periods__when_system_operator_or_datahub_admin_w
 
 def test_execute_metering_point_periods__when_balance_fixing__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_balance_fixing_scenario_args: SettlementReportArgs,
     standard_balance_fixing_scenario_data_written_to_delta: None,
 ):
@@ -266,7 +266,7 @@ def test_execute_metering_point_periods__when_balance_fixing__returns_expected(
 
 def test_execute_metering_point_periods__when_include_basis_data_false__returns_no_file_paths(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):

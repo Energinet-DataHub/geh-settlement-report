@@ -15,6 +15,7 @@ from functools import reduce
 
 import pyspark.sql.functions as F
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import DataFrame, SparkSession
 
 import geh_settlement_report.domain.energy_results.order_by_columns as energy_order_by_columns
@@ -42,7 +43,6 @@ from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import (
     standard_wholesale_fixing_scenario_data_generator,
 )
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.test_factories.default_test_data_spec import (
     create_energy_results_data_spec,
 )
@@ -67,7 +67,7 @@ def _read_csv_file(
     ],
 )
 def test_write__returns_files_corresponding_to_grid_area_codes(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     resolution: MeteringPointResolutionDataProductValue,
@@ -102,7 +102,7 @@ def test_write__returns_files_corresponding_to_grid_area_codes(
 
 
 def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -141,7 +141,7 @@ def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
     ],
 )
 def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_files(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -182,7 +182,7 @@ def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_f
     ],
 )
 def test_write__files_have_correct_ordering_for_each_file(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_metering_points: int,
@@ -234,7 +234,7 @@ def test_write__files_have_correct_ordering_for_each_file(
     ],
 )
 def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -277,7 +277,7 @@ def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
 
 
 def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -339,7 +339,7 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
     ],
 )
 def test_write__files_have_correct_sorting_across_multiple_files(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -386,7 +386,7 @@ def test_write__files_have_correct_sorting_across_multiple_files(
 
 
 def test_write__when_prevent_large_files__chunk_index_start_at_1(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -423,7 +423,7 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
 
 
 def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be_excluded(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -459,7 +459,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
 
 
 def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_rows__chunk_index_should_be_excluded(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -500,7 +500,7 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
 
 def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange
@@ -559,7 +559,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
 
 def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_correct_columns_and_files(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange
@@ -620,7 +620,7 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
 
 def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange

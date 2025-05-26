@@ -454,7 +454,7 @@ wheels = [
 [[package]]
 name = "geh-common"
 version = "5.10.0"
-source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.10.0_174#bfebc8d71b1dca3037fb6f2bcc672fbc2f7438b6" }
+source = { git = "https://github.com/Energinet-DataHub/opengeh-python-packages?subdirectory=source%2Fgeh_common&rev=geh_common_5.10.0_174#7ceb0011decf646c665944fb1ba91d23b8e77a54" }
 dependencies = [
     { name = "azure-core" },
     { name = "azure-identity" },

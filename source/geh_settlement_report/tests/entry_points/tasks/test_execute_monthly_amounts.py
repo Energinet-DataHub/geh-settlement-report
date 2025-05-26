@@ -1,4 +1,5 @@
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.domain.utils.csv_column_names import (
@@ -14,7 +15,6 @@ from geh_settlement_report.entry_points.tasks.monthly_amounts_task import (
 from geh_settlement_report.infrastructure.paths import get_report_output_path
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.utils import cleanup_output_path, get_actual_files
 
 
@@ -28,7 +28,7 @@ def reset_task_values(settlement_reports_output_path: str):
 
 def test_execute_monthly_amounts__when_standard_wholesale_fixing_scenario__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -75,7 +75,7 @@ def test_execute_monthly_amounts__when_standard_wholesale_fixing_scenario__retur
 
 def test_execute_monthly_amounts__when_administrator_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_datahub_admin_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -124,7 +124,7 @@ def test_execute_monthly_amounts__when_administrator_and_split_report_by_grid_ar
 
 def test_execute_monthly_amounts__when_grid_access_provider__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_grid_access_provider_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -178,7 +178,7 @@ def test_execute_monthly_amounts__when_grid_access_provider__returns_expected_nu
 
 def test_execute_monthly_amounts__when_system_operator__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_system_operator_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):

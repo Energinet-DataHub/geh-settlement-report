@@ -22,6 +22,7 @@ from unittest import mock
 import pytest
 import yaml
 from delta import configure_spark_with_delta_pip
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.domain.utils.market_role import MarketRole
@@ -47,16 +48,15 @@ from tests.data_seeding.write_test_data import (
     write_monthly_amounts_per_charge_to_delta_table,
     write_total_monthly_amounts_to_delta_table,
 )
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
 @pytest.fixture(scope="session")
-def dbutils() -> DBUtilsFixture:
+def dbutils() -> MockDBUtils:
     """
     Returns a DBUtilsFixture instance that can be used to mock dbutils.
     """
-    return DBUtilsFixture()
+    return MockDBUtils()
 
 
 @pytest.fixture(scope="session", autouse=True)

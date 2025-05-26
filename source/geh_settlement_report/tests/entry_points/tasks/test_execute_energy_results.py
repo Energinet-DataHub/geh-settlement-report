@@ -1,4 +1,5 @@
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.domain.utils.csv_column_names import (
@@ -15,7 +16,6 @@ from geh_settlement_report.entry_points.tasks.energy_resuls_task import (
 from geh_settlement_report.infrastructure.paths import get_report_output_path
 from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import standard_wholesale_fixing_scenario_data_generator
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.utils import cleanup_output_path, get_actual_files
 
 
@@ -29,7 +29,7 @@ def reset_task_values(settlement_reports_output_path: str):
 
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -72,7 +72,7 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario__return
 
 def test_execute_energy_results__when_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -122,7 +122,7 @@ def test_execute_energy_results__when_split_report_by_grid_area_is_false__return
 
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_access__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -165,7 +165,7 @@ def test_execute_energy_results__when_standard_wholesale_fixing_scenario_grid_ac
 
 def test_execute_energy_results__when_standard_wholesale_fixing_scenario_energy_supplier__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
