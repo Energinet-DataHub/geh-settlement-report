@@ -88,4 +88,5 @@ def start_task_with_deps(task_type: TaskType) -> None:
 
 
 def start_measurements_report() -> None:
+    configure_logging(cloud_role_name="dbr-measurements-report", subsystem="measurements-report-aggregations")
     start_measurements_report_with_deps()

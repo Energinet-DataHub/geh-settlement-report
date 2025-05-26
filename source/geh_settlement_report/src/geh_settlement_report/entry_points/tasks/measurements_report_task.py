@@ -6,7 +6,7 @@ from geh_common.databricks.get_dbutils import get_dbutils
 from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.telemetry import Logger, use_span
 from geh_common.telemetry.decorators import start_trace
-from geh_common.telemetry.logging_configuration import add_extras, configure_logging
+from geh_common.telemetry.logging_configuration import add_extras
 
 from geh_settlement_report.entry_points.job_args.measurements_report_args import MeasurementsReportArgs
 from geh_settlement_report.infrastructure.get_report_id import get_report_id_from_args
@@ -15,7 +15,6 @@ from geh_settlement_report.infrastructure.spark_initializor import initialize_sp
 
 @start_trace()
 def start_measurements_report_with_deps():
-    configure_logging(cloud_role_name="dbr-measurements-report", subsystem="measurements-report-aggregations")
     add_extras({"measurements_report_id": get_report_id_from_args(sys.argv)})
     args = MeasurementsReportArgs()
     spark = initialize_spark()
