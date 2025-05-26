@@ -12,25 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
-public interface ISettlementReportInitializeHandler
+public sealed class SettlementReportPersistenceService : ISettlementReportPersistenceService
 {
-    Task InitializeAsync(
+    private readonly ISettlementReportRepository _repository;
+
+    public SettlementReportPersistenceService(ISettlementReportRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public Task PersistAsync(
         Guid userId,
         Guid actorId,
         bool hideReport,
         ReportRequestId requestId,
-        SettlementReportRequestDto request);
+        SettlementReportRequestDto request)
+    {
+        var settlementReport = new SettlementReport(SystemClock.Instance, userId, actorId, hideReport, requestId, request);
+        return _repository.AddOrUpdateAsync(settlementReport);
+    }
 
-    Task InitializeFromJobAsync(
+    public Task PersistAsync(
         Guid userId,
         Guid actorId,
         bool hideReport,
         JobRunId jobId,
         ReportRequestId requestId,
-        SettlementReportRequestDto request);
+        SettlementReportRequestDto request)
+    {
+        var settlementReport = new SettlementReport(SystemClock.Instance, userId, actorId, hideReport, jobId, requestId, request);
+        return _repository.AddOrUpdateAsync(settlementReport);
+    }
 }

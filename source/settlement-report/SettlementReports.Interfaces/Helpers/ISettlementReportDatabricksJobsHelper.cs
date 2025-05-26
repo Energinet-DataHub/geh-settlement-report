@@ -17,15 +17,15 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.
 
 namespace Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 
-public interface IDatabricksJobsHelper
+public interface ISettlementReportDatabricksJobsHelper
 {
-    Task<JobRunId> RunSettlementReportsJobAsync(
+    Task<JobRunId> RunJobAsync(
         SettlementReportRequestDto request,
         MarketRole marketRole,
-        ReportRequestId reportId,
+        ReportRequestId reportRequestId,
         string actorGln);
 
-    Task<JobRunWithStatusAndEndTime> GetSettlementReportsJobWithStatusAndEndTimeAsync(long runId);
+    Task<JobRunWithStatusAndEndTime> GetJobRunAsync(long jobRunId);
 
-    Task CancelSettlementReportJobAsync(long runId);
+    Task CancelAsync(long jobRunId);
 }

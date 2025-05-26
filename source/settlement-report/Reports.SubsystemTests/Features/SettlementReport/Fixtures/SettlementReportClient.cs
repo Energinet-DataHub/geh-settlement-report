@@ -1,20 +1,7 @@
-﻿// Copyright 2020 Energinet DataHub A/S
-//
-// Licensed under the Apache License, Version 2.0 (the "License2");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Newtonsoft.Json;
 
@@ -31,26 +18,17 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         _apiHttpClient = apiHttpClient;
     }
 
-    public async Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
+    public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
     {
         if (IsPeriodAcrossMonths(requestDto.Filter))
-        {
             throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto));
-        }
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/RequestSettlementReport");
+        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
+    }
 
-        request.Content = new StringContent(
-            JsonConvert.SerializeObject(requestDto),
-            Encoding.UTF8,
-            "application/json");
-
-        using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-        var jobRunId = JsonConvert.DeserializeObject<long>(responseContent);
-        return new JobRunId(jobRunId);
+    public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
+    {
+        return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
@@ -100,5 +78,22 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(settlementReportRequestFilter.PeriodEnd.AddMilliseconds(-1), "Romance Standard Time");
         return startDate.Month != endDate.Month
             || startDate.Year != endDate.Year;
+    }
+
+    private async Task<JobRunId> RequestAsync(object requestDto, string endpoint, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+
+        request.Content = new StringContent(
+            JsonConvert.SerializeObject(requestDto),
+            Encoding.UTF8,
+            "application/json");
+
+        using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        var jobRunId = JsonConvert.DeserializeObject<long>(responseContent);
+        return new JobRunId(jobRunId);
     }
 }

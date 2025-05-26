@@ -1,8 +1,8 @@
 ﻿using System.Net.Mime;
-using Energinet.DataHub.RevisionLog.Integration.WebApi;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,23 +13,32 @@ namespace SettlementReports.WebAPI.Controllers;
 public class MeasurementsReportsController
     : ControllerBase
 {
-    [HttpPost]
-    [Route("RequestMeasurementsReport")]
-    [Authorize]
-    [EnableRevision("RequestMeasurementsReportAPI", typeof(MeasurementsReportRequestDto))]
-    public ActionResult<long> RequestMeasurementsReport(
-        [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
+    private readonly IRequestMeasurementsReportJobHandler _requestMeasurementsReportJobHandler;
+
+    public MeasurementsReportsController(IRequestMeasurementsReportJobHandler requestMeasurementsReportJobHandler)
     {
-        return Ok(42);
+        _requestMeasurementsReportJobHandler = requestMeasurementsReportJobHandler;
+    }
+
+    [HttpPost]
+    [Route("request")]
+    [Authorize]
+    public async Task<ActionResult<long>> RequestMeasurementsReport(
+        [FromBody] MeasurementsReportRequestDto reportRequest)
+    {
+        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
+
+        var result = await _requestMeasurementsReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
+
+        return Ok(result.Id);
     }
 
     [HttpGet]
     [Route("list")]
     [Authorize]
-    [EnableRevision("ListSettlementReportsAPI", typeof(RequestedSettlementReportDto))]
-    public IEnumerable<RequestedSettlementReportDto> ListSettlementReports()
+    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
     {
-        return new List<RequestedSettlementReportDto>();
+        return new List<RequestedMeasurementsReportDto>();
     }
 
     [HttpPost]
@@ -37,8 +46,7 @@ public class MeasurementsReportsController
     [Authorize]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
-    [EnableRevision("DownloadSettlementReportAPI", typeof(RequestedSettlementReportDto))]
-    public ActionResult DownloadFileAsync([FromBody] ReportRequestId requestId)
+    public ActionResult DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
         using var stream = new MemoryStream();
         return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
@@ -47,8 +55,7 @@ public class MeasurementsReportsController
     [HttpPost]
     [Route("cancel")]
     [Authorize]
-    [EnableRevision("CancelSettlementReportAPI")]
-    public ActionResult CancelSettlementReport([FromBody] ReportRequestId requestId)
+    public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
     {
         return NoContent();
     }

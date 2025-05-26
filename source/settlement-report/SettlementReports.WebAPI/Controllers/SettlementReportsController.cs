@@ -16,8 +16,8 @@ using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
-using Energinet.DataHub.SettlementReport.Application.Commands;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -25,6 +25,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Databricks.Client;
+using SettlementReports.WebAPI.Controllers.Mappers;
 
 namespace SettlementReports.WebAPI.Controllers;
 
@@ -60,15 +61,7 @@ public class SettlementReportsController
     public async Task<ActionResult<long>> RequestSettlementReport([FromBody] SettlementReportRequestDto settlementReportRequest)
     {
         var actorNumber = _userContext.CurrentUser.Actor.ActorNumber;
-        var marketRole = _userContext.CurrentUser.Actor.MarketRole switch
-        {
-            FrontendActorMarketRole.Other => MarketRole.Other,
-            FrontendActorMarketRole.GridAccessProvider => MarketRole.GridAccessProvider,
-            FrontendActorMarketRole.EnergySupplier => MarketRole.EnergySupplier,
-            FrontendActorMarketRole.SystemOperator => MarketRole.SystemOperator,
-            FrontendActorMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
-            _ => throw new ArgumentOutOfRangeException(nameof(_userContext.CurrentUser.Actor.MarketRole)),
-        };
+        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
 
         if (_userContext.CurrentUser is { MultiTenancy: true, Actor.MarketRole: FrontendActorMarketRole.DataHubAdministrator } &&
             settlementReportRequest is { MarketRoleOverride: not null, ActorNumberOverride: not null })
