@@ -358,7 +358,8 @@ def spark(
 
 
 @pytest.fixture(scope="session")
-def env_args_fixture() -> dict[str, str]:
+def env_args_fixture(monkeypatch: pytest.MonkeyPatch) -> dict[str, str]:
+    monkeypatch.setattr(sys, "argv")
     env_args = {
         "CLOUD_ROLE_NAME": "test_role",
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",

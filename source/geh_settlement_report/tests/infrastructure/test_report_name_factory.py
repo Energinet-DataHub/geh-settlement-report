@@ -8,6 +8,7 @@ from geh_settlement_report.settlement_reports.application.job_args.calculation_t
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import EphemeralColumns
 from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
 from geh_settlement_report.settlement_reports.infrastructure.report_name_factory import (
     FileNameFactory,
