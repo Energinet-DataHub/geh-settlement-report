@@ -22,6 +22,8 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 
+from geh_settlement_report.common.get_report_id import get_report_id_from_args
+from geh_settlement_report.common.spark_initializor import initialize_spark
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
@@ -30,8 +32,6 @@ from geh_settlement_report.settlement_reports.application.tasks.measurements_rep
     start_measurements_report_with_deps,
 )
 from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
-from geh_settlement_report.settlement_reports.infrastructure.get_report_id import get_report_id_from_args
-from geh_settlement_report.settlement_reports.infrastructure.spark_initializor import initialize_spark
 
 
 # The start_x() methods should only have its name updated in correspondence with the

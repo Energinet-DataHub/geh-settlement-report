@@ -8,9 +8,11 @@ from geh_common.telemetry import Logger, use_span
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logging_configuration import add_extras
 
-from geh_settlement_report.entry_points.job_args.measurements_report_args import MeasurementsReportArgs
-from geh_settlement_report.infrastructure.get_report_id import get_report_id_from_args
-from geh_settlement_report.infrastructure.spark_initializor import initialize_spark
+from geh_settlement_report.common.get_report_id import get_report_id_from_args
+from geh_settlement_report.common.spark_initializor import initialize_spark
+from geh_settlement_report.measurements_reports.application.job_args.measurements_report_args import (
+    MeasurementsReportArgs,
+)
 
 
 @start_trace()
