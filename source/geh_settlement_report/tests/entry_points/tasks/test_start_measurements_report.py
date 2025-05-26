@@ -11,7 +11,9 @@ from geh_settlement_report.entry_points.job_args.measurements_report_args import
 @pytest.fixture
 def mock_dbutils(monkeypatch):
     # src/geh_settlement_report/entry_points/tasks/task_factory.py
-    monkeypatch.setattr("geh_settlement_report.entry_points.entry_point.get_dbutils", lambda _: MockDBUtils())
+    monkeypatch.setattr(
+        "geh_settlement_report.entry_points.tasks.measurements_report_task.get_dbutils", lambda _: MockDBUtils()
+    )
     return MockDBUtils()
 
 
@@ -28,10 +30,12 @@ def default_measurements_report_args(monkeypatch: pytest.MonkeyPatch):
             "--grid-area-codes=123,456",
         ],
     )
-
     monkeypatch.setenv("OUTPUT_PATH", "/tmp")
     monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
     monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv(
+        "APPLICATIONINSIGHTS_CONNECTION_STRING", "InstrumentationKey=12345678-1234-1234-1234-123456789012"
+    )
 
     return MeasurementsReportArgs()
 

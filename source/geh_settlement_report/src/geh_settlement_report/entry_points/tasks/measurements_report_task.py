@@ -23,7 +23,7 @@ def start_measurements_report_with_deps():
     logger = Logger(__name__)
     logger.info("Starting measurements report")
     logger.info(f"Command line arguments: {args}")
-    start_measurements_report_with_deps(args, spark, dbutils, logger)
+    execute_measurements_report(args, dbutils, logger)
 
 
 @use_span()
@@ -37,7 +37,7 @@ def execute_measurements_report(args: MeasurementsReportArgs, dbutils, logger):
         Path(f).write_text('a,b\n1, "a"')
 
     logger.info(f"Files to zip: {files}")
-    zip_file = create_zip_file(dbutils, result_dir, files)
+    zip_file = create_zip_file(dbutils, result_dir.with_suffix(".zip"), files)
     shutil.rmtree(result_dir)
     shutil.rmtree(tmpdir)
     logger.info(f"Finished creating '{zip_file}'")
