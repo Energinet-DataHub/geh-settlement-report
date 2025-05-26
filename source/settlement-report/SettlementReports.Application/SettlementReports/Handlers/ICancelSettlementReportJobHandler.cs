@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
 
-namespace Energinet.DataHub.SettlementReport.Application.Commands;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 
-public sealed record RequestSettlementReportCommand(
-    SettlementReportRequestDto RequestDto,
-    Guid UserId,
-    Guid ActorId,
-    bool IsFas,
-    string ActorGln,
-    MarketRole MarketRole);
+public interface ICancelSettlementReportJobHandler
+{
+    Task HandleAsync(CancelSettlementReportCommand cancelSettlementReportCommand);
+}

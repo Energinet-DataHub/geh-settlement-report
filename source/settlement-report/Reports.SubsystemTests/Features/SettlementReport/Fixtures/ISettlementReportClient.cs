@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
 // TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
-// TODO BJM: Make this reusable for all report types
 
 /// <summary>
 /// Interface of client for working with the settlement reports.
@@ -30,6 +30,12 @@ public interface ISettlementReportClient
     /// </summary>
     /// <returns>The job id.</returns>
     public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Requests generation of a new settlement report.
+    /// </summary>
+    /// <returns>The job id.</returns>
+    public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a list of all settlement reports visible to the current user.

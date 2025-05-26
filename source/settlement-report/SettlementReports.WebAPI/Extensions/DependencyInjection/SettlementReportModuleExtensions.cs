@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
@@ -37,19 +38,24 @@ public static class SettlementReportModuleExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         // general services
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
+        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
+
+        // settlement report services
+        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportJobHandler>();
         services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
         services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
-        services.AddScoped<IDatabricksJobsHelper, DatabricksJobsHelper>();
-        services.AddScoped<ISettlementReportInitializeHandler, SettlementReportInitializeHandler>();
+        services.AddScoped<ISettlementReportDatabricksJobsHelper, SettlementReportDatabricksJobsHelper>();
+        services.AddScoped<ISettlementReportPersistenceService, SettlementReportPersistenceService>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportHandler>();
         services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
         services.AddScoped<ICancelSettlementReportJobHandler, CancelSettlementReportJobHandler>();
-        services.AddScoped<IGridAreaOwnerRepository, GridAreaOwnerRepository>();
         services.AddSettlementReportBlobStorage();
+
+        // measurements reports services
+        services.AddScoped<IRequestMeasurementsReportJobHandler, RequestMeasurementsReportJobHandler>();
+        services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
 
         // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(
