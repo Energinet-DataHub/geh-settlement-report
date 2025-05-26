@@ -4,14 +4,14 @@ from decimal import Decimal
 
 from pyspark.sql import DataFrame, SparkSession
 
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
     ChargeTypeDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.schemas import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.schemas import (
     monthly_amounts_per_charge_v1,
 )
 

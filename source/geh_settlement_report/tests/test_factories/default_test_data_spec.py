@@ -1,16 +1,16 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     ChargeResolutionDataProductValue,
     ChargeTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values.calculation_type import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values.calculation_type import (
     CalculationTypeDataProductValue,
 )
-from geh_settlement_report.infrastructure.wholesale.data_values.settlement_method import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values.settlement_method import (
     SettlementMethodDataProductValue,
 )
 from tests.test_factories.amounts_per_charge_factory import AmountsPerChargeRow

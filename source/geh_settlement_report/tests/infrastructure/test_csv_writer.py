@@ -20,25 +20,25 @@ import pyspark.sql.functions as F
 import pytest
 from pyspark.sql import DataFrame, SparkSession
 
-import geh_settlement_report.domain.energy_results.order_by_columns as energy_order_by_columns
-import geh_settlement_report.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
+import geh_settlement_report.settlement_reports.domain.energy_results.order_by_columns as energy_order_by_columns
+import geh_settlement_report.settlement_reports.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
 import tests.test_factories.energy_factory as energy_factory
 import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
-from geh_settlement_report.domain.energy_results.prepare_for_csv import (
-    prepare_for_csv,
-)
-from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
-from geh_settlement_report.domain.utils.market_role import (
-    MarketRole,
-)
-from geh_settlement_report.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.infrastructure import csv_writer
-from geh_settlement_report.infrastructure.csv_writer import _write_files
-from geh_settlement_report.infrastructure.paths import get_report_output_path
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.domain.energy_results.prepare_for_csv import (
+    prepare_for_csv,
+)
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.settlement_reports.domain.utils.market_role import (
+    MarketRole,
+)
+from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.settlement_reports.infrastructure import csv_writer
+from geh_settlement_report.settlement_reports.infrastructure.csv_writer import _write_files
+from geh_settlement_report.settlement_reports.infrastructure.paths import get_report_output_path
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
