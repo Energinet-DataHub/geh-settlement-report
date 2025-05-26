@@ -33,7 +33,6 @@ class EnergyResultsTask(TaskBase):
         energy_results_df = create_energy_results(args=self.args, repository=repository)
 
         csv_writer.write(
-            dbutils=self.dbutils,
             args=self.args,
             df=energy_results_df,
             report_data_type=ReportDataType.EnergyResults,

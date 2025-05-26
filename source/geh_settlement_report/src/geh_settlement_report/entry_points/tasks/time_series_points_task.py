@@ -78,7 +78,6 @@ class TimeSeriesPointsTask(TaskBase):
             )
 
         csv_writer.write(
-            dbutils=self.dbutils,
             args=self.args,
             df=time_series_points_df,
             report_data_type=report_type,

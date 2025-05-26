@@ -14,7 +14,6 @@
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from geh_common.infrastructure.write_csv import write_csv_files
 from geh_common.telemetry import Logger, use_span
@@ -40,7 +39,6 @@ class TmpFile:
 
 @use_span()
 def write(
-    dbutils: Any,
     args: SettlementReportArgs,
     df: DataFrame,
     report_data_type: ReportDataType,

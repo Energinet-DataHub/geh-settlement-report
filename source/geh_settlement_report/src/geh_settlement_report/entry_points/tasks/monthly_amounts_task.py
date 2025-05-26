@@ -29,7 +29,6 @@ class MonthlyAmountsTask(TaskBase):
         wholesale_results_df = create_monthly_amounts(args=self.args, repository=repository)
 
         csv_writer.write(
-            dbutils=self.dbutils,
             args=self.args,
             df=wholesale_results_df,
             report_data_type=ReportDataType.MonthlyAmounts,

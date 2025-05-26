@@ -34,7 +34,6 @@ class ChargePricePointsTask(TaskBase):
         charge_price_points = create_charge_price_points(args=self.args, repository=repository)
 
         csv_writer.write(
-            dbutils=self.dbutils,
             args=self.args,
             df=charge_price_points,
             report_data_type=ReportDataType.ChargePricePoints,
