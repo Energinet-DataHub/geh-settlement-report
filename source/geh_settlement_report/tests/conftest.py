@@ -1,6 +1,8 @@
+import json
 import logging
 import os
 import shutil
+import sys
 import uuid
 from pathlib import Path
 from typing import Callable, Generator
@@ -8,7 +10,7 @@ from unittest import mock
 
 import pytest
 import yaml
-from delta import configure_spark_with_delta_pip
+from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
@@ -61,31 +63,35 @@ def cleanup_before_tests(
 @pytest.fixture(scope="function")
 def standard_wholesale_fixing_scenario_args(
     settlement_reports_output_path: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> SettlementReportArgs:
-    return SettlementReportArgs(
-        report_id=str(uuid.uuid4()),
-        period_start=standard_wholesale_fixing_scenario_data_generator.FROM_DATE,
-        period_end=standard_wholesale_fixing_scenario_data_generator.TO_DATE,
-        calculation_type=CalculationType.WHOLESALE_FIXING,
-        calculation_id_by_grid_area={
-            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]: uuid.UUID(
-                standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
-            ),
-            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[1]: uuid.UUID(
-                standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
-            ),
-        },
-        grid_area_codes=None,
-        split_report_by_grid_area=True,
-        prevent_large_text_files=False,
-        time_zone="Europe/Copenhagen",
-        catalog_name="spark_catalog",
-        energy_supplier_ids=None,
-        requesting_actor_market_role=MarketRole.SYSTEM_OPERATOR,  # using system operator since it is more complex (requires filter based on charge owner)
-        requesting_actor_id=standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX,
-        settlement_reports_output_path=settlement_reports_output_path,
-        include_basis_data=True,
-    )
+    grid_area_uuid = {
+        standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]: uuid.UUID(
+            standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
+        ).hex,
+        standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[1]: uuid.UUID(
+            standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
+        ).hex,
+    }
+
+    args = [
+        f"--report_id={str(uuid.uuid4())}",
+        f"--period_start={standard_wholesale_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period_end={standard_wholesale_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation_type={CalculationType.WHOLESALE_FIXING.value}",
+        f"--calculation_id_by_grid_area={json.dumps(grid_area_uuid)}",
+        "--split_report_by_grid_area",
+        f"--requesting_actor_market_role={MarketRole.SYSTEM_OPERATOR.value}",  # using system operator since it is more complex (requires filter based on charge owner)
+        f"--requesting_actor_id={standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX}",
+        f"--settlement_reports_output_path={settlement_reports_output_path}",
+        "--include_basis_data",
+    ]
+    monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
+
+    monkeypatch.setattr(sys, "argv", ["program"] + args)
+
+    return SettlementReportArgs()
 
 
 @pytest.fixture(scope="function")
@@ -134,25 +140,26 @@ def standard_wholesale_fixing_scenario_system_operator_args(
 
 @pytest.fixture(scope="function")
 def standard_balance_fixing_scenario_args(
-    settlement_reports_output_path: str,
+    settlement_reports_output_path: str, monkeypatch: pytest.MonkeyPatch
 ) -> SettlementReportArgs:
-    return SettlementReportArgs(
-        report_id=str(uuid.uuid4()),
-        period_start=standard_balance_fixing_scenario_data_generator.FROM_DATE,
-        period_end=standard_balance_fixing_scenario_data_generator.TO_DATE,
-        calculation_type=CalculationType.BALANCE_FIXING,
-        calculation_id_by_grid_area=None,
-        grid_area_codes=standard_balance_fixing_scenario_data_generator.GRID_AREAS,
-        split_report_by_grid_area=True,
-        prevent_large_text_files=False,
-        time_zone="Europe/Copenhagen",
-        catalog_name="spark_catalog",
-        energy_supplier_ids=None,
-        requesting_actor_market_role=MarketRole.SYSTEM_OPERATOR,
-        requesting_actor_id="1212121212121",
-        settlement_reports_output_path=settlement_reports_output_path,
-        include_basis_data=True,
-    )
+    args = [
+        f"--report_id={str(uuid.uuid4())}",
+        f"--period_start={standard_balance_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period_end={standard_balance_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation_type={CalculationType.BALANCE_FIXING.value}",
+        f"--grid_area_codes={standard_balance_fixing_scenario_data_generator.GRID_AREAS}",
+        "--split_report_by_grid_area",
+        f"--requesting_actor_market_role={MarketRole.SYSTEM_OPERATOR.value}",
+        "--requesting_actor_id=1212121212121",
+        f"--settlement_reports_output_path={settlement_reports_output_path}",
+        "--include_basis_data",
+    ]
+    monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
+
+    monkeypatch.setattr(sys, "argv", ["program"] + args)
+
+    return SettlementReportArgs()
 
 
 @pytest.fixture(scope="function")
@@ -274,7 +281,7 @@ def contracts_path(settlement_report_path: str) -> str:
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return settlement_report_path / "contracts"
+    return f"{settlement_report_path}/contracts"
 
 
 @pytest.fixture(scope="session")
@@ -319,40 +326,16 @@ def settlement_report_job_container_path(source_path: str) -> str:
     return PROJECT_PATH
 
 
+# pytest-xdist plugin does not work with SparkSession as a fixture. The session scope is not supported.
+# Therefore, we need to create a global variable to store the Spark session and data directory.
+# This is a workaround to avoid creating a new Spark session for each test.
+_spark, data_dir = get_spark_test_session()
+
+
 @pytest.fixture(scope="session")
-def spark(
-    tests_path: str,
-) -> Generator[SparkSession, None, None]:
-    warehouse_location = f"{tests_path}/__spark-warehouse__"
-
-    session = configure_spark_with_delta_pip(
-        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)
-        .config("spark.sql.streaming.schemaInference", True)
-        .config("spark.ui.showConsoleProgress", "false")
-        .config("spark.ui.enabled", "false")
-        .config("spark.ui.dagGraph.retainedRootRDDs", "1")
-        .config("spark.ui.retainedJobs", "1")
-        .config("spark.ui.retainedStages", "1")
-        .config("spark.ui.retainedTasks", "1")
-        .config("spark.sql.ui.retainedExecutions", "1")
-        .config("spark.worker.ui.retainedExecutors", "1")
-        .config("spark.worker.ui.retainedDrivers", "1")
-        .config("spark.default.parallelism", 1)
-        .config("spark.driver.memory", "2g")
-        .config("spark.executor.memory", "2g")
-        .config("spark.rdd.compress", False)
-        .config("spark.shuffle.compress", False)
-        .config("spark.shuffle.spill.compress", False)
-        .config("spark.sql.shuffle.partitions", 1)
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config(
-            "spark.sql.catalog.spark_catalog",
-            "org.apache.spark.sql.delta.catalog.DeltaCatalog",
-        )
-    ).getOrCreate()
-
-    yield session
-    session.stop()
+def spark() -> Generator[SparkSession, None, None]:
+    yield _spark
+    _spark.stop()
 
 
 @pytest.fixture(scope="session")
