@@ -7,10 +7,10 @@ import tests.test_factories.charge_link_periods_factory as charge_link_periods_f
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
-from geh_settlement_report.domain.time_series_points.system_operator_filter import (
+from geh_settlement_report.settlement_reports.domain.time_series_points.system_operator_filter import (
     filter_time_series_points_on_charge_owner,
 )
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 

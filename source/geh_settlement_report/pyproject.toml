@@ -15,15 +15,15 @@ dependencies = [
 ]
 
 [project.scripts]
-create_hourly_time_series = "geh_settlement_report.entry_points.entry_point:start_hourly_time_series_points"
-create_quarterly_time_series = "geh_settlement_report.entry_points.entry_point:start_quarterly_time_series_points"
-create_metering_point_periods = "geh_settlement_report.entry_points.entry_point:start_metering_point_periods"
-create_charge_links = "geh_settlement_report.entry_points.entry_point:start_charge_link_periods"
-create_charge_price_points = "geh_settlement_report.entry_points.entry_point:start_charge_price_points"
-create_energy_results = "geh_settlement_report.entry_points.entry_point:start_energy_results"
-create_monthly_amounts = "geh_settlement_report.entry_points.entry_point:start_monthly_amounts"
-create_wholesale_results = "geh_settlement_report.entry_points.entry_point:start_wholesale_results"
-create_zip = "geh_settlement_report.entry_points.entry_point:start_zip"
+create_hourly_time_series = "geh_settlement_report.settlement_reports.entry_point:start_hourly_time_series_points"
+create_quarterly_time_series = "geh_settlement_report.settlement_reports.entry_point:start_quarterly_time_series_points"
+create_metering_point_periods = "geh_settlement_report.settlement_reports.entry_point:start_metering_point_periods"
+create_charge_links = "geh_settlement_report.settlement_reports.entry_point:start_charge_link_periods"
+create_charge_price_points = "geh_settlement_report.settlement_reports.entry_point:start_charge_price_points"
+create_energy_results = "geh_settlement_report.settlement_reports.entry_point:start_energy_results"
+create_monthly_amounts = "geh_settlement_report.settlement_reports.entry_point:start_monthly_amounts"
+create_wholesale_results = "geh_settlement_report.settlement_reports.entry_point:start_wholesale_results"
+create_zip = "geh_settlement_report.settlement_reports.entry_point:start_zip"
 
 execute_measurements_report = "geh_settlement_report.entry_points.entry_point:start_measurements_report"
 

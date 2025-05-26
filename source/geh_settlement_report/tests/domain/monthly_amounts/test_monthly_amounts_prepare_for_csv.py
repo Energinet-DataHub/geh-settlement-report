@@ -4,14 +4,14 @@ from pyspark.sql.functions import lit
 
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.monthly_amounts_per_charge_factory as monthly_amounts_per_charge_factory
-from geh_settlement_report.domain.monthly_amounts.prepare_for_csv import (
+from geh_settlement_report.settlement_reports.domain.monthly_amounts.prepare_for_csv import (
     prepare_for_csv,
 )
-from geh_settlement_report.domain.utils.csv_column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import (
     CsvColumnNames,
     EphemeralColumns,
 )
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
