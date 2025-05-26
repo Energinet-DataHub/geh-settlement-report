@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import reduce
 from unittest.mock import Mock
 
@@ -448,8 +448,8 @@ def test_read_and_filter__when_energy_supplier_changes_on_metering_point__return
 
     # Assert
     assert actual.count() == 1
-    assert actual.select(DataProductColumnNames.from_date).collect()[0][0] == JAN_1ST
-    assert actual.select(DataProductColumnNames.to_date).collect()[0][0] == JAN_3RD
+    assert actual.select(DataProductColumnNames.from_date).collect()[0][0].replace(tzinfo=timezone.utc) == JAN_1ST
+    assert actual.select(DataProductColumnNames.to_date).collect()[0][0].replace(tzinfo=timezone.utc) == JAN_3RD
 
 
 def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_metering_point__returns_two_link_periods(
@@ -496,13 +496,13 @@ def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_meter
 
     actual_row_1 = actual.collect()[0]
     assert actual_row_1[DataProductColumnNames.energy_supplier_id] == es_id_a
-    assert actual_row_1[DataProductColumnNames.from_date] == JAN_1ST
-    assert actual_row_1[DataProductColumnNames.to_date] == JAN_2ND
+    assert actual_row_1[DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == JAN_1ST
+    assert actual_row_1[DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == JAN_2ND
 
     actual_row_2 = actual.collect()[1]
     assert actual_row_2[DataProductColumnNames.energy_supplier_id] == es_id_b
-    assert actual_row_2[DataProductColumnNames.from_date] == JAN_2ND
-    assert actual_row_2[DataProductColumnNames.to_date] == JAN_3RD
+    assert actual_row_2[DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == JAN_2ND
+    assert actual_row_2[DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == JAN_3RD
 
 
 def test_read_and_filter__when_duplicate_metering_point_periods__returns_one_link_period_per_duplicate(

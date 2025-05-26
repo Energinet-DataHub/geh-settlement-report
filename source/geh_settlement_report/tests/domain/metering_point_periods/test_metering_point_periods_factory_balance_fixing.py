@@ -1,3 +1,4 @@
+from datetime import timezone
 from unittest.mock import Mock
 
 from pyspark.sql import DataFrame, SparkSession
@@ -100,5 +101,5 @@ def test_create_metering_point_periods__when_and_metering_point_period_exceeds_s
 
     # Assert
     assert actual.count() == 1
-    assert actual.collect()[0][CsvColumnNames.metering_point_from_date] == d.JAN_2ND
-    assert actual.collect()[0][CsvColumnNames.metering_point_to_date] == d.JAN_3RD
+    assert actual.collect()[0][CsvColumnNames.metering_point_from_date].replace(tzinfo=timezone.utc) == d.JAN_2ND
+    assert actual.collect()[0][CsvColumnNames.metering_point_to_date].replace(tzinfo=timezone.utc) == d.JAN_3RD
