@@ -28,9 +28,6 @@ from geh_settlement_report.settlement_reports.application.job_args.settlement_re
     SettlementReportArgs,
 )
 from geh_settlement_report.settlement_reports.application.tasks import task_factory
-from geh_settlement_report.settlement_reports.application.tasks.measurements_report_task import (
-    start_measurements_report_with_deps,
-)
 from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
 
 
@@ -87,8 +84,3 @@ def start_task_with_deps(task_type: TaskType) -> None:
     spark = initialize_spark()
     task = task_factory.create(task_type, spark, args)
     task.execute()
-
-
-def start_measurements_report() -> None:
-    configure_logging(cloud_role_name="dbr-measurements-report", subsystem="measurements-report-aggregations")
-    start_measurements_report_with_deps()

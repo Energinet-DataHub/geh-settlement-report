@@ -4,15 +4,17 @@ import uuid
 import pytest
 from geh_common.testing.spark.mocks import MockDBUtils
 
-from geh_settlement_report.entry_points.entry_point import start_measurements_report
-from geh_settlement_report.entry_points.job_args.measurements_report_args import MeasurementsReportArgs
+from geh_settlement_report.measurements_reports.application.job_args.measurements_report_args import (
+    MeasurementsReportArgs,
+)
+from geh_settlement_report.measurements_reports.entry_point import start_measurements_report
 
 
 @pytest.fixture
 def mock_dbutils(monkeypatch):
-    # src/geh_settlement_report/entry_points/tasks/task_factory.py
     monkeypatch.setattr(
-        "geh_settlement_report.entry_points.tasks.measurements_report_task.get_dbutils", lambda _: MockDBUtils()
+        "geh_settlement_report.measurements_reports.application.tasks.measurements_report_task.get_dbutils",
+        lambda _: MockDBUtils(),
     )
     return MockDBUtils()
 
