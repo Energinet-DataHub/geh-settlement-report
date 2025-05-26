@@ -1,5 +1,6 @@
 from typing import Any
 
+from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.telemetry import use_span
 from pyspark.sql import SparkSession
 
@@ -7,7 +8,6 @@ from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from geh_settlement_report.entry_points.tasks.task_base import TaskBase
-from geh_settlement_report.infrastructure.create_zip_file import create_zip_file
 from geh_settlement_report.infrastructure.paths import get_report_output_path
 
 
@@ -26,5 +26,5 @@ class ZipTask(TaskBase):
         self.log.info(f"Files to zip: {files_to_zip}")
         zip_file_path = f"{self.args.settlement_reports_output_path}/{self.args.report_id}.zip"
         self.log.info(f"Creating zip file: '{zip_file_path}'")
-        create_zip_file(self.dbutils, self.args.report_id, zip_file_path, files_to_zip)
+        create_zip_file(self.dbutils, zip_file_path, files_to_zip)
         self.log.info(f"Finished creating '{zip_file_path}'")

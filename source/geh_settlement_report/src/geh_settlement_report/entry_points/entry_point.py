@@ -117,13 +117,13 @@ def start_measurements_report() -> None:
     result_dir = Path(args.output_path) / args.report_id
     result_dir.mkdir(parents=True, exist_ok=True)
     tmpdir = Path("tmp")
-    files = [result_dir / "file1.csv", result_dir / "file2.csv", result_dir / "file3.csv"]
+    files = [str(result_dir / "file1.csv"), str(result_dir / "file2.csv"), str(result_dir / "file3.csv")]
     for f in files:
         logger.info(f"Processing file: {f}")
         Path(f).write_text('a,b\n1, "a"')
     logger.info(f"Files to zip: {files}")
     dbutils = get_dbutils(spark)
-    zip_file = create_zip_file(result_dir, dbutils, tmpdir)
+    zip_file = create_zip_file(dbutils, result_dir, files)
     shutil.rmtree(result_dir)
     shutil.rmtree(tmpdir)
     logger.info(f"Finished creating '{zip_file}'")
