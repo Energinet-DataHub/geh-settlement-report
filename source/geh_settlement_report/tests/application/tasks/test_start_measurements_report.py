@@ -1,3 +1,4 @@
+import shutil
 import sys
 import uuid
 
@@ -15,6 +16,7 @@ def test_start_measurements_report(
     # Arrange
     report_id = uuid.uuid4().hex
     output_path = tmp_path_factory.mktemp("measurements_report_output")
+    result_file = output_path / f"{report_id}.zip"
     monkeypatch.setattr(
         "geh_settlement_report.measurements_reports.application.tasks.measurements_report_task.get_dbutils",
         lambda _: MockDBUtils(),
@@ -41,4 +43,9 @@ def test_start_measurements_report(
     start_measurements_report()
 
     # Assert
-    assert (output_path / report_id).with_suffix(".zip").exists(), "Report CSV file was not created"
+    assert result_file.exists(), "Report CSV file was not created"
+    assert result_file.is_file(), "Report output is not a file"
+    assert result_file.stat().st_size > 0, "Report CSV file is empty"
+
+    # Clean up
+    shutil.rmtree(output_path, ignore_errors=True)

@@ -19,9 +19,11 @@ class ZipTask(TaskBase):
     def execute(self) -> None:
         """Entry point for the logic of creating the final zip file."""
         report_output_path = get_report_output_path(self.args)
-        files_to_zip = [
-            f"{report_output_path}/{file_info.name}" for file_info in self.dbutils.fs.ls(report_output_path)
-        ]
+
+        files_to_zip = []
+        for file_info in self.dbutils.fs.ls(report_output_path):
+            if file_info.name.endswith(".csv"):  # We're only interested in CSV files
+                files_to_zip.append(f"{report_output_path}/{file_info.name}")
 
         self.log.info(f"Files to zip: {files_to_zip}")
         zip_file_path = f"{self.args.settlement_reports_output_path}/{self.args.report_id}.zip"
