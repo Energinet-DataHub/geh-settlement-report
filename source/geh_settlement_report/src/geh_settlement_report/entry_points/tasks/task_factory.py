@@ -1,3 +1,4 @@
+from geh_common.databricks.get_dbutils import get_dbutils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
@@ -29,7 +30,6 @@ from geh_settlement_report.entry_points.tasks.wholesale_results_task import (
     WholesaleResultsTask,
 )
 from geh_settlement_report.entry_points.tasks.zip_task import ZipTask
-from geh_settlement_report.entry_points.utils.get_dbutils import get_dbutils
 
 
 def create(

@@ -13,12 +13,8 @@
 # limitations under the License.
 
 
-import shutil
 import sys
-from pathlib import Path
 
-from geh_common.databricks.get_dbutils import get_dbutils
-from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.telemetry.decorators import start_trace
 from geh_common.telemetry.logger import Logger
 from geh_common.telemetry.logging_configuration import (
@@ -26,12 +22,13 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 
-from geh_settlement_report.entry_points.job_args.measurements_report_args import MeasurementsReportArgs
 from geh_settlement_report.entry_points.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from geh_settlement_report.entry_points.tasks import task_factory
+from geh_settlement_report.entry_points.tasks.measurements_report_task import start_measurements_report_with_deps
 from geh_settlement_report.entry_points.tasks.task_type import TaskType
+from geh_settlement_report.infrastructure.get_report_id import get_report_id_from_args
 from geh_settlement_report.infrastructure.spark_initializor import initialize_spark
 
 
@@ -90,40 +87,5 @@ def start_task_with_deps(task_type: TaskType) -> None:
     task.execute()
 
 
-def get_report_id_from_args(args: list[str] = sys.argv) -> str:
-    """Check if --report-id is part of sys.argv and returns its value.
-
-    Returns:
-        str: The value of --report-id
-
-    Raises:
-        ValueError: If --report-id is not found in sys.argv
-    """
-    for i, arg in enumerate(args):
-        if arg.startswith("--report-id"):
-            if "=" in arg:
-                return arg.split("=")[1]
-            else:
-                if i + 1 <= len(args):
-                    return args[i + 1]
-    raise ValueError(f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}")
-
-
 def start_measurements_report() -> None:
-    args = MeasurementsReportArgs()
-    spark = initialize_spark()
-    logger = Logger(__name__)
-    logger.info("Starting measurements report")
-    result_dir = Path(args.output_path) / args.report_id
-    result_dir.mkdir(parents=True, exist_ok=True)
-    tmpdir = Path("tmp")
-    files = [str(result_dir / "file1.csv"), str(result_dir / "file2.csv"), str(result_dir / "file3.csv")]
-    for f in files:
-        logger.info(f"Processing file: {f}")
-        Path(f).write_text('a,b\n1, "a"')
-    logger.info(f"Files to zip: {files}")
-    dbutils = get_dbutils(spark)
-    zip_file = create_zip_file(dbutils, result_dir, files)
-    shutil.rmtree(result_dir)
-    shutil.rmtree(tmpdir)
-    logger.info(f"Finished creating '{zip_file}'")
+    start_measurements_report_with_deps()
