@@ -12,25 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Model;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
 
-public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsDownloadHandler
+public sealed class SettlementReportFileService : ISettlementReportFileService
 {
-    private readonly ISettlementReportJobsFileRepository _fileRepository;
+    private readonly IReportFileRepository _reportFileRepository;
     private readonly ISettlementReportRepository _repository;
 
-    public SettlementReportJobsDownloadHandler(
-        ISettlementReportJobsFileRepository fileRepository,
+    public SettlementReportFileService(
+        IReportFileRepository reportFileRepository,
         ISettlementReportRepository repository)
     {
-        _fileRepository = fileRepository;
+        _reportFileRepository = reportFileRepository;
         _repository = repository;
     }
 
-    public async Task<Stream> DownloadReportAsync(
+    public async Task<Stream> DownloadAsync(
         ReportRequestId requestId,
         Guid actorId,
         bool isMultitenancy)
@@ -47,8 +48,8 @@ public sealed class SettlementReportJobsDownloadHandler : ISettlementReportJobsD
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a Blob file name.");
 
-        return await _fileRepository
-            .DownloadAsync(report.BlobFileName)
+        return await _reportFileRepository
+            .DownloadAsync(ReportType.Settlement, report.BlobFileName)
             .ConfigureAwait(false);
     }
 }
