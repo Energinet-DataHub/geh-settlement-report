@@ -1,4 +1,4 @@
-using Energinet.DataHub.Core.Messaging.Communication.Publisher;
+﻿using Energinet.DataHub.Core.Messaging.Communication.Publisher;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
