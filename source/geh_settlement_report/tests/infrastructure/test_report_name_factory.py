@@ -1,5 +1,7 @@
+import json
+import sys
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 import pytest
 from pyspark.sql import SparkSession
@@ -16,27 +18,30 @@ from geh_settlement_report.settlement_reports.infrastructure.report_name_factory
 
 
 @pytest.fixture(scope="function")
-def default_settlement_report_args() -> SettlementReportArgs:
+def default_settlement_report_args(monkeypatch: pytest.MonkeyPatch) -> SettlementReportArgs:
     """
     Note: Some tests depend on the values of `period_start` and `period_end`
     """
-    return SettlementReportArgs(
-        report_id=str(uuid.uuid4()),
-        requesting_actor_id="4123456789012",
-        period_start=datetime(2024, 6, 30, 22, 0, 0),
-        period_end=datetime(2024, 7, 31, 22, 0, 0),
-        calculation_type=CalculationType.WHOLESALE_FIXING,
-        calculation_id_by_grid_area={"016": uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373")},
-        grid_area_codes=None,
-        split_report_by_grid_area=True,
-        prevent_large_text_files=False,
-        time_zone="Europe/Copenhagen",
-        catalog_name="catalog_name",
-        energy_supplier_ids=["1234567890123"],
-        requesting_actor_market_role=MarketRole.DATAHUB_ADMINISTRATOR,
-        settlement_reports_output_path="some_output_volume_path",
-        include_basis_data=True,
-    )
+    grid_area_uuid = {"016": str(uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373"))}
+    args = [
+        f"--report-id={str(uuid.uuid4())}",
+        "--requesting-actor-id=4123456789012",
+        f"--period-start={datetime(2024, 6, 30, 22, 0, 0, tzinfo=timezone.utc)}",
+        f"--period-end={datetime(2024, 7, 31, 22, 0, 0, tzinfo=timezone.utc)}",
+        f"--calculation-type={CalculationType.WHOLESALE_FIXING.value}",
+        f"--calculation-id-by-grid-area={json.dumps(grid_area_uuid)}",
+        "--split-report-by-grid-area",
+        "--energy-supplier-ids=[1234567890123]",
+        f"--requesting-actor-market-role={MarketRole.DATAHUB_ADMINISTRATOR.value}",
+        "--settlement-reports-output-path=some_output_volume_path",
+        "--include-basis-data",
+    ]
+    monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
+
+    monkeypatch.setattr(sys, "argv", ["program"] + args)
+
+    return SettlementReportArgs()
 
 
 @pytest.mark.parametrize(
@@ -222,7 +227,7 @@ def test_create__when_energy_supplier_requests_report_not_combined(
     args = default_settlement_report_args
     args.split_report_by_grid_area = True
     args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
-    args.energy_supplier_ids = args.requesting_actor_id
+    args.energy_supplier_ids = [args.requesting_actor_id]
 
     factory = FileNameFactory(report_data_type, args)
 
