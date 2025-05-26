@@ -102,7 +102,3 @@ def get_report_id_from_args(args: list[str] = sys.argv) -> str:
                 if i + 1 <= len(args):
                     return args[i + 1]
     raise ValueError(f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}")
-
-
-def create_measurements_report() -> None:
-    pass
