@@ -6,5 +6,5 @@ from geh_settlement_report.measurements_reports.application.tasks.measurements_r
 
 
 def start_measurements_report() -> None:
-    configure_logging(cloud_role_name="dbr-measurements-report", subsystem="measurements-report-aggregations")
+    configure_logging(cloud_role_name="dbr-measurements-report", subsystem="settlement-report-aggregations")
     start_measurements_report_with_deps()
