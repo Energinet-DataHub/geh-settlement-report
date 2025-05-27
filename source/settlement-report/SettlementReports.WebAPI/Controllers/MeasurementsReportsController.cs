@@ -32,7 +32,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("request")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto reportRequest)
     {
@@ -46,9 +46,11 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
+    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
     {
-        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return new List<RequestedMeasurementsReportDto>();
+
+        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]
@@ -71,7 +73,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("cancel")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
     {
         return NoContent();
