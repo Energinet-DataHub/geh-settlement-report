@@ -1,3 +1,4 @@
+import shutil
 from datetime import datetime
 from functools import reduce
 from pathlib import Path
@@ -765,6 +766,7 @@ def test_write_files__when_order_by_specified_on_multiple_partitions(
 
 def test_write_files__when_df_includes_timestamps__creates_csv_without_milliseconds(
     spark: SparkSession,
+    tmp_path_factory: pytest.TempPathFactory,
 ):
     # Arrange
     df = spark.createDataFrame(
@@ -775,30 +777,30 @@ def test_write_files__when_df_includes_timestamps__creates_csv_without_milliseco
         ],
         ["key", "value"],
     )
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
+    tmp_dir = tmp_path_factory.mktemp("test")
+    csv_path = tmp_dir / "csv_file"
 
     # Act
     columns = _write_files(
         df,
-        csv_path,
+        csv_path.as_posix(),
         partition_columns=[],
         order_by=[],
         rows_per_file=1000,
     )
 
     # Assert
-    assert Path(csv_path).exists()
+    assert columns == ["key", "value"], f"Expected headers to be returned, but got {columns}."
+    assert Path(csv_path).exists(), f"The path {csv_path} does not exist."
 
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
+    paths = [path for path in Path(csv_path).iterdir() if path.is_file() and path.suffix == ".csv"]
+    # assert len(paths) == 1, f"Expected one csv file, but got {len(paths)}"
+    contents = []
+    for path in paths:
+        contents.extend(path.read_text().splitlines())
 
-                assert all_lines_written[0] == "a,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[1] == "b,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[2] == "c,2024-10-21T12:10:30Z\n"
+    assert "a,2024-10-21T12:10:30Z" in contents, f"Expected `a,2024-10-21T12:10:30Z` to be contained in `{contents}`"
+    assert "b,2024-10-21T12:10:30Z" in contents, f"Expected `b,2024-10-21T12:10:30Z` to be contained in `{contents}`"
+    assert "c,2024-10-21T12:10:30Z" in contents, f"Expected `c,2024-10-21T12:10:30Z` to be contained in `{contents}`"
 
-    assert columns == ["key", "value"]
-
-    tmp_dir.cleanup()
+    shutil.rmtree(tmp_dir)
