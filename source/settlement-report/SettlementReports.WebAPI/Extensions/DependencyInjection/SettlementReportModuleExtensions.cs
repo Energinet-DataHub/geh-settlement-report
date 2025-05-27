@@ -62,6 +62,7 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
         services.AddScoped<IMeasurementsReportFileService, MeasurementsReportFileService>();
         services.AddScoped<IListMeasurementsReportService, ListMeasurementsReportService>();
+        services.AddScoped<IMeasurementsReportService, MeasurementsReportService>();
 
         // Database Health check
         services.AddDbContext<SettlementReportDatabaseContext>(options => options.UseSqlServer(
