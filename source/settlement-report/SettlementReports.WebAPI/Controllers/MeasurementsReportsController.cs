@@ -9,6 +9,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SettlementReports.WebAPI.Controllers.Mappers;
 
 namespace SettlementReports.WebAPI.Controllers;
 
@@ -36,7 +37,10 @@ public class MeasurementsReportsController
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto reportRequest)
     {
-        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
+        var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
+        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
+
+        var requestCommand = new RequestMeasurementsReportCommand(reportRequest, marketRole, actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

@@ -4,6 +4,8 @@ from geh_common.application import GridAreaCodes
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from geh_settlement_report.measurements_reports.domain.market_role import MarketRole
+
 
 class MeasurementsReportArgs(BaseSettings):
     model_config = SettingsConfigDict(
@@ -18,6 +20,8 @@ class MeasurementsReportArgs(BaseSettings):
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
+    requesting_actor_market_role: MarketRole = Field(init=False)
+    requesting_actor_id: str = Field(init=False)
 
     catalog_name: str = Field(init=False)
     output_path: str = Field(init=False)

@@ -22,7 +22,7 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
     {
         var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId, request.MarketRole, request.ActorGln).ConfigureAwait(false);
 
         // Eventually the report will be added to the database here
         return runId;

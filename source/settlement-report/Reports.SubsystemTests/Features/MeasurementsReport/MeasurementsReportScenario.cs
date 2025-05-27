@@ -43,10 +43,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
             PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
             PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
-        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(
-            Filter: filter,
-            ActorNumberOverride: null,
-            MarketRoleOverride: null);
+        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(Filter: filter);
     }
 
     [SubsystemFact]
