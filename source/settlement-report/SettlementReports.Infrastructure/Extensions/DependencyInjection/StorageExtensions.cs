@@ -42,14 +42,14 @@ public static class StorageExtensions
             return new SettlementReportFileBlobStorage(blobContainerClient);
         });
 
-        services.AddScoped<ISettlementReportJobsFileRepository, SettlementReportJobsFileBlobStorage>(serviceProvider =>
+        services.AddScoped<IReportFileRepository, ReportFileRepository>(serviceProvider =>
         {
             var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
 
             var blobContainerUri = new Uri(blobSettings.StorageAccountForJobsUri, blobSettings.StorageContainerForJobsName);
             var blobContainerClient = new BlobContainerClient(blobContainerUri, new DefaultAzureCredential());
 
-            return new SettlementReportJobsFileBlobStorage(blobContainerClient);
+            return new ReportFileRepository(blobContainerClient);
         });
 
         // Health checks
