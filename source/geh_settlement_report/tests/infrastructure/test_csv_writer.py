@@ -1,5 +1,3 @@
-import shutil
-from datetime import datetime
 from functools import reduce
 
 import pyspark.sql.functions as F
