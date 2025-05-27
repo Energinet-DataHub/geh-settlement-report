@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Application.Model;
+
 namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
-public interface ISettlementReportJobsFileRepository
+public interface IReportFileRepository
 {
-    Task<Stream> DownloadAsync(string blobFileName);
+    Task<Stream> DownloadAsync(ReportType reportType, string blobFileName);
 }

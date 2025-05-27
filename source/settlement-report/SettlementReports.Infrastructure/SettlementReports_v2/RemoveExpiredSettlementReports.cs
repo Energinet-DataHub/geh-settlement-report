@@ -24,18 +24,18 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
     private readonly IClock _clock;
     private readonly ISettlementReportRepository _settlementReportRepository;
     private readonly ISettlementReportFileRepository _settlementReportFileRepository;
-    private readonly ISettlementReportJobsFileRepository _settlementReportJobFileRepository;
+    private readonly IReportFileRepository _reportFileRepository;
 
     public RemoveExpiredSettlementReports(
         IClock clock,
         ISettlementReportRepository settlementReportRepository,
         ISettlementReportFileRepository settlementReportFileRepository,
-        ISettlementReportJobsFileRepository settlementReportJobFileRepository)
+        IReportFileRepository reportFileRepository)
     {
         _clock = clock;
         _settlementReportRepository = settlementReportRepository;
         _settlementReportFileRepository = settlementReportFileRepository;
-        _settlementReportJobFileRepository = settlementReportJobFileRepository;
+        _reportFileRepository = reportFileRepository;
     }
 
     public async Task RemoveExpiredAsync(IList<Application.SettlementReports_v2.SettlementReport> settlementReports)
