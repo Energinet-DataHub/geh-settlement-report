@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{9805FFFF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Infrastructure", "source\settlement-report\Common.Infrastructure\Common.Infrastructure.csproj", "{90CB46D5-6345-40A2-BACC-9D3C211EF692}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestration.SettlementReports", "source\settlement-report\Orchestration.SettlementReports\Orchestration.SettlementReports.csproj", "{A119215C-4161-4BDC-8E7C-0DA6DD655079}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMigration", "source\settlement-report\DatabaseMigration\DatabaseMigration.csproj", "{EB86F2BA-AC67-4A51-BDD7-E391CDFDF265}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Core", "source\settlement-report\Test.Core\Test.Core.csproj", "{F16F641E-9989-4BD9-97D8-2135DD52B803}"
@@ -26,8 +24,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.UnitTests", "source\settlement-report\SettlementReports.UnitTests\SettlementReports.UnitTests.csproj", "{AC7E764C-12EF-492A-A60D-2E284AF2D31D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Function", "source\settlement-report\SettlementReports.Function\SettlementReports.Function.csproj", "{323D0FB4-7D5C-4C44-8C52-C629766750F8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "legacy", "legacy", "{DA1A3074-1719-45B5-BECE-703B9AA1F9CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{92E7938D-A590-44A7-9720-DCA505366390}"
 EndProject

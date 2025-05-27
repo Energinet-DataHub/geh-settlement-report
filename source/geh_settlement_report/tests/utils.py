@@ -1,42 +1,29 @@
-# Copyright 2020 Energinet DataHub A/S
-#
-# Licensed under the Apache License, Version 2.0 (the "License2");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 import os
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.infrastructure import paths
-from geh_settlement_report.infrastructure.report_name_factory import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.settlement_reports.infrastructure import paths
+from geh_settlement_report.settlement_reports.infrastructure.report_name_factory import (
     MarketRoleInFileName,
 )
 
 
 class Dates:
-    JAN_1ST = datetime(2023, 12, 31, 23)
-    JAN_2ND = datetime(2024, 1, 1, 23)
-    JAN_3RD = datetime(2024, 1, 2, 23)
-    JAN_4TH = datetime(2024, 1, 3, 23)
-    JAN_5TH = datetime(2024, 1, 4, 23)
-    JAN_6TH = datetime(2024, 1, 5, 23)
-    JAN_7TH = datetime(2024, 1, 6, 23)
-    JAN_8TH = datetime(2024, 1, 7, 23)
-    JAN_9TH = datetime(2024, 1, 8, 23)
+    JAN_1ST = datetime(2023, 12, 31, 23, tzinfo=timezone.utc)
+    JAN_2ND = datetime(2024, 1, 1, 23, tzinfo=timezone.utc)
+    JAN_3RD = datetime(2024, 1, 2, 23, tzinfo=timezone.utc)
+    JAN_4TH = datetime(2024, 1, 3, 23, tzinfo=timezone.utc)
+    JAN_5TH = datetime(2024, 1, 4, 23, tzinfo=timezone.utc)
+    JAN_6TH = datetime(2024, 1, 5, 23, tzinfo=timezone.utc)
+    JAN_7TH = datetime(2024, 1, 6, 23, tzinfo=timezone.utc)
+    JAN_8TH = datetime(2024, 1, 7, 23, tzinfo=timezone.utc)
+    JAN_9TH = datetime(2024, 1, 8, 23, tzinfo=timezone.utc)
 
 
 DEFAULT_TIME_ZONE = "Europe/Copenhagen"

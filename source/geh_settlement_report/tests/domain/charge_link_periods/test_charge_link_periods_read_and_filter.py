@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import reduce
 from unittest.mock import Mock
 
@@ -10,11 +10,11 @@ import tests.test_factories.charge_link_periods_factory as charge_link_periods_f
 import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
-from geh_settlement_report.domain.charge_link_periods.read_and_filter import (
+from geh_settlement_report.settlement_reports.domain.charge_link_periods.read_and_filter import (
     read_and_filter,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
@@ -28,15 +28,15 @@ DEFAULT_CALCULATION_ID_BY_GRID_AREA = {
     default_data.DEFAULT_GRID_AREA_CODE: uuid.UUID(default_data.DEFAULT_CALCULATION_ID)
 }
 
-JAN_1ST = datetime(2023, 12, 31, 23)
-JAN_2ND = datetime(2024, 1, 1, 23)
-JAN_3RD = datetime(2024, 1, 2, 23)
-JAN_4TH = datetime(2024, 1, 3, 23)
-JAN_5TH = datetime(2024, 1, 4, 23)
-JAN_6TH = datetime(2024, 1, 5, 23)
-JAN_7TH = datetime(2024, 1, 6, 23)
-JAN_8TH = datetime(2024, 1, 7, 23)
-JAN_9TH = datetime(2024, 1, 8, 23)
+JAN_1ST = datetime(2023, 12, 31, 23, tzinfo=timezone.utc)
+JAN_2ND = datetime(2024, 1, 1, 23, tzinfo=timezone.utc)
+JAN_3RD = datetime(2024, 1, 2, 23, tzinfo=timezone.utc)
+JAN_4TH = datetime(2024, 1, 3, 23, tzinfo=timezone.utc)
+JAN_5TH = datetime(2024, 1, 4, 23, tzinfo=timezone.utc)
+JAN_6TH = datetime(2024, 1, 5, 23, tzinfo=timezone.utc)
+JAN_7TH = datetime(2024, 1, 6, 23, tzinfo=timezone.utc)
+JAN_8TH = datetime(2024, 1, 7, 23, tzinfo=timezone.utc)
+JAN_9TH = datetime(2024, 1, 8, 23, tzinfo=timezone.utc)
 
 
 def _get_repository_mock(
@@ -448,8 +448,8 @@ def test_read_and_filter__when_energy_supplier_changes_on_metering_point__return
 
     # Assert
     assert actual.count() == 1
-    assert actual.select(DataProductColumnNames.from_date).collect()[0][0] == JAN_1ST
-    assert actual.select(DataProductColumnNames.to_date).collect()[0][0] == JAN_3RD
+    assert actual.select(DataProductColumnNames.from_date).collect()[0][0].replace(tzinfo=timezone.utc) == JAN_1ST
+    assert actual.select(DataProductColumnNames.to_date).collect()[0][0].replace(tzinfo=timezone.utc) == JAN_3RD
 
 
 def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_metering_point__returns_two_link_periods(
@@ -496,13 +496,13 @@ def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_meter
 
     actual_row_1 = actual.collect()[0]
     assert actual_row_1[DataProductColumnNames.energy_supplier_id] == es_id_a
-    assert actual_row_1[DataProductColumnNames.from_date] == JAN_1ST
-    assert actual_row_1[DataProductColumnNames.to_date] == JAN_2ND
+    assert actual_row_1[DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == JAN_1ST
+    assert actual_row_1[DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == JAN_2ND
 
     actual_row_2 = actual.collect()[1]
     assert actual_row_2[DataProductColumnNames.energy_supplier_id] == es_id_b
-    assert actual_row_2[DataProductColumnNames.from_date] == JAN_2ND
-    assert actual_row_2[DataProductColumnNames.to_date] == JAN_3RD
+    assert actual_row_2[DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == JAN_2ND
+    assert actual_row_2[DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == JAN_3RD
 
 
 def test_read_and_filter__when_duplicate_metering_point_periods__returns_one_link_period_per_duplicate(
