@@ -7,12 +7,13 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 
+from geh_settlement_report.common.get_report_id import get_report_id_from_args
+from geh_settlement_report.common.spark_initializor import initialize_spark
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
 from geh_settlement_report.settlement_reports.application.tasks import task_factory
 from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
-from geh_settlement_report.settlement_reports.infrastructure.spark_initializor import initialize_spark
 
 
 # The start_x() methods should only have its name updated in correspondence with the
@@ -55,7 +56,7 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    configure_logging(cloud_role_name="dbr-settlement-report", subsystem="settlement-report-aggregations")
+    configure_logging(cloud_role_name="dbr-settlement-report", subsystem="settlement-report")
     start_task_with_deps(task_type=task_type)
 
 
@@ -68,22 +69,3 @@ def start_task_with_deps(task_type: TaskType) -> None:
     spark = initialize_spark()
     task = task_factory.create(task_type, spark, args)
     task.execute()
-
-
-def get_report_id_from_args(args: list[str] = sys.argv) -> str:
-    """Check if --report-id is part of sys.argv and returns its value.
-
-    Returns:
-        str: The value of --report-id
-
-    Raises:
-        ValueError: If --report-id is not found in sys.argv
-    """
-    for i, arg in enumerate(args):
-        if arg.startswith("--report-id"):
-            if "=" in arg:
-                return arg.split("=")[1]
-            else:
-                if i + 1 <= len(args):
-                    return args[i + 1]
-    raise ValueError(f"'--report-id' was not found in arguments. Existing arguments: {','.join(sys.argv)}")

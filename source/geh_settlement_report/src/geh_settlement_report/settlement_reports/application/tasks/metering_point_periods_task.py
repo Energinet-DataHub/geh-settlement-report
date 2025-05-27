@@ -34,7 +34,6 @@ class MeteringPointPeriodsTask(TaskBase):
         charge_link_periods = create_metering_point_periods(args=self.args, repository=repository)
 
         csv_writer.write(
-            dbutils=self.dbutils,
             args=self.args,
             df=charge_link_periods,
             report_data_type=ReportDataType.MeteringPointPeriods,

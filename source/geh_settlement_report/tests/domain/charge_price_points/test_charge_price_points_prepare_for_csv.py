@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock
 
 import pytest
@@ -178,11 +178,11 @@ def test_tax_indicator_is_converted_correctly(
     "daylight_savings, expected_energy_price_columns_with_value",
     [
         (
-            datetime(2023, 3, 25, 23),
+            datetime(2023, 3, 25, 23, tzinfo=timezone.utc),
             23,
         ),
         (
-            datetime(2023, 10, 28, 22),
+            datetime(2023, 10, 28, 22, tzinfo=timezone.utc),
             25,
         ),
     ],

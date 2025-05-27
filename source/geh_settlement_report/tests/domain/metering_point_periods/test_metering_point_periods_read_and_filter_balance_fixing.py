@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import Mock
 
 from pyspark.sql import DataFrame, SparkSession
@@ -132,10 +132,10 @@ def test_read_and_filter__when_metering_periods_with_gap__returns_separate_perio
     # Assert
     assert actual.count() == 2
     actual = actual.orderBy(DataProductColumnNames.from_date)
-    assert actual.collect()[0][DataProductColumnNames.from_date] == d.JAN_1ST
-    assert actual.collect()[0][DataProductColumnNames.to_date] == d.JAN_2ND
-    assert actual.collect()[1][DataProductColumnNames.from_date] == d.JAN_3RD
-    assert actual.collect()[1][DataProductColumnNames.to_date] == d.JAN_4TH
+    assert actual.collect()[0][DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == d.JAN_1ST
+    assert actual.collect()[0][DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == d.JAN_2ND
+    assert actual.collect()[1][DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == d.JAN_3RD
+    assert actual.collect()[1][DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == d.JAN_4TH
 
 
 def test_read_and_filter__when_period_exceeds_selection_period__returns_period_that_ends_on_the_selection_end_date(
@@ -184,8 +184,8 @@ def test_read_and_filter__when_period_exceeds_selection_period__returns_period_t
     # Assert
     assert actual.count() == 1
     actual = actual.orderBy(DataProductColumnNames.from_date)
-    assert actual.collect()[0][DataProductColumnNames.from_date] == d.JAN_2ND
-    assert actual.collect()[0][DataProductColumnNames.to_date] == d.JAN_3RD
+    assert actual.collect()[0][DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == d.JAN_2ND
+    assert actual.collect()[0][DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == d.JAN_3RD
 
 
 def test_read_and_filter__when_calculation_overlap_in_time__returns_latest(
@@ -298,24 +298,24 @@ def test_read_and_filter__when_metering_point_period_is_shorter_in_newer_calcula
 
     # Assert
     assert actual.count() == 1
-    assert actual.collect()[0][DataProductColumnNames.from_date] == d.JAN_2ND
-    assert actual.collect()[0][DataProductColumnNames.to_date] == d.JAN_3RD
+    assert actual.collect()[0][DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == d.JAN_2ND
+    assert actual.collect()[0][DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == d.JAN_3RD
 
 
 def test_read_and_filter__when_daylight_saving_time_returns_expected(
     spark: SparkSession,
 ) -> None:
     # Arrange
-    from_date = datetime(2024, 3, 30, 23)
-    to_date = datetime(2024, 4, 1, 22)
+    from_date = datetime(2024, 3, 30, 23, tzinfo=timezone.utc)
+    to_date = datetime(2024, 4, 1, 22, tzinfo=timezone.utc)
     latest_calculations = latest_calculations_factory.create(
         spark,
         [
             default_data.create_latest_calculations_per_day_row(
-                start_of_day=datetime(2024, 3, 30, 23),
+                start_of_day=datetime(2024, 3, 30, 23, tzinfo=timezone.utc),
             ),
             default_data.create_latest_calculations_per_day_row(
-                start_of_day=datetime(2024, 3, 31, 22),
+                start_of_day=datetime(2024, 3, 31, 22, tzinfo=timezone.utc),
             ),
         ],
     )
@@ -344,5 +344,5 @@ def test_read_and_filter__when_daylight_saving_time_returns_expected(
 
     # Assert
     assert actual.count() == 1
-    assert actual.collect()[0][DataProductColumnNames.from_date] == from_date
-    assert actual.collect()[0][DataProductColumnNames.to_date] == to_date
+    assert actual.collect()[0][DataProductColumnNames.from_date].replace(tzinfo=timezone.utc) == from_date
+    assert actual.collect()[0][DataProductColumnNames.to_date].replace(tzinfo=timezone.utc) == to_date

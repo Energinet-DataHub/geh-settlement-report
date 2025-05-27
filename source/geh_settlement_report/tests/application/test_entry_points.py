@@ -8,24 +8,25 @@ from geh_settlement_report.settlement_reports.entry_point import (
     get_report_id_from_args,
 )
 
-# IMPORTANT:
-# If we add/remove tests here, we also update the "retry logic" in '.docker/entrypoint.sh',
-# which depends on the number of "entry point tests".
 
-
-def assert_entry_point_exists(entry_point_name: str) -> Any:
+def _assert_entry_point_exists(entry_point_name: str) -> Any:
     # Load the entry point function from the installed wheel
     try:
-        entry_points = importlib.metadata.entry_points(group="console_scripts", name=entry_point_name)
+        entry_points = importlib.metadata.entry_points(group="console_scripts")
+        entry_point_names = [ep.name for ep in entry_points]
 
         if not entry_points:
-            assert False, f"The {entry_point_name} entry point was not found."
+            assert False, (
+                f"The {entry_point_name} entry point was not found. Available entry points: {entry_point_names}"
+            )
 
         # Filter for the specific entry point group and name
         matching_entry_points = [ep for ep in entry_points if ep.name == entry_point_name]
 
-        if not matching_entry_points:
-            assert False, f"The {entry_point_name} entry point was not found."
+        if entry_point_name not in entry_point_names:
+            assert False, (
+                f"The {entry_point_name} entry point was not found. Available entry points: {entry_point_names}"
+            )
 
         # Check if the module exists
         entry_point = matching_entry_points[0]  # Get the single entry point
@@ -61,7 +62,7 @@ def test__installed_package__can_load_entry_point(
     installed_package: None,
     entry_point_name: str,
 ) -> None:
-    assert_entry_point_exists(entry_point_name)
+    _assert_entry_point_exists(entry_point_name)
 
 
 def test_get_report_id():

@@ -1,4 +1,5 @@
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
@@ -17,7 +18,6 @@ from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding.standard_wholesale_fixing_scenario_data_generator import (
     CHARGE_OWNER_ID_WITHOUT_TAX,
 )
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.utils import (
     cleanup_output_path,
     get_actual_files,
@@ -37,7 +37,8 @@ def reset_task_values(settlement_reports_output_path: str):
 
 def test_execute_wholesale_results__when_energy_supplier_and_split_by_grid_area_is_false__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -95,7 +96,8 @@ def test_execute_wholesale_results__when_energy_supplier_and_split_by_grid_area_
 
 def test_execute_wholesale_results__when_energy_supplier_and_split_by_grid_area_is_true__returns_expected(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
@@ -169,7 +171,8 @@ def test_execute_wholesale_results__when_energy_supplier_and_split_by_grid_area_
 )
 def test_when_market_role_is(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
     market_role: MarketRole,
@@ -232,7 +235,8 @@ def test_when_market_role_is(
 
 def test_when_market_role_is_grid_access_provider_return_correct_file_name(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
+    dummy_logging: None,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     standard_wholesale_fixing_scenario_data_written_to_delta: None,
 ):
