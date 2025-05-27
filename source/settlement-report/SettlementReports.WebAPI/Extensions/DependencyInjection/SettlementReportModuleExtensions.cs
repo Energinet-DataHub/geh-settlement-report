@@ -61,11 +61,10 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
         services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
         services.AddScoped<IMeasurementsReportFileService, MeasurementsReportFileService>();
-        services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
+        services.AddScoped<IListMeasurementsReportService, ListMeasurementsReportService>();
 
         // Database Health check
-        services.AddDbContext<SettlementReportDatabaseContext>(
-            options => options.UseSqlServer(
+        services.AddDbContext<SettlementReportDatabaseContext>(options => options.UseSqlServer(
                 configuration
                     .GetSection(ConnectionStringsOptions.ConnectionStrings)
                     .Get<ConnectionStringsOptions>()!.DB_CONNECTION_STRING,
