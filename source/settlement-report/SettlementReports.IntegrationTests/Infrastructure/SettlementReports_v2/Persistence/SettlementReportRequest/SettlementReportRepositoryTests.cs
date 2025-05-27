@@ -22,7 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
 
 public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
 {
@@ -42,8 +42,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
 
         var calculationFilter = new Dictionary<string, CalculationId?>
         {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) }, { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
         };
 
         var requestFilterDto = new SettlementReportRequestFilterDto(
@@ -90,8 +89,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         // Arrange
         var calculationFilter = new Dictionary<string, CalculationId?>
         {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) }, { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
         };
 
         var requestFilterDto = new SettlementReportRequestFilterDto(
@@ -152,7 +150,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             await PrepareNewRequestAsync(),
             await PrepareNewRequestAsync(),
             await PrepareNewRequestForJobAsync(),
-            await PrepareNewRequestForJobAsync(),
+            await PrepareNewRequestForJobAsync()
         ];
 
         await using var context = _databaseManager.CreateDbContext();
@@ -221,7 +219,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             await PrepareNewRequestAsync(),
             await PrepareNewRequestAsync(),
             await PrepareNewRequestForJobAsync(),
-            await PrepareNewRequestForJobAsync(),
+            await PrepareNewRequestForJobAsync()
         ];
 
         await using var context = _databaseManager.CreateDbContext();
@@ -304,7 +302,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -318,7 +316,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -346,7 +344,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
             return request;
         });
         var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
@@ -359,7 +357,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip",  []));
+            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
             request.MarkAsNotificationSent();
             return request;
         });
@@ -378,15 +376,15 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         Assert.True(actualSent.IsNotificationSent);
     }
 
-    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
+    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(
+        Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new SettlementReportRepository(setupContext);
 
         var calculationFilter = new Dictionary<string, CalculationId?>
         {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) }, { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
         };
 
         var requestFilterDto = new SettlementReportRequestFilterDto(
@@ -414,15 +412,15 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         return settlementReportRequest;
     }
 
-    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestForJobAsync(Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
+    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestForJobAsync(
+        Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new SettlementReportRepository(setupContext);
 
         var calculationFilter = new Dictionary<string, CalculationId?>
         {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) }, { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
         };
 
         var requestFilterDto = new SettlementReportRequestFilterDto(

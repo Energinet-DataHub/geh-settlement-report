@@ -15,28 +15,29 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <AssemblyName>Energinet.DataHub.SettlementReport.DatabaseMigration</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.DatabaseMigration</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>Energinet.DataHub.SettlementReport.DatabaseMigration</AssemblyName>
+        <RootNamespace>Energinet.DataHub.SettlementReport.DatabaseMigration</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\202405081100_Add_SettlementReport_table.sql" />
-    <EmbeddedResource Include="Scripts\202405141445_Add_Period_To_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202405151335_Use_DateTime_In_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202409121100_Increase_GridAreas_Column_Size.sql" />
-    <EmbeddedResource Include="Scripts\202409121100_Add_FilterProperties_to_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202409101100_Add_EndedDateTime_to_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202406210900_Add_IsHiddenFromActor_to_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202409081607_Add_JobId_To_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202410261405_Add_IsNotificationSent_to_SettlementReport.sql" />
-    <EmbeddedResource Include="Scripts\202412021100_Add_GridAreaOwner.sql" />
-    <EmbeddedResource Include="Scripts\202412131100_Update_GridAreaOwner_ValidFrom.sql" />
-    <EmbeddedResource Include="Scripts\202501080947_Delete_anything_but_completed_reports.sql" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Scripts\202405081100_Add_SettlementReport_table.sql"/>
+        <EmbeddedResource Include="Scripts\202405141445_Add_Period_To_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202405151335_Use_DateTime_In_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202409121100_Increase_GridAreas_Column_Size.sql"/>
+        <EmbeddedResource Include="Scripts\202409121100_Add_FilterProperties_to_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202409101100_Add_EndedDateTime_to_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202406210900_Add_IsHiddenFromActor_to_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202409081607_Add_JobId_To_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202410261405_Add_IsNotificationSent_to_SettlementReport.sql"/>
+        <EmbeddedResource Include="Scripts\202412021100_Add_GridAreaOwner.sql"/>
+        <EmbeddedResource Include="Scripts\202412131100_Update_GridAreaOwner_ValidFrom.sql"/>
+        <EmbeddedResource Include="Scripts\202501080947_Delete_anything_but_completed_reports.sql"/>
+        <EmbeddedResource Include="Scripts\202505271500_Add_MeasurementsReport_table.sql"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="dbup-sqlserver" Version="6.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="dbup-sqlserver" Version="6.0.0"/>
+    </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 using NodaTime.Extensions;
 
@@ -11,12 +12,42 @@ public sealed class MeasurementsReport
         BlobFileName = blobFileName;
     }
 
+    public MeasurementsReport(
+        IClock clock,
+        Guid userId,
+        Guid actorId,
+        ReportRequestId requestId,
+        MeasurementsReportRequestDto request)
+    {
+        RequestId = requestId.Id;
+        UserId = userId;
+        ActorId = actorId;
+        CreatedDateTime = clock.GetCurrentInstant();
+        Status = ReportStatus.InProgress;
+        PeriodStart = request.Filter.PeriodStart.ToInstant();
+        PeriodEnd = request.Filter.PeriodEnd.ToInstant();
+        GridAreaCodes = request.Filter.GridAreaCodes.ToList();
+    }
+
+    // EF Core Constructor.
+    // ReSharper disable once UnusedMember.Local
+    private MeasurementsReport()
+    {
+    }
+
+    /// <summary>
+    ///     Internal (database) ID of the report.
+    /// </summary>
+    public int Id { get; init; }
+
     /// <summary>
     ///     The public ID of the report.
     /// </summary>
     public string RequestId { get; init; } = null!;
 
     public Guid ActorId { get; init; }
+
+    public Guid UserId { get; init; }
 
     public Instant PeriodStart { get; }
 

@@ -13,16 +13,15 @@
 // limitations under the License.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
 
-public interface ISettlementReportDatabaseContext
+public class MeasurementsReportEntityConfiguration : IEntityTypeConfiguration<Application.SettlementReports_v2.MeasurementsReport>
 {
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
-
-    DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; }
-
-    DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
-
-    Task<int> SaveChangesAsync();
+    public void Configure(EntityTypeBuilder<Application.SettlementReports_v2.MeasurementsReport> builder)
+    {
+        builder.ToTable("MeasurementsReport");
+        builder.HasKey(e => e.Id);
+    }
 }
