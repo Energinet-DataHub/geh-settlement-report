@@ -32,7 +32,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("request")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto reportRequest)
     {
@@ -73,7 +73,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("cancel")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
     {
         return NoContent();
