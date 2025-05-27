@@ -64,7 +64,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
         var blobContainerClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClient();
         var blobContainerJobsClient = settlementReportFileBlobStorageFixture.CreateBlobContainerClientForJobs();
         Fixture.Inject<ISettlementReportFileRepository>(new SettlementReportFileBlobStorage(blobContainerClient));
-        Fixture.Inject<ISettlementReportJobsFileRepository>(new SettlementReportJobsFileBlobStorage(blobContainerJobsClient));
+        Fixture.Inject<IReportFileRepository>(new ReportFileRepository(blobContainerJobsClient));
 
         var clockMock = new Mock<IClock>();
         clockMock
