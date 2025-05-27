@@ -2,5 +2,11 @@
 
 public interface IMeasurementsReportRepository
 {
+    Task AddOrUpdateAsync(MeasurementsReport request);
+
     Task<MeasurementsReport> GetAsync(string requestId);
+
+    Task<IEnumerable<MeasurementsReport>> GetByActorIdAsync(Guid actorId);
+
+    Task<MeasurementsReport> GetByJobRunIdAsync(long jobRunId);
 }
