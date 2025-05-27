@@ -27,8 +27,8 @@ def test_start_measurements_report(
         [
             "entry_point.py",
             f"--report-id={report_id}",
-            "--period-start=2025-01-01",
-            "--period-end=2025-01-31",
+            "--period-start-datetime=2025-01-01",
+            "--period-end-datetime=2025-01-31",
             "--grid-area-codes=123,456",
         ],
     )

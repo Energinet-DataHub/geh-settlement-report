@@ -15,8 +15,8 @@ class MeasurementsReportArgs(BaseSettings):
     )
 
     report_id: str = Field(init=False)
-    period_start: datetime = Field(init=False)
-    period_end: datetime = Field(init=False)
+    period_start_datetime: datetime = Field(init=False)
+    period_end_datetime: datetime = Field(init=False)
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
 
     catalog_name: str = Field(init=False)
