@@ -34,7 +34,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -71,7 +71,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.settlement_reports.entry_point"
         | count
@@ -104,7 +104,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "argparse.ArgumentTypeError"
         | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -145,7 +145,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
         | where OuterMessage contains "Unexpected grid area code"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count

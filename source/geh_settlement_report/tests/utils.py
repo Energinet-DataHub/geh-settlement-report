@@ -1,6 +1,6 @@
 import os
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
@@ -15,15 +15,15 @@ from geh_settlement_report.settlement_reports.infrastructure.report_name_factory
 
 
 class Dates:
-    JAN_1ST = datetime(2023, 12, 31, 23)
-    JAN_2ND = datetime(2024, 1, 1, 23)
-    JAN_3RD = datetime(2024, 1, 2, 23)
-    JAN_4TH = datetime(2024, 1, 3, 23)
-    JAN_5TH = datetime(2024, 1, 4, 23)
-    JAN_6TH = datetime(2024, 1, 5, 23)
-    JAN_7TH = datetime(2024, 1, 6, 23)
-    JAN_8TH = datetime(2024, 1, 7, 23)
-    JAN_9TH = datetime(2024, 1, 8, 23)
+    JAN_1ST = datetime(2023, 12, 31, 23, tzinfo=timezone.utc)
+    JAN_2ND = datetime(2024, 1, 1, 23, tzinfo=timezone.utc)
+    JAN_3RD = datetime(2024, 1, 2, 23, tzinfo=timezone.utc)
+    JAN_4TH = datetime(2024, 1, 3, 23, tzinfo=timezone.utc)
+    JAN_5TH = datetime(2024, 1, 4, 23, tzinfo=timezone.utc)
+    JAN_6TH = datetime(2024, 1, 5, 23, tzinfo=timezone.utc)
+    JAN_7TH = datetime(2024, 1, 6, 23, tzinfo=timezone.utc)
+    JAN_8TH = datetime(2024, 1, 7, 23, tzinfo=timezone.utc)
+    JAN_9TH = datetime(2024, 1, 8, 23, tzinfo=timezone.utc)
 
 
 DEFAULT_TIME_ZONE = "Europe/Copenhagen"
