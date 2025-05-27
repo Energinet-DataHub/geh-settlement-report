@@ -19,14 +19,14 @@ public class MeasurementsReportsController
 {
     private readonly IMeasurementsReportFileService _fileService;
     private readonly IRequestMeasurementsReportHandler _requestHandler;
-    private readonly IListMeasurementsReportJobsHandler _listMeasurementsReportJobsHandler;
+    private readonly IListMeasurementsReportService _listMeasurementsReportService;
     private readonly IUserContext<FrontendUser> _userContext;
 
-    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService, IListMeasurementsReportJobsHandler listMeasurementsReportJobsHandler, IUserContext<FrontendUser> userContext)
+    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService, IListMeasurementsReportService listMeasurementsReportService, IUserContext<FrontendUser> userContext)
     {
         _requestHandler = requestHandler;
         _fileService = fileService;
-        _listMeasurementsReportJobsHandler = listMeasurementsReportJobsHandler;
+        _listMeasurementsReportService = listMeasurementsReportService;
         _userContext = userContext;
     }
 
@@ -49,9 +49,9 @@ public class MeasurementsReportsController
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
     {
         if (_userContext.CurrentUser.MultiTenancy)
-            return await _listMeasurementsReportJobsHandler.HandleAsync().ConfigureAwait(false);
+            return await _listMeasurementsReportService.GetAsync().ConfigureAwait(false);
 
-        return await _listMeasurementsReportJobsHandler.HandleAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]
