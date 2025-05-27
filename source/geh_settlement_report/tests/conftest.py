@@ -142,12 +142,19 @@ def standard_wholesale_fixing_scenario_system_operator_args(
 def standard_balance_fixing_scenario_args(
     settlement_reports_output_path: str, monkeypatch: pytest.MonkeyPatch
 ) -> SettlementReportArgs:
+    # grid_areas = [
+    #     int(standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]),
+    #     int(standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[1]),
+    # ]
+
+    grid_areas = ",".join(standard_wholesale_fixing_scenario_data_generator.GRID_AREAS)
+
     args = [
         f"--report-id={str(uuid.uuid4())}",
         f"--period-start={standard_balance_fixing_scenario_data_generator.FROM_DATE}",
         f"--period-end={standard_balance_fixing_scenario_data_generator.TO_DATE}",
         f"--calculation-type={CalculationType.BALANCE_FIXING.value}",
-        f"--grid-area-codes={standard_balance_fixing_scenario_data_generator.GRID_AREAS}",
+        f"--grid-area-codes={grid_areas}",
         "--split-report-by-grid-area",
         f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",
         "--requesting-actor-id=1212121212121",
