@@ -6,16 +6,36 @@ namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 
 public sealed class MeasurementsReport
 {
-    public Instant? EndedDateTime { get; private set; }
-
-    public ReportStatus Status { get; private set; }
-
     public MeasurementsReport(string? blobFileName = null)
     {
         BlobFileName = blobFileName;
     }
 
+    /// <summary>
+    ///     The public ID of the report.
+    /// </summary>
+    public string RequestId { get; init; } = null!;
+
+    public Guid ActorId { get; init; }
+
+    public Instant PeriodStart { get; }
+
+    public Instant PeriodEnd { get; }
+
+    public Instant CreatedDateTime { get; init; }
+
+    public Instant? EndedDateTime { get; private set; }
+
+    public ReportStatus Status { get; private set; }
+
     public string? BlobFileName { get; private set; }
+
+    /// <summary>
+    ///     The Databricks job run ID of the job run creating the report.
+    /// </summary>
+    public long? JobRunId { get; init; }
+
+    public IReadOnlyList<string> GridAreaCodes { get; init; } = null!;
 
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
     {
