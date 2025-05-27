@@ -152,8 +152,7 @@ def test_prepare_for_csv__when_daylight_saving_tim_transition__returns_expected_
         resolution=resolution,
     )
     total_columns = 25 if resolution == MeteringPointResolutionDataProductValue.HOUR else 100
-    df.show(25)
-    print("total_columns", total_columns)
+
     # Act
     actual_df = prepare_for_csv(
         filtered_time_series_points=df,
