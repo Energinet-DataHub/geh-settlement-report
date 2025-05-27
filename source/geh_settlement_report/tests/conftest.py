@@ -75,16 +75,16 @@ def standard_wholesale_fixing_scenario_args(
     }
 
     args = [
-        f"--report_id={str(uuid.uuid4())}",
-        f"--period_start={standard_wholesale_fixing_scenario_data_generator.FROM_DATE}",
-        f"--period_end={standard_wholesale_fixing_scenario_data_generator.TO_DATE}",
-        f"--calculation_type={CalculationType.WHOLESALE_FIXING.value}",
-        f"--calculation_id_by_grid_area={json.dumps(grid_area_uuid)}",
-        "--split_report_by_grid_area",
-        f"--requesting_actor_market_role={MarketRole.SYSTEM_OPERATOR.value}",  # using system operator since it is more complex (requires filter based on charge owner)
-        f"--requesting_actor_id={standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX}",
-        f"--settlement_reports_output_path={settlement_reports_output_path}",
-        "--include_basis_data",
+        f"--report-id={str(uuid.uuid4())}",
+        f"--period-start={standard_wholesale_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period-end={standard_wholesale_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation-type={CalculationType.WHOLESALE_FIXING.value}",
+        f"--calculation-id-by-grid-area={json.dumps(grid_area_uuid)}",
+        "--split-report-by-grid-area",
+        f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",  # using system operator since it is more complex (requires filter based on charge owner)
+        f"--requesting-actor-id={standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX}",
+        f"--settlement-reports-output-path={settlement_reports_output_path}",
+        "--include-basis-data",
     ]
     monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
     monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
@@ -143,16 +143,16 @@ def standard_balance_fixing_scenario_args(
     settlement_reports_output_path: str, monkeypatch: pytest.MonkeyPatch
 ) -> SettlementReportArgs:
     args = [
-        f"--report_id={str(uuid.uuid4())}",
-        f"--period_start={standard_balance_fixing_scenario_data_generator.FROM_DATE}",
-        f"--period_end={standard_balance_fixing_scenario_data_generator.TO_DATE}",
-        f"--calculation_type={CalculationType.BALANCE_FIXING.value}",
-        f"--grid_area_codes={standard_balance_fixing_scenario_data_generator.GRID_AREAS}",
-        "--split_report_by_grid_area",
-        f"--requesting_actor_market_role={MarketRole.SYSTEM_OPERATOR.value}",
-        "--requesting_actor_id=1212121212121",
-        f"--settlement_reports_output_path={settlement_reports_output_path}",
-        "--include_basis_data",
+        f"--report-id={str(uuid.uuid4())}",
+        f"--period-start={standard_balance_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period-end={standard_balance_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation-type={CalculationType.BALANCE_FIXING.value}",
+        f"--grid-area-codes={standard_balance_fixing_scenario_data_generator.GRID_AREAS}",
+        "--split-report-by-grid-area",
+        f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",
+        "--requesting-actor-id=1212121212121",
+        f"--settlement-reports-output-path={settlement_reports_output_path}",
+        "--include-basis-data",
     ]
     monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
     monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
