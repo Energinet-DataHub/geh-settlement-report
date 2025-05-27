@@ -61,7 +61,7 @@ jobs:
               - 'docs/Reports.Client/**'
               - 'source/settlement-report/Reports.Client*/**'
               - 'source/settlement-report/Reports.Abstractions*/**'
-              - '.github/workflows/report-client-bundle-publish.yml'
+              - '.github/workflows/reports-client-bundle-publish.yml'
             db_migrations:
               - 'source/settlement-report/DatabaseMigration/**'
             render_c4model_views:
