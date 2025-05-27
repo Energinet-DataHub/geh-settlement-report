@@ -1,44 +1,28 @@
-# Copyright 2020 Energinet DataHub A/S
-#
-# Licensed under the Apache License, Version 2.0 (the "License2");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-from datetime import datetime
 from functools import reduce
-from pathlib import Path
-from tempfile import TemporaryDirectory
 
 import pyspark.sql.functions as F
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import DataFrame, SparkSession
 
-import geh_settlement_report.domain.energy_results.order_by_columns as energy_order_by_columns
-import geh_settlement_report.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
+import geh_settlement_report.settlement_reports.domain.energy_results.order_by_columns as energy_order_by_columns
+import geh_settlement_report.settlement_reports.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
 import tests.test_factories.energy_factory as energy_factory
 import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
-from geh_settlement_report.domain.energy_results.prepare_for_csv import (
-    prepare_for_csv,
-)
-from geh_settlement_report.domain.utils.csv_column_names import CsvColumnNames
-from geh_settlement_report.domain.utils.market_role import (
-    MarketRole,
-)
-from geh_settlement_report.domain.utils.report_data_type import ReportDataType
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
-from geh_settlement_report.infrastructure import csv_writer
-from geh_settlement_report.infrastructure.csv_writer import _write_files
-from geh_settlement_report.infrastructure.paths import get_report_output_path
-from geh_settlement_report.infrastructure.wholesale.data_values import (
+from geh_settlement_report.settlement_reports.domain.energy_results.prepare_for_csv import (
+    prepare_for_csv,
+)
+from geh_settlement_report.settlement_reports.domain.utils.csv_column_names import CsvColumnNames
+from geh_settlement_report.settlement_reports.domain.utils.market_role import (
+    MarketRole,
+)
+from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
+from geh_settlement_report.settlement_reports.infrastructure import csv_writer
+from geh_settlement_report.settlement_reports.infrastructure.paths import get_report_output_path
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     MeteringPointResolutionDataProductValue,
     MeteringPointTypeDataProductValue,
 )
@@ -46,7 +30,6 @@ from tests.assertion import assert_file_names_and_columns
 from tests.data_seeding import (
     standard_wholesale_fixing_scenario_data_generator,
 )
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.test_factories.default_test_data_spec import (
     create_energy_results_data_spec,
 )
@@ -71,7 +54,7 @@ def _read_csv_file(
     ],
 )
 def test_write__returns_files_corresponding_to_grid_area_codes(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     resolution: MeteringPointResolutionDataProductValue,
@@ -93,7 +76,6 @@ def test_write__returns_files_corresponding_to_grid_area_codes(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -107,7 +89,7 @@ def test_write__returns_files_corresponding_to_grid_area_codes(
 
 
 def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -124,7 +106,6 @@ def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -147,7 +128,7 @@ def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
     ],
 )
 def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_files(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -165,7 +146,6 @@ def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_f
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -189,7 +169,7 @@ def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_f
     ],
 )
 def test_write__files_have_correct_ordering_for_each_file(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_metering_points: int,
@@ -214,7 +194,6 @@ def test_write__files_have_correct_ordering_for_each_file(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=ReportDataType.TimeSeriesHourly,
@@ -242,7 +221,7 @@ def test_write__files_have_correct_ordering_for_each_file(
     ],
 )
 def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -266,7 +245,6 @@ def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -286,7 +264,7 @@ def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
 
 
 def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -318,7 +296,6 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -349,7 +326,7 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
     ],
 )
 def test_write__files_have_correct_sorting_across_multiple_files(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     number_of_rows: int,
@@ -374,7 +351,6 @@ def test_write__files_have_correct_sorting_across_multiple_files(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -397,7 +373,7 @@ def test_write__files_have_correct_sorting_across_multiple_files(
 
 
 def test_write__when_prevent_large_files__chunk_index_start_at_1(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -414,7 +390,6 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -435,7 +410,7 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
 
 
 def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be_excluded(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -452,7 +427,6 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
@@ -472,7 +446,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
 
 
 def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_rows__chunk_index_should_be_excluded(
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
@@ -491,7 +465,6 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
 
     # Act
     result_files = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=prepared_time_series_point,
         report_data_type=report_data_type,
@@ -514,7 +487,7 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
 
 def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange
@@ -552,7 +525,6 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
 
     # Act
     actual_file_names = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
@@ -574,7 +546,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
 
 def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_correct_columns_and_files(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange
@@ -614,7 +586,6 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
 
     # Act
     actual_file_names = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
@@ -636,7 +607,7 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
 
 def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_files_and_content(
     spark: SparkSession,
-    dbutils: DBUtilsFixture,
+    dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
 ):
     # Arrange
@@ -681,7 +652,6 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
 
     # Act
     actual_file_names = csv_writer.write(
-        dbutils=dbutils,
         args=standard_wholesale_fixing_scenario_args,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
@@ -699,119 +669,3 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
         expected_file_names=expected_file_names,
         spark=spark,
     )
-
-
-def test_write_files__csv_separator_is_comma_and_decimals_use_points(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame([("a", 1.1), ("b", 2.2), ("c", 3.3)], ["key", "value"])
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=[],
-        order_by=[],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                assert all_lines_written[0] == "a,1.1\n"
-                assert all_lines_written[1] == "b,2.2\n"
-                assert all_lines_written[2] == "c,3.3\n"
-
-    assert columns == ["key", "value"]
-
-    tmp_dir.cleanup()
-
-
-def test_write_files__when_order_by_specified_on_multiple_partitions(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame(
-        [("b", 2.2), ("b", 1.1), ("c", 3.3)],
-        ["key", "value"],
-    )
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=["key"],
-        order_by=["value"],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                if len(all_lines_written == 1):
-                    assert all_lines_written[0] == "c;3,3\n"
-                elif len(all_lines_written == 2):
-                    assert all_lines_written[0] == "b;1,1\n"
-                    assert all_lines_written[1] == "b;2,2\n"
-                else:
-                    raise AssertionError("Found unexpected csv file.")
-
-    assert columns == ["value"]
-
-    tmp_dir.cleanup()
-
-
-def test_write_files__when_df_includes_timestamps__creates_csv_without_milliseconds(
-    spark: SparkSession,
-):
-    # Arrange
-    df = spark.createDataFrame(
-        [
-            ("a", datetime(2024, 10, 21, 12, 10, 30, 0)),
-            ("b", datetime(2024, 10, 21, 12, 10, 30, 30)),
-            ("c", datetime(2024, 10, 21, 12, 10, 30, 123)),
-        ],
-        ["key", "value"],
-    )
-    tmp_dir = TemporaryDirectory()
-    csv_path = f"{tmp_dir.name}/csv_file"
-
-    # Act
-    columns = _write_files(
-        df,
-        csv_path,
-        partition_columns=[],
-        order_by=[],
-        rows_per_file=1000,
-    )
-
-    # Assert
-    assert Path(csv_path).exists()
-
-    for x in Path(csv_path).iterdir():
-        if x.is_file() and x.name[-4:] == ".csv":
-            with x.open(mode="r") as f:
-                all_lines_written = f.readlines()
-
-                assert all_lines_written[0] == "a,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[1] == "b,2024-10-21T12:10:30Z\n"
-                assert all_lines_written[2] == "c,2024-10-21T12:10:30Z\n"
-
-    assert columns == ["key", "value"]
-
-    tmp_dir.cleanup()

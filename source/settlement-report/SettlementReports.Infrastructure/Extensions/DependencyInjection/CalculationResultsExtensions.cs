@@ -25,7 +25,6 @@ using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Databricks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
@@ -62,19 +61,9 @@ public static class CalculationResultsExtensions
         services.AddScoped<ISettlementReportDownloadHandler, SettlementReportDownloadHandler>();
         services.AddScoped<IUpdateFailedSettlementReportsHandler, UpdateFailedSettlementReportsHandler>();
 
-        services.AddScoped<ISettlementReportDatabricksContext, SettlementReportDatabricksContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
         services.AddScoped<ISettlementReportFileGeneratorFactory, SettlementReportFileGeneratorFactory>();
-        services.AddScoped<ISettlementReportWholesaleRepository, SettlementReportWholesaleRepository>();
-        services.AddScoped<ISettlementReportEnergyResultRepository, SettlementReportEnergyResultRepository>();
-        services.AddScoped<ISettlementReportMeteringPointTimeSeriesResultRepository, SettlementReportMeteringPointTimeSeriesResultRepository>();
-        services.AddScoped<ISettlementReportChargeLinkPeriodsRepository, SettlementReportChargeLinkPeriodsRepository>();
-        services.AddScoped<ISettlementReportMeteringPointMasterDataRepository, SettlementReportMeteringPointMasterDataRepository>();
-        services.AddScoped<ISettlementReportMonthlyAmountRepository, SettlementReportMonthlyAmountRepository>();
-        services.AddScoped<ILatestCalculationVersionRepository, LatestCalculationVersionRepository>();
-        services.AddScoped<ISettlementReportChargePriceRepository, SettlementReportChargePriceRepository>();
-        services.AddScoped<ISettlementReportMonthlyAmountTotalRepository, SettlementReportMonthlyAmountTotalRepository>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
         services.AddScoped<ISettlementReportDatabricksJobsHelper, SettlementReportDatabricksJobsHelper>();
         services.AddSettlementReportBlobStorage();

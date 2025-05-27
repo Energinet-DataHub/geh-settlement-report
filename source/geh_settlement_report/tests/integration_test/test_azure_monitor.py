@@ -1,32 +1,22 @@
-# Copyright 2020 Energinet DataHub A/S
-#
-# Licensed under the Apache License, Version 2.0 (the "License2");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import sys
 import time
 import uuid
 from datetime import timedelta
 from typing import Callable, cast
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 from azure.monitor.query import LogsQueryClient, LogsQueryResult
 
-from geh_settlement_report.entry_points.entry_point import (
+from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
+from geh_settlement_report.settlement_reports.application.tasks import task_factory
+from geh_settlement_report.settlement_reports.application.tasks.task_type import TaskType
+from geh_settlement_report.settlement_reports.application.tasks.time_series_points_task import (
+    TimeSeriesPointsTask,
+)
+from geh_settlement_report.settlement_reports.entry_point import (
     _start_task,
 )
-from geh_settlement_report.entry_points.job_args.calculation_type import CalculationType
-from geh_settlement_report.entry_points.tasks.task_type import TaskType
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
@@ -36,6 +26,7 @@ class TestWhenInvokedWithArguments:
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
         clean_up_logging,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -43,7 +34,7 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -62,23 +53,13 @@ class TestWhenInvokedWithArguments:
 
         task_factory_mock = Mock()
 
+        monkeypatch.setattr(task_factory, "create", task_factory_mock)
+        monkeypatch.setattr(TimeSeriesPointsTask, "execute", lambda _: None)
+        monkeypatch.setattr(sys, "argv", updated_args)
+        monkeypatch.setenv("APPLICATIONINSIGHTS_CONNECTION_STRING", applicationinsights_connection_string)
+
         # Act
-        with patch(
-            "geh_settlement_report.entry_points.tasks.task_factory.create",
-            task_factory_mock,
-        ):
-            with (
-                patch(
-                    "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                    return_value=None,
-                ),
-                patch("sys.argv", updated_args),
-                patch.dict(
-                    "os.environ",
-                    {"APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string},
-                ),
-            ):
-                _start_task(task_type=valid_task_type)
+        _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -90,9 +71,9 @@ class TestWhenInvokedWithArguments:
         | where SeverityLevel == 1
         | where Message startswith_cs "Command line arguments"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         | where Properties.settlement_report_id == "{new_report_id}"
-        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.entry_points.entry_point"
+        | where Properties.CategoryName == "Energinet.DataHub.geh_settlement_report.settlement_reports.entry_point"
         | count
         """
 
@@ -115,6 +96,7 @@ class TestWhenInvokedWithArguments:
         integration_test_configuration: IntegrationTestConfiguration,
         script_args_fixture_integration_test,
         clean_up_logging,
+        monkeypatch: pytest.MonkeyPatch,
     ) -> None:
         """
         Assert that the settlement report job adds log records to Azure Monitor with the expected settings:
@@ -122,7 +104,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "argparse.ArgumentTypeError"
         | where OuterMessage startswith_cs "Grid area codes must consist of 3 digits"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         - custom field "settlement_report_id" = <the settlement report id>
         - custom field "CategoryName" = "Energinet.DataHub." + <logger name>
 
@@ -144,26 +126,14 @@ class TestWhenInvokedWithArguments:
         task_factory_mock = Mock()
 
         # Act
+        monkeypatch.setattr(task_factory, "create", task_factory_mock)
+        monkeypatch.setattr(TimeSeriesPointsTask, "execute", lambda _: None)
+        monkeypatch.setattr(sys, "argv", updated_args)
+        monkeypatch.setenv("APPLICATIONINSIGHTS_CONNECTION_STRING", applicationinsights_connection_string)
+        monkeypatch.setenv("CATALOG_NAME", "test_catalog")
+
         with pytest.raises(SystemExit):
-            with patch(
-                "geh_settlement_report.entry_points.tasks.task_factory.create",
-                task_factory_mock,
-            ):
-                with (
-                    patch(
-                        "geh_settlement_report.entry_points.tasks.time_series_points_task.TimeSeriesPointsTask.execute",
-                        return_value=None,
-                    ),
-                    patch("sys.argv", updated_args),
-                    patch.dict(
-                        "os.environ",
-                        {
-                            "APPLICATIONINSIGHTS_CONNECTION_STRING": applicationinsights_connection_string,
-                            "CATALOG_NAME": "test_catalog",
-                        },
-                    ),
-                ):
-                    _start_task(task_type=valid_task_type)
+            _start_task(task_type=valid_task_type)
 
         # Assert
         # noinspection PyTypeChecker
@@ -175,7 +145,7 @@ class TestWhenInvokedWithArguments:
         | where ExceptionType == "pydantic_core._pydantic_core.ValidationError"
         | where OuterMessage contains "Unexpected grid area code"
         | where OperationId != "00000000000000000000000000000000"
-        | where Properties.Subsystem == "settlement-report-aggregations"
+        | where Properties.Subsystem == "settlement-report"
         | where Properties.settlement_report_id == "{new_report_id}"
         | where Properties.CategoryName == "Energinet.DataHub.geh_common.telemetry.span_recording"
         | count
