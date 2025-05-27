@@ -1,8 +1,10 @@
 ﻿using System.Net.Mime;
 using Azure;
+using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
+using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
@@ -17,16 +19,20 @@ public class MeasurementsReportsController
 {
     private readonly IMeasurementsReportFileService _fileService;
     private readonly IRequestMeasurementsReportHandler _requestHandler;
+    private readonly IListMeasurementsReportService _listMeasurementsReportService;
+    private readonly IUserContext<FrontendUser> _userContext;
 
-    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService)
+    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService, IListMeasurementsReportService listMeasurementsReportService, IUserContext<FrontendUser> userContext)
     {
         _requestHandler = requestHandler;
         _fileService = fileService;
+        _listMeasurementsReportService = listMeasurementsReportService;
+        _userContext = userContext;
     }
 
     [HttpPost]
     [Route("request")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto reportRequest)
     {
@@ -43,6 +49,8 @@ public class MeasurementsReportsController
     public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
     {
         return new List<RequestedMeasurementsReportDto>();
+
+        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]
@@ -65,7 +73,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("cancel")]
-    [Authorize(Roles = "measurements-reports:manage")]
+    [Authorize]
     public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
     {
         return NoContent();
