@@ -6,11 +6,15 @@ import sys
 import uuid
 from pathlib import Path
 from typing import Callable, Generator
-from unittest import mock
 
+import geh_common.telemetry.logging_configuration
 import pytest
 import yaml
 from geh_common.testing.spark.spark_test_session import get_spark_test_session
+from geh_common.telemetry.logging_configuration import (
+    configure_logging,
+)
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
@@ -36,16 +40,15 @@ from tests.data_seeding.write_test_data import (
     write_monthly_amounts_per_charge_to_delta_table,
     write_total_monthly_amounts_to_delta_table,
 )
-from tests.dbutils_fixture import DBUtilsFixture
 from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
 @pytest.fixture(scope="session")
-def dbutils() -> DBUtilsFixture:
+def dbutils() -> MockDBUtils:
     """
     Returns a DBUtilsFixture instance that can be used to mock dbutils.
     """
-    return DBUtilsFixture()
+    return MockDBUtils()
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -265,25 +268,14 @@ def source_path(file_path_finder: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def settlement_report_path(source_path: str) -> Path:
-    """
-    Returns the source/databricks/ folder path.
-    Please note that this only works if current folder haven't been changed prior using
-    `os.chdir()`. The correctness also relies on the prerequisite that this function is
-    actually located in a file located directly in the tests folder.
-    """
-    return PROJECT_PATH
-
-
-@pytest.fixture(scope="session")
-def contracts_path(settlement_report_path: str) -> str:
+def contracts_path() -> Path:
     """
     Returns the source/contract folder path.
     Please note that this only works if current folder haven't been changed prior using
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return f"{settlement_report_path}/contracts"
+    return PROJECT_PATH / "contracts"
 
 
 @pytest.fixture(scope="session")
@@ -307,25 +299,14 @@ def data_lake_path(tests_path: str, worker_id: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def tests_path(settlement_report_path: str) -> str:
+def tests_path() -> str:
     """
     Returns the tests folder path.
     Please note that this only works if current folder haven't been changed prior using
     `os.chdir()`. The correctness also relies on the prerequisite that this function is
     actually located in a file located directly in the tests folder.
     """
-    return f"{settlement_report_path}/tests"
-
-
-@pytest.fixture(scope="session")
-def settlement_report_job_container_path(source_path: str) -> str:
-    """
-    Returns the <repo-root>/source folder path.
-    Please note that this only works if current folder haven't been changed prior using
-    `os.chdir()`. The correctness also relies on the prerequisite that this function is
-    actually located in a file located directly in the tests folder.
-    """
-    return PROJECT_PATH
+    return f"{PROJECT_PATH}/tests"
 
 
 # pytest-xdist plugin does not work with SparkSession as a fixture. The session scope is not supported.
@@ -338,16 +319,6 @@ _spark, data_dir = get_spark_test_session()
 def spark() -> Generator[SparkSession, None, None]:
     yield _spark
     _spark.stop()
-
-
-@pytest.fixture(scope="session")
-def env_args_fixture() -> dict[str, str]:
-    env_args = {
-        "CLOUD_ROLE_NAME": "test_role",
-        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
-        "SUBSYSTEM": "test_subsystem",
-    }
-    return env_args
 
 
 @pytest.fixture(scope="session")
@@ -400,28 +371,25 @@ def script_args_fixture_integration_test() -> list[str]:
     return sys_argv
 
 
-@pytest.fixture(autouse=True)
-def configure_dummy_logging(env_args_fixture, script_args_fixture) -> None:
+@pytest.fixture
+def dummy_logging(monkeypatch: pytest.MonkeyPatch):
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
-    from geh_common.telemetry.logging_configuration import (
-        configure_logging,
-    )
+    env = {
+        "CLOUD_ROLE_NAME": "test_role",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
+        "SUBSYSTEM": "test_subsystem",
+    }
 
-    with (
-        mock.patch("sys.argv", script_args_fixture),
-        mock.patch.dict("os.environ", env_args_fixture, clear=False),
-        mock.patch(
-            "geh_common.telemetry.logging_configuration.configure_azure_monitor"
-        ),  # Patching call to configure_azure_monitor in order to not actually connect to app. insights.
-    ):
-        configure_logging(
-            cloud_role_name=env_args_fixture["CLOUD_ROLE_NAME"],
-            subsystem=env_args_fixture["SUBSYSTEM"],
-        )
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(os, "environ", env)
+        mp.setattr(geh_common.telemetry.logging_configuration, "configure_azure_monitor", lambda *args, **kwargs: None)
+        mp.setattr(geh_common.telemetry.logging_configuration, "get_is_instrumented", lambda *args, **kwargs: False)
+        configure_logging(cloud_role_name="test_role", subsystem="test_subsystem")
+        yield
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def clean_up_logging():
     """
     Function that cleans up the Logging module prior to running integration tests, so logging can be reconfigured after use of configure_dummy_logging fixture
