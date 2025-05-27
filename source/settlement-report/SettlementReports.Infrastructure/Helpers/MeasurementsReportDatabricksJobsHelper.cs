@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application;
 using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
@@ -42,7 +42,6 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
         return new JobRunId(runId);
     }
 
-    // TODO BJM: Share with SettlementReportDatabricksJobsHelper
     private async Task<Job> GetJobAsync(string jobName)
     {
         var settlementJob = await _jobsApiClient.Jobs

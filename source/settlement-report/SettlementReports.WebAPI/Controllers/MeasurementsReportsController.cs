@@ -1,6 +1,8 @@
 ﻿using System.Net.Mime;
+using Azure;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +15,13 @@ namespace SettlementReports.WebAPI.Controllers;
 public class MeasurementsReportsController
     : ControllerBase
 {
-    private readonly IRequestMeasurementsReportJobHandler _requestMeasurementsReportJobHandler;
+    private readonly IMeasurementsReportFileService _fileService;
+    private readonly IRequestMeasurementsReportHandler _requestHandler;
 
-    public MeasurementsReportsController(IRequestMeasurementsReportJobHandler requestMeasurementsReportJobHandler)
+    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService)
     {
-        _requestMeasurementsReportJobHandler = requestMeasurementsReportJobHandler;
+        _requestHandler = requestHandler;
+        _fileService = fileService;
     }
 
     [HttpPost]
@@ -28,7 +32,7 @@ public class MeasurementsReportsController
     {
         var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
 
-        var result = await _requestMeasurementsReportJobHandler.HandleAsync(requestCommand).ConfigureAwait(false);
+        var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
         return Ok(result.Id);
     }
@@ -46,10 +50,17 @@ public class MeasurementsReportsController
     [Authorize]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
-    public ActionResult DownloadFileAsync([FromBody] ReportRequestId reportId)
+    public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
-        using var stream = new MemoryStream();
-        return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
+        try
+        {
+            var stream = await _fileService.DownloadAsync(reportId).ConfigureAwait(false);
+            return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
+        {
+            return NotFound();
+        }
     }
 
     [HttpPost]

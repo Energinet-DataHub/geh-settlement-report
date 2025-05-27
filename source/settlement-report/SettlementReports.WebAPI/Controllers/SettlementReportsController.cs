@@ -16,8 +16,9 @@ using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
-using Energinet.DataHub.SettlementReport.Application.Commands;
-using Energinet.DataHub.SettlementReport.Application.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
 using Energinet.DataHub.SettlementReport.Interfaces.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
@@ -36,7 +37,7 @@ public class SettlementReportsController
 {
     private readonly IRequestSettlementReportJobHandler _requestSettlementReportJobHandler;
     private readonly IListSettlementReportJobsHandler _listSettlementReportJobsHandler;
-    private readonly ISettlementReportJobsDownloadHandler _downloadHandler;
+    private readonly ISettlementReportFileService _downloadHandler;
     private readonly ICancelSettlementReportJobHandler _cancelSettlementReportJobHandler;
     private readonly IUserContext<FrontendUser> _userContext;
 
@@ -44,7 +45,7 @@ public class SettlementReportsController
         IRequestSettlementReportJobHandler requestSettlementReportJobHandler,
         IUserContext<FrontendUser> userContext,
         IListSettlementReportJobsHandler listSettlementReportJobsHandler,
-        ISettlementReportJobsDownloadHandler downloadHandler,
+        ISettlementReportFileService downloadHandler,
         ICancelSettlementReportJobHandler cancelSettlementReportJobHandler)
     {
         _requestSettlementReportJobHandler = requestSettlementReportJobHandler;
@@ -128,7 +129,7 @@ public class SettlementReportsController
         try
         {
             var stream = await _downloadHandler
-                .DownloadReportAsync(
+                .DownloadAsync(
                     requestId,
                     _userContext.CurrentUser.Actor.ActorId,
                     _userContext.CurrentUser.MultiTenancy)
