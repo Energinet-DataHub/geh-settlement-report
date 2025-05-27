@@ -61,7 +61,6 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
         services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
         services.AddScoped<IMeasurementsReportFileService, MeasurementsReportFileService>();
-        services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
         services.AddScoped<IListMeasurementsReportService, ListMeasurementsReportService>();
 
         // Database Health check
