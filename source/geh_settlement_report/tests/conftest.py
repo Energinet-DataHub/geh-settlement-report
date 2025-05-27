@@ -10,11 +10,11 @@ from typing import Callable, Generator
 import geh_common.telemetry.logging_configuration
 import pytest
 import yaml
-from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 from geh_common.testing.spark.mocks import MockDBUtils
+from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.settlement_reports.application.job_args.calculation_type import CalculationType
