@@ -7,15 +7,15 @@ from pyspark.sql import functions as F
 import tests.test_factories.default_test_data_spec as default_data
 import tests.test_factories.monthly_amounts_per_charge_factory as monthly_amounts_per_charge_factory
 import tests.test_factories.total_monthly_amounts_factory as total_monthly_amounts_factory
-from geh_settlement_report.domain.monthly_amounts.read_and_filter import (
+from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
+    SettlementReportArgs,
+)
+from geh_settlement_report.settlement_reports.domain.monthly_amounts.read_and_filter import (
     _filter_monthly_amounts_per_charge,
     read_and_filter_from_view,
 )
-from geh_settlement_report.domain.utils.market_role import MarketRole
-from geh_settlement_report.entry_points.job_args.settlement_report_args import (
-    SettlementReportArgs,
-)
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 from tests.data_seeding import (

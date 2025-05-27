@@ -14,14 +14,17 @@
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
 using Energinet.DataHub.SettlementReport.Application.Services;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
 using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.SettlementReport.Infrastructure.Services;
 using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
@@ -49,17 +52,19 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<ISettlementReportDatabricksJobsHelper, SettlementReportDatabricksJobsHelper>();
         services.AddScoped<ISettlementReportPersistenceService, SettlementReportPersistenceService>();
         services.AddScoped<IListSettlementReportJobsHandler, ListSettlementReportJobsHandler>();
-        services.AddScoped<ISettlementReportJobsDownloadHandler, SettlementReportJobsDownloadHandler>();
+        services.AddScoped<ISettlementReportFileService, SettlementReportFileService>();
         services.AddScoped<ICancelSettlementReportJobHandler, CancelSettlementReportJobHandler>();
         services.AddSettlementReportBlobStorage();
 
         // measurements reports services
-        services.AddScoped<IRequestMeasurementsReportJobHandler, RequestMeasurementsReportJobHandler>();
+        services.AddScoped<IRequestMeasurementsReportHandler, RequestMeasurementsReportHandler>();
         services.AddScoped<IMeasurementsReportDatabricksJobsHelper, MeasurementsReportDatabricksJobsHelper>();
+        services.AddScoped<IMeasurementsReportRepository, MeasurementsReportRepository>();
+        services.AddScoped<IMeasurementsReportFileService, MeasurementsReportFileService>();
+        services.AddScoped<IListMeasurementsReportService, ListMeasurementsReportService>();
 
         // Database Health check
-        services.AddDbContext<SettlementReportDatabaseContext>(
-            options => options.UseSqlServer(
+        services.AddDbContext<SettlementReportDatabaseContext>(options => options.UseSqlServer(
                 configuration
                     .GetSection(ConnectionStringsOptions.ConnectionStrings)
                     .Get<ConnectionStringsOptions>()!.DB_CONNECTION_STRING,

@@ -4,10 +4,10 @@ import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
-from geh_settlement_report.domain.utils.merge_periods import (
+from geh_settlement_report.settlement_reports.domain.utils.merge_periods import (
     merge_connected_periods,
 )
-from geh_settlement_report.infrastructure.wholesale.column_names import (
+from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_names import (
     DataProductColumnNames,
 )
 
