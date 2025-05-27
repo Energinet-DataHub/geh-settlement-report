@@ -3,7 +3,7 @@ using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 
-public interface IRequestMeasurementsReportJobHandler
+public interface IRequestMeasurementsReportHandler
 {
     /// <summary>
     /// Request a measurements report job

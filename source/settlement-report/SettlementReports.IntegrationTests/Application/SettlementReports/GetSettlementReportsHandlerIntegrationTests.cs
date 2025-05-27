@@ -64,7 +64,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             SystemClock.Instance,
             new SettlementReportRepository(wholesaleDatabaseFixture.DatabaseManager.CreateDbContext()),
             new SettlementReportFileBlobStorage(blobContainerClient),
-            new SettlementReportJobsFileBlobStorage(blobContainerClientJobs)));
+            new ReportFileRepository(blobContainerClientJobs)));
     }
 
     [Fact]
