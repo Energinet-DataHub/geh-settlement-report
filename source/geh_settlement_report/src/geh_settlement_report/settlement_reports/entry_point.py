@@ -56,7 +56,7 @@ def start_zip() -> None:
 
 
 def _start_task(task_type: TaskType) -> None:
-    configure_logging(cloud_role_name="dbr-settlement-report", subsystem="settlement-report-aggregations")
+    configure_logging(cloud_role_name="dbr-settlement-report", subsystem="settlement-report")
     start_task_with_deps(task_type=task_type)
 
 
