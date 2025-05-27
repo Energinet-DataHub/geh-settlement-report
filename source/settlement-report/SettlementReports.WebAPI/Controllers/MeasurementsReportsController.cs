@@ -48,9 +48,6 @@ public class MeasurementsReportsController
     [Authorize]
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
     {
-        if (_userContext.CurrentUser.MultiTenancy)
-            return await _listMeasurementsReportService.GetAsync().ConfigureAwait(false);
-
         return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
