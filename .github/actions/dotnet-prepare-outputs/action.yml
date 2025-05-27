@@ -32,16 +32,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Publish Settlement Reports Orchestrations
-      shell: bash
-      run: |
-        dotnet publish \
-          '.\source\settlement-report\Orchestration.SettlementReports\Orchestration.SettlementReports.csproj' \
-          --no-build \
-          --no-restore \
-          --configuration Release \
-          --output '${{ inputs.output_path }}\functions\orchestration-settlement-reports'
-
     - name: Publish Web API
       shell: bash
       run: |
