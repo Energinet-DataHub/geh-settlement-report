@@ -46,9 +46,11 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
+    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
     {
-        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return new List<RequestedMeasurementsReportDto>();
+
+        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]
