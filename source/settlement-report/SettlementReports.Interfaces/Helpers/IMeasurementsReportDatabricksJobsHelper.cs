@@ -7,5 +7,6 @@ public interface IMeasurementsReportDatabricksJobsHelper
 {
     Task<JobRunId> RunJobAsync(
         MeasurementsReportRequestDto request,
-        ReportRequestId reportId);
+        ReportRequestId reportRequestId,
+        string actorGln);
 }

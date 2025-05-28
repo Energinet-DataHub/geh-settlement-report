@@ -3,4 +3,5 @@
 namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 
 public sealed record RequestMeasurementsReportCommand(
-    MeasurementsReportRequestDto RequestDto);
+    MeasurementsReportRequestDto RequestDto,
+    string ActorGln);
