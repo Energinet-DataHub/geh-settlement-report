@@ -1,2 +1,0 @@
-grid_area_code;metering_point_id;metering_point_type;metering_point_resolution;energy_supplier_id;physical_status;settlement_method;unit;from_grid_area_code;to_grid_area_code;period_from_datetime;period_to_datetime;#comment
-800;170000000000000201;consumption;P15M;1000000000000;connected;D01;?;;;2016-01-01T23:00:00Z;;Case 0
