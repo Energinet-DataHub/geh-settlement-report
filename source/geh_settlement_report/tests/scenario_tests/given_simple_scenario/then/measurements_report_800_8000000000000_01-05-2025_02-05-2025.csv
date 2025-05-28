@@ -1,2 +1,0 @@
-grid_area_code;metering_point_id;metering_point_type;meter_reading_occurrence;balance_supplier_id;physical_status;date_time_stamp;quantity_daily;quantity_quality;unit;#comment
-800;170000000000000201;consumption;?;det får vi ikke fra master data kontrakt;connected;observation time?;;measured;;Case 0
