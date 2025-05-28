@@ -7,10 +7,10 @@ import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
-import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
-import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods
-import tests.test_factories.default_test_data_spec as default_data
-import tests.test_factories.metering_point_time_series_factory as time_series_points_factory
+import tests.settlement_reports.test_factories.charge_link_periods_factory as charge_link_periods_factory
+import tests.settlement_reports.test_factories.charge_price_information_periods_factory as charge_price_information_periods
+import tests.settlement_reports.test_factories.default_test_data_spec as default_data
+import tests.settlement_reports.test_factories.metering_point_time_series_factory as time_series_points_factory
 from geh_settlement_report.settlement_reports.domain.time_series_points.read_and_filter import (
     read_and_filter_for_balance_fixing,
     read_and_filter_for_wholesale,
@@ -23,7 +23,7 @@ from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_valu
     CalculationTypeDataProductValue,
     MeteringPointResolutionDataProductValue,
 )
-from tests.test_factories import latest_calculations_factory
+from tests.settlement_reports.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

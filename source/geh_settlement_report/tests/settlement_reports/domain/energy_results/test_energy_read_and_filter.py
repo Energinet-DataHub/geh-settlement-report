@@ -7,8 +7,8 @@ import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 
-import tests.test_factories.default_test_data_spec as default_data
-import tests.test_factories.energy_factory as energy_factory
+import tests.settlement_reports.test_factories.default_test_data_spec as default_data
+import tests.settlement_reports.test_factories.energy_factory as energy_factory
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
@@ -22,7 +22,7 @@ from geh_settlement_report.settlement_reports.infrastructure.wholesale.column_na
 from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_values import (
     CalculationTypeDataProductValue,
 )
-from tests.test_factories import latest_calculations_factory
+from tests.settlement_reports.test_factories import latest_calculations_factory
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

@@ -7,8 +7,8 @@ from pyspark.sql import DataFrame, SparkSession
 
 import geh_settlement_report.settlement_reports.domain.energy_results.order_by_columns as energy_order_by_columns
 import geh_settlement_report.settlement_reports.domain.time_series_points.order_by_columns as time_series_points_order_by_columns
-import tests.test_factories.energy_factory as energy_factory
-import tests.test_factories.time_series_points_csv_factory as time_series_points_factory
+import tests.settlement_reports.test_factories.energy_factory as energy_factory
+import tests.settlement_reports.test_factories.time_series_points_csv_factory as time_series_points_factory
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
 )
@@ -27,10 +27,10 @@ from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_valu
     MeteringPointTypeDataProductValue,
 )
 from tests.assertion import assert_file_names_and_columns
-from tests.data_seeding import (
+from tests.settlement_reports.data_seeding import (
     standard_wholesale_fixing_scenario_data_generator,
 )
-from tests.test_factories.default_test_data_spec import (
+from tests.settlement_reports.test_factories.default_test_data_spec import (
     create_energy_results_data_spec,
 )
 

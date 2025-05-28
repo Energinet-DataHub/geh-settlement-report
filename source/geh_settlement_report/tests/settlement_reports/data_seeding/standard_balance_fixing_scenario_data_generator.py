@@ -10,13 +10,13 @@ from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_valu
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
-from tests.test_factories import (
+from tests.settlement_reports.test_factories import (
     energy_factory,
     latest_calculations_factory,
     metering_point_periods_factory,
     metering_point_time_series_factory,
 )
-from tests.test_factories.default_test_data_spec import create_energy_results_data_spec
+from tests.settlement_reports.test_factories.default_test_data_spec import create_energy_results_data_spec
 
 GRID_AREAS = ["804", "805"]
 CALCULATION_ID = "ba6a4ce2-b549-494b-ad4b-80a35a05a925"

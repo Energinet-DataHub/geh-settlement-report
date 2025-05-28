@@ -12,7 +12,7 @@ from geh_settlement_report.settlement_reports.infrastructure.wholesale.data_valu
     MeteringPointTypeDataProductValue,
     SettlementMethodDataProductValue,
 )
-from tests.test_factories import (
+from tests.settlement_reports.test_factories import (
     amounts_per_charge_factory,
     charge_link_periods_factory,
     charge_price_information_periods_factory,
@@ -23,7 +23,7 @@ from tests.test_factories import (
     monthly_amounts_per_charge_factory,
     total_monthly_amounts_factory,
 )
-from tests.test_factories.default_test_data_spec import (
+from tests.settlement_reports.test_factories.default_test_data_spec import (
     create_amounts_per_charge_row,
     create_energy_results_data_spec,
     create_monthly_amounts_per_charge_row,

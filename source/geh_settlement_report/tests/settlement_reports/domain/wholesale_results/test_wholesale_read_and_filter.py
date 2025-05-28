@@ -5,13 +5,13 @@ from uuid import UUID
 import pytest
 from pyspark.sql import SparkSession
 
-import tests.test_factories.default_test_data_spec as default_data
+import tests.settlement_reports.test_factories.default_test_data_spec as default_data
 from geh_settlement_report.settlement_reports.domain.utils.market_role import MarketRole
 from geh_settlement_report.settlement_reports.domain.wholesale_results.read_and_filter import (
     read_and_filter_from_view,
 )
-from tests.test_factories.amounts_per_charge_factory import create
-from tests.test_factories.default_test_data_spec import create_amounts_per_charge_row
+from tests.settlement_reports.test_factories.amounts_per_charge_factory import create
+from tests.settlement_reports.test_factories.default_test_data_spec import create_amounts_per_charge_row
 
 DEFAULT_FROM_DATE = default_data.DEFAULT_FROM_DATE
 DEFAULT_TO_DATE = default_data.DEFAULT_TO_DATE

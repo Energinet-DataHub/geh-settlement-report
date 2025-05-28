@@ -16,7 +16,7 @@ from geh_settlement_report.settlement_reports.domain.utils.market_role import Ma
 from geh_settlement_report.settlement_reports.domain.utils.report_data_type import ReportDataType
 from geh_settlement_report.settlement_reports.infrastructure.paths import get_report_output_path
 from tests.assertion import assert_file_names_and_columns
-from tests.data_seeding import (
+from tests.settlement_reports.data_seeding import (
     standard_balance_fixing_scenario_data_generator,
     standard_wholesale_fixing_scenario_data_generator,
 )

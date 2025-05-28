@@ -6,8 +6,8 @@ import pytest
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
-import tests.test_factories.charge_price_points_factory as charge_price_points_factory
-import tests.test_factories.default_test_data_spec as default_data
+import tests.settlement_reports.test_factories.charge_price_points_factory as charge_price_points_factory
+import tests.settlement_reports.test_factories.default_test_data_spec as default_data
 from geh_settlement_report.settlement_reports.domain.charge_price_points.prepare_for_csv import (
     prepare_for_csv,
 )

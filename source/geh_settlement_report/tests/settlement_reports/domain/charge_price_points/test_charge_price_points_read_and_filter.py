@@ -6,11 +6,11 @@ from uuid import UUID
 import pytest
 from pyspark.sql import DataFrame, SparkSession
 
-import tests.test_factories.charge_link_periods_factory as charge_link_periods_factory
-import tests.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
-import tests.test_factories.charge_price_points_factory as charge_price_points_factory
-import tests.test_factories.default_test_data_spec as default_data
-import tests.test_factories.metering_point_periods_factory as metering_point_periods_factory
+import tests.settlement_reports.test_factories.charge_link_periods_factory as charge_link_periods_factory
+import tests.settlement_reports.test_factories.charge_price_information_periods_factory as charge_price_information_periods_factory
+import tests.settlement_reports.test_factories.charge_price_points_factory as charge_price_points_factory
+import tests.settlement_reports.test_factories.default_test_data_spec as default_data
+import tests.settlement_reports.test_factories.metering_point_periods_factory as metering_point_periods_factory
 from geh_settlement_report.settlement_reports.domain.charge_price_points.read_and_filter import (
     read_and_filter,
 )
