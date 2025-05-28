@@ -63,7 +63,7 @@ def standard_wholesale_fixing_scenario_args(
     settlement_reports_output_path: str,
     monkeypatch: pytest.MonkeyPatch,
 ) -> SettlementReportArgs:
-    grid_area_uuid = {
+    calculation_id_by_grid_area = {
         standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]: uuid.UUID(
             standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
         ).hex,
@@ -77,7 +77,7 @@ def standard_wholesale_fixing_scenario_args(
         f"--period-start={standard_wholesale_fixing_scenario_data_generator.FROM_DATE}",
         f"--period-end={standard_wholesale_fixing_scenario_data_generator.TO_DATE}",
         f"--calculation-type={CalculationType.WHOLESALE_FIXING.value}",
-        f"--calculation-id-by-grid-area={json.dumps(grid_area_uuid)}",
+        f"--calculation-id-by-grid-area={json.dumps(calculation_id_by_grid_area)}",
         "--split-report-by-grid-area",
         f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",  # using system operator since it is more complex (requires filter based on charge owner)
         f"--requesting-actor-id={standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX}",
