@@ -58,7 +58,7 @@ jobs:
       create_subsystem_release: true
 
   ci_python_integration:
-    name: Settlement reports integration tests
+    name: Integration tests
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
       packages_directory: source
