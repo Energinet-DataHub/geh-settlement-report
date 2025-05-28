@@ -7,7 +7,7 @@ using Energinet.DataHub.RevisionLog.Integration;
 using Microsoft.Azure.Functions.Worker;
 using NodaTime;
 
-namespace SettlementReports.Function.Functions;
+namespace Energinet.DataHub.Reports.Function.Functions;
 
 /// <summary>
 /// They are used to update "grid-area-ownership-assigned" so that settlement reports know the current,

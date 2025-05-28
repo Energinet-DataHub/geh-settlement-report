@@ -3,9 +3,9 @@ using Energinet.DataHub.Core.App.FunctionApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Reports.Common.Infrastructure.Telemetry;
+using Energinet.DataHub.Reports.Function.Extensions.DependencyInjection;
 using Energinet.DataHub.RevisionLog.Integration.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SettlementReports.Function.Extensions.DependencyInjection;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()

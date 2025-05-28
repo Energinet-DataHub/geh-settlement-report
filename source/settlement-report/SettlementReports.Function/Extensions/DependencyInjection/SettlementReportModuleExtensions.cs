@@ -22,7 +22,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using GridAreaOwnershipAssigned = Energinet.DataHub.Reports.Infrastructure.Contracts.GridAreaOwnershipAssigned;
 
-namespace SettlementReports.Function.Extensions.DependencyInjection;
+namespace Energinet.DataHub.Reports.Function.Extensions.DependencyInjection;
 
 public static class SettlementReportModuleExtensions
 {

@@ -2,7 +2,7 @@
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
-namespace SettlementReports.Function.Functions;
+namespace Energinet.DataHub.Reports.Function.Functions;
 
 /// <summary>
 /// Scheduled function that updates the status of settlement reports.
