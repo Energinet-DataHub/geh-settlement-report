@@ -1,0 +1,19 @@
+"Measurement Reports Tests":
+  "GIVEN ... WHEN .. THEN ...": true
+  "Request a report with actual resolution is splits per resolution (hour and 15 min)" ??
+  Sorting by “grid area”, “Metering point type” and thereafter “Metering point ID”
+
+  "Market Actors":
+    "GIVEN ... WHEN .. THEN ...": true
+    "Grid Area Owner": true
+    "Energy supplier": true
+
+  "Speficikt for netoperatører":
+    "For netoperatører, rapport skal indeholde E20, hvor ens netområde indgår i, inkl. både to og from" (hvordan ser man hvem der ejer mp)?
+
+  "Speficikt for eleverandører":
+    "Kan bestille for flere netområder" (hvordan laver vi negativ test for det?)
+
+  "Aggregation Levels":
+    "1 day": true
+    ??
