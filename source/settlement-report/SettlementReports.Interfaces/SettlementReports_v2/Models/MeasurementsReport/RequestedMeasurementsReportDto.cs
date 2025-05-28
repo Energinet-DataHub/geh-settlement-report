@@ -6,5 +6,6 @@ public sealed record RequestedMeasurementsReportDto(
     DateTimeOffset PeriodEnd,
     ReportStatus Status,
     Guid RequestedByActorId,
-    IEnumerable<string> GridAreas,
-    DateTimeOffset CreatedDateTime);
+    IEnumerable<string> GridAreaCodes,
+    DateTimeOffset CreatedDateTime,
+    JobRunId? JobRunId);

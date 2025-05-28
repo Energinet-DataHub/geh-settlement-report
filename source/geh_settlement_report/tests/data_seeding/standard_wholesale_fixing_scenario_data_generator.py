@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 from pyspark.sql import DataFrame, SparkSession
@@ -34,7 +34,7 @@ GRID_AREAS = ["804", "805"]
 CALCULATION_ID = "12345678-6f20-40c5-9a95-f419a1245d7e"
 CALCULATION_TYPE = CalculationTypeDataProductValue.WHOLESALE_FIXING
 ENERGY_SUPPLIER_IDS = ["1000000000000", "2000000000000"]
-FROM_DATE = datetime(2024, 1, 1, 23)
+FROM_DATE = datetime(2024, 1, 1, 23, tzinfo=timezone.utc)
 TO_DATE = FROM_DATE + timedelta(days=1)
 """TO_DATE is exclusive"""
 METERING_POINT_TYPES = [
