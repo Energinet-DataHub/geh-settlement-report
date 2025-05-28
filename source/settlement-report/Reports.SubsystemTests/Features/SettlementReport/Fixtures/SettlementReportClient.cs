@@ -3,6 +3,7 @@ using System.Text;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using GraphQL.Types;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
@@ -29,6 +30,19 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
     {
         return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
+    }
+
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken)
+    {
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
+
+        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken) ?? [];
+
+        return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
@@ -85,10 +99,9 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
 
         request.Content = new StringContent(
-            JsonConvert.SerializeObject(requestDto),
-            Encoding.UTF8,
-            "application/json");
-
+           string.Empty,
+           Encoding.UTF8,
+           "application/json");
         using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
