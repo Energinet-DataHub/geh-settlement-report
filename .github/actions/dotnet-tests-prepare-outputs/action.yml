@@ -35,7 +35,7 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '.\source\settlement-report\SettlementReports.IntegrationTests\bin\Release\net8.0'
+          --output '.\source\settlement-report\SettlementReports.IntegrationTests\bin\Release\net9.0'
 
     - name: Copy all directories and files in source/settlement-report except the obj-directories
       shell: bash

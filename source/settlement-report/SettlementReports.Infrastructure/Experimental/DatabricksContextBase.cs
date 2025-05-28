@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Data;
-using System.Linq.Expressions;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +93,7 @@ public abstract class DatabricksContextBase : IDisposable
                     return new SqlFunctionExpression(
                         "DATE_TRUNC",
                         [
-                            new SqlConstantExpression(Expression.Constant("DAY"), new StringTypeMapping("VARCHAR", DbType.String)),
+                            new SqlConstantExpression("DAY", new StringTypeMapping("VARCHAR", DbType.String)),
                             new SqlFunctionExpression(
                                 "FROM_UTC_TIMESTAMP",
                                 [
