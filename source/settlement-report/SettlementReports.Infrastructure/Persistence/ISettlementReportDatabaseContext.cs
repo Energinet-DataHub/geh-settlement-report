@@ -20,6 +20,8 @@ public interface ISettlementReportDatabaseContext
 {
     DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
 
+    DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; }
+
     DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
 
     Task<int> SaveChangesAsync();

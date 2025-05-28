@@ -33,6 +33,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Client", "source\se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reports.Abstractions", "source\settlement-report\Reports.Abstractions\Reports.Abstractions.csproj", "{3CAFE7C8-7F61-4499-B980-EF96CBF9A884}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Settings", "_Settings", "{BF7ECE81-3A6D-4A3C-BA10-B6E92101D937}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		global.json = global.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
