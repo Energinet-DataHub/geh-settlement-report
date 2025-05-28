@@ -59,6 +59,7 @@ def _get_repository_mock(
 def test_when_resolution_is_day_or_month_return_only_value_in_energy_price_1(
     spark: SparkSession,
     resolution: ChargeResolutionDataProductValue,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     filtered_charge_price_points = (
@@ -93,6 +94,7 @@ def test_when_resolution_is_day_or_month_return_only_value_in_energy_price_1(
 
 def test_when_resolution_is_hour_return_one_row_with_value_in_every_energy_price_except_25(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     hours_in_day = [Dates.JAN_1ST + timedelta(hours=i) for i in range(24)]
@@ -146,6 +148,7 @@ def test_tax_indicator_is_converted_correctly(
     spark: SparkSession,
     is_tax: bool,
     expected_tax_indicator: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     filtered_charge_price_points = (
@@ -191,6 +194,7 @@ def test_when_daylight_savings_time_return_number_of_expected_rows(
     spark: SparkSession,
     daylight_savings: datetime,
     expected_energy_price_columns_with_value: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     hours_in_day = [daylight_savings + timedelta(hours=i) for i in range(25)]

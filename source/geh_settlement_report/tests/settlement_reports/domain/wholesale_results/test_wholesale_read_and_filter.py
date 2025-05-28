@@ -44,6 +44,7 @@ def test_time_within_and_outside_of_date_range_scenarios(
     args_start_date: datetime,
     args_end_date: datetime,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     time = datetime(2024, 1, 3, 23)
@@ -91,6 +92,7 @@ def test_energy_supplier_ids_scenarios(
     spark: SparkSession,
     args_energy_supplier_ids: list[str] | None,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     energy_supplier_id = "1234567890123"
@@ -145,6 +147,7 @@ def test_calculation_id_by_grid_area_scenarios(
     spark: SparkSession,
     args_calculation_id_by_grid_area: dict[str, UUID],
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     df = create(
@@ -208,6 +211,7 @@ def test_grid_access_provider_and_system_operator_scenarios(
     args_requesting_actor_id: str,
     is_tax: bool,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     df = create(

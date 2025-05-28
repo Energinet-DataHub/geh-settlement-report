@@ -53,7 +53,9 @@ def _create_time_series_points_with_increasing_quantity(
     ],
 )
 def test_prepare_for_csv__when_two_days_of_data__returns_two_rows(
-    spark: SparkSession, resolution: MeteringPointResolutionDataProductValue
+    spark: SparkSession,
+    resolution: MeteringPointResolutionDataProductValue,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     expected_rows = DEFAULT_TO_DATE.day - DEFAULT_FROM_DATE.day
@@ -85,6 +87,7 @@ def test_prepare_for_csv__returns_expected_energy_quantity_columns(
     spark: SparkSession,
     resolution: MeteringPointResolutionDataProductValue,
     energy_quantity_column_count: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     expected_columns = [f"ENERGYQUANTITY{i}" for i in range(1, energy_quantity_column_count + 1)]
@@ -143,6 +146,7 @@ def test_prepare_for_csv__when_daylight_saving_tim_transition__returns_expected_
     to_date: datetime,
     resolution: MeteringPointResolutionDataProductValue,
     expected_columns_with_data: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     df = _create_time_series_points_with_increasing_quantity(

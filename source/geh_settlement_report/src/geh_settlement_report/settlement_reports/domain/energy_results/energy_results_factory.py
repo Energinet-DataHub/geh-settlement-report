@@ -18,6 +18,7 @@ from geh_settlement_report.settlement_reports.infrastructure.repository import W
 def create_energy_results(
     args: SettlementReportArgs,
     repository: WholesaleRepository,
+    dummy_logging: None,  # Used implicitly
 ) -> DataFrame:
     energy = read_and_filter_from_view(args, repository)
 
