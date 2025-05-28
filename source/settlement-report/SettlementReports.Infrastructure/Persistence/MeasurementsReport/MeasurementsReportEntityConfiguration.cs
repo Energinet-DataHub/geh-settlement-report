@@ -15,7 +15,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
 public class MeasurementsReportEntityConfiguration : IEntityTypeConfiguration<Application.SettlementReports_v2.MeasurementsReport>
 {

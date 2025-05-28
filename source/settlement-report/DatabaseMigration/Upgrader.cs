@@ -16,7 +16,7 @@ using System.Reflection;
 using DbUp;
 using DbUp.Engine;
 
-namespace Energinet.DataHub.SettlementReport.DatabaseMigration;
+namespace Energinet.DataHub.Reports.DatabaseMigration;
 
 public static class Upgrader
 {

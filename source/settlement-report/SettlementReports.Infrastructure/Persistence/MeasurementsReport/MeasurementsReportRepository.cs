@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
 public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 {

@@ -14,7 +14,7 @@
 
 using System.Collections.ObjectModel;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure;
+namespace Energinet.DataHub.Reports.UnitTests.Infrastructure;
 
 /// <summary>
 ///     Represents a table or a chunk of a table.

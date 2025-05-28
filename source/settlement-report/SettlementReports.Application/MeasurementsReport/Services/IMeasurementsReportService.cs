@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
 public interface IMeasurementsReportService
 {

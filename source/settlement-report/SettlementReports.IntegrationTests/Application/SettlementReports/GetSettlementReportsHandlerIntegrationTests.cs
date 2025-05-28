@@ -14,21 +14,21 @@
 
 using AutoFixture;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
-using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Reports.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSettlementReportsHandler>,
@@ -148,7 +148,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
 
         var requestId = new ReportRequestId(Guid.NewGuid().ToString());
-        var report = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var report = new Reports.Application.SettlementReports_v2.SettlementReport(
             clockMock.Object,
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -183,7 +183,7 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
 
         var requestId = new ReportRequestId(Guid.NewGuid().ToString());
-        var report = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var report = new Reports.Application.SettlementReports_v2.SettlementReport(
             clockMock.Object,
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -219,8 +219,8 @@ public sealed class GetSettlementReportsHandlerIntegrationTests : TestBase<GetSe
         Assert.False(await blobClient.GetBlobClient(blobName).ExistsAsync());
     }
 
-    private SettlementReport.Application.SettlementReports_v2.SettlementReport CreateMockedSettlementReport(Guid userId, Guid actorId, ReportRequestId requestId)
+    private Reports.Application.SettlementReports_v2.SettlementReport CreateMockedSettlementReport(Guid userId, Guid actorId, ReportRequestId requestId)
     {
-        return new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+        return new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
     }
 }

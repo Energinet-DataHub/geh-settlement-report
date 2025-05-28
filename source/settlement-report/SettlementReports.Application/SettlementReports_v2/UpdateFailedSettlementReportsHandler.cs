@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public sealed class UpdateFailedSettlementReportsHandler : IUpdateFailedSettlementReportsHandler
 {

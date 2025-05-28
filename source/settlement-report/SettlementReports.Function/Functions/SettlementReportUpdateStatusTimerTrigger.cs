@@ -1,5 +1,5 @@
 ﻿using Energinet.DataHub.Core.Messaging.Communication.Publisher;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Microsoft.Azure.Functions.Worker;
 
 namespace SettlementReports.Function.Functions;

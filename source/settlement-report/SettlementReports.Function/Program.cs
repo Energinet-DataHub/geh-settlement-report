@@ -2,8 +2,8 @@
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
+using Energinet.DataHub.Reports.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.RevisionLog.Integration.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Microsoft.Extensions.Hosting;
 using SettlementReports.Function.Extensions.DependencyInjection;
 
