@@ -18,6 +18,9 @@ class MeasurementsReportArgs(BaseSettings):
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
+    requesting_actor_id: str = Field(init=False)
+    # TODO BJM: Update to correctly parse input parameter - share functionality with settlement report args
+    energy_supplier_ids: str = Field(init=False)
 
     catalog_name: str = Field(init=False)
     output_path: str = Field(init=False)
