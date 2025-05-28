@@ -1,8 +1,6 @@
 from datetime import datetime
 
 from geh_common.application import GridAreaCodes
-from geh_settlement_report.measurements_reports.domain.market_role import \
-    MarketRole
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
