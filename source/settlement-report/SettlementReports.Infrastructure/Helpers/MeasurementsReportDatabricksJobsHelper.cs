@@ -54,14 +54,11 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
 
     private RunParameters CreateParameters(MeasurementsReportRequestDto request, ReportRequestId reportId)
     {
-        var gridAreas = string.Join(", ", request.Filter.GridAreas);
+        var gridAreas = string.Join(", ", request.Filter.GridAreaCodes);
 
         var jobParameters = new List<string>
         {
-            $"--report-id={reportId.Id}",
-            $"--grid-areas={gridAreas}",
-            $"--period-start={request.Filter.PeriodStart.ToInstant()}",
-            $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
+            $"--report-id={reportId.Id}", $"--grid-areas={gridAreas}", $"--period-start={request.Filter.PeriodStart.ToInstant()}", $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
         };
 
         return RunParameters.CreatePythonParams(jobParameters);

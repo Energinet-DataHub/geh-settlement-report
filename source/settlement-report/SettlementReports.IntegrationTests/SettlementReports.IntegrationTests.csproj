@@ -54,5 +54,8 @@
       <None Update="TestData\wholesale_calculation_results.total_monthly_amounts_v1.csv">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="integrationtest.local.settings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
   </ItemGroup>
 </Project>
