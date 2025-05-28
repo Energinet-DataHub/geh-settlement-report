@@ -4,15 +4,31 @@ namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.Measurem
 
 public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 {
-    public Task AddOrUpdateAsync(Application.SettlementReports_v2.MeasurementsReport request)
+    private readonly ISettlementReportDatabaseContext _context;
+
+    public MeasurementsReportRepository(ISettlementReportDatabaseContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+
+    public async Task AddOrUpdateAsync(Application.SettlementReports_v2.MeasurementsReport measurementsReport)
+    {
+        if (measurementsReport.Id == 0)
+        {
+            await _context.MeasurementsReports
+                .AddAsync(measurementsReport)
+                .ConfigureAwait(false);
+        }
+
+        await _context
+            .SaveChangesAsync()
+            .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetAsync(string requestId)
     {
         // TODO BJM: Replace dummy implementation when story #784 is completed
-        return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport(blobFileName: "foo"));
+        return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport());
     }
 
     public Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
