@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pyspark.sql.functions as F
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql import DataFrame, SparkSession, Window
+from pyspark.sql.functions import row_number
 from pyspark.sql.types import DecimalType
 
 import tests.settlement_reports.test_factories.default_test_data_spec as default_data
@@ -40,10 +40,9 @@ def _create_time_series_points_with_increasing_quantity(
 ) -> DataFrame:
     spec = default_data.create_time_series_points_data_spec(from_date=from_date, to_date=to_date, resolution=resolution)
     df = time_series_points_factory.create(spark, spec)
-    return df.withColumn(  # just set quantity equal to its row number
-        DataProductColumnNames.quantity,
-        monotonically_increasing_id().cast(DecimalType(18, 3)),
-    )
+    w = Window.orderBy(df.observation_time.asc())
+    df = df.withColumn(DataProductColumnNames.quantity, (row_number().over(w) - 1.0).cast(DecimalType(18, 3)))
+    return df
 
 
 @pytest.mark.parametrize(

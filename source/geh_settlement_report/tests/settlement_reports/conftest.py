@@ -1,6 +1,8 @@
+import json
 import logging
 import os
 import shutil
+import sys
 import uuid
 from pathlib import Path
 from typing import Callable
@@ -59,31 +61,35 @@ def cleanup_before_tests(
 @pytest.fixture(scope="function")
 def standard_wholesale_fixing_scenario_args(
     settlement_reports_output_path: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> SettlementReportArgs:
-    return SettlementReportArgs(
-        report_id=str(uuid.uuid4()),
-        period_start=standard_wholesale_fixing_scenario_data_generator.FROM_DATE,
-        period_end=standard_wholesale_fixing_scenario_data_generator.TO_DATE,
-        calculation_type=CalculationType.WHOLESALE_FIXING,
-        calculation_id_by_grid_area={
-            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]: uuid.UUID(
-                standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
-            ),
-            standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[1]: uuid.UUID(
-                standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
-            ),
-        },
-        grid_area_codes=None,
-        split_report_by_grid_area=True,
-        prevent_large_text_files=False,
-        time_zone="Europe/Copenhagen",
-        catalog_name="spark_catalog",
-        energy_supplier_ids=None,
-        requesting_actor_market_role=MarketRole.SYSTEM_OPERATOR,  # using system operator since it is more complex (requires filter based on charge owner)
-        requesting_actor_id=standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX,
-        settlement_reports_output_path=settlement_reports_output_path,
-        include_basis_data=True,
-    )
+    calculation_id_by_grid_area = {
+        standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[0]: uuid.UUID(
+            standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
+        ).hex,
+        standard_wholesale_fixing_scenario_data_generator.GRID_AREAS[1]: uuid.UUID(
+            standard_wholesale_fixing_scenario_data_generator.CALCULATION_ID
+        ).hex,
+    }
+
+    args = [
+        f"--report-id={str(uuid.uuid4())}",
+        f"--period-start={standard_wholesale_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period-end={standard_wholesale_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation-type={CalculationType.WHOLESALE_FIXING.value}",
+        f"--calculation-id-by-grid-area={json.dumps(calculation_id_by_grid_area)}",
+        "--split-report-by-grid-area",
+        f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",  # using system operator since it is more complex (requires filter based on charge owner)
+        f"--requesting-actor-id={standard_wholesale_fixing_scenario_data_generator.CHARGE_OWNER_ID_WITHOUT_TAX}",
+        f"--settlement-reports-output-path={settlement_reports_output_path}",
+        "--include-basis-data",
+    ]
+    monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
+
+    monkeypatch.setattr(sys, "argv", ["program"] + args)
+
+    return SettlementReportArgs()
 
 
 @pytest.fixture(scope="function")
@@ -132,25 +138,28 @@ def standard_wholesale_fixing_scenario_system_operator_args(
 
 @pytest.fixture(scope="function")
 def standard_balance_fixing_scenario_args(
-    settlement_reports_output_path: str,
+    settlement_reports_output_path: str, monkeypatch: pytest.MonkeyPatch
 ) -> SettlementReportArgs:
-    return SettlementReportArgs(
-        report_id=str(uuid.uuid4()),
-        period_start=standard_balance_fixing_scenario_data_generator.FROM_DATE,
-        period_end=standard_balance_fixing_scenario_data_generator.TO_DATE,
-        calculation_type=CalculationType.BALANCE_FIXING,
-        calculation_id_by_grid_area=None,
-        grid_area_codes=standard_balance_fixing_scenario_data_generator.GRID_AREAS,
-        split_report_by_grid_area=True,
-        prevent_large_text_files=False,
-        time_zone="Europe/Copenhagen",
-        catalog_name="spark_catalog",
-        energy_supplier_ids=None,
-        requesting_actor_market_role=MarketRole.SYSTEM_OPERATOR,
-        requesting_actor_id="1212121212121",
-        settlement_reports_output_path=settlement_reports_output_path,
-        include_basis_data=True,
-    )
+    grid_areas = ",".join(standard_wholesale_fixing_scenario_data_generator.GRID_AREAS)
+
+    args = [
+        f"--report-id={str(uuid.uuid4())}",
+        f"--period-start={standard_balance_fixing_scenario_data_generator.FROM_DATE}",
+        f"--period-end={standard_balance_fixing_scenario_data_generator.TO_DATE}",
+        f"--calculation-type={CalculationType.BALANCE_FIXING.value}",
+        f"--grid-area-codes={grid_areas}",
+        "--split-report-by-grid-area",
+        f"--requesting-actor-market-role={MarketRole.SYSTEM_OPERATOR.value}",
+        "--requesting-actor-id=1212121212121",
+        f"--settlement-reports-output-path={settlement_reports_output_path}",
+        "--include-basis-data",
+    ]
+    monkeypatch.setenv("TIME_ZONE", "Europe/Copenhagen")
+    monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
+
+    monkeypatch.setattr(sys, "argv", ["program"] + args)
+
+    return SettlementReportArgs()
 
 
 @pytest.fixture(scope="function")
