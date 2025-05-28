@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
 public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatabaseContext
 {

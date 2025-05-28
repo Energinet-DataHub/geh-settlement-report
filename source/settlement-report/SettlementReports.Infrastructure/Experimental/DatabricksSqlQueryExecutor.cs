@@ -15,12 +15,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution.Formats;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 public sealed class DatabricksSqlQueryExecutor
 {

@@ -12,6 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
+namespace Energinet.DataHub.Reports.Common.Infrastructure.Security;
 
 public sealed record FrontendUser(Guid UserId, bool MultiTenancy, FrontendActor Actor);

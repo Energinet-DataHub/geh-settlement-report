@@ -17,8 +17,8 @@ limitations under the License.
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <AssemblyName>Energinet.DataHub.SettlementReport.DatabaseMigration</AssemblyName>
-        <RootNamespace>Energinet.DataHub.SettlementReport.DatabaseMigration</RootNamespace>
+        <AssemblyName>Energinet.DataHub.Reports.DatabaseMigration</AssemblyName>
+        <RootNamespace>Energinet.DataHub.Reports.DatabaseMigration</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

@@ -16,7 +16,7 @@
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Energinet.DataHub.SettlementReport.Infrastructure.Contracts";
+option csharp_namespace = "Energinet.DataHub.Reports.Infrastructure.Contracts";
 
 /*
  * UserNotificationTriggered Integration Event.

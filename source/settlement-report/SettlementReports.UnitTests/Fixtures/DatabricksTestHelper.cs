@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
-using Energinet.DataHub.SettlementReport.UnitTests.Infrastructure;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.DeltaTableConstants;
+using Energinet.DataHub.Reports.UnitTests.Infrastructure;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Fixtures;
+namespace Energinet.DataHub.Reports.UnitTests.Fixtures;
 
 public static class DatabricksTestHelper
 {

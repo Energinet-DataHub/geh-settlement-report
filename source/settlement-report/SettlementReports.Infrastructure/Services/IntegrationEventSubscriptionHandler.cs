@@ -14,9 +14,10 @@
 
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Subscriber;
-using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
+using Energinet.DataHub.Reports.Infrastructure.Contracts;
+using GridAreaOwnershipAssigned = Energinet.DataHub.Reports.Infrastructure.Contracts.GridAreaOwnershipAssigned;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
+namespace Energinet.DataHub.Reports.Infrastructure.Services;
 
 public sealed class IntegrationEventSubscriptionHandler : IIntegrationEventHandler
 {

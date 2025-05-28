@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Application;
+﻿namespace Energinet.DataHub.Reports.Application;
 
 /// <summary>
 /// These names are defined in infrastructure.

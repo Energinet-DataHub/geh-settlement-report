@@ -13,16 +13,16 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
-using Energinet.DataHub.SettlementReport.Application;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
+namespace Energinet.DataHub.Reports.Infrastructure.Helpers;
 
 public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJobsHelper
 {

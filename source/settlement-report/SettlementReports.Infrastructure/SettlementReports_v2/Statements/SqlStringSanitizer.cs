@@ -14,7 +14,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Statements;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Statements;
 
 public static partial class SqlStringSanitizer
 {

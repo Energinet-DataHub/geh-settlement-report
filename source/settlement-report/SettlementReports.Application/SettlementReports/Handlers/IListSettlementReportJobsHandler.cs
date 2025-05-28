@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+namespace Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 
 /// <summary>
 /// The handler for listing settlement report jobs.

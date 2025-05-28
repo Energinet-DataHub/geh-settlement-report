@@ -19,12 +19,12 @@ using Energinet.DataHub.Core.App.WebApp.Extensions.Builder;
 using Energinet.DataHub.Core.App.WebApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Databricks.Jobs.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Logging.LoggingMiddleware;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Common.Infrastructure.Telemetry;
+using Energinet.DataHub.Reports.WebAPI.Extensions.DependencyInjection;
 using Energinet.DataHub.RevisionLog.Integration.Extensions.DependencyInjection;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.RevisionLog.Integration.WebApi.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
-using SettlementReports.WebAPI.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +70,7 @@ app.UseRevisionLogIntegrationWebApiModule();
 app.Run();
 
 // This is needed in order to test the dependency injection
-namespace SettlementReports.WebAPI
+namespace Energinet.DataHub.Reports.WebAPI
 {
     public partial class Program
     {

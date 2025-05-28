@@ -1,16 +1,16 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SettlementReports.WebAPI.Controllers;
+namespace Energinet.DataHub.Reports.WebAPI.Controllers;
 
 [ApiController]
 [Route("measurements-reports")]

@@ -15,7 +15,7 @@
 using System.Text.Json.Serialization;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 public static class DatabricksSqlQueryableExtensions
 {

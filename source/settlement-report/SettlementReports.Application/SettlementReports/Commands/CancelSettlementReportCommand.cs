@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
+namespace Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 
 public sealed record CancelSettlementReportCommand(
     ReportRequestId RequestId,

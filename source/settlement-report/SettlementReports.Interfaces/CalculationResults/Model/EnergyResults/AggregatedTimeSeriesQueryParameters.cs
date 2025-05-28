@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
+namespace Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
 
 public record AggregatedTimeSeriesQueryParameters(
     IReadOnlyCollection<TimeSeriesType> TimeSeriesTypes,

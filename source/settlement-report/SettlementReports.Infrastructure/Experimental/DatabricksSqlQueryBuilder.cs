@@ -15,7 +15,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.Core.Databricks.SqlStatementExecution;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -23,7 +23,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 public sealed class DatabricksSqlQueryBuilder
 {

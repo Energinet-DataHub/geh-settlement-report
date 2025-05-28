@@ -14,19 +14,19 @@
 
 using AutoFixture;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
-using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Reports.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<SettlementReportDownloadHandler>,
@@ -76,7 +76,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
 
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
-        var settlementReport = new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+        var settlementReport = new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -106,7 +106,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+            new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -133,7 +133,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
+            new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, false, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
@@ -162,7 +162,7 @@ public sealed class SettlementReportDownloadHandlerIntegrationTests : TestBase<S
 
         var userId = Guid.NewGuid();
         var actorId = Guid.NewGuid();
-        var settlementReport = new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, true, requestId, _mockedSettlementReportRequest);
+        var settlementReport = new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, userId, actorId, true, requestId, _mockedSettlementReportRequest);
         settlementReport.MarkAsCompleted(SystemClock.Instance, generatedSettlementReport);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();

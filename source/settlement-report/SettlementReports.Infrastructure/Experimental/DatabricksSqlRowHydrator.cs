@@ -24,7 +24,7 @@ using System.Text.Json.Serialization;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 public sealed class DatabricksSqlRowHydrator
 {

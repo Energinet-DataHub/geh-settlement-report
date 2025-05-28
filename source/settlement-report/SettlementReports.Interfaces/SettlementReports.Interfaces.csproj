@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.SettlementReport.Interfaces</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.Interfaces</RootNamespace>
+    <AssemblyName>Energinet.DataHub.Reports.Interfaces</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Interfaces</RootNamespace>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
+namespace Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
 
 /// <summary>
 /// Time series point from wholesale results.

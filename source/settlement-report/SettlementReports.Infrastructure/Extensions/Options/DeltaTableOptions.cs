@@ -14,7 +14,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
+namespace Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
 
 public class DeltaTableOptions
 {

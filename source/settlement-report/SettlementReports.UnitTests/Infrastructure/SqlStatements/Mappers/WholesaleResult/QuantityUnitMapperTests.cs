@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+using Energinet.DataHub.Reports.Interfaces.Models;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+namespace Energinet.DataHub.Reports.UnitTests.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 
 public class QuantityUnitMapperTests
 {

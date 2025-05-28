@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
+using Energinet.DataHub.Reports.Infrastructure.Contracts;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
+namespace Energinet.DataHub.Reports.Infrastructure.Services;
 
 public interface IGridAreaOwnershipAssignedEventStore
 {

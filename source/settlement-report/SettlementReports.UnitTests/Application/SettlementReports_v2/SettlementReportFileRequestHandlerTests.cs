@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.UnitTests.Application.SettlementReports_v2;
 
 public class SettlementReportFileRequestHandlerTests
 {

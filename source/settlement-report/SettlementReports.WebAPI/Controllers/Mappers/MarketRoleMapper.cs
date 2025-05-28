@@ -1,7 +1,7 @@
-﻿using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace SettlementReports.WebAPI.Controllers.Mappers;
+namespace Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 
 public static class MarketRoleMapper
 {

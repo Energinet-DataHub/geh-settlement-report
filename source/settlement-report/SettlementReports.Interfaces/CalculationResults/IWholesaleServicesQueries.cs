@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.CalculationResults;
+namespace Energinet.DataHub.Reports.Interfaces.CalculationResults;
 
 /// <summary>
 /// Used to query wholesale services which is wholesale data across multiple calculations

@@ -15,8 +15,8 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.SettlementReport.Test.Core</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.Test.Core</RootNamespace>
+    <AssemblyName>Energinet.DataHub.Reports.Test.Core</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Test.Core</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="8.2.1" />

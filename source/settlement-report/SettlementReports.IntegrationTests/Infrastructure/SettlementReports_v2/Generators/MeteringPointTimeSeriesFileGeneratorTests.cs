@@ -13,18 +13,18 @@
 // limitations under the License.
 
 using System.Text;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Generators;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Infrastructure.SettlementReports_v2.Generators;
+namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.SettlementReports_v2.Generators;
 
 public sealed class MeteringPointTimeSeriesFileGeneratorTests
 {

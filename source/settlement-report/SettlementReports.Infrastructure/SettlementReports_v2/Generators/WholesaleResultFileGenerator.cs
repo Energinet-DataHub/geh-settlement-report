@@ -13,15 +13,14 @@
 // limitations under the License.
 
 using CsvHelper.Configuration;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Resolution = Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults.Resolution;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Resolution = Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults.Resolution;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Generators;
 
 public sealed class WholesaleResultFileGenerator : CsvFileGeneratorBase<SettlementReportWholesaleResultRow, WholesaleResultFileGenerator.SettlementReportWholesaleResultRowMap>
 {

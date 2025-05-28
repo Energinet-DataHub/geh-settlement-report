@@ -16,7 +16,7 @@ using System.Collections;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 // The purpose of this provider is to ensure that all chained IQueryable are of our type DatabricksSqlQueryable.
 // The actual implementations are always delegated to the core provider.

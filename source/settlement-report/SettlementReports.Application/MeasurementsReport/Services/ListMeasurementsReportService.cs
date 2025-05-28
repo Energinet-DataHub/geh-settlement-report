@@ -1,10 +1,10 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
 public sealed class ListMeasurementsReportService : IListMeasurementsReportService
 {

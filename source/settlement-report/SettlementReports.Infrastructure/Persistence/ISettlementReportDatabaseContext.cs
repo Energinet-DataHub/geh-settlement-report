@@ -14,7 +14,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
 public interface ISettlementReportDatabaseContext
 {

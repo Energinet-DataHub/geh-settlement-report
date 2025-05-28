@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Reports.IntegrationTests.Fixtures;
 
 public class MigrationsFreeDatabricksSqlStatementApiFixture : IAsyncLifetime
 {

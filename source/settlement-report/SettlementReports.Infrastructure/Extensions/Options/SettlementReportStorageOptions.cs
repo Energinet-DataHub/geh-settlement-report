@@ -14,7 +14,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Extensions.Options;
+namespace Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
 
 public class SettlementReportStorageOptions
 {

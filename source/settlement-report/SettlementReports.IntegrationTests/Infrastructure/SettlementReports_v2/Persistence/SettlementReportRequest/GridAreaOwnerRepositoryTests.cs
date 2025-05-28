@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
-using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Services;
-using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
+using Energinet.DataHub.Reports.Application.Model;
+using Energinet.DataHub.Reports.Infrastructure.Contracts;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Services;
+using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Google.Protobuf.WellKnownTypes;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
+namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
 
 public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
 {

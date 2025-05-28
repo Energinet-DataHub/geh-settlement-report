@@ -15,7 +15,7 @@
 using System.Collections;
 using System.Linq.Expressions;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Experimental;
+namespace Energinet.DataHub.Reports.Infrastructure.Experimental;
 
 // Wraps an existing IQueryable and adds our provider.
 // All IQueryable methods are forwarded to the core IQueryable, which does the heavy lifting.

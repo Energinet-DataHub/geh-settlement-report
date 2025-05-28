@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <AzureFunctionsVersion>V4</AzureFunctionsVersion>
+    <AssemblyName>Energinet.DataHub.Reports.Function</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Function</RootNamespace>
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

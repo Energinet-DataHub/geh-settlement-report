@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
-using Energinet.DataHub.SettlementReport.Application.Services;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.Model;
+using Energinet.DataHub.Reports.Application.Services;
+using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using NodaTime.Extensions;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
+namespace Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 
 public sealed class RequestSettlementReportJobHandler : IRequestSettlementReportJobHandler
 {

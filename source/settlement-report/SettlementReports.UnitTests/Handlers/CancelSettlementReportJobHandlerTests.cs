@@ -13,18 +13,18 @@
 // limitations under the License.
 
 using System.Collections.ObjectModel;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
+using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Handlers;
+namespace Energinet.DataHub.Reports.UnitTests.Handlers;
 
 public class CancelSettlementReportJobHandlerTests
 {
@@ -58,7 +58,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Reports.Application.SettlementReports_v2.SettlementReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
@@ -111,7 +111,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Reports.Application.SettlementReports_v2.SettlementReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
@@ -163,7 +163,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Reports.Application.SettlementReports_v2.SettlementReport(
                 clockMock.Object,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -214,7 +214,7 @@ public class CancelSettlementReportJobHandlerTests
             .Setup(clock => clock.GetCurrentInstant())
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
         var settlementReport =
-            new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            new Reports.Application.SettlementReports_v2.SettlementReport(
                 clockMock.Object,
                 Guid.NewGuid(),
                 Guid.NewGuid(),

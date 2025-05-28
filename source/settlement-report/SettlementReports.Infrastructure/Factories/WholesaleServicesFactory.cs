@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.DeltaTableConstants;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Factories;
+namespace Energinet.DataHub.Reports.Infrastructure.Factories;
 
 public static class WholesaleServicesFactory
 {

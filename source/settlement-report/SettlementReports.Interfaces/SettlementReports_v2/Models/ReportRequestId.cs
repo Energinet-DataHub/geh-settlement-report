@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿namespace Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
 /// <summary>
 /// The ReportRequestId is a unique identifier for both a report and the request to create the report.

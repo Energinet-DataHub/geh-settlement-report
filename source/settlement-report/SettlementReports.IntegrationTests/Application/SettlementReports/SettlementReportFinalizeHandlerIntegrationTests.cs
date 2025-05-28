@@ -14,21 +14,21 @@
 
 using AutoFixture;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
-using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Reports.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<SettlementReportFinalizeHandler>,
@@ -93,7 +93,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
             inputFiles);
 
         await using var dbContext = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
-        await dbContext.SettlementReports.AddAsync(new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, _mockedSettlementReportRequest));
+        await dbContext.SettlementReports.AddAsync(new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, _mockedSettlementReportRequest));
         await dbContext.SaveChangesAsync();
 
         // Act
@@ -120,7 +120,7 @@ public sealed class SettlementReportFinalizeHandlerIntegrationTests : TestBase<S
             []);
 
         await using var dbContextArrange = _wholesaleDatabaseFixture.DatabaseManager.CreateDbContext();
-        await dbContextArrange.SettlementReports.AddAsync(new SettlementReport.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, _mockedSettlementReportRequest));
+        await dbContextArrange.SettlementReports.AddAsync(new Reports.Application.SettlementReports_v2.SettlementReport(SystemClock.Instance, Guid.NewGuid(), Guid.NewGuid(), false, requestId, _mockedSettlementReportRequest));
         await dbContextArrange.SaveChangesAsync();
 
         // Act

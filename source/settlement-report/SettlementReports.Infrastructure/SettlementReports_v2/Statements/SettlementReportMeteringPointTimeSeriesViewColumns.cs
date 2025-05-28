@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Statements;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Statements;
 
 public class SettlementReportMeteringPointTimeSeriesViewColumns
 {

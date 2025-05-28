@@ -15,14 +15,14 @@
 using System.IO.Compression;
 using AutoFixture;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.IntegrationTests.Fixtures;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Reports.IntegrationTests.Application.SettlementReports;
 
 [Collection(nameof(SettlementReportCollectionFixture))]
 public sealed class SettlementReportFromFilesHandlerIntegrationTests : TestBase<SettlementReportFromFilesHandler>

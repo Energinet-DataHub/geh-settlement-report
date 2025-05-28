@@ -14,14 +14,14 @@
 
 using AutoFixture;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Moq;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Application.SettlementReports;
+namespace Energinet.DataHub.Reports.IntegrationTests.Application.SettlementReports;
 
 public sealed class SettlementReportRequestHandlerIntegrationTests : TestBase<SettlementReportRequestHandler>
 {

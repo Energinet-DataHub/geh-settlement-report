@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.Extensions.Configuration;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;

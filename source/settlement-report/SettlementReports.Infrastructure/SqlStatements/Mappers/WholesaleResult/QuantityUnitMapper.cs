@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Common.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 
 public static class QuantityUnitMapper
 {

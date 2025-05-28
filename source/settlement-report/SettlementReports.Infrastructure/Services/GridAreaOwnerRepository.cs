@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
-using Energinet.DataHub.SettlementReport.Application.Services;
-using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Application.Model;
+using Energinet.DataHub.Reports.Application.Services;
+using Energinet.DataHub.Reports.Infrastructure.Contracts;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Services;
+namespace Energinet.DataHub.Reports.Infrastructure.Services;
 
 public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAreaOwnershipAssignedEventStore
 {

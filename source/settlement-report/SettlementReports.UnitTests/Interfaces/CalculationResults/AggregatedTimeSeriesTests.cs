@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Interfaces.Models;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Interfaces.CalculationResults;
+namespace Energinet.DataHub.Reports.UnitTests.Interfaces.CalculationResults;
 
 public class AggregatedTimeSeriesTests
 {

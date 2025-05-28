@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
+namespace Energinet.DataHub.Reports.Common.Infrastructure.HealthChecks;
 
 /// <summary>
 /// Only keep shared health check names here (names used in multiple places).
