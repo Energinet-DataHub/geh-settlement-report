@@ -73,6 +73,7 @@ def test_when_energy_supplier_ids_contain_only_one_energy_supplier_id(
     spark: SparkSession,
     args_energy_supplier_ids: list[str] | None,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     energy_supplier_id_1 = "1"
@@ -171,6 +172,7 @@ def test_when_two_energy_suppliers_ids_with_different_periods(
     spark: SparkSession,
     charge_time: datetime,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     energy_supplier_id_1 = "1"
@@ -268,6 +270,7 @@ def test_time_within_and_outside_of_date_range_scenarios(
     args_start_date: datetime,
     args_end_date: datetime,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     charge_time = JAN_3RD
@@ -341,6 +344,7 @@ def test_energy_supplier_ids_scenarios(
     spark: SparkSession,
     args_energy_supplier_ids: list[str] | None,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     energy_supplier_id = "1234567890123"
@@ -413,6 +417,7 @@ def test_calculation_id_by_grid_area_scenarios(
     spark: SparkSession,
     args_calculation_id_by_grid_area: dict[str, UUID],
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = metering_point_periods_factory.create(
@@ -498,6 +503,7 @@ def test_grid_access_provider_and_system_operator_scenarios(
     args_requesting_actor_id: str,
     is_tax: bool,
     expected_rows: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = metering_point_periods_factory.create(

@@ -25,7 +25,7 @@ def tests_path() -> Path:
 
 
 @pytest.fixture
-def dummy_logging(monkeypatch: pytest.MonkeyPatch):
+def dummy_logging(monkeypatch: pytest.MonkeyPatch) -> Generator[None, None, None]:
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
 
     env = {

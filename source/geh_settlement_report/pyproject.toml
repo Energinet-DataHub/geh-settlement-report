@@ -43,9 +43,20 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-# -s ensures that print("<text>") is written to output.
-addopts = "--cov-report=term --cov-report=xml:coverage.xml --cov=geh_settlement_report -ra -vv -s"
-
+addopts = [
+    "--import-mode=importlib",
+    "--cov-report=term",
+    "--cov-report=xml:coverage.xml",
+    "--cov=geh_settlement_report",
+    "-ra",
+    "-vv",
+    "-s",                            # -s ensures that print("<text>") is written to output.
+    # pytest-xdist options
+    # - loadfile is required when using both pytest-xdist and pytest-order
+    #   See https://pytest-order.readthedocs.io/en/stable/other_plugins.html#usage-with-pytest-xdist
+    "-n=auto",
+    "--dist=loadfile",
+]
 [tool.coverage.report]
 fail_under = 0
 show_missing = true
