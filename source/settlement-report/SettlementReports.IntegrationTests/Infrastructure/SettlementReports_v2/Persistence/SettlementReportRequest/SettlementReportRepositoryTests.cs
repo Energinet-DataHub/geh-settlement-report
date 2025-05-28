@@ -24,13 +24,29 @@ using Xunit;
 
 namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
 
-public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
+public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>, IAsyncLifetime
 {
     private readonly WholesaleDatabaseManager<SettlementReportDatabaseContext> _databaseManager;
 
     public SettlementReportRepositoryTests(WholesaleDatabaseFixture<SettlementReportDatabaseContext> fixture)
     {
         _databaseManager = fixture.DatabaseManager;
+    }
+
+    /// <summary>
+    /// Setup logic.
+    /// </summary>
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    /// <summary>
+    /// Async cleanup logic.
+    /// Runs after each test method.
+    /// </summary>
+    public async Task DisposeAsync()
+    {
+        var context = _databaseManager.CreateDbContext();
+        context.RemoveRange(context.SettlementReports);
+        await context.SaveChangesAsync();
     }
 
     [Fact]
@@ -339,7 +355,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
-                Guid.NewGuid(),
+                Guid.Parse("4412da02-7036-48e7-a8e8-d9cd2d9ce828"),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
