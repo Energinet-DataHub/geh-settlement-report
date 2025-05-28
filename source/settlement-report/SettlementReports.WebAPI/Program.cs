@@ -68,3 +68,11 @@ app.MapStatusHealthChecks();
 app.UseRevisionLogIntegrationWebApiModule();
 
 app.Run();
+
+// This is needed in order to test the dependency injection
+namespace SettlementReports.WebAPI
+{
+    public partial class Program
+    {
+    }
+}
