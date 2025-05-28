@@ -44,7 +44,7 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
         ReportRequestId reportRequestId,
         string actorGln)
     {
-        var gridAreas = string.Join(", ", request.Filter.GridAreas);
+        var gridAreas = string.Join(", ", request.Filter.GridAreaCodes);
 
         var jobParameters = new List<string>
         {

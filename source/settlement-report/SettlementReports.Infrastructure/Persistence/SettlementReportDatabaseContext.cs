@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,9 +31,14 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
 
     public DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; init; } = null!;
 
+    public DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; init; } = null!;
+
     public DbSet<GridAreaOwnerEntity> GridAreaOwners { get; init; } = null!;
 
-    public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
+    public Task<int> SaveChangesAsync()
+    {
+        return base.SaveChangesAsync();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +46,7 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
 
         modelBuilder.ApplyConfiguration(new SettlementReportEntityConfiguration());
         modelBuilder.ApplyConfiguration(new GridAreaOwnerEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new MeasurementsReportEntityConfiguration());
 
         base.OnModelCreating(modelBuilder);
     }
