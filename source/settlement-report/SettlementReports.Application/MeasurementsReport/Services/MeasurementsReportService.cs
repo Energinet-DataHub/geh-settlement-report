@@ -1,4 +1,6 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿using System.Collections.ObjectModel;
+using System.Text.Json;
+using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 
@@ -30,7 +32,7 @@ public sealed class MeasurementsReportService : IMeasurementsReportService
             report.PeriodEnd.ToDateTimeOffset(),
             report.Status,
             report.ActorId,
-            report.GridAreaCodes,
+            JsonSerializer.Deserialize<ReadOnlyCollection<string>>(report.GridAreaCodes) ?? ReadOnlyCollection<string>.Empty,
             report.CreatedDateTime.ToDateTimeOffset(),
             report.JobRunId is not null ? new JobRunId(report.JobRunId.Value) : null);
     }

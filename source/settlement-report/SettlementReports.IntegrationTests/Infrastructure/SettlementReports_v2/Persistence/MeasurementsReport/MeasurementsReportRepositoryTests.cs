@@ -16,7 +16,6 @@ using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
 using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -39,12 +38,6 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         // arrange
         await using var context = _databaseManager.CreateDbContext();
         var target = new MeasurementsReportRepository(context);
-
-        var calculationFilter = new Dictionary<string, CalculationId?>
-        {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) }, { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-        };
-
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
             ["805", "806"],
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
@@ -62,7 +55,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
 
         // assert
         await using var readContext = _databaseManager.CreateDbContext();
-        var actual = await readContext.SettlementReports.SingleOrDefaultAsync(x => x.Id == report.Id);
+        var actual = await readContext.MeasurementsReports.SingleOrDefaultAsync(x => x.Id == report.Id);
 
         Assert.NotNull(actual);
         Assert.Equal(report.Id, actual.Id);
@@ -74,5 +67,8 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         Assert.Equal(report.PeriodEnd, actual.PeriodEnd);
         Assert.Equal(report.Status, actual.Status);
         Assert.Equal(report.BlobFileName, actual.BlobFileName);
+        Assert.Equal(report.GridAreaCodes, actual.GridAreaCodes);
+        Assert.Equal(report.JobRunId, actual.JobRunId);
+        Assert.Equal(report.EndedDateTime, actual.EndedDateTime);
     }
 }

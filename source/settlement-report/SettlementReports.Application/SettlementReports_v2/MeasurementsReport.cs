@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using System.Text.Json;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 using NodaTime.Extensions;
@@ -10,6 +11,7 @@ public sealed class MeasurementsReport
     public MeasurementsReport(string? blobFileName = null)
     {
         BlobFileName = blobFileName;
+        GridAreaCodes = "test";
     }
 
     public MeasurementsReport(
@@ -26,7 +28,7 @@ public sealed class MeasurementsReport
         Status = ReportStatus.InProgress;
         PeriodStart = request.Filter.PeriodStart.ToInstant();
         PeriodEnd = request.Filter.PeriodEnd.ToInstant();
-        GridAreaCodes = request.Filter.GridAreaCodes.ToList();
+        GridAreaCodes = JsonSerializer.Serialize(request.Filter.GridAreaCodes);
     }
 
     // EF Core Constructor.
@@ -49,9 +51,9 @@ public sealed class MeasurementsReport
 
     public Guid UserId { get; init; }
 
-    public Instant PeriodStart { get; }
+    public Instant PeriodStart { get; init; }
 
-    public Instant PeriodEnd { get; }
+    public Instant PeriodEnd { get; init; }
 
     public Instant CreatedDateTime { get; init; }
 
@@ -66,7 +68,7 @@ public sealed class MeasurementsReport
     /// </summary>
     public long? JobRunId { get; init; }
 
-    public IReadOnlyList<string> GridAreaCodes { get; init; } = null!;
+    public string GridAreaCodes { get; init; } = null!;
 
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
     {

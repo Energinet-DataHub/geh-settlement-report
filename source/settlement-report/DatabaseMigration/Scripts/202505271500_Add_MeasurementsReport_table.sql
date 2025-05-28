@@ -8,7 +8,7 @@ CREATE TABLE [settlementreports].[MeasurementsReport]
     [BlobFilename] [nvarchar] (2048) NULL,
     [PeriodStart] [datetime2] NOT NULL,
     [PeriodEnd] [datetime2] NOT NULL,
-    [CreatedDateTime] [datetimeoffset] NOT NULL,
+    [CreatedDateTime] [datetime2] NOT NULL,
     [JobRunId] [bigint] NULL,
     [EndedDateTime] [datetime2] NULL,
     [GridAreaCodes] [nvarchar] (max) NOT NULL,
