@@ -1,4 +1,6 @@
-﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using System.Text.Json;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 using NodaTime.Extensions;
 
@@ -9,7 +11,36 @@ public sealed class MeasurementsReport
     public MeasurementsReport(string? blobFileName = null)
     {
         BlobFileName = blobFileName;
+        GridAreaCodes = "test";
     }
+
+    public MeasurementsReport(
+        IClock clock,
+        Guid userId,
+        Guid actorId,
+        ReportRequestId requestId,
+        MeasurementsReportRequestDto request)
+    {
+        RequestId = requestId.Id;
+        UserId = userId;
+        ActorId = actorId;
+        CreatedDateTime = clock.GetCurrentInstant();
+        Status = ReportStatus.InProgress;
+        PeriodStart = request.Filter.PeriodStart.ToInstant();
+        PeriodEnd = request.Filter.PeriodEnd.ToInstant();
+        GridAreaCodes = JsonSerializer.Serialize(request.Filter.GridAreaCodes);
+    }
+
+    // EF Core Constructor.
+    // ReSharper disable once UnusedMember.Local
+    private MeasurementsReport()
+    {
+    }
+
+    /// <summary>
+    ///     Internal (database) ID of the report.
+    /// </summary>
+    public int Id { get; init; }
 
     /// <summary>
     ///     The public ID of the report.
@@ -18,9 +49,11 @@ public sealed class MeasurementsReport
 
     public Guid ActorId { get; init; }
 
-    public Instant PeriodStart { get; }
+    public Guid UserId { get; init; }
 
-    public Instant PeriodEnd { get; }
+    public Instant PeriodStart { get; init; }
+
+    public Instant PeriodEnd { get; init; }
 
     public Instant CreatedDateTime { get; init; }
 
@@ -35,7 +68,7 @@ public sealed class MeasurementsReport
     /// </summary>
     public long? JobRunId { get; init; }
 
-    public IReadOnlyList<string> GridAreaCodes { get; init; } = null!;
+    public string GridAreaCodes { get; init; } = null!;
 
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
     {

@@ -21,7 +21,7 @@ using Google.Protobuf.WellKnownTypes;
 using NodaTime.Extensions;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence;
+namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
 
 public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
 {
@@ -51,20 +51,8 @@ public sealed class GridAreaOwnerRepositoryTests : IClassFixture<WholesaleDataba
 
         var target = new GridAreaOwnerRepository(dbContext);
 
-        await target.AddAsync(new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = new GridAreaCode(gridAreaCode).Value,
-            ActorNumber = "1",
-            ValidFrom = DateTimeOffset.Parse("2024-01-01").ToTimestamp(),
-            SequenceNumber = 1,
-        });
-        await target.AddAsync(new GridAreaOwnershipAssigned
-        {
-            GridAreaCode = new GridAreaCode(gridAreaCode).Value,
-            ActorNumber = "2",
-            ValidFrom = DateTimeOffset.Parse("2024-01-15").ToTimestamp(),
-            SequenceNumber = 1,
-        });
+        await target.AddAsync(new GridAreaOwnershipAssigned { GridAreaCode = new GridAreaCode(gridAreaCode).Value, ActorNumber = "1", ValidFrom = DateTimeOffset.Parse("2024-01-01").ToTimestamp(), SequenceNumber = 1 });
+        await target.AddAsync(new GridAreaOwnershipAssigned { GridAreaCode = new GridAreaCode(gridAreaCode).Value, ActorNumber = "2", ValidFrom = DateTimeOffset.Parse("2024-01-15").ToTimestamp(), SequenceNumber = 1 });
 
         // act
         var owners = (await target.GetGridAreaOwnersAsync(

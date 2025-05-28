@@ -2,7 +2,7 @@
 
 public interface IMeasurementsReportRepository
 {
-    Task AddOrUpdateAsync(MeasurementsReport request);
+    Task AddOrUpdateAsync(MeasurementsReport measurementsReport);
 
     Task<MeasurementsReport> GetAsync(string requestId);
 

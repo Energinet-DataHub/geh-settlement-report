@@ -8,8 +8,8 @@ using Xunit.Abstractions;
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport;
 
 [TestCaseOrderer(
-    ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
-    ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
+    TestCaseOrdererLocation.OrdererTypeName,
+    TestCaseOrdererLocation.OrdererAssemblyName)]
 public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenarioFixture>,
     IAsyncLifetime
 {
@@ -39,14 +39,14 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
     public void Given_ValidReportRequest()
     {
         var filter = new MeasurementsReportRequestFilterDto(
-            GridAreas: ["543"],
-            PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
-            PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
+            ["543"],
+            new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
         _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(
-            Filter: filter,
-            ActorNumberOverride: null,
-            MarketRoleOverride: null);
+            filter,
+            null,
+            null);
     }
 
     [SubsystemFact]
