@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
@@ -34,9 +35,9 @@ public class MeasurementsReportsController
     [Route("request")]
     [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
-        [FromBody] MeasurementsReportRequestDto reportRequest)
+        [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
+        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

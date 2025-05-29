@@ -24,7 +24,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         if (IsPeriodAcrossMonths(requestDto.Filter))
             throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto));
 
-        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
+        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport2", cancellationToken);
     }
 
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
@@ -97,12 +97,19 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     private async Task<JobRunId> RequestAsync(object requestDto, string endpoint, CancellationToken cancellationToken)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-
         request.Content = new StringContent(
-           string.Empty,
+           JsonConvert.SerializeObject(requestDto),
            Encoding.UTF8,
            "application/json");
+
         using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
+        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"Request to {endpoint} failed with status code {response.StatusCode}: {responseText}.");
+        }
+
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);

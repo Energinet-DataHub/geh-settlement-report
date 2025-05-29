@@ -2,5 +2,5 @@
 
 public sealed record MeasurementsReportRequestDto(
     MeasurementsReportRequestFilterDto Filter,
-    string? ActorNumberOverride,
-    MarketRole? MarketRoleOverride);
+    string? ActorNumberOverride = null,
+    MarketRole? MarketRoleOverride = null);
