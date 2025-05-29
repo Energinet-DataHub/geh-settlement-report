@@ -24,7 +24,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         if (IsPeriodAcrossMonths(requestDto.Filter))
             throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto));
 
-        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport2", cancellationToken);
+        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
     }
 
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
