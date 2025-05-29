@@ -37,7 +37,9 @@ public class MeasurementsReportsController
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest);
+        var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
+
+        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest, actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

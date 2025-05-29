@@ -46,10 +46,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
             new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
-        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(
-            filter,
-            null,
-            null);
+        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(Filter: filter);
     }
 
     [SubsystemFact]

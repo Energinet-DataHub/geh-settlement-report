@@ -752,3 +752,6 @@ cython_debug/
 
 # Ignore files that are related to integration test settings
 source/settlement_report_python/tests/integrationtest.local.settings.yml
+ 
+# Ignore remnants of virtual environments that are created during the test session
+source/geh_settlement_report/.settlement-report-pytest
