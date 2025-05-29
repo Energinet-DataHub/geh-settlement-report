@@ -355,7 +355,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
-                Guid.Parse("4412da02-7036-48e7-a8e8-d9cd2d9ce828"),
+                Guid.NewGuid(),
                 false,
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),

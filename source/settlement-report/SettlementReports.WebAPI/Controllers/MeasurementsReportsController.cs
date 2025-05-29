@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
@@ -34,11 +35,11 @@ public class MeasurementsReportsController
     [Route("request")]
     [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
-        [FromBody] MeasurementsReportRequestDto reportRequest)
+        [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
 
-        var requestCommand = new RequestMeasurementsReportCommand(reportRequest, actorGln);
+        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest, actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -48,11 +49,9 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
     {
-        return new List<RequestedMeasurementsReportDto>();
-
-        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]

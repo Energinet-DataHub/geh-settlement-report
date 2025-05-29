@@ -13,17 +13,16 @@ public sealed class ListMeasurementsReportService : IListMeasurementsReportServi
     private readonly IMeasurementsReportRepository _repository;
     private readonly IClock _clock;
 
-    public ListMeasurementsReportService(IMeasurementsReportService measurementsReportService, ISettlementReportDatabricksJobsHelper jobHelper, IMeasurementsReportRepository repository, IClock clock)
+    public ListMeasurementsReportService(
+        IMeasurementsReportService measurementsReportService,
+        ISettlementReportDatabricksJobsHelper jobHelper,
+        IMeasurementsReportRepository repository,
+        IClock clock)
     {
         _measurementsReportService = measurementsReportService;
         _jobHelper = jobHelper;
         _repository = repository;
         _clock = clock;
-    }
-
-    public Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync()
-    {
-        throw new NotImplementedException();
     }
 
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync(Guid actorId)

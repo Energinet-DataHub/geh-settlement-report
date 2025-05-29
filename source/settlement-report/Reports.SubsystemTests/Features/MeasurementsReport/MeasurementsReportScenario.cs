@@ -1,7 +1,10 @@
 ﻿using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
 using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.Fixtures;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -39,7 +42,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
     public void Given_ValidReportRequest()
     {
         var filter = new MeasurementsReportRequestFilterDto(
-            ["543"],
+            new Dictionary<string, CalculationId?> { { "543", null } },
             new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
@@ -58,5 +61,20 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         // Assert
         Assert.NotNull(jobRunId);
         _scenarioFixture.ScenarioState.JobRunId = jobRunId;
+    }
+
+    [SubsystemFact]
+    [ScenarioStep(3)]
+    public async Task Then_ReportGenerationIsCompletedWithinWaitTime()
+    {
+        var (isCompletedOrFailed, reportRequest) = await _scenarioFixture.WaitForReportGenerationCompletedOrFailedAsync(
+            _scenarioFixture.ScenarioState.JobRunId!,
+            TimeSpan.FromMinutes(15));
+
+        // Assert
+        using var assertionScope = new AssertionScope();
+        Assert.True(isCompletedOrFailed);
+        Assert.NotNull(reportRequest);
+        Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 }
