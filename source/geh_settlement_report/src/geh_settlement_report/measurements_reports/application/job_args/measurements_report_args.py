@@ -32,7 +32,7 @@ def _validate_energy_supplier_ids(v: list[str]) -> list[str]:
         if not isinstance(id_, str):
             raise TypeError(f"Energy supplier IDs must be strings, not {type(id_)}")
         if not id_.isdigit():
-            raise ValueError(f"Unexpected energy supplier ID: '{id_}'. Energy supplier IDs must consist of 8 digits.")
+            raise ValueError(f"Unexpected energy supplier ID: '{id_}'.")
     return v
 
 
