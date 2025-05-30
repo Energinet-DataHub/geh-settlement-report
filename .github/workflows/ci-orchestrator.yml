@@ -67,7 +67,7 @@ jobs:
           ]
     with:
       packages_directory: source
-      pytest_addopts: --ignore-glob='**/integration_test/**' --dist="${{ matrix.dist }}" -${{ matrix.n }}
+      pytest_addopts: --ignore-glob='**/integration_test/**' --dist='${{ matrix.dist }}' -n=${{ matrix.n }}
       create_subsystem_release: true
 
   ci_python_integration:
