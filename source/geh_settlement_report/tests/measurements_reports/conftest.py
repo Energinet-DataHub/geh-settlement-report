@@ -7,6 +7,7 @@ from geh_common.data_products.electricity_market_reports_input import measuremen
 from geh_common.data_products.measurements_core.measurements_gold import current_v1
 from geh_common.testing.dataframes import read_csv
 from geh_common.testing.scenario_testing import TestCase, TestCases
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.measurements_reports.application.job_args.measurements_report_args import (
@@ -42,16 +43,27 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, dummy_loggin
     with pytest.MonkeyPatch.context() as monkeypatch:
         sysargs = [x for k, v in scenario_parameters.items() for x in [f"--{k.replace('_', '-')}", str(v)]]
         monkeypatch.setattr(sys, "argv", ["program"] + sysargs)
+        monkeypatch.setattr(
+            "geh_settlement_report.measurements_reports.domain.measurements_reports.calculation.get_dbutils",
+            lambda _: MockDBUtils(),
+        )
         monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
         monkeypatch.setenv("OUTPUT_PATH", str(output_path))
 
         # Execute the logic
         args = MeasurementsReportArgs()
         result = execute(
+            spark,
             args,
             calculated_measurements=measurements_gold_current_v1,
             metering_point_periods=measurements_report_metering_point_periods,
         )
+
+        zip_path = Path(args.output_path) / f"{args.report_id}.zip"
+
+        assert zip_path.exists(), f"Zip file {zip_path} was not created."
+        assert zip_path.is_file(), f"Expected {zip_path} to be a file."
+        assert zip_path.stat().st_size > 0, f"Zip file {zip_path} is empty."
 
         # Return test cases
         return TestCases(

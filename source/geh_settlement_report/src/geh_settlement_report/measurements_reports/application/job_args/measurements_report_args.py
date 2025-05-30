@@ -20,7 +20,7 @@ class MeasurementsReportArgs(BaseSettings):
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
     requesting_actor_id: str = Field(init=False)
     # TODO BJM: Update to correctly parse input parameter - share functionality with settlement report args
-    energy_supplier_ids: str = Field(init=False)
+    energy_supplier_ids: list[str] = Field(init=False, default_factory=list)
 
     catalog_name: str = Field(init=False)
     output_path: str = Field(init=False)
