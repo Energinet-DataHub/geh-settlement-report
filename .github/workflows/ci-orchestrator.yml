@@ -52,9 +52,22 @@ jobs:
   ci_python:
     name: Unit tests and build packages
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
+    strategy:
+      matrix:
+        n: ["auto", "logical"]
+        dist:
+          [
+            "loadfile",
+            "load",
+            "worksteal",
+            "loaddist",
+            "loadscope",
+            "loadgroup",
+            "no",
+          ]
     with:
       packages_directory: source
-      pytest_addopts: --ignore-glob='**/integration_test/**'
+      pytest_addopts: --ignore-glob='**/integration_test/**' --dist="${{ matrix.dist }}" -${{ matrix.n }}
       create_subsystem_release: true
 
   ci_python_integration:
