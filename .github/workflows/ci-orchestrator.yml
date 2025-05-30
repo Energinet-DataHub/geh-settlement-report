@@ -54,7 +54,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     strategy:
       matrix:
-        n: [auto, logical]
+        n: [auto]
         dist: [loadfile, load, worksteal, loadscope, loadgroup, no]
       fail-fast: false
     with:
