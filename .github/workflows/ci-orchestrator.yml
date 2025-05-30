@@ -55,7 +55,7 @@ jobs:
     strategy:
       matrix:
         n: [auto]
-        dist: [loadfile, load, worksteal, loadscope, loadgroup, no]
+        dist: [load, worksteal, workgroup]
       fail-fast: false
     with:
       packages_directory: source
