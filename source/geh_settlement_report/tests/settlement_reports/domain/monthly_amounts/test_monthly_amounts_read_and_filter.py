@@ -117,6 +117,7 @@ def get_expected_unordered_columns() -> list[str]:
 def test_read_and_filter_from_view__returns_expected_columns(
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     monthly_amounts_read_and_filter_mock_repository: Mock,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     expected_unordered_columns = get_expected_unordered_columns()
@@ -134,6 +135,7 @@ def test_read_and_filter_from_view__returns_expected_columns(
 def test_read_and_filter_from_view__when_energy_supplier__returns_only_data_from_itself_but_all_charge_owners(
     standard_wholesale_fixing_scenario_energy_supplier_args: SettlementReportArgs,
     monthly_amounts_read_and_filter_mock_repository: Mock,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     args = standard_wholesale_fixing_scenario_energy_supplier_args
@@ -159,6 +161,7 @@ def test_read_and_filter_from_view__when_energy_supplier__returns_only_data_from
 def test_read_and_filter_from_view__when_datahub_administrator__returns_all_suppliers_and_charge_owners(
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     monthly_amounts_read_and_filter_mock_repository: Mock,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
@@ -190,6 +193,7 @@ def test_read_and_filter_from_view__when_grid_or_system_operator__returns_multip
     monthly_amounts_read_and_filter_mock_repository: Mock,
     requesting_actor_market_role: MarketRole,
     actor_id: str,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_wholesale_fixing_scenario_args.requesting_actor_market_role = requesting_actor_market_role

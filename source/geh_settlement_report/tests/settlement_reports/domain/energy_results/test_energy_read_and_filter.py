@@ -79,6 +79,7 @@ def test_read_and_filter_from_view__when_requesting_actor_is_energy_supplier__re
     energy_read_and_filter_mock_repository: Mock,
     requesting_energy_supplier_id: str,
     contains_data: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.ENERGY_SUPPLIER
@@ -121,6 +122,7 @@ def test_read_and_filter_from_view__when_datahub_admin__returns_results_for_expe
     energy_read_and_filter_mock_repository: Mock,
     energy_supplier_ids: list[str] | None,
     contains_data: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
@@ -163,6 +165,7 @@ def test_read_and_filter_from_view__when_grid_access_provider__returns_expected_
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
     energy_read_and_filter_mock_repository: Mock,
     grid_area_code: str,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_wholesale_fixing_scenario_args.requesting_actor_market_role = MarketRole.GRID_ACCESS_PROVIDER
@@ -194,6 +197,7 @@ def test_read_and_filter_from_view__when_grid_access_provider__returns_expected_
 def test_read_and_filter_from_view__when_balance_fixing__returns_only_rows_from_latest_calculations(
     spark: SparkSession,
     standard_balance_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
@@ -238,6 +242,7 @@ def test_read_and_filter_from_view__when_balance_fixing__returns_only_rows_from_
 def test_read_and_filter_from_view__when_balance_fixing_with_two_calculations_with_time_overlap__returns_only_latest_calculation_data(
     spark: SparkSession,
     standard_balance_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
@@ -317,7 +322,9 @@ def test_read_and_filter_from_view__when_balance_fixing_with_two_calculations_wi
 
 
 def test_read_and_filter_from_view__when_balance_fixing__latest_calculation_for_grid_area(
-    spark: SparkSession, standard_balance_fixing_scenario_args: SettlementReportArgs
+    spark: SparkSession,
+    standard_balance_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     standard_balance_fixing_scenario_args.requesting_actor_market_role = MarketRole.DATAHUB_ADMINISTRATOR
@@ -401,7 +408,9 @@ def test_read_and_filter_from_view__when_balance_fixing__latest_calculation_for_
 
 
 def test_read_and_filter_from_view__when_balance_fixing__returns_only_balance_fixing_results(
-    spark: SparkSession, standard_balance_fixing_scenario_args: SettlementReportArgs
+    spark: SparkSession,
+    standard_balance_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     calculation_id_and_type = {

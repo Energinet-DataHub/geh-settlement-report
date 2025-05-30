@@ -3,8 +3,8 @@ from decimal import Decimal
 
 import pyspark.sql.functions as F
 import pytest
-from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql import DataFrame, SparkSession, Window
+from pyspark.sql.functions import row_number
 from pyspark.sql.types import DecimalType
 
 import tests.settlement_reports.test_factories.default_test_data_spec as default_data
@@ -40,10 +40,9 @@ def _create_time_series_points_with_increasing_quantity(
 ) -> DataFrame:
     spec = default_data.create_time_series_points_data_spec(from_date=from_date, to_date=to_date, resolution=resolution)
     df = time_series_points_factory.create(spark, spec)
-    return df.withColumn(  # just set quantity equal to its row number
-        DataProductColumnNames.quantity,
-        monotonically_increasing_id().cast(DecimalType(18, 3)),
-    )
+    w = Window.orderBy(df.observation_time.asc())
+    df = df.withColumn(DataProductColumnNames.quantity, (row_number().over(w) - 1.0).cast(DecimalType(18, 3)))
+    return df
 
 
 @pytest.mark.parametrize(
@@ -54,7 +53,9 @@ def _create_time_series_points_with_increasing_quantity(
     ],
 )
 def test_prepare_for_csv__when_two_days_of_data__returns_two_rows(
-    spark: SparkSession, resolution: MeteringPointResolutionDataProductValue
+    spark: SparkSession,
+    resolution: MeteringPointResolutionDataProductValue,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     expected_rows = DEFAULT_TO_DATE.day - DEFAULT_FROM_DATE.day
@@ -86,6 +87,7 @@ def test_prepare_for_csv__returns_expected_energy_quantity_columns(
     spark: SparkSession,
     resolution: MeteringPointResolutionDataProductValue,
     energy_quantity_column_count: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     expected_columns = [f"ENERGYQUANTITY{i}" for i in range(1, energy_quantity_column_count + 1)]
@@ -144,6 +146,7 @@ def test_prepare_for_csv__when_daylight_saving_tim_transition__returns_expected_
     to_date: datetime,
     resolution: MeteringPointResolutionDataProductValue,
     expected_columns_with_data: int,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     df = _create_time_series_points_with_increasing_quantity(

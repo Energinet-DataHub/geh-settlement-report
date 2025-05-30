@@ -100,6 +100,7 @@ def test_read_and_filter__returns_charge_link_periods_that_overlap_with_selected
     from_date: datetime,
     to_date: datetime,
     is_included: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     calculation_period_start = d.JAN_2ND
@@ -129,6 +130,7 @@ def test_read_and_filter__returns_charge_link_periods_that_overlap_with_selected
 
 def test_read_and_filter__returns_only_selected_grid_area(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     selected_grid_area_code = "805"
@@ -173,6 +175,7 @@ def test_read_and_filter__returns_only_selected_grid_area(
 
 def test_read_and_filter__returns_only_rows_from_selected_calculation_id(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     selected_calculation_id = "11111111-9fc8-409a-a169-fbd49479d718"
@@ -237,6 +240,7 @@ def test_read_and_filter__returns_data_for_expected_energy_suppliers(
     spark: SparkSession,
     selected_energy_supplier_ids: list[str] | None,
     expected_energy_supplier_ids: list[str],
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = reduce(
@@ -286,6 +290,7 @@ def test_read_and_filter__when_system_operator__returns_expected_metering_points
     charge_owner_id: str,
     is_tax: bool,
     return_rows: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = metering_point_periods_factory.create(
@@ -325,6 +330,7 @@ def test_read_and_filter__when_system_operator__returns_expected_metering_points
 
 def test_read_and_filter__when_balance_responsible_party_changes_on_metering_point__returns_single_period(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = metering_point_periods_factory.create(
@@ -379,6 +385,7 @@ def test_read_and_filter__when_balance_responsible_party_changes_on_metering_poi
 
 def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_metering_point__returns_two_link_periods(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     es_id_a = "111"
@@ -433,6 +440,7 @@ def test_read_and_filter__when_datahub_user_and_energy_supplier_changes_on_meter
 
 def test_read_and_filter__when_duplicate_metering_point_periods__returns_one_period_per_duplicate(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     metering_point_periods = metering_point_periods_factory.create(

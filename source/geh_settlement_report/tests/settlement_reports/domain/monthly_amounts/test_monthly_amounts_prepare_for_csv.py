@@ -28,6 +28,7 @@ DEFAULT_CALCULATION_ID = "12345678-6f20-40c5-9a95-f419a1245d7e"
 def test_prepare_for_csv__returns_expected_columns(
     spark: SparkSession,
     should_have_one_file_per_grid_area: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     monthly_amounts = monthly_amounts_per_charge_factory.create(

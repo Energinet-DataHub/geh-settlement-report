@@ -43,6 +43,7 @@ DEFAULT_TIME_ZONE = "Europe/Copenhagen"
 def test_read_and_filter_for_wholesale__when_input_has_both_resolution_types__returns_only_data_with_expected_resolution(
     spark: SparkSession,
     resolution: MeteringPointResolutionDataProductValue,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     hourly_metering_point_id = "1111111111111"
@@ -89,6 +90,7 @@ def test_read_and_filter_for_wholesale__when_input_has_both_resolution_types__re
 
 def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     data_from_date = datetime(2024, 1, 1, 23)
@@ -133,6 +135,7 @@ def test_read_and_filter_for_wholesale__returns_only_days_within_selected_period
 
 def test_read_and_filter_for_wholesale__returns_only_selected_grid_area(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     selected_grid_area_code = "805"
@@ -173,6 +176,7 @@ def test_read_and_filter_for_wholesale__returns_only_selected_grid_area(
 
 def test_read_and_filter_for_wholesale__returns_only_metering_points_from_selected_calculation_id(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     selected_calculation_id = "11111111-9fc8-409a-a169-fbd49479d718"
@@ -237,6 +241,7 @@ def test_read_and_filter_for_wholesale__returns_data_for_expected_energy_supplie
     spark: SparkSession,
     selected_energy_supplier_ids: list[str] | None,
     expected_energy_supplier_ids: list[str],
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     df = reduce(
@@ -285,6 +290,7 @@ def test_read_and_filter_for_wholesale__when_system_operator__returns_only_time_
     spark: SparkSession,
     charge_owner_id: str,
     return_rows: bool,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     time_series_points_df = time_series_points_factory.create(
@@ -324,6 +330,7 @@ def test_read_and_filter_for_wholesale__when_system_operator__returns_only_time_
 
 def test_read_and_filter_for_balance_fixing__returns_only_time_series_points_from_latest_calculations(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     not_latest_calculation_id = "11111111-9fc8-409a-a169-fbd49479d718"
@@ -369,6 +376,7 @@ def test_read_and_filter_for_balance_fixing__returns_only_time_series_points_fro
 
 def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     calculation_id_and_type = {
@@ -424,6 +432,7 @@ def test_read_and_filter_for_balance_fixing__returns_only_balance_fixing_results
 
 def test_read_and_filter_for_balance_fixing__when_two_calculations_with_time_overlap__returns_only_latest_calculation_data(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     day_1 = DEFAULT_FROM_DATE
@@ -504,6 +513,7 @@ def test_read_and_filter_for_balance_fixing__when_two_calculations_with_time_ove
 
 def test_read_and_filter_for_balance_fixing__latest_calculation_for_grid_area(
     spark: SparkSession,
+    dummy_logging: None,  # Used implicitly
 ) -> None:
     # Arrange
     day_1 = DEFAULT_FROM_DATE

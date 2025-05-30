@@ -60,6 +60,7 @@ def test_write__returns_files_corresponding_to_grid_area_codes(
     resolution: MeteringPointResolutionDataProductValue,
     grid_area_codes: list[str],
     expected_file_count: int,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     report_data_type = (
@@ -92,6 +93,7 @@ def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
     dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     spark.conf.set("spark.sql.shuffle.partitions", "10")
@@ -134,6 +136,7 @@ def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_f
     number_of_rows: int,
     rows_per_file: int,
     expected_file_count: int,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     report_data_type = ReportDataType.TimeSeriesHourly
@@ -176,6 +179,7 @@ def test_write__files_have_correct_ordering_for_each_file(
     number_of_days_for_each_mp: int,
     rows_per_file: int,
     expected_file_count: int,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_order_by = [
@@ -227,6 +231,7 @@ def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
     number_of_rows: int,
     grid_area_codes: list[str],
     expected_file_count: int,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_order_by = [
@@ -267,6 +272,7 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
     dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_file_count = 3
@@ -332,6 +338,7 @@ def test_write__files_have_correct_sorting_across_multiple_files(
     number_of_rows: int,
     rows_per_file: int,
     expected_file_count: int,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     individual_dataframes = []
@@ -376,6 +383,7 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
     dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_file_count = 3
@@ -413,6 +421,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
     dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_file_count = 1
@@ -449,6 +458,7 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
     dbutils: MockDBUtils,
     spark: SparkSession,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_file_count = 2
@@ -489,6 +499,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
     spark: SparkSession,
     dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_columns = [
@@ -548,6 +559,7 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
     spark: SparkSession,
     dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_columns = [
@@ -609,6 +621,7 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
     spark: SparkSession,
     dbutils: MockDBUtils,
     standard_wholesale_fixing_scenario_args: SettlementReportArgs,
+    dummy_logging: None,  # Used implicitly
 ):
     # Arrange
     expected_file_count = 4  # corresponding to the number of grid areas in standard_wholesale_fixing_scenario
