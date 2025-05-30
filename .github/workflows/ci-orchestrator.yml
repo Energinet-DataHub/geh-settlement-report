@@ -55,7 +55,7 @@ jobs:
     strategy:
       matrix:
         n: [auto, logical]
-        dist: [loadfile, load, worksteal, loaddist, loadscope, loadgroup, no]
+        dist: [loadfile, load, worksteal, loadscope, loadgroup, no]
     with:
       packages_directory: source
       pytest_addopts: --ignore-glob='**/integration_test/**' --dist='${{ matrix.dist }}' -n=${{ matrix.n }}
