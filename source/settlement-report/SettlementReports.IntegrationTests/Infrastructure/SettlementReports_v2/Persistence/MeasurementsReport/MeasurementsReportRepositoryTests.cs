@@ -48,7 +48,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             Guid.NewGuid(),
             Guid.NewGuid(),
             new ReportRequestId(Guid.NewGuid().ToString()),
-            new MeasurementsReportRequestDto(requestFilterDto, null, null));
+            new MeasurementsReportRequestDto(requestFilterDto));
 
         // act
         await target.AddOrUpdateAsync(report);
