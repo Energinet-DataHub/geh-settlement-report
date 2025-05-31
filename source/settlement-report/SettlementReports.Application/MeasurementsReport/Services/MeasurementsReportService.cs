@@ -1,7 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
-using System.Text.Json;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿using System.Text.Json;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
@@ -10,20 +7,20 @@ namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Serv
 
 public sealed class MeasurementsReportService : IMeasurementsReportService
 {
-    private readonly IMeasurementsReportRepository _measurementsReportRepository;
+    private readonly IReportRepository<SettlementReports_v2.MeasurementsReport> _reportRepository;
 
-    public MeasurementsReportService(IMeasurementsReportRepository measurementsReportRepository)
+    public MeasurementsReportService(IReportRepository<SettlementReports_v2.MeasurementsReport> reportRepository)
     {
-        _measurementsReportRepository = measurementsReportRepository;
+        _reportRepository = reportRepository;
     }
 
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetReportsAsync(Guid actorId)
     {
-        var settlementReports = (await _measurementsReportRepository
+        var reports = (await _reportRepository
                 .GetByActorIdAsync(actorId)
                 .ConfigureAwait(false))
             .ToList();
-        return settlementReports.Select(Map);
+        return reports.Select(Map);
     }
 
     private static RequestedMeasurementsReportDto Map(SettlementReports_v2.MeasurementsReport report)
