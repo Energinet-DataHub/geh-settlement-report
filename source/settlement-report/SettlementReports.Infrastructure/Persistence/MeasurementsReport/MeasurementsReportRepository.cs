@@ -42,6 +42,6 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)
     {
-        throw new NotImplementedException();
+        return _context.MeasurementsReports.FirstAsync(x => x.JobRunId == jobRunId);
     }
 }

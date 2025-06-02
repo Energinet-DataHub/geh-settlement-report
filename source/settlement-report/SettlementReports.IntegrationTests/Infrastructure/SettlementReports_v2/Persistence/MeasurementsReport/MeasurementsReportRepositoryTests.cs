@@ -41,7 +41,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         await using var context = _databaseManager.CreateDbContext();
         var target = new MeasurementsReportRepository(context);
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            new Dictionary<string, CalculationId?> { { "805", null }, { "806", null } },
+            new List<string> { "805", "806" },
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
@@ -121,14 +121,10 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new MeasurementsReportRepository(setupContext);
 
-        var calculationFilter = new Dictionary<string, CalculationId?>
-        {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-        };
+        var gridAreaCodes = new List<string> { "805", "806" };
 
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            calculationFilter,
+            gridAreaCodes,
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
