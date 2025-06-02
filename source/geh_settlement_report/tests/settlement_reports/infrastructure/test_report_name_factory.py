@@ -23,7 +23,7 @@ def default_settlement_report_args(monkeypatch: pytest.MonkeyPatch) -> Settlemen
     """
     Note: Some tests depend on the values of `period_start` and `period_end`
     """
-    grid_area_uuid = {"016": str(uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373"))}
+    grid_area_uuid = {"016": uuid.UUID("32e49805-20ef-4db2-ac84-c4455de7a373").hex}
     args = [
         f"--report-id={str(uuid.uuid4())}",
         "--requesting-actor-id=4123456789012",
