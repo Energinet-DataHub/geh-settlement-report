@@ -17,7 +17,12 @@ limitations under the License.
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <AssemblyName>Energinet.DataHub.SettlementReport.DatabaseMigration</AssemblyName>
+        <AssemblyName>Energinet.DataHub.Reports.DatabaseMigration</AssemblyName>
+        <!--
+        IMPORTANT: Be careful to change the root namespace as it affects the embedded database migration script names.
+        These names are used in the DbUp migration process, and changing them will
+        make the migration scripts appear as new migrations and thus run again.
+         -->
         <RootNamespace>Energinet.DataHub.SettlementReport.DatabaseMigration</RootNamespace>
     </PropertyGroup>
 

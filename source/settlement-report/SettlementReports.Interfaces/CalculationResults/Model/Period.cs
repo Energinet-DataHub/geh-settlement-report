@@ -14,7 +14,7 @@
 
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
+namespace Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
 
 public readonly record struct Period(Instant Start, Instant End)
 {

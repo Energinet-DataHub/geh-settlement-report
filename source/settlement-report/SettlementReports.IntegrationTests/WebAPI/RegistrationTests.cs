@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.WebAPI;
+namespace Energinet.DataHub.Reports.IntegrationTests.WebAPI;
 
 public class RegistrationTests
 {
@@ -24,7 +24,7 @@ public class RegistrationTests
                 })
             .Build();
 
-        using var application = new WebApplicationFactory<global::SettlementReports.WebAPI.Program>()
+        using var application = new WebApplicationFactory<global::Energinet.DataHub.Reports.WebAPI.Program>()
             .WithWebHostBuilder(
                 webBuilder =>
                 {

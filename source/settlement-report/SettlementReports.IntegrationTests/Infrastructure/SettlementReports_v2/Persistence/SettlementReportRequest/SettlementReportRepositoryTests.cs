@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
-using Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
+namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.SettlementReports_v2.Persistence.SettlementReportRequest;
 
 public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>, IAsyncLifetime
 {
@@ -69,7 +69,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             null,
             null);
 
-        var settlementReportRequest = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var settlementReportRequest = new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -116,7 +116,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             null,
             null);
 
-        var settlementReport = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var settlementReport = new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -161,7 +161,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
     public async Task GetAsync_RequestsExists_ReturnsRequests()
     {
         // arrange
-        IEnumerable<SettlementReport.Application.SettlementReports_v2.SettlementReport> preparedRequests =
+        IEnumerable<Reports.Application.SettlementReports_v2.SettlementReport> preparedRequests =
         [
             await PrepareNewRequestAsync(),
             await PrepareNewRequestAsync(),
@@ -207,7 +207,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
     {
         // Arrange
         var expectedRequest = await PrepareNewRequestAsync();
-        await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        await PrepareNewRequestAsync(requestFilterDto => new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             expectedRequest.ActorId,
@@ -230,7 +230,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
     public async Task GetAsync_RequestsExists_ReturnsRequestsOnlyForJobs()
     {
         // arrange
-        IEnumerable<SettlementReport.Application.SettlementReports_v2.SettlementReport> preparedRequests =
+        IEnumerable<Reports.Application.SettlementReports_v2.SettlementReport> preparedRequests =
         [
             await PrepareNewRequestAsync(),
             await PrepareNewRequestAsync(),
@@ -276,7 +276,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
     {
         // Arrange
         var expectedRequest = await PrepareNewRequestForJobAsync();
-        await PrepareNewRequestForJobAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        await PrepareNewRequestForJobAsync(requestFilterDto => new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             expectedRequest.ActorId,
@@ -284,7 +284,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             new JobRunId(Random.Shared.NextInt64()),
             new ReportRequestId(Guid.NewGuid().ToString()),
             new SettlementReportRequestDto(false, false, false, false, requestFilterDto)));
-        await PrepareNewRequestAsync(requestFilterDto => new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        await PrepareNewRequestAsync(requestFilterDto => new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             expectedRequest.ActorId,
@@ -310,7 +310,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         // arrange
         var expected = await PrepareNewRequestForJobAsync(requestFilterDto =>
         {
-            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            var request = new Reports.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -324,7 +324,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         });
         await PrepareNewRequestAsync(requestFilterDto =>
         {
-            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            var request = new Reports.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -352,7 +352,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         // arrange
         var expected = await PrepareNewRequestForJobAsync(requestFilterDto =>
         {
-            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            var request = new Reports.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -365,7 +365,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         });
         var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
         {
-            var request = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+            var request = new Reports.Application.SettlementReports_v2.SettlementReport(
                 SystemClock.Instance,
                 Guid.NewGuid(),
                 Guid.NewGuid(),
@@ -392,8 +392,8 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         Assert.True(actualSent.IsNotificationSent);
     }
 
-    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(
-        Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
+    private async Task<Reports.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestAsync(
+        Func<SettlementReportRequestFilterDto, Reports.Application.SettlementReports_v2.SettlementReport>? createReport = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new SettlementReportRepository(setupContext);
@@ -411,7 +411,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             null,
             null);
 
-        var settlementReportRequest = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var settlementReportRequest = new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -428,8 +428,8 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         return settlementReportRequest;
     }
 
-    private async Task<SettlementReport.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestForJobAsync(
-        Func<SettlementReportRequestFilterDto, SettlementReport.Application.SettlementReports_v2.SettlementReport>? createReport = null)
+    private async Task<Reports.Application.SettlementReports_v2.SettlementReport> PrepareNewRequestForJobAsync(
+        Func<SettlementReportRequestFilterDto, Reports.Application.SettlementReports_v2.SettlementReport>? createReport = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new SettlementReportRepository(setupContext);
@@ -447,7 +447,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
             null,
             null);
 
-        var settlementReportRequest = new SettlementReport.Application.SettlementReports_v2.SettlementReport(
+        var settlementReportRequest = new Reports.Application.SettlementReports_v2.SettlementReport(
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),

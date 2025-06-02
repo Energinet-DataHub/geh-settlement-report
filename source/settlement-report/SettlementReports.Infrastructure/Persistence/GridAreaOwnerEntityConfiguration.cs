@@ -15,7 +15,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
 public class GridAreaOwnerEntityConfiguration : IEntityTypeConfiguration<GridAreaOwnerEntity>
 {
