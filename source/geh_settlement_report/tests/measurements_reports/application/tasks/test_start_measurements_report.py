@@ -36,8 +36,8 @@ def test_start_measurements_report(
             "--period-start=2025-01-01",
             "--period-end=2025-01-31",
             "--grid-area-codes=[123,456]",
-            "--requesting-actor-id=1234567890",
-            "--energy-supplier-ids=[1234567890]",
+            "--requesting-actor-id=1234567890123",
+            "--energy-supplier-ids=[1234567890123]",
         ],
     )
     monkeypatch.setenv("OUTPUT_PATH", str(output_path))
