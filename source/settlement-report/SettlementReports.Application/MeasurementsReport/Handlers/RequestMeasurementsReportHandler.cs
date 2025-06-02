@@ -7,6 +7,7 @@ namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportHandler
 {
     private readonly IMeasurementsReportDatabricksJobsHelper _jobHelper;
+    private readonly IMeasurementsReportPersistenceService _measurementsReportPersistenceService;
 
     public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper)
     {
@@ -24,7 +25,15 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
 
         var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId, request.ActorGln).ConfigureAwait(false);
 
-        // Eventually the report will be added to the database here
+        await _measurementsReportPersistenceService
+            .PersistAsync(
+                request.UserId,
+                request.ActorId,
+                request.IsFas,
+                runId,
+                reportId,
+                request.RequestDto)
+            .ConfigureAwait(false);
         return runId;
     }
 }
