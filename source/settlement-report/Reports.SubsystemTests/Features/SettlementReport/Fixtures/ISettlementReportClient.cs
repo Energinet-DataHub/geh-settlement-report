@@ -24,6 +24,12 @@ public interface ISettlementReportClient
     Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Gets a list of all measurements reports visible to the current user.
+    /// </summary>
+    /// <returns>A list of measurements reports.</returns>
+    Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets a list of all settlement reports visible to the current user.
     /// </summary>
     /// <returns>A list of settlement reports.</returns>

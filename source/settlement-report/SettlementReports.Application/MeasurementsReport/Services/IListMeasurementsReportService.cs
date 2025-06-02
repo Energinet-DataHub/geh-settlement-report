@@ -8,12 +8,6 @@ namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Serv
 public interface IListMeasurementsReportService
 {
     /// <summary>
-    /// List all measurements reports
-    /// </summary>
-    /// <returns>A list of measurements reports with metadata.</returns>
-    Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync();
-
-    /// <summary>
     /// List all measurements reports for a given actor
     /// </summary>
     /// <param name="actorId">The actorId to return reports for</param>
