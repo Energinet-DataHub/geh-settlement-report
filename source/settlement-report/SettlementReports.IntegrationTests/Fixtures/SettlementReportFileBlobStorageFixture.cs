@@ -17,7 +17,7 @@ using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Reports.IntegrationTests.Fixtures;
 
 public sealed class SettlementReportFileBlobStorageFixture : IAsyncLifetime
 {

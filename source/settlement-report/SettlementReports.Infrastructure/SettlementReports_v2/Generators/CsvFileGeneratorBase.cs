@@ -15,11 +15,10 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Generators;
 
 public abstract class CsvFileGeneratorBase<TRow, TClassMap> : ISettlementReportFileGenerator
     where TClassMap : ClassMap<TRow>

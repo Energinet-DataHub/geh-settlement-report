@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements;
+namespace Energinet.DataHub.Reports.UnitTests.Infrastructure.SqlStatements;
 
 public class SqlResultValueConvertersTests
 {

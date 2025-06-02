@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Application.Model;
+﻿namespace Energinet.DataHub.Reports.Application.Model;
 
 public enum ReportType
 {

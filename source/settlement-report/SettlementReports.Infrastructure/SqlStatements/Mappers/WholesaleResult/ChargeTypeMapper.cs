@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.WholesaleResult;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.WholesaleResult;
 
 public static class ChargeTypeMapper
 {
