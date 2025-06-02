@@ -52,7 +52,6 @@ addopts = [
     "-vv",
     "-s",                            # -s ensures that print("<text>") is written to output.
     # pytest-xdist options
-    # - loadfile is required when using both pytest-xdist and pytest-order
     #   See https://pytest-order.readthedocs.io/en/stable/other_plugins.html#usage-with-pytest-xdist
     "-n=auto",
     "--dist=worksteal",
