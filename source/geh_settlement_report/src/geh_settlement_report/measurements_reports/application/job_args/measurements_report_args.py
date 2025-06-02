@@ -19,7 +19,7 @@ class MeasurementsReportArgs(BaseSettings):
     period_end: datetime = Field(init=False)
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
     requesting_actor_id: str = Field(init=False)
-    energy_supplier_ids: EnergySupplierIds | None = Field(init=False, default_factory=list)
+    energy_supplier_ids: EnergySupplierIds | None = Field(init=False, default=None)
 
     catalog_name: str = Field(init=False)
     output_path: str = Field(init=False)
