@@ -94,37 +94,33 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         Assert.Equal(expectedRequest.Id, actual[0].Id);
     }
 
-
     [Fact]
     public async Task GetByRequestIdAsync_IdMatches_ReturnsRequests()
     {
         // arrange
-        await PrepareNewRequestAsync();
-        await PrepareNewRequestAsync();
+        var expectedReportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
+        var notExpectedReportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var expectedRequest = await PrepareNewRequestAsync();
+        await PrepareNewRequestAsync(reportRequestId: expectedReportRequestId);
+        await PrepareNewRequestAsync(reportRequestId: notExpectedReportRequestId);
 
         await using var context = _databaseManager.CreateDbContext();
         var repository = new MeasurementsReportRepository(context);
 
         // act
-        var actual = (await repository.GetByActorIdAsync(expectedRequest.ActorId)).ToList();
+        var actual = await repository.GetByRequestIdAsync(expectedReportRequestId.Id);
 
         // assert
-        Assert.Single(actual);
-        Assert.Equal(expectedRequest.Id, actual[0].Id);
+        Assert.Equal(actual.RequestId, expectedReportRequestId.Id);
     }
 
-    private async Task<Reports.Application.SettlementReports_v2.MeasurementsReport> PrepareNewRequestAsync(
-        Func<MeasurementsReportRequestFilterDto, Reports.Application.SettlementReports_v2.MeasurementsReport>? createReport = null)
+    private async Task<Reports.Application.SettlementReports_v2.MeasurementsReport> PrepareNewRequestAsync(ReportRequestId? reportRequestId = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new MeasurementsReportRepository(setupContext);
 
-        var gridAreaCodes = new List<string> { "805", "806" };
-
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            gridAreaCodes,
+            ["805", "806"],
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
@@ -132,13 +128,8 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new ReportRequestId(Guid.NewGuid().ToString()),
+            reportRequestId ?? new ReportRequestId(Guid.NewGuid().ToString()),
             new MeasurementsReportRequestDto(requestFilterDto));
-
-        if (createReport != null)
-        {
-            measurementsReportRequest = createReport(requestFilterDto);
-        }
 
         await setupRepository.AddOrUpdateAsync(measurementsReportRequest);
         return measurementsReportRequest;
