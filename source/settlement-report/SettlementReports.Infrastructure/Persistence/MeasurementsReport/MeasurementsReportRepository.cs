@@ -1,4 +1,5 @@
 ﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
@@ -38,6 +39,6 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)
     {
-        throw new NotImplementedException();
+        return _context.MeasurementsReports.FirstAsync(x => x.JobRunId == jobRunId);
     }
 }
