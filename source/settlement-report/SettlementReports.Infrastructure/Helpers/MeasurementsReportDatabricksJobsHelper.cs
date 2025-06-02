@@ -29,6 +29,11 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
         return new JobRunId(runId);
     }
 
+    public Task CancelAsync(long jobRunId)
+    {
+        return _jobsApiClient.Jobs.RunsCancel(jobRunId);
+    }
+
     private async Task<Job> GetJobAsync(string jobName)
     {
         var settlementJob = await _jobsApiClient.Jobs
