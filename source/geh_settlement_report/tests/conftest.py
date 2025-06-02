@@ -27,7 +27,7 @@ def tests_path() -> Path:
 @pytest.fixture
 def dummy_logging(monkeypatch: pytest.MonkeyPatch):
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
-
+    "testtest"
     env = {
         "CLOUD_ROLE_NAME": "test_role",
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "connection_string",
