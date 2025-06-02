@@ -4,7 +4,7 @@ public interface IMeasurementsReportRepository
 {
     Task AddOrUpdateAsync(MeasurementsReport measurementsReport);
 
-    Task<MeasurementsReport> GetAsync(string requestId);
+    Task<MeasurementsReport> GetByRequestIdAsync(string requestId);
 
     Task<IEnumerable<MeasurementsReport>> GetByActorIdAsync(Guid actorId);
 
