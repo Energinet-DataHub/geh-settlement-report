@@ -30,8 +30,7 @@ public sealed class MeasurementsReportService : IMeasurementsReportService
 
     public async Task CancelAsync(ReportRequestId reportRequestId, Guid userId)
     {
-        var report = await _measurementsReportRepository
-            .GetAsync(reportRequestId.Id)
+        var report = await _measurementsReportRepository.GetByRequestIdAsync(reportRequestId.Id)
             .ConfigureAwait(false) ?? throw new InvalidOperationException("Report not found.");
 
         if (!report.JobRunId.HasValue)
