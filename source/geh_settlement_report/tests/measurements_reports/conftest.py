@@ -15,6 +15,7 @@ from geh_settlement_report.measurements_reports.application.job_args.measurement
     MeasurementsReportArgs,
 )
 from geh_settlement_report.measurements_reports.domain.calculation import execute
+from geh_settlement_report.measurements_reports.domain.file_name_factory import file_name_factory
 
 
 @pytest.fixture(scope="module")
@@ -70,7 +71,8 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, dummy_loggin
             # Check if the expected CSV file is in the zip
             files = [Path(f).name for f in zip_file.namelist()]
             assert len(files) == 1, f"Expected exactly one file in zip, found {len(files)} files: {files}"
-            expected_csv_name = f"measurements_report_{args.period_start.strftime('%d-%m-%Y')}_{args.period_end.strftime('%d-%m-%Y')}.csv"
+
+            expected_csv_name = f"{file_name_factory(args)}.csv"
             assert expected_csv_name in files, f"Expected CSV file {expected_csv_name} not found in zip."
 
         # Return test cases
