@@ -6,11 +6,6 @@ from geh_settlement_report.measurements_reports.application.job_args.measurement
 )
 
 
-def _convert_date(date: datetime, timezone: str):
-    """Convert a date to a string in the format YYYY-MM-DD."""
-    return date.astimezone(ZoneInfo(timezone)).strftime("%d-%m-%Y")
-
-
 def file_name_factory(args: MeasurementsReportArgs) -> str:
     """Generate a file name based on the provided arguments."""
     return "_".join(
@@ -22,3 +17,8 @@ def file_name_factory(args: MeasurementsReportArgs) -> str:
             _convert_date(args.period_end, args.time_zone),
         ]
     )
+
+
+def _convert_date(date: datetime, timezone: str):
+    """Convert a date to a string in the format YYYY-MM-DD."""
+    return date.astimezone(ZoneInfo(timezone)).strftime("%d-%m-%Y")
