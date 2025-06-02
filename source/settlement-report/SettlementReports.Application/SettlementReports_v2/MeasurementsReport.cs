@@ -31,6 +31,25 @@ public sealed class MeasurementsReport
         GridAreaCodes = JsonSerializer.Serialize(request.Filter.GridAreaCodes);
     }
 
+    public MeasurementsReport(
+        IClock clock,
+        Guid userId,
+        Guid actorId,
+        JobRunId jobRunId,
+        ReportRequestId requestId,
+        MeasurementsReportRequestDto request)
+    {
+        RequestId = requestId.Id;
+        UserId = userId;
+        ActorId = actorId;
+        JobRunId = jobRunId.Id;
+        CreatedDateTime = clock.GetCurrentInstant();
+        Status = ReportStatus.InProgress;
+        PeriodStart = request.Filter.PeriodStart.ToInstant();
+        PeriodEnd = request.Filter.PeriodEnd.ToInstant();
+        GridAreaCodes = JsonSerializer.Serialize(request.Filter.GridAreaCodes);
+    }
+
     // EF Core Constructor.
     // ReSharper disable once UnusedMember.Local
     private MeasurementsReport()
