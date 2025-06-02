@@ -21,6 +21,7 @@ from tests.integration_test_configuration import IntegrationTestConfiguration
 
 
 class TestWhenInvokedWithArguments:
+    @pytest.mark.no_dummy_logging
     def test_add_info_log_record_to_azure_monitor_with_expected_settings(
         self,
         integration_test_configuration: IntegrationTestConfiguration,
@@ -91,6 +92,7 @@ class TestWhenInvokedWithArguments:
         # Assert, but timeout if not succeeded
         wait_for_condition(assert_logged, timeout=timedelta(minutes=5), step=timedelta(seconds=10))
 
+    @pytest.mark.no_dummy_logging
     def test_add_exception_log_record_to_azure_monitor_with_unexpected_settings(
         self,
         integration_test_configuration: IntegrationTestConfiguration,
