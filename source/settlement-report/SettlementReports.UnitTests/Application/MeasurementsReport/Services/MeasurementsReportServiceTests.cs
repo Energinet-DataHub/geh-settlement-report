@@ -68,7 +68,7 @@ public class MeasurementsReportServiceTests
     }
 
     [Fact]
-    public async Task CancelRequest_ThrowsException_WhenJobRunIdIsMissing()
+    public async Task CancelRequest_WhenJobRunIdIsMissing_ThrowsException()
     {
         // Arrange
         var measurementsReport = CreateMeasurementsReport(null);
