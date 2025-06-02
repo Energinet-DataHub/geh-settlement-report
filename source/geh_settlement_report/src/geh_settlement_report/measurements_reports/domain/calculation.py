@@ -86,7 +86,7 @@ def execute(
     return result
 
 
-def filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
     df_with_grid_area_codes = df.filter(
         F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
         | F.col(MeteringPointPeriodsColumnNames.from_grid_area_code).isin(args.grid_area_codes)
