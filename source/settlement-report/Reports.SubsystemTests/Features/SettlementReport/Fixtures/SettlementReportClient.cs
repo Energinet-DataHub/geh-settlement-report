@@ -31,6 +31,19 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
     }
 
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken)
+    {
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
+
+        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken) ?? [];
+
+        return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
+    }
+
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
     {
         using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");
@@ -83,13 +96,19 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     private async Task<JobRunId> RequestAsync(object requestDto, string endpoint, CancellationToken cancellationToken)
     {
         using var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-
         request.Content = new StringContent(
-            JsonConvert.SerializeObject(requestDto),
-            Encoding.UTF8,
-            "application/json");
+           JsonConvert.SerializeObject(requestDto),
+           Encoding.UTF8,
+           "application/json");
 
         using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
+        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"Request to {endpoint} failed with status code {response.StatusCode}: {responseText}.");
+        }
+
         response.EnsureSuccessStatusCode();
 
         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);

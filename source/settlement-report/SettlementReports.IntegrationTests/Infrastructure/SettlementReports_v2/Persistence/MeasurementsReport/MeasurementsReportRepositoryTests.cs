@@ -16,6 +16,7 @@ using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -39,7 +40,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         await using var context = _databaseManager.CreateDbContext();
         var target = new MeasurementsReportRepository(context);
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            ["805", "806"],
+            new Dictionary<string, CalculationId?> { { "805", null }, { "806", null } },
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
