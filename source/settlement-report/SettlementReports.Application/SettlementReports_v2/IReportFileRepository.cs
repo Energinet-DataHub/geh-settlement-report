@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.Model;
+using Energinet.DataHub.Reports.Application.Model;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public interface IReportFileRepository
 {

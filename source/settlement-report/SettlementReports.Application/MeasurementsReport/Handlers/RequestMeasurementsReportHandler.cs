@@ -1,8 +1,8 @@
-﻿using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 
 public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportHandler
 {

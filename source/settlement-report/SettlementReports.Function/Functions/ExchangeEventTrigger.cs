@@ -2,12 +2,12 @@
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.Core.Messaging.Communication.Subscriber;
+using Energinet.DataHub.Reports.Common.Infrastructure.Telemetry;
 using Energinet.DataHub.RevisionLog.Integration;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Telemetry;
 using Microsoft.Azure.Functions.Worker;
 using NodaTime;
 
-namespace SettlementReports.Function.Functions;
+namespace Energinet.DataHub.Reports.Function.Functions;
 
 /// <summary>
 /// They are used to update "grid-area-ownership-assigned" so that settlement reports know the current,

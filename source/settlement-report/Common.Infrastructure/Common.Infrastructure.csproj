@@ -15,8 +15,8 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.SettlementReport.Common.Infrastructure</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.Common.Infrastructure</RootNamespace>
+    <AssemblyName>Energinet.DataHub.Reports.Common.Infrastructure</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Common.Infrastructure</RootNamespace>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>

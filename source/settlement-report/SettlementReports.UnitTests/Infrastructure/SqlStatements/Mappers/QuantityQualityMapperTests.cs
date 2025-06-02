@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
 using Xunit;
 
-namespace Energinet.DataHub.SettlementReport.UnitTests.Infrastructure.SqlStatements.Mappers;
+namespace Energinet.DataHub.Reports.UnitTests.Infrastructure.SqlStatements.Mappers;
 
 public class QuantityQualityMapperTests
 {

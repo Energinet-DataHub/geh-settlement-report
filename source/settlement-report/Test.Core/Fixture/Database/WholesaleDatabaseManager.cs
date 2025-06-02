@@ -16,7 +16,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using Energinet.DataHub.SettlementReport.DatabaseMigration;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Test.Core.Fixture.Database;
+namespace Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 
 public class WholesaleDatabaseManager<TDatabaseContext> : SqlServerDatabaseManager<TDatabaseContext>
 where TDatabaseContext : DbContext, new()

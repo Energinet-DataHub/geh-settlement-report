@@ -15,20 +15,20 @@
 using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
+using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Commands;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Databricks.Client;
-using SettlementReports.WebAPI.Controllers.Mappers;
 
-namespace SettlementReports.WebAPI.Controllers;
+namespace Energinet.DataHub.Reports.WebAPI.Controllers;
 
 [ApiController]
 [Route("settlement-reports")]

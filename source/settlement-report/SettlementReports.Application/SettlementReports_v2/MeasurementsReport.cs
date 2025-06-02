@@ -1,10 +1,10 @@
 ﻿using System.Text.Json;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 using NodaTime.Extensions;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public sealed class MeasurementsReport
 {

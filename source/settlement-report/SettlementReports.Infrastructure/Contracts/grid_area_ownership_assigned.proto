@@ -17,7 +17,7 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "Contracts/eic_function.proto";
 
-option csharp_namespace = "Energinet.DataHub.SettlementReport.Infrastructure.Contracts";
+option csharp_namespace = "Energinet.DataHub.Reports.Infrastructure.Contracts";
 
 /*
  * GridAreaOwnershipAssigned Integration Event.

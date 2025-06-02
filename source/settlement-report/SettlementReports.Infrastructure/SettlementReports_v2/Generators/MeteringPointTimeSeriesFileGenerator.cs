@@ -15,13 +15,12 @@
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.TypeConversion;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Generators;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Generators;
 
 public sealed class MeteringPointTimeSeriesFileGenerator : ISettlementReportFileGenerator
 {

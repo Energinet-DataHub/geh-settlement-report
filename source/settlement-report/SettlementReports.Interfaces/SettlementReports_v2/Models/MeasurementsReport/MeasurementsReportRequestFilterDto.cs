@@ -1,6 +1,8 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+
+namespace Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 
 public sealed record MeasurementsReportRequestFilterDto(
-    IEnumerable<string> GridAreaCodes,
+    IReadOnlyDictionary<string, CalculationId?> GridAreaCodes,
     DateTimeOffset PeriodStart,
     DateTimeOffset PeriodEnd);
