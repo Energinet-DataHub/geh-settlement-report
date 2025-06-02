@@ -1,6 +1,7 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
 public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 {
@@ -31,9 +32,13 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
         return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport());
     }
 
-    public Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
+    public async Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
     {
-        throw new NotImplementedException();
+        return await _context.MeasurementsReports
+             .Where(x => x.ActorId == actorId && x.JobRunId == null)
+             .OrderByDescending(x => x.Id)
+             .ToListAsync()
+             .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)

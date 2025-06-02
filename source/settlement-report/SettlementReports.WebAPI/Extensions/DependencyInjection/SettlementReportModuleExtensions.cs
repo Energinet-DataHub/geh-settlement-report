@@ -13,26 +13,26 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
-using Energinet.DataHub.SettlementReport.Application.Services;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
-using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.Services;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Application.Services;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Extensions.Options;
+using Energinet.DataHub.Reports.Common.Infrastructure.HealthChecks;
+using Energinet.DataHub.Reports.Infrastructure.Extensions.DependencyInjection;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.Services;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 
-namespace SettlementReports.WebAPI.Extensions.DependencyInjection;
+namespace Energinet.DataHub.Reports.WebAPI.Extensions.DependencyInjection;
 
 public static class SettlementReportModuleExtensions
 {

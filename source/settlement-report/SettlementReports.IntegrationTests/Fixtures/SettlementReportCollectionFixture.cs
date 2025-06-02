@@ -14,7 +14,7 @@
 
 using Xunit;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Reports.IntegrationTests.Fixtures;
 
 /// <summary>
 /// A xUnit collection fixture for ensuring tests don't run in parallel.
