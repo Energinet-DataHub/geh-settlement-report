@@ -4,11 +4,11 @@ from typing import Generator
 
 import geh_common.telemetry.logging_configuration
 import pytest
-from delta import configure_spark_with_delta_pip
 from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 from geh_common.testing.dataframes import AssertDataframesConfiguration
+from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from pyspark.sql import SparkSession
 
 from tests.constants import TESTS_PATH
@@ -69,37 +69,13 @@ def dummy_logging():
         yield
 
 
+# pytest-xdist plugin does not work with SparkSession as a fixture. The session scope is not supported.
+# Therefore, we need to create a global variable to store the Spark session and data directory.
+# This is a workaround to avoid creating a new Spark session for each test.
+_spark, data_dir = get_spark_test_session()
+
+
 @pytest.fixture(scope="session")
-def spark(
-    tests_path: Path,
-) -> Generator[SparkSession, None, None]:
-    warehouse_location = f"{tests_path}/__spark-warehouse__"
-
-    session = configure_spark_with_delta_pip(
-        SparkSession.builder.config("spark.sql.warehouse.dir", warehouse_location)  # type: ignore
-        .config("spark.sql.streaming.schemaInference", True)
-        .config("spark.ui.showConsoleProgress", "false")
-        .config("spark.ui.enabled", "false")
-        .config("spark.ui.dagGraph.retainedRootRDDs", "1")
-        .config("spark.ui.retainedJobs", "1")
-        .config("spark.ui.retainedStages", "1")
-        .config("spark.ui.retainedTasks", "1")
-        .config("spark.sql.ui.retainedExecutions", "1")
-        .config("spark.worker.ui.retainedExecutors", "1")
-        .config("spark.worker.ui.retainedDrivers", "1")
-        .config("spark.default.parallelism", 1)
-        .config("spark.driver.memory", "2g")
-        .config("spark.executor.memory", "2g")
-        .config("spark.rdd.compress", False)
-        .config("spark.shuffle.compress", False)
-        .config("spark.shuffle.spill.compress", False)
-        .config("spark.sql.shuffle.partitions", 1)
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config(
-            "spark.sql.catalog.spark_catalog",
-            "org.apache.spark.sql.delta.catalog.DeltaCatalog",
-        )
-    ).getOrCreate()
-
-    yield session
-    session.stop()
+def spark() -> Generator[SparkSession, None, None]:
+    yield _spark
+    _spark.stop()
