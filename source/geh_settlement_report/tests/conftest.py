@@ -25,8 +25,11 @@ def tests_path() -> Path:
 
 
 @pytest.fixture(autouse=True)
-def dummy_logging(monkeypatch: pytest.MonkeyPatch):
+def dummy_logging(request, monkeypatch: pytest.MonkeyPatch):
     """Ensure that logging hooks don't fail due to _TRACER_NAME not being set."""
+    # skip if we don't want dummylogging
+    if "no_dummy_logging" in request.keywords:
+        yield
 
     env = {
         "CLOUD_ROLE_NAME": "test_role",
