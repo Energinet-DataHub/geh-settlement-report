@@ -1,10 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using FluentAssertions;
 using Moq;
 using NodaTime;
@@ -88,11 +86,7 @@ public class MeasurementsReportServiceTests
 
     private static Reports.Application.SettlementReports_v2.MeasurementsReport CreateMeasurementsReport(JobRunId? jobRunId)
     {
-        var gridAreas = new ReadOnlyDictionary<string, CalculationId?>(new Dictionary<string, CalculationId?>
-        {
-            { "101", new CalculationId(Guid.NewGuid()) },
-            { "102", new CalculationId(Guid.NewGuid()) },
-        });
+        var gridAreas = new List<string> { "101", "102" };
         var request = new MeasurementsReportRequestDto(
             new MeasurementsReportRequestFilterDto(
                 gridAreas,
