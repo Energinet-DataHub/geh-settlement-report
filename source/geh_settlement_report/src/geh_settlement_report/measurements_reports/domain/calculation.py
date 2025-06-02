@@ -23,8 +23,8 @@ def execute(
     calculated_measurements: DataFrame,
     metering_point_periods: DataFrame,
 ) -> DataFrame:
-    filtered_measurements = apply_filters(args, calculated_measurements)
-    filtered_metering_point_periods = apply_filters(args, metering_point_periods)
+    filtered_measurements = filter_calculated_measurements(args, calculated_measurements)
+    filtered_metering_point_periods = filter_metering_point_periods(args, metering_point_periods)
 
     result = (
         filtered_measurements.alias("m")
@@ -86,21 +86,18 @@ def execute(
     return result
 
 
-def apply_filters(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
-    filtered = df
-    if (
-        MeteringPointPeriodsColumnNames.grid_area_code in filtered.columns
-        or MeteringPointPeriodsColumnNames.from_grid_area_code in filtered.columns
-        or MeteringPointPeriodsColumnNames.to_grid_area_code in filtered.columns
-    ):
-        filtered = filtered.filter(
-            F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
-            | F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
-            | F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
-        )
-    if MeasurementsGoldCurrentV1ColumnNames.observation_time in filtered.columns:
-        filtered = filtered.filter(
-            (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) >= args.period_start)
-            & (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) < args.period_end)
-        )
-    return filtered
+def filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+    df_with_grid_area_codes = df.filter(
+        F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
+        | F.col(MeteringPointPeriodsColumnNames.from_grid_area_code).isin(args.grid_area_codes)
+        | F.col(MeteringPointPeriodsColumnNames.to_grid_area_code).isin(args.grid_area_codes)
+    )
+
+    return df_with_grid_area_codes
+
+
+def filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+    df_in_period = df.filter(
+        F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time).between(args.period_start, args.period_end)
+    )
+    return df_in_period
