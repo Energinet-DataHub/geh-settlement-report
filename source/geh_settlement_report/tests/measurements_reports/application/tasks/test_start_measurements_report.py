@@ -13,7 +13,6 @@ def test_start_measurements_report(
     spark: SparkSession,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path_factory: pytest.TempPathFactory,
-    dummy_logging: None,
 ):
     # Arrange
     report_id = uuid.uuid4().hex
