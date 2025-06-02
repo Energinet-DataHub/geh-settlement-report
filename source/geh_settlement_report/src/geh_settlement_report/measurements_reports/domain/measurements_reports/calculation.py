@@ -46,7 +46,20 @@ def execute(
         )
     )
 
-    files = write_csv_files(result, args.output_path)
+    def file_name_generater(_: str, partitions: dict) -> str:
+        """Generate a file name based on the provided file name and partitions.
+
+        This function is used to create a unique file name for each partitioned file.
+        """
+        return (
+            f"measurements_report_{args.period_start.strftime('%d-%m-%Y')}_{args.period_end.strftime('%d-%m-%Y')}.csv"
+        )
+
+    files = write_csv_files(
+        result,
+        args.output_path,
+        file_name_factory=file_name_generater,
+    )
     create_zip_file(
         get_dbutils(spark),
         Path(args.output_path) / f"{args.report_id}.zip",

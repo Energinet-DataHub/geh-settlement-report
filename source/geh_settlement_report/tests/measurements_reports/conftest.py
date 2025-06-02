@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 import yaml
@@ -64,6 +65,12 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, dummy_loggin
         assert zip_path.exists(), f"Zip file {zip_path} was not created."
         assert zip_path.is_file(), f"Expected {zip_path} to be a file."
         assert zip_path.stat().st_size > 0, f"Zip file {zip_path} is empty."
+
+        with ZipFile(zip_path, "r") as zip_file:
+            # Check if the expected CSV file is in the zip
+            files = [Path(f).name for f in zip_file.namelist()]
+            expected_csv_name = f"measurements_report_{args.period_start.strftime('%d-%m-%Y')}_{args.period_end.strftime('%d-%m-%Y')}.csv"
+            assert expected_csv_name in files, f"Expected CSV file {expected_csv_name} not found in zip."
 
         # Return test cases
         return TestCases(
