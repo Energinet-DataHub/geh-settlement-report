@@ -14,7 +14,7 @@
 
 using System.Reflection;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.DeltaTableConstants;
 
 public class EnergyResultColumnNames
 {

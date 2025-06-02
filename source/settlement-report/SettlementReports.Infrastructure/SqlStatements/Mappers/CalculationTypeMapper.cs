@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 
 public static class CalculationTypeMapper
 {

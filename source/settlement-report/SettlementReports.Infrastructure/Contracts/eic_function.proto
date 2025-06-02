@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Energinet.DataHub.SettlementReport.Infrastructure.Contracts";
+option csharp_namespace = "Energinet.DataHub.Reports.Infrastructure.Contracts";
 
 enum EicFunction {
   /*

@@ -18,13 +18,13 @@ using System.Net.Http.Json;
 using System.Reflection;
 using CsvHelper;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Options;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2.Statements;
+using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2.Statements;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Reports.IntegrationTests.Fixtures;
 
 public class MigrationsFreeDatabricksSchemaManager
 {

@@ -1,8 +1,8 @@
 ﻿using Azure.Storage.Blobs;
-using Energinet.DataHub.SettlementReport.Application.Model;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.Model;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
 
 public sealed class ReportFileRepository : IReportFileRepository
 {
