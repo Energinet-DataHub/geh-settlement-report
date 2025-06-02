@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
@@ -71,5 +72,58 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         Assert.Equal(report.GridAreaCodes, actual.GridAreaCodes);
         Assert.Equal(report.JobRunId, actual.JobRunId);
         Assert.Equal(report.EndedDateTime, actual.EndedDateTime);
+    }
+
+    [Fact]
+    public async Task GetAsync_ActorIdMatches_ReturnsRequests()
+    {
+        // arrange
+        await PrepareNewRequestAsync();
+        await PrepareNewRequestAsync();
+
+        var expectedRequest = await PrepareNewRequestAsync();
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new MeasurementsReportRepository(context);
+
+        // act
+        var actual = (await repository.GetByActorIdAsync(expectedRequest.ActorId)).ToList();
+
+        // assert
+        Assert.Single(actual);
+        Assert.Equal(expectedRequest.Id, actual[0].Id);
+    }
+
+    private async Task<Reports.Application.SettlementReports_v2.MeasurementsReport> PrepareNewRequestAsync(
+        Func<MeasurementsReportRequestFilterDto, Reports.Application.SettlementReports_v2.MeasurementsReport>? createReport = null)
+    {
+        await using var setupContext = _databaseManager.CreateDbContext();
+        var setupRepository = new MeasurementsReportRepository(setupContext);
+
+        var calculationFilter = new Dictionary<string, CalculationId?>
+        {
+            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
+        };
+
+        var requestFilterDto = new MeasurementsReportRequestFilterDto(
+            calculationFilter,
+            new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
+
+        var measurementsReportRequest = new Reports.Application.SettlementReports_v2.MeasurementsReport(
+            SystemClock.Instance,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            new ReportRequestId(Guid.NewGuid().ToString()),
+            new MeasurementsReportRequestDto(requestFilterDto));
+
+        if (createReport != null)
+        {
+            measurementsReportRequest = createReport(requestFilterDto);
+        }
+
+        await setupRepository.AddOrUpdateAsync(measurementsReportRequest);
+        return measurementsReportRequest;
     }
 }
