@@ -27,7 +27,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
         _context = context;
     }
 
-    public async Task AddOrUpdateAsync(Application.SettlementReports_v2.SettlementReport request)
+    public async Task AddOrUpdateAsync(SettlementReport request)
     {
         if (request.Id == 0)
         {
@@ -37,19 +37,19 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task DeleteAsync(Application.SettlementReports_v2.SettlementReport request)
+    public async Task DeleteAsync(SettlementReport request)
     {
         _context.SettlementReports.Remove(request);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public Task<Application.SettlementReports_v2.SettlementReport> GetAsync(string requestId)
+    public Task<SettlementReport> GetAsync(string requestId)
     {
         return _context.SettlementReports
             .FirstAsync(x => x.RequestId == requestId);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetAsync()
+    public async Task<IEnumerable<SettlementReport>> GetAsync()
     {
         return await _context.SettlementReports
             .Where(x => x.JobId == null)
@@ -58,22 +58,22 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetAsync(Guid actorId)
+    public async Task<IEnumerable<SettlementReport>> GetAsync(Guid actorId)
     {
-            return await _context.SettlementReports
-                .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
-                .OrderByDescending(x => x.Id)
-                .ToListAsync()
-                .ConfigureAwait(false);
+        return await _context.SettlementReports
+            .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
+            .OrderByDescending(x => x.Id)
+            .ToListAsync()
+            .ConfigureAwait(false);
     }
 
-    public Task<Application.SettlementReports_v2.SettlementReport> GetAsync(long jobId)
+    public Task<SettlementReport> GetAsync(long jobId)
     {
         return _context.SettlementReports
             .FirstAsync(x => x.JobId == jobId);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetForJobsAsync()
+    public async Task<IEnumerable<SettlementReport>> GetForJobsAsync()
     {
         return await _context.SettlementReports
             .Where(x => x.JobId != null)
@@ -82,7 +82,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetForJobsAsync(Guid actorId)
+    public async Task<IEnumerable<SettlementReport>> GetForJobsAsync(Guid actorId)
     {
         return await _context.SettlementReports
             .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId != null)
@@ -91,10 +91,11 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
+    public async Task<IEnumerable<SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
     {
         return await _context.SettlementReports
-            .Where(x => x.IsNotificationSent == false && (x.Status == ReportStatus.Completed || x.Status == ReportStatus.Failed))
+            .Where(x => x.IsNotificationSent == false &&
+                        (x.Status == ReportStatus.Completed || x.Status == ReportStatus.Failed))
             .OrderBy(x => x.EndedDateTime)
             .ToListAsync()
             .ConfigureAwait(false);

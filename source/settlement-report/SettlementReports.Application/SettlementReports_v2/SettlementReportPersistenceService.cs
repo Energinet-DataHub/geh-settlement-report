@@ -32,17 +32,6 @@ public sealed class SettlementReportPersistenceService : ISettlementReportPersis
         Guid userId,
         Guid actorId,
         bool hideReport,
-        ReportRequestId requestId,
-        SettlementReportRequestDto request)
-    {
-        var settlementReport = new SettlementReport(SystemClock.Instance, userId, actorId, hideReport, requestId, request);
-        return _repository.AddOrUpdateAsync(settlementReport);
-    }
-
-    public Task PersistAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
         JobRunId jobId,
         ReportRequestId requestId,
         SettlementReportRequestDto request)
