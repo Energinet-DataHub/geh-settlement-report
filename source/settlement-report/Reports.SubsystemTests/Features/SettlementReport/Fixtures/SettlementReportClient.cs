@@ -85,6 +85,19 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         responseMessage.EnsureSuccessStatusCode();
     }
 
+    public async Task CancelMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/cancel");
+
+        request.Content = new StringContent(
+            JsonConvert.SerializeObject(requestId),
+            Encoding.UTF8,
+            "application/json");
+
+        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken);
+        responseMessage.EnsureSuccessStatusCode();
+    }
+
     private static bool IsPeriodAcrossMonths(SettlementReportRequestFilterDto settlementReportRequestFilter)
     {
         var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(settlementReportRequestFilter.PeriodStart, "Romance Standard Time");
