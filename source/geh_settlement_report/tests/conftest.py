@@ -7,10 +7,37 @@ import pytest
 from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
+from geh_common.testing.dataframes import AssertDataframesConfiguration
 from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from pyspark.sql import SparkSession
 
 from tests.constants import TESTS_PATH
+from tests.testsession_configuration import TestSessionConfiguration
+
+
+@pytest.fixture(scope="session")
+def test_session_configuration() -> TestSessionConfiguration:
+    """Load the test session configuration from the testsession.local.settings.yml file.
+
+    This is a useful feature for developers who wants to run the tests with different configurations
+    on their local machine. The file is not included in the repository, so it's up to the developer to create it.
+    """
+    settings_file_path = TESTS_PATH / "testsession.local.settings.yml"
+    return TestSessionConfiguration.load(settings_file_path)
+
+
+@pytest.fixture(scope="session")
+def assert_dataframes_configuration(
+    test_session_configuration: TestSessionConfiguration,
+) -> AssertDataframesConfiguration:
+    """This fixture is used for comparing data frames in scenario tests.
+
+    It's mainly specific to the scenario tests. The fixture is placed here to avoid code duplication."""
+    return AssertDataframesConfiguration(
+        show_actual_and_expected_count=test_session_configuration.scenario_tests.show_actual_and_expected_count,
+        show_actual_and_expected=test_session_configuration.scenario_tests.show_actual_and_expected,
+        show_columns_when_actual_and_expected_are_equal=test_session_configuration.scenario_tests.show_columns_when_actual_and_expected_are_equal,
+    )
 
 
 @pytest.fixture(scope="session")
