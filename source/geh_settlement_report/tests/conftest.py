@@ -30,6 +30,7 @@ def dummy_logging(request, monkeypatch: pytest.MonkeyPatch):
     # skip if we don't want dummylogging
     if "no_dummy_logging" in request.keywords:
         yield
+        return
 
     env = {
         "CLOUD_ROLE_NAME": "test_role",
