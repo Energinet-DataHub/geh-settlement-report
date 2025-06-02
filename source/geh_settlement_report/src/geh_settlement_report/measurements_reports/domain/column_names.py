@@ -1,4 +1,4 @@
-class MeasurementsReport:
+class MeasurementsReportColumnNames:
     """Column names for the MeasurementsReport table."""
 
     grid_area_code = "grid_area_code"
@@ -13,7 +13,7 @@ class MeasurementsReport:
     unit = "unit"
 
 
-class MeteringPointPeriods:
+class MeteringPointPeriodsColumnNames:
     """Column names for the MeteringPointPeriods table."""
 
     grid_area_code = "grid_area_code"
@@ -29,7 +29,7 @@ class MeteringPointPeriods:
     period_to_date = "period_to_date"
 
 
-class MeasurementsGoldCurrentV1:
+class MeasurementsGoldCurrentV1ColumnNames:
     """Column names for the MeasurementsGoldCurrentV1 data product."""
 
     metering_point_id = "metering_point_id"
