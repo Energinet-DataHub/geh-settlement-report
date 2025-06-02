@@ -60,11 +60,11 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
 
     public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetAsync(Guid actorId)
     {
-        return await _context.SettlementReports
-            .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
-            .OrderByDescending(x => x.Id)
-            .ToListAsync()
-            .ConfigureAwait(false);
+            return await _context.SettlementReports
+                .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
+                .OrderByDescending(x => x.Id)
+                .ToListAsync()
+                .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.SettlementReport> GetAsync(long jobId)
