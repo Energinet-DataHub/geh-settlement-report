@@ -1,23 +1,7 @@
-﻿// Copyright 2020 Energinet DataHub A/S
-//
-// Licensed under the Apache License, Version 2.0 (the "License2");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using Energinet.DataHub.Reports.Infrastructure.Persistence;
+﻿using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -41,7 +25,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         await using var context = _databaseManager.CreateDbContext();
         var target = new MeasurementsReportRepository(context);
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            new Dictionary<string, CalculationId?> { { "805", null }, { "806", null } },
+            new List<string> { "805", "806" },
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
@@ -75,7 +59,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
     }
 
     [Fact]
-    public async Task GetAsync_ActorIdMatches_ReturnsRequests()
+    public async Task GetByActorIdAsync_ActorIdMatches_ReturnsRequests()
     {
         // arrange
         await PrepareNewRequestAsync();
@@ -94,20 +78,33 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         Assert.Equal(expectedRequest.Id, actual[0].Id);
     }
 
-    private async Task<Reports.Application.SettlementReports_v2.MeasurementsReport> PrepareNewRequestAsync(
-        Func<MeasurementsReportRequestFilterDto, Reports.Application.SettlementReports_v2.MeasurementsReport>? createReport = null)
+    [Fact]
+    public async Task GetByRequestIdAsync_IdMatches_ReturnsRequests()
+    {
+        // arrange
+        var expectedReportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
+        var notExpectedReportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
+
+        await PrepareNewRequestAsync(reportRequestId: expectedReportRequestId);
+        await PrepareNewRequestAsync(reportRequestId: notExpectedReportRequestId);
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new MeasurementsReportRepository(context);
+
+        // act
+        var actual = await repository.GetByRequestIdAsync(expectedReportRequestId.Id);
+
+        // assert
+        Assert.Equal(actual.RequestId, expectedReportRequestId.Id);
+    }
+
+    private async Task<Reports.Application.SettlementReports_v2.MeasurementsReport> PrepareNewRequestAsync(ReportRequestId? reportRequestId = null)
     {
         await using var setupContext = _databaseManager.CreateDbContext();
         var setupRepository = new MeasurementsReportRepository(setupContext);
 
-        var calculationFilter = new Dictionary<string, CalculationId?>
-        {
-            { "805", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-            { "806", new CalculationId(Guid.Parse("D116DD8A-898E-48F1-8200-D31D12F82545")) },
-        };
-
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            calculationFilter,
+            ["805", "806"],
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
@@ -115,13 +112,8 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new ReportRequestId(Guid.NewGuid().ToString()),
+            reportRequestId ?? new ReportRequestId(Guid.NewGuid().ToString()),
             new MeasurementsReportRequestDto(requestFilterDto));
-
-        if (createReport != null)
-        {
-            measurementsReportRequest = createReport(requestFilterDto);
-        }
 
         await setupRepository.AddOrUpdateAsync(measurementsReportRequest);
         return measurementsReportRequest;

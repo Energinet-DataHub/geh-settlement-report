@@ -9,4 +9,6 @@ public interface IMeasurementsReportDatabricksJobsHelper
         MeasurementsReportRequestDto request,
         ReportRequestId reportRequestId,
         string actorGln);
+
+    Task CancelAsync(long reportJobRunId);
 }

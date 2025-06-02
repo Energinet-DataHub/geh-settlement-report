@@ -18,7 +18,7 @@ public sealed class MeasurementsReportFileService : IMeasurementsReportFileServi
 
     public async Task<Stream> DownloadAsync(ReportRequestId requestId)
     {
-        var report = await _repository.GetAsync(requestId.Id).ConfigureAwait(false);
+        var report = await _repository.GetByRequestIdAsync(requestId.Id).ConfigureAwait(false);
 
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a blob file name.");
