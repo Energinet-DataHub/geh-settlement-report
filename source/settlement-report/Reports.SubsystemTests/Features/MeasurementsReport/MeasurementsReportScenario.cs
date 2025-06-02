@@ -42,7 +42,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
     public void Given_ValidReportRequest()
     {
         var filter = new MeasurementsReportRequestFilterDto(
-            new Dictionary<string, CalculationId?> { { "543", null } },
+            new List<string> { "543" },
             new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
