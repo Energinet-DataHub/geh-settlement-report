@@ -19,7 +19,7 @@ from geh_settlement_report.measurements_reports.domain.file_name_factory import 
 
 
 @pytest.fixture(scope="module")
-def test_cases(spark: SparkSession, request: pytest.FixtureRequest, dummy_logging, tmp_path_factory) -> TestCases:
+def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_factory) -> TestCases:
     """Fixture used for scenario tests. Learn more in package `testcommon.etl`."""
 
     # Get the path to the scenario
