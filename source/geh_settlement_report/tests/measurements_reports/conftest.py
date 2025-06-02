@@ -14,7 +14,7 @@ from pyspark.sql import SparkSession
 from geh_settlement_report.measurements_reports.application.job_args.measurements_report_args import (
     MeasurementsReportArgs,
 )
-from geh_settlement_report.measurements_reports.domain.measurements_reports.calculation import execute
+from geh_settlement_report.measurements_reports.domain.calculation import execute
 
 
 @pytest.fixture(scope="module")
@@ -45,7 +45,7 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, dummy_loggin
         sysargs = [x for k, v in scenario_parameters.items() for x in [f"--{k.replace('_', '-')}", str(v)]]
         monkeypatch.setattr(sys, "argv", ["program"] + sysargs)
         monkeypatch.setattr(
-            "geh_settlement_report.measurements_reports.domain.measurements_reports.calculation.get_dbutils",
+            "geh_settlement_report.measurements_reports.domain.calculation.get_dbutils",
             lambda _: MockDBUtils(),
         )
         monkeypatch.setenv("CATALOG_NAME", "spark_catalog")
