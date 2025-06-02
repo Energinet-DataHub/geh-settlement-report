@@ -31,7 +31,7 @@ public class MeasurementsReportServiceTests
     }
 
     [Fact]
-    public async Task CancelRequest_ThrowsException_WhenReportMarkedAsFailed()
+    public async Task CancelRequest_WhenReportMarkedAsFailed_ThrowsException()
     {
         // Arrange
         var measurementsReport = CreateMeasurementsReport(new JobRunId(Random.Shared.NextInt64()));
