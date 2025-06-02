@@ -50,7 +50,7 @@ public class MeasurementsReportServiceTests
     }
 
     [Fact]
-    public async Task CancelRequest_ThrowsException_WhenReportStartedByAnotherUser()
+    public async Task CancelRequest_WhenReportStartedByAnotherUser_ThrowsException()
     {
         // Arrange
         var otherUserId = Guid.NewGuid();
