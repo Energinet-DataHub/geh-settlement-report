@@ -18,7 +18,7 @@ public class MeasurementsReportServiceTests
         // Arrange
         var measurementsReport = CreateMeasurementsReport(new JobRunId(Random.Shared.NextInt64()));
         var measurementsReportRepositoryMock = new Mock<IMeasurementsReportRepository>();
-        measurementsReportRepositoryMock.Setup(x => x.GetAsync(measurementsReport.RequestId))
+        measurementsReportRepositoryMock.Setup(x => x.GetByRequestIdAsync(measurementsReport.RequestId))
             .ReturnsAsync(measurementsReport);
         var jobHelperMock = new Mock<IMeasurementsReportDatabricksJobsHelper>();
         jobHelperMock
@@ -38,7 +38,7 @@ public class MeasurementsReportServiceTests
         measurementsReport.MarkAsFailed();
 
         var measurementsReportRepositoryMock = new Mock<IMeasurementsReportRepository>();
-        measurementsReportRepositoryMock.Setup(x => x.GetAsync(measurementsReport.RequestId))
+        measurementsReportRepositoryMock.Setup(x => x.GetByRequestIdAsync(measurementsReport.RequestId))
             .ReturnsAsync(measurementsReport);
         var jobHelperMock = new Mock<IMeasurementsReportDatabricksJobsHelper>();
         var sut = new MeasurementsReportService(measurementsReportRepositoryMock.Object, jobHelperMock.Object);
@@ -56,7 +56,7 @@ public class MeasurementsReportServiceTests
         var otherUserId = Guid.NewGuid();
         var measurementsReport = CreateMeasurementsReport(new JobRunId(Random.Shared.NextInt64()));
         var measurementsReportRepositoryMock = new Mock<IMeasurementsReportRepository>();
-        measurementsReportRepositoryMock.Setup(x => x.GetAsync(measurementsReport.RequestId))
+        measurementsReportRepositoryMock.Setup(x => x.GetByRequestIdAsync(measurementsReport.RequestId))
             .ReturnsAsync(measurementsReport);
         var jobHelperMock = new Mock<IMeasurementsReportDatabricksJobsHelper>();
         var sut = new MeasurementsReportService(measurementsReportRepositoryMock.Object, jobHelperMock.Object);
@@ -73,7 +73,7 @@ public class MeasurementsReportServiceTests
         // Arrange
         var measurementsReport = CreateMeasurementsReport(null);
         var measurementsReportRepositoryMock = new Mock<IMeasurementsReportRepository>();
-        measurementsReportRepositoryMock.Setup(x => x.GetAsync(measurementsReport.RequestId))
+        measurementsReportRepositoryMock.Setup(x => x.GetByRequestIdAsync(measurementsReport.RequestId))
             .ReturnsAsync(measurementsReport);
         var jobHelperMock = new Mock<IMeasurementsReportDatabricksJobsHelper>();
         var sut = new MeasurementsReportService(measurementsReportRepositoryMock.Object, jobHelperMock.Object);
