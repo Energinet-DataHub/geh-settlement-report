@@ -1,17 +1,21 @@
 ﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using NodaTime;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 
 public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportHandler
 {
     private readonly IMeasurementsReportDatabricksJobsHelper _jobHelper;
-    private readonly IMeasurementsReportPersistenceService _measurementsReportPersistenceService;
+    private readonly IMeasurementsReportRepository _repository;
 
-    public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper)
+    public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper, IMeasurementsReportRepository repository)
     {
         _jobHelper = jobHelper;
+        _repository = repository;
     }
 
     public async Task<JobRunId> HandleAsync(RequestMeasurementsReportCommand request)
@@ -21,19 +25,19 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
 
     private async Task<JobRunId> StartReportAsync(RequestMeasurementsReportCommand request)
     {
-        var reportId = new ReportRequestId(Guid.NewGuid().ToString());
+        var reportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId, request.ActorGln).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportRequestId, request.ActorGln).ConfigureAwait(false);
 
-        await _measurementsReportPersistenceService
-            .PersistAsync(
-                request.UserId,
-                request.ActorId,
-                request.IsFas,
-                runId,
-                reportId,
-                request.RequestDto)
-            .ConfigureAwait(false);
+        var measurementsReport = new SettlementReports_v2.MeasurementsReport(
+            clock: SystemClock.Instance,
+            userId: request.UserId,
+            actorId: request.ActorId,
+            requestId: reportRequestId,
+            request: request.RequestDto);
+
+        await _repository.AddOrUpdateAsync(measurementsReport).ConfigureAwait(false);
+
         return runId;
     }
 }
