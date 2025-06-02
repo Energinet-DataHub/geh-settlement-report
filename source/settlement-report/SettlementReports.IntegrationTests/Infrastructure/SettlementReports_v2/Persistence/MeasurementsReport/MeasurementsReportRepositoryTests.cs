@@ -75,7 +75,28 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
     }
 
     [Fact]
-    public async Task GetAsync_ActorIdMatches_ReturnsRequests()
+    public async Task GetByActorIdAsync_ActorIdMatches_ReturnsRequests()
+    {
+        // arrange
+        await PrepareNewRequestAsync();
+        await PrepareNewRequestAsync();
+
+        var expectedRequest = await PrepareNewRequestAsync();
+
+        await using var context = _databaseManager.CreateDbContext();
+        var repository = new MeasurementsReportRepository(context);
+
+        // act
+        var actual = (await repository.GetByActorIdAsync(expectedRequest.ActorId)).ToList();
+
+        // assert
+        Assert.Single(actual);
+        Assert.Equal(expectedRequest.Id, actual[0].Id);
+    }
+
+
+    [Fact]
+    public async Task GetByRequestIdAsync_IdMatches_ReturnsRequests()
     {
         // arrange
         await PrepareNewRequestAsync();
