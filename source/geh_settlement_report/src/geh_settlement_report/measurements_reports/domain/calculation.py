@@ -23,8 +23,8 @@ def execute(
     calculated_measurements: DataFrame,
     metering_point_periods: DataFrame,
 ) -> DataFrame:
-    filtered_measurements = filter_calculated_measurements(args, calculated_measurements)
-    filtered_metering_point_periods = filter_metering_point_periods(args, metering_point_periods)
+    filtered_measurements = _filter_calculated_measurements(args, calculated_measurements)
+    filtered_metering_point_periods = _filter_metering_point_periods(args, metering_point_periods)
 
     result = (
         filtered_measurements.alias("m")
