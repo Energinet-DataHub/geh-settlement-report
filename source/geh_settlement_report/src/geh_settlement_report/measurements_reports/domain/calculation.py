@@ -96,7 +96,7 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
     return df_with_grid_area_codes
 
 
-def filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+def _filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
     df_in_period = df.filter(
         F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time).between(args.period_start, args.period_end)
     )
