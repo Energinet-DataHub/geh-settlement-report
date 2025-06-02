@@ -1,7 +1,7 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
 public sealed class MeasurementsReportFileService : IMeasurementsReportFileService
 {

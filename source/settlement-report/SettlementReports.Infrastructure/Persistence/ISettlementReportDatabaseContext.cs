@@ -14,11 +14,13 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
 public interface ISettlementReportDatabaseContext
 {
     DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
+
+    DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; }
 
     DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
 

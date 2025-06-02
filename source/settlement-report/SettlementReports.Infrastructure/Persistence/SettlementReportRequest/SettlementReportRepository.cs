@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 
 public sealed class SettlementReportRepository : ISettlementReportRepository
 {
@@ -60,11 +60,11 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
 
     public async Task<IEnumerable<Application.SettlementReports_v2.SettlementReport>> GetAsync(Guid actorId)
     {
-        return await _context.SettlementReports
-            .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
-            .OrderByDescending(x => x.Id)
-            .ToListAsync()
-            .ConfigureAwait(false);
+            return await _context.SettlementReports
+                .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
+                .OrderByDescending(x => x.Id)
+                .ToListAsync()
+                .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.SettlementReport> GetAsync(long jobId)

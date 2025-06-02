@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults;
 using NodaTime;
 using NodaTime.Extensions;
-using EnergyResultsResolution = Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults.Resolution;
-using InternalPeriod = Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.Period;
-using WholesaleResolution = Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.WholesaleResults.Resolution;
+using EnergyResultsResolution = Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults.Resolution;
+using InternalPeriod = Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.Period;
+using WholesaleResolution = Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.WholesaleResults.Resolution;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Factories;
+namespace Energinet.DataHub.Reports.Infrastructure.Factories;
 
 public static class PeriodHelper
 {

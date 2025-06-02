@@ -1,16 +1,16 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SettlementReports.WebAPI.Controllers;
+namespace Energinet.DataHub.Reports.WebAPI.Controllers;
 
 [ApiController]
 [Route("measurements-reports")]
@@ -34,9 +34,11 @@ public class MeasurementsReportsController
     [Route("request")]
     [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
-        [FromBody] MeasurementsReportRequestDto reportRequest)
+        [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
+        var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
+
+        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest, actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -46,11 +48,9 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
     {
-        return new List<RequestedMeasurementsReportDto>();
-
-        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]

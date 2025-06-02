@@ -1,4 +1,7 @@
-﻿using Energinet.DataHub.Core.TestCommon.Diagnostics;
+﻿using Energinet.DataHub.Core.TestCommon;
+using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.States;
 using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
@@ -41,5 +44,31 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
     public void SetTestOutputHelper(ITestOutputHelper? testOutputHelper)
     {
         Logger.TestOutputHelper = testOutputHelper;
+    }
+
+    public async Task<(bool IsCompletedOrFailed, RequestedMeasurementsReportDto? ReportRequest)> WaitForReportGenerationCompletedOrFailedAsync(
+        JobRunId jobRunId,
+        TimeSpan waitTimeLimit)
+    {
+        var delay = TimeSpan.FromSeconds(30);
+
+        RequestedMeasurementsReportDto? reportRequest = null;
+
+        var isCompletedOrFailed = await Awaiter.TryWaitUntilConditionAsync(
+            async () =>
+            {
+                reportRequest = await GetReportRequestByJobRunIdAsync(jobRunId);
+                return reportRequest?.Status is ReportStatus.Completed or ReportStatus.Failed;
+            },
+            waitTimeLimit,
+            delay);
+
+        return (isCompletedOrFailed, reportRequest);
+    }
+
+    private async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
+    {
+        var reportRequests = await ReportsClient.GetMeasurementsReportAsync(CancellationToken.None);
+        return reportRequests.FirstOrDefault(x => x.JobRunId is not null && x.JobRunId.Id == jobRunId.Id);
     }
 }

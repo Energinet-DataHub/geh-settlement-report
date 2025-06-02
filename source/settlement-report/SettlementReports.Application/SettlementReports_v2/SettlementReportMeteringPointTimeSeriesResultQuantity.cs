@@ -14,6 +14,6 @@
 
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public sealed record SettlementReportMeteringPointTimeSeriesResultQuantity(Instant ObservationTime, decimal Quantity);

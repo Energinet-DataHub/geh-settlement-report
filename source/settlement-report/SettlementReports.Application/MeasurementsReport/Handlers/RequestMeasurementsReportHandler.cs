@@ -1,8 +1,8 @@
-﻿using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 
 public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportHandler
 {
@@ -22,7 +22,7 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
     {
         var reportId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId).ConfigureAwait(false);
+        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId, request.ActorGln).ConfigureAwait(false);
 
         // Eventually the report will be added to the database here
         return runId;

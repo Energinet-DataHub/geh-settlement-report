@@ -1,23 +1,44 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Persistence.MeasurementsReport;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
 public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 {
-    public Task AddOrUpdateAsync(Application.SettlementReports_v2.MeasurementsReport request)
+    private readonly ISettlementReportDatabaseContext _context;
+
+    public MeasurementsReportRepository(ISettlementReportDatabaseContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
+    }
+
+    public async Task AddOrUpdateAsync(Application.SettlementReports_v2.MeasurementsReport measurementsReport)
+    {
+        if (measurementsReport.Id == 0)
+        {
+            await _context.MeasurementsReports
+                .AddAsync(measurementsReport)
+                .ConfigureAwait(false);
+        }
+
+        await _context
+            .SaveChangesAsync()
+            .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetAsync(string requestId)
     {
         // TODO BJM: Replace dummy implementation when story #784 is completed
-        return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport(blobFileName: "foo"));
+        return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport());
     }
 
-    public Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
+    public async Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
     {
-        throw new NotImplementedException();
+        return await _context.MeasurementsReports
+             .Where(x => x.ActorId == actorId && x.JobRunId == null)
+             .OrderByDescending(x => x.Id)
+             .ToListAsync()
+             .ConfigureAwait(false);
     }
 
     public Task<Application.SettlementReports_v2.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)

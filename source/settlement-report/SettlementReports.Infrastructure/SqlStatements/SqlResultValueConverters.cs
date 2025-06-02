@@ -14,14 +14,14 @@
 
 using System.Globalization;
 using System.Text.Json;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.EnergyResult;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
 using NodaTime;
 using NodaTime.Text;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements;
 
 public static class SqlResultValueConverters
 {

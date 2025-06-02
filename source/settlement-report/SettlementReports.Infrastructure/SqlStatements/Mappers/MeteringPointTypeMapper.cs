@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers.EnergyResult;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers.EnergyResult;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 
 public static class MeteringPointTypeMapper
 {

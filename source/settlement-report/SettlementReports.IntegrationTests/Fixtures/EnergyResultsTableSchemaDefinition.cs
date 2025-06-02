@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.DeltaTableConstants;
 
-namespace Energinet.DataHub.Wholesale.CalculationResults.IntegrationTests.Fixtures;
+namespace Energinet.DataHub.Reports.IntegrationTests.Fixtures;
 
 public class EnergyResultsTableSchemaDefinition
 {

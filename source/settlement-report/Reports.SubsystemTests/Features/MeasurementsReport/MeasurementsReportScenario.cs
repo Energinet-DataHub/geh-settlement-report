@@ -1,15 +1,18 @@
 ﻿using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
 using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.Fixtures;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport;
 
 [TestCaseOrderer(
-    ordererTypeName: TestCaseOrdererLocation.OrdererTypeName,
-    ordererAssemblyName: TestCaseOrdererLocation.OrdererAssemblyName)]
+    TestCaseOrdererLocation.OrdererTypeName,
+    TestCaseOrdererLocation.OrdererAssemblyName)]
 public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenarioFixture>,
     IAsyncLifetime
 {
@@ -39,14 +42,11 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
     public void Given_ValidReportRequest()
     {
         var filter = new MeasurementsReportRequestFilterDto(
-            GridAreas: ["543"],
-            PeriodStart: new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
-            PeriodEnd: new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
+            new Dictionary<string, CalculationId?> { { "543", null } },
+            new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
 
-        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(
-            Filter: filter,
-            ActorNumberOverride: null,
-            MarketRoleOverride: null);
+        _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(Filter: filter);
     }
 
     [SubsystemFact]
@@ -61,5 +61,20 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         // Assert
         Assert.NotNull(jobRunId);
         _scenarioFixture.ScenarioState.JobRunId = jobRunId;
+    }
+
+    [SubsystemFact(Skip = "Skipped for now due to missing implementations.")]
+    [ScenarioStep(3)]
+    public async Task Then_ReportGenerationIsCompletedWithinWaitTime()
+    {
+        var (isCompletedOrFailed, reportRequest) = await _scenarioFixture.WaitForReportGenerationCompletedOrFailedAsync(
+            _scenarioFixture.ScenarioState.JobRunId!,
+            TimeSpan.FromMinutes(15));
+
+        // Assert
+        using var assertionScope = new AssertionScope();
+        Assert.True(isCompletedOrFailed);
+        Assert.NotNull(reportRequest);
+        Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 }

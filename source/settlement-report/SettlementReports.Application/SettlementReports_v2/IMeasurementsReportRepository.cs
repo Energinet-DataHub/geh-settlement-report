@@ -1,8 +1,8 @@
-﻿namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+﻿namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public interface IMeasurementsReportRepository
 {
-    Task AddOrUpdateAsync(MeasurementsReport request);
+    Task AddOrUpdateAsync(MeasurementsReport measurementsReport);
 
     Task<MeasurementsReport> GetAsync(string requestId);
 
