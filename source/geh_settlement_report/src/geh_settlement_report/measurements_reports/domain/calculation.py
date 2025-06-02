@@ -93,7 +93,18 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
         | F.col(MeteringPointPeriodsColumnNames.to_grid_area_code).isin(args.grid_area_codes)
     )
 
-    return df_with_grid_area_codes
+    df_within_period = df_with_grid_area_codes.filter(
+        (F.col(MeteringPointPeriodsColumnNames.period_from_date) < F.lit(args.period_end))
+        & (
+            F.coalesce(
+                F.col(MeteringPointPeriodsColumnNames.period_to_date),
+                F.lit("9999-12-31 23:59:59.999999").cast("timestamp"),
+            )
+            > F.lit(args.period_start)
+        )
+    )
+
+    return df_within_period
 
 
 def _filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
