@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
-using Energinet.DataHub.Reports.DatabaseMigration;
+using Energinet.DataHub.SettlementReport.DatabaseMigration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Test.Core.Fixture.Database;

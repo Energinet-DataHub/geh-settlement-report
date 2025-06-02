@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.Reports.DatabaseMigration;
+namespace Energinet.DataHub.SettlementReport.DatabaseMigration;
 
 internal static class Program
 {
