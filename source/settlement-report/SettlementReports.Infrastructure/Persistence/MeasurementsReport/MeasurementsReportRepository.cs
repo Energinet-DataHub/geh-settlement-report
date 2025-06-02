@@ -26,10 +26,9 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
             .ConfigureAwait(false);
     }
 
-    public Task<Application.SettlementReports_v2.MeasurementsReport> GetAsync(string requestId)
+    public Task<Application.SettlementReports_v2.MeasurementsReport> GetByRequestIdAsync(string requestId)
     {
-        // TODO BJM: Replace dummy implementation when story #784 is completed
-        return Task.FromResult(new Application.SettlementReports_v2.MeasurementsReport());
+        return _context.MeasurementsReports.FirstAsync(x => x.RequestId == requestId);
     }
 
     public async Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
