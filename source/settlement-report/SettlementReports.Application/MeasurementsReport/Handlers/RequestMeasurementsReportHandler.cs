@@ -27,17 +27,18 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
     {
         var reportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportRequestId, request.ActorGln).ConfigureAwait(false);
+        var jobRunId = await _jobHelper.RunJobAsync(request.RequestDto, reportRequestId, request.ActorGln).ConfigureAwait(false);
 
         var measurementsReport = new SettlementReports_v2.MeasurementsReport(
             clock: SystemClock.Instance,
             userId: request.UserId,
             actorId: request.ActorId,
-            requestId: reportRequestId,
+            jobRunId: jobRunId,
+            reportRequestId: reportRequestId,
             request: request.RequestDto);
 
         await _repository.AddOrUpdateAsync(measurementsReport).ConfigureAwait(false);
 
-        return runId;
+        return jobRunId;
     }
 }
