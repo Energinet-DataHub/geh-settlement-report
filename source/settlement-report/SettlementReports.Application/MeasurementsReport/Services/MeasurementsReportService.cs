@@ -2,7 +2,6 @@
 using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
