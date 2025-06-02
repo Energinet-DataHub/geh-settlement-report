@@ -3,26 +3,26 @@ using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Handlers;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Extensions.Options;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.HealthChecks;
-using Energinet.DataHub.SettlementReport.Infrastructure.Contracts;
-using Energinet.DataHub.SettlementReport.Infrastructure.Extensions.DependencyInjection;
-using Energinet.DataHub.SettlementReport.Infrastructure.Helpers;
-using Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence;
-using Energinet.DataHub.SettlementReport.Infrastructure.Persistence.SettlementReportRequest;
-using Energinet.DataHub.SettlementReport.Infrastructure.Services;
-using Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Extensions.Options;
+using Energinet.DataHub.Reports.Common.Infrastructure.HealthChecks;
+using Energinet.DataHub.Reports.Infrastructure.Extensions.DependencyInjection;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
+using Energinet.DataHub.Reports.Infrastructure.Notifications;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.Services;
+using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using GridAreaOwnershipAssigned = Energinet.DataHub.Reports.Infrastructure.Contracts.GridAreaOwnershipAssigned;
 
-namespace SettlementReports.Function.Extensions.DependencyInjection;
+namespace Energinet.DataHub.Reports.Function.Extensions.DependencyInjection;
 
 public static class SettlementReportModuleExtensions
 {

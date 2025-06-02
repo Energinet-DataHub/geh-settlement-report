@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.SettlementReport.Application</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.Application</RootNamespace>
+    <AssemblyName>Energinet.DataHub.Reports.Application</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Application</RootNamespace>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>

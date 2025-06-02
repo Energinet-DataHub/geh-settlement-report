@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements;
-using Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.DeltaTableConstants;
-using Energinet.DataHub.SettlementReport.Interfaces.CalculationResults.Model.EnergyResults;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements;
+using Energinet.DataHub.Reports.Infrastructure.SqlStatements.DeltaTableConstants;
+using Energinet.DataHub.Reports.Interfaces.CalculationResults.Model.EnergyResults;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Factories;
+namespace Energinet.DataHub.Reports.Infrastructure.Factories;
 
 public static class EnergyTimeSeriesPointFactory
 {

@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+﻿using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 
@@ -22,6 +22,12 @@ public interface ISettlementReportClient
     /// </summary>
     /// <returns>The job id.</returns>
     Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets a list of all measurements reports visible to the current user.
+    /// </summary>
+    /// <returns>A list of measurements reports.</returns>
+    Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a list of all settlement reports visible to the current user.
