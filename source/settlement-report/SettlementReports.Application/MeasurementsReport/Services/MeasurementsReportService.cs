@@ -28,7 +28,7 @@ public sealed class MeasurementsReportService : IMeasurementsReportService
     {
         var gridAreas = string.IsNullOrEmpty(report.GridAreaCodes)
             ? []
-            : JsonSerializer.Deserialize<Dictionary<string, CalculationId?>>(report.GridAreaCodes) ??
+            : JsonSerializer.Deserialize<List<string>>(report.GridAreaCodes) ??
               [];
 
         return new RequestedMeasurementsReportDto(
