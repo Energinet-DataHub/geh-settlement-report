@@ -9,7 +9,10 @@ from geh_settlement_report.measurements_reports.entry_point import start_measure
 
 
 def test_start_measurements_report(
-    spark: SparkSession, monkeypatch: pytest.MonkeyPatch, tmp_path_factory: pytest.TempPathFactory, create
+    spark: SparkSession,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path_factory: pytest.TempPathFactory,
+    external_dataproducts_created: None,  # Used implicitly
 ):
     # Arrange
     report_id = uuid.uuid4().hex
