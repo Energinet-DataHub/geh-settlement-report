@@ -46,11 +46,11 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
 
     public async Task<IEnumerable<SettlementReport>> GetAsync(Guid actorId)
     {
-            return await _context.SettlementReports
-                .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
-                .OrderByDescending(x => x.Id)
-                .ToListAsync()
-                .ConfigureAwait(false);
+        return await _context.SettlementReports
+            .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
+            .OrderByDescending(x => x.Id)
+            .ToListAsync()
+            .ConfigureAwait(false);
     }
 
     public Task<SettlementReport> GetAsync(long jobId)
@@ -80,7 +80,8 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
     public async Task<IEnumerable<SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
     {
         return await _context.SettlementReports
-            .Where(x => x.IsNotificationSent == false && (x.Status == ReportStatus.Completed || x.Status == ReportStatus.Failed))
+            .Where(x => x.IsNotificationSent == false &&
+                        (x.Status == ReportStatus.Completed || x.Status == ReportStatus.Failed))
             .OrderBy(x => x.EndedDateTime)
             .ToListAsync()
             .ConfigureAwait(false);

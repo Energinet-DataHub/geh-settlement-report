@@ -27,27 +27,6 @@ public sealed class SettlementReportFileBlobStorage : ISettlementReportFileRepos
         _blobContainerClient = blobContainerClient;
     }
 
-    public Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.OpenReadAsync(bufferSize: 25 * 1024 * 1024);
-    }
-
-    public async Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
-    }
-
-    public Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.OpenWriteAsync(true);
-    }
-
     public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
     {
         var blobName = GetBlobName(reportRequestId, fileName);

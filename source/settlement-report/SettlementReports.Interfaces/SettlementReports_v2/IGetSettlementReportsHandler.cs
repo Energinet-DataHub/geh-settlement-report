@@ -18,10 +18,6 @@ namespace Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
 
 public interface IGetSettlementReportsHandler
 {
-    Task<IEnumerable<RequestedSettlementReportDto>> GetAsync();
-
-    Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(Guid actorId);
-
     Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync();
 
     Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync(Guid actorId);
