@@ -23,7 +23,7 @@ public sealed class ReportFileRepository : IReportFileRepository
     private static string GetBlobName(ReportType reportType, string fileName) => reportType switch
     {
         ReportType.Settlement => string.Join('/', "settlementreports", fileName),
-        ReportType.Measurements => string.Join('/', "measurements-reports", fileName),
+        ReportType.Measurements => string.Join('/', "measurementsreports", fileName),
         _ => throw new NotSupportedException($"Report type {reportType} is not supported."),
     };
 }
