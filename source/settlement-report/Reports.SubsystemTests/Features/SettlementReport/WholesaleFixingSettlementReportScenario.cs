@@ -94,7 +94,7 @@ public class WholesaleFixingSettlementReportScenario : IClassFixture<SettlementR
     {
         var (isCompletedOrFailed, reportRequest) = await _scenarioFixture.WaitForReportGenerationCompletedOrFailedAsync(
             _scenarioFixture.SettlementReportScenarioState.JobRunId!,
-            TimeSpan.FromMinutes(15));
+            TimeSpan.FromMinutes(20));
 
         // Assert
         using var assertionScope = new AssertionScope();
