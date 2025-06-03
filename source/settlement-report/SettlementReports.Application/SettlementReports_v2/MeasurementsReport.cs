@@ -18,10 +18,10 @@ public sealed class MeasurementsReport
         IClock clock,
         Guid userId,
         Guid actorId,
-        ReportRequestId requestId,
+        ReportRequestId reportRequestId,
         MeasurementsReportRequestDto request)
     {
-        RequestId = requestId.Id;
+        RequestId = reportRequestId.Id;
         UserId = userId;
         ActorId = actorId;
         CreatedDateTime = clock.GetCurrentInstant();
@@ -36,10 +36,10 @@ public sealed class MeasurementsReport
         Guid userId,
         Guid actorId,
         JobRunId jobRunId,
-        ReportRequestId requestId,
+        ReportRequestId reportRequestId,
         MeasurementsReportRequestDto request)
     {
-        RequestId = requestId.Id;
+        RequestId = reportRequestId.Id;
         UserId = userId;
         ActorId = actorId;
         JobRunId = jobRunId.Id;
