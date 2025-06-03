@@ -1,8 +1,8 @@
 ﻿using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.Reports.Application;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 

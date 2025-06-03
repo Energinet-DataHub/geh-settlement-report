@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 

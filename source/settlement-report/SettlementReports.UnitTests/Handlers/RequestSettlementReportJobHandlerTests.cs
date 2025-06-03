@@ -16,11 +16,10 @@ using System.Collections.ObjectModel;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Interfaces;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Moq;
 using Xunit;
 
