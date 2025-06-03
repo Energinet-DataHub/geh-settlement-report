@@ -17,8 +17,7 @@ using Energinet.DataHub.Reports.Application;
 using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 
