@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.Reports.Application;
-using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
@@ -84,7 +83,7 @@ public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJ
         var jobParameters = new List<string>
         {
             $"--report-id={reportId.Id}",
-            $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
+            $"--calculation-type={MapCalculationType(request.Filter.CalculationType)}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(marketRole)}",
@@ -162,6 +161,24 @@ public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJ
             RunStatusState.PENDING or RunStatusState.QUEUED => JobRunStatus.Queued,
             RunStatusState.RUNNING => JobRunStatus.Running,
             _ => JobRunStatus.Queued,
+        };
+    }
+
+    private static string MapCalculationType(CalculationType calculationType)
+    {
+        return calculationType switch
+        {
+            CalculationType.BalanceFixing => "aggregation",
+            CalculationType.Aggregation => "balance_fixing",
+            CalculationType.WholesaleFixing => "wholesale_fixing",
+            CalculationType.FirstCorrectionSettlement => "first_correction_settlement",
+            CalculationType.SecondCorrectionSettlement => "second_correction_settlement",
+            CalculationType.ThirdCorrectionSettlement => "third_correction_settlement",
+
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(calculationType),
+                actualValue: calculationType,
+                "Value cannot be mapped to a string representation of a calculation type."),
         };
     }
 }
