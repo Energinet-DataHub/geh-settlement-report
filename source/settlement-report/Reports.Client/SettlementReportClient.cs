@@ -5,9 +5,8 @@ using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.Measureme
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 using Newtonsoft.Json;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
+namespace Energinet.DataHub.Reports.Client;
 
-// TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
 internal sealed class SettlementReportClient : ISettlementReportClient
 {
     private readonly HttpClient _apiHttpClient;
@@ -20,10 +19,9 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
     {
-        if (IsPeriodAcrossMonths(requestDto.Filter))
-            throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto));
-
-        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
+        return IsPeriodAcrossMonths(requestDto.Filter)
+            ? throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto))
+            : RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
     }
 
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
@@ -35,11 +33,11 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     {
         using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
 
-        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
+        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken) ?? [];
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken).ConfigureAwait(false) ?? [];
 
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
@@ -48,11 +46,11 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     {
         using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");
 
-        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
+        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedSettlementReportDto>>(cancellationToken) ?? [];
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedSettlementReportDto>>(cancellationToken).ConfigureAwait(false) ?? [];
 
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
@@ -65,11 +63,11 @@ internal sealed class SettlementReportClient : ISettlementReportClient
             Encoding.UTF8,
             "application/json");
 
-        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
@@ -81,7 +79,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
             Encoding.UTF8,
             "application/json");
 
-        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken);
+        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         responseMessage.EnsureSuccessStatusCode();
     }
 
@@ -94,7 +92,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
             Encoding.UTF8,
             "application/json");
 
-        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken);
+        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         responseMessage.EnsureSuccessStatusCode();
     }
 
@@ -114,8 +112,8 @@ internal sealed class SettlementReportClient : ISettlementReportClient
            Encoding.UTF8,
            "application/json");
 
-        using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+        using var response = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -124,7 +122,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
         response.EnsureSuccessStatusCode();
 
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jobRunId = JsonConvert.DeserializeObject<long>(responseContent);
         return new JobRunId(jobRunId);
     }

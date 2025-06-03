@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures.Identity;
 
