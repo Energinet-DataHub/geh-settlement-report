@@ -112,6 +112,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
+            new JobRunId(Random.Shared.NextInt64()),
             reportRequestId ?? new ReportRequestId(Guid.NewGuid().ToString()),
             new MeasurementsReportRequestDto(requestFilterDto));
 

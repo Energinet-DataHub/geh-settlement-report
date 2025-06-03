@@ -4,7 +4,6 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
-using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
@@ -47,7 +46,11 @@ public class MeasurementsReportsController
     {
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
 
-        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest, actorGln);
+        var requestCommand = new RequestMeasurementsReportCommand(
+            measurementsReportRequest,
+            _userContext.CurrentUser.UserId,
+            _userContext.CurrentUser.Actor.ActorId,
+            actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

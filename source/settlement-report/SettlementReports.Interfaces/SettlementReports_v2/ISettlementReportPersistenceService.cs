@@ -12,13 +12,6 @@ public interface ISettlementReportPersistenceService
         Guid userId,
         Guid actorId,
         bool hideReport,
-        ReportRequestId requestId,
-        SettlementReportRequestDto request);
-
-    Task PersistAsync(
-        Guid userId,
-        Guid actorId,
-        bool hideReport,
         JobRunId jobId,
         ReportRequestId requestId,
         SettlementReportRequestDto request);

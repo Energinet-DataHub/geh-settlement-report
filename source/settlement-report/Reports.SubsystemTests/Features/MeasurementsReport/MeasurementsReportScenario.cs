@@ -63,7 +63,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         _scenarioFixture.ScenarioState.JobRunId = jobRunId;
     }
 
-    [SubsystemFact(Skip = "Skipped for now due to missing implementations.")]
+    [SubsystemFact]
     [ScenarioStep(3)]
     public async Task Then_ReportGenerationIsCompletedWithinWaitTime()
     {
@@ -76,5 +76,23 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.True(isCompletedOrFailed);
         Assert.NotNull(reportRequest);
         Assert.Equal(ReportStatus.Completed, reportRequest.Status);
+    }
+
+    [SubsystemFact(Skip = "Not implemented yet")]
+    [ScenarioStep(4)]
+    public async Task AndThen_ReportCanBeDownloadedAndIsNotEmpty()
+    {
+        // Arrange
+        var reportRequest = await _scenarioFixture.GetReportRequestByJobRunIdAsync(_scenarioFixture.ScenarioState.JobRunId!);
+        Assert.NotNull(reportRequest);
+
+        // Act
+        var stream = await _scenarioFixture.ReportsClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(stream);
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        Assert.True(memoryStream.Length > 0, "The downloaded file is empty.");
     }
 }

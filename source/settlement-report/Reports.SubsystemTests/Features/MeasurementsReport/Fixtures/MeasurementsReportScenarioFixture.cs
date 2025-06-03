@@ -66,7 +66,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
         return (isCompletedOrFailed, reportRequest);
     }
 
-    private async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
+    public async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
     {
         var reportRequests = await ReportsClient.GetMeasurementsReportAsync(CancellationToken.None);
         return reportRequests.FirstOrDefault(x => x.JobRunId is not null && x.JobRunId.Id == jobRunId.Id);

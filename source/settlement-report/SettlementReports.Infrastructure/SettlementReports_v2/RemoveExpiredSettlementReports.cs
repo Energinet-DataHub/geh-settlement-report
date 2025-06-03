@@ -22,30 +22,29 @@ namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
 public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementReports
 {
     private readonly IClock _clock;
-    private readonly ISettlementReportRepository _settlementReportRepository;
     private readonly ISettlementReportFileRepository _settlementReportFileRepository;
-    private readonly IReportFileRepository _reportFileRepository;
+    private readonly ISettlementReportRepository _settlementReportRepository;
 
     public RemoveExpiredSettlementReports(
         IClock clock,
         ISettlementReportRepository settlementReportRepository,
-        ISettlementReportFileRepository settlementReportFileRepository,
-        IReportFileRepository reportFileRepository)
+        ISettlementReportFileRepository settlementReportFileRepository)
     {
         _clock = clock;
         _settlementReportRepository = settlementReportRepository;
         _settlementReportFileRepository = settlementReportFileRepository;
-        _reportFileRepository = reportFileRepository;
     }
 
-    public async Task RemoveExpiredAsync(IList<Application.SettlementReports_v2.SettlementReport> settlementReports)
+    public async Task RemoveExpiredAsync(IList<SettlementReport> settlementReports)
     {
         for (var i = 0; i < settlementReports.Count; i++)
         {
             var settlementReport = settlementReports[i];
 
             if (!IsExpired(settlementReport))
+            {
                 continue;
+            }
 
             // Delete the blob file if it exists and the job id is null, because on the shared blob storage we use retention to clean-up
             if (settlementReport is { BlobFileName: not null, JobId: null })
@@ -65,7 +64,7 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
         }
     }
 
-    private bool IsExpired(Application.SettlementReports_v2.SettlementReport settlementReport)
+    private bool IsExpired(SettlementReport settlementReport)
     {
         var cutOffPeriod = _clock
             .GetCurrentInstant()
