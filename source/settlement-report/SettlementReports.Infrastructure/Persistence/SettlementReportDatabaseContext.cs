@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,9 @@ public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatab
 
     public SettlementReportDatabaseContext() { }
 
-    public DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; init; } = null!;
+    public DbSet<SettlementReport> SettlementReports { get; init; } = null!;
 
-    public DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; init; } = null!;
+    public DbSet<Application.MeasurementsReport.MeasurementsReport> MeasurementsReports { get; init; } = null!;
 
     public DbSet<GridAreaOwnerEntity> GridAreaOwners { get; init; } = null!;
 

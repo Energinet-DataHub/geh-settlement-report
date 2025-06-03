@@ -1,4 +1,4 @@
-﻿using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Services;
 
