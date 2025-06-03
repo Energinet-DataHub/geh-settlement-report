@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
 public interface ISettlementReportDatabaseContext
 {
-    DbSet<Application.SettlementReports_v2.SettlementReport> SettlementReports { get; }
+    DbSet<SettlementReport> SettlementReports { get; }
 
-    DbSet<Application.SettlementReports_v2.MeasurementsReport> MeasurementsReports { get; }
+    DbSet<Application.MeasurementsReport.MeasurementsReport> MeasurementsReports { get; }
 
     DbSet<GridAreaOwnerEntity> GridAreaOwners { get; }
 

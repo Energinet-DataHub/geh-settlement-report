@@ -1,8 +1,7 @@
 ﻿using System.Text.Json;
-using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
@@ -51,7 +50,7 @@ public sealed class MeasurementsReportService : IMeasurementsReportService
         await _jobHelper.CancelAsync(report.JobRunId.Value).ConfigureAwait(false);
     }
 
-    private static RequestedMeasurementsReportDto Map(SettlementReports_v2.MeasurementsReport report)
+    private static RequestedMeasurementsReportDto Map(MeasurementsReport report)
     {
         var gridAreas = string.IsNullOrEmpty(report.GridAreaCodes)
             ? []
