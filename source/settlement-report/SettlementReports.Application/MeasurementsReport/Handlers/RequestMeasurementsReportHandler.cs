@@ -33,6 +33,7 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
             clock: SystemClock.Instance,
             userId: request.UserId,
             actorId: request.ActorId,
+            isHiddenFromActor: request.IsFas,
             jobRunId: jobRunId,
             reportRequestId: reportRequestId,
             request: request.RequestDto);
