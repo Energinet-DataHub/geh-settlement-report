@@ -78,7 +78,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 
-    [SubsystemFact(Skip = "Not implemented yet")]
+    [SubsystemFact]
     [ScenarioStep(4)]
     public async Task AndThen_ReportCanBeDownloadedAndIsNotEmpty()
     {
