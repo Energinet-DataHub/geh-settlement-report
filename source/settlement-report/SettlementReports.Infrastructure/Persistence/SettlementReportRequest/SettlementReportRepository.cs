@@ -1,5 +1,5 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports;
+using Energinet.DataHub.Reports.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;

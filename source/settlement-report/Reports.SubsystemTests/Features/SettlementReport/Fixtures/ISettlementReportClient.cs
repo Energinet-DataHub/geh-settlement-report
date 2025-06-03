@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
+﻿using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 

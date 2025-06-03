@@ -1,4 +1,4 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
@@ -12,7 +12,7 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
         _context = context;
     }
 
-    public async Task AddOrUpdateAsync(Application.SettlementReports_v2.MeasurementsReport measurementsReport)
+    public async Task AddOrUpdateAsync(Application.MeasurementsReport.MeasurementsReport measurementsReport)
     {
         if (measurementsReport.Id == 0)
         {
@@ -26,12 +26,12 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
             .ConfigureAwait(false);
     }
 
-    public Task<Application.SettlementReports_v2.MeasurementsReport> GetByRequestIdAsync(string requestId)
+    public Task<Application.MeasurementsReport.MeasurementsReport> GetByRequestIdAsync(string requestId)
     {
         return _context.MeasurementsReports.FirstAsync(x => x.RequestId == requestId);
     }
 
-    public async Task<IEnumerable<Application.SettlementReports_v2.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
+    public async Task<IEnumerable<Application.MeasurementsReport.MeasurementsReport>> GetByActorIdAsync(Guid actorId)
     {
         return await _context.MeasurementsReports
              .Where(x => x.ActorId == actorId && x.JobRunId != null)
@@ -40,7 +40,7 @@ public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
              .ConfigureAwait(false);
     }
 
-    public Task<Application.SettlementReports_v2.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)
+    public Task<Application.MeasurementsReport.MeasurementsReport> GetByJobRunIdAsync(long jobRunId)
     {
         return _context.MeasurementsReports.FirstAsync(x => x.JobRunId == jobRunId);
     }

@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
+using Energinet.DataHub.Reports.Application.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Application.Services;
-using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Extensions.Options;
@@ -27,9 +28,8 @@ using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.Reports.Infrastructure.Services;
-using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.WebAPI.Extensions.DependencyInjection;

@@ -1,8 +1,8 @@
-﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
-using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using FluentAssertions;
 using Moq;
 using NodaTime;
@@ -84,7 +84,7 @@ public class MeasurementsReportServiceTests
         exception.Message.Should().Be("Report does not have a JobRunId.");
     }
 
-    private static Reports.Application.SettlementReports_v2.MeasurementsReport CreateMeasurementsReport(JobRunId? jobRunId)
+    private static Reports.Application.MeasurementsReport.MeasurementsReport CreateMeasurementsReport(JobRunId? jobRunId)
     {
         var gridAreas = new List<string> { "101", "102" };
         var request = new MeasurementsReportRequestDto(
@@ -101,14 +101,14 @@ public class MeasurementsReportServiceTests
             .Returns(Instant.FromUtc(2021, 1, 1, 0, 0));
 
         return jobRunId != null
-            ? new Reports.Application.SettlementReports_v2.MeasurementsReport(
+            ? new Reports.Application.MeasurementsReport.MeasurementsReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
                 jobRunId,
                 reportRequestId,
                 request)
-            : new Reports.Application.SettlementReports_v2.MeasurementsReport(
+            : new Reports.Application.MeasurementsReport.MeasurementsReport(
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
