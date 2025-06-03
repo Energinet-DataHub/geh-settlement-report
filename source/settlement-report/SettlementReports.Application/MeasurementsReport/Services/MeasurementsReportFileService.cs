@@ -1,4 +1,4 @@
-using Energinet.DataHub.Reports.Application.Model;
+﻿using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Interfaces.Models;
 
