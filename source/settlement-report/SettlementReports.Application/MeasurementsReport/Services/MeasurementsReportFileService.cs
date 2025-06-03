@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+﻿using Energinet.DataHub.Reports.Application.Model;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
 using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
@@ -23,10 +24,8 @@ public sealed class MeasurementsReportFileService : IMeasurementsReportFileServi
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a blob file name.");
 
-        // TODO BJM: Replace dummy implementation when stories #784 and #759 are completed
-        return new MemoryStream();
-        // return await _reportFileRepository
-        //     .DownloadAsync(ReportType.Measurements, report.BlobFileName)
-        //     .ConfigureAwait(false);
+        return await _reportFileRepository
+            .DownloadAsync(ReportType.Measurements, report.BlobFileName)
+            .ConfigureAwait(false);
     }
 }
