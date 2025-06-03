@@ -18,11 +18,5 @@ namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public interface ISettlementReportFileRepository
 {
-    Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName);
-
-    Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName);
-
     Task DeleteAsync(ReportRequestId reportRequestId, string fileName);
-
-    Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream);
 }
