@@ -46,7 +46,11 @@ public class MeasurementsReportsController
     {
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
 
-        var requestCommand = new RequestMeasurementsReportCommand(measurementsReportRequest, actorGln);
+        var requestCommand = new RequestMeasurementsReportCommand(
+            measurementsReportRequest,
+            _userContext.CurrentUser.UserId,
+            _userContext.CurrentUser.Actor.ActorId,
+            actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 

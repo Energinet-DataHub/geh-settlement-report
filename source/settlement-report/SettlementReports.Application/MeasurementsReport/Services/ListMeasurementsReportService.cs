@@ -27,8 +27,8 @@ public sealed class ListMeasurementsReportService : IListMeasurementsReportServi
 
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync(Guid actorId)
     {
-        var settlementReports = await _measurementsReportService.GetReportsAsync(actorId).ConfigureAwait(false);
-        return await GetMeasurementsReportsAsync(settlementReports).ConfigureAwait(false);
+        var measurementsReports = await _measurementsReportService.GetReportsAsync(actorId).ConfigureAwait(false);
+        return await GetMeasurementsReportsAsync(measurementsReports).ConfigureAwait(false);
     }
 
     private async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportsAsync(IEnumerable<RequestedMeasurementsReportDto> measurementsReports)
