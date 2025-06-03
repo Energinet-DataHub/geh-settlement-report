@@ -44,6 +44,21 @@ internal sealed class SettlementReportClient : ISettlementReportClient
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
 
+    public async Task<Stream> DownloadMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/download");
+        request.Content = new StringContent(
+            JsonConvert.SerializeObject(requestId),
+            Encoding.UTF8,
+            "application/json");
+
+        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStreamAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
     {
         using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");

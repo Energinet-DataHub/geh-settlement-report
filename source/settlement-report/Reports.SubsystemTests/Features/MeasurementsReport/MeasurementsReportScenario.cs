@@ -87,7 +87,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.NotNull(reportRequest);
 
         // Act
-        var stream = await _scenarioFixture.ReportsClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
+        var stream = await _scenarioFixture.ReportsClient.DownloadMeasurementsReportAsync(reportRequest.RequestId, CancellationToken.None);
 
         // Assert
         Assert.NotNull(stream);
