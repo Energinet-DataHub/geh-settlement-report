@@ -50,6 +50,7 @@ public class MeasurementsReportsController
             measurementsReportRequest,
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
+            measurementsReportRequest.IsFas,
             actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);

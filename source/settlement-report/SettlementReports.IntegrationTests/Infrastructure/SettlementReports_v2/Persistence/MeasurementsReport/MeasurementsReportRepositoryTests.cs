@@ -25,7 +25,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         await using var context = _databaseManager.CreateDbContext();
         var target = new MeasurementsReportRepository(context);
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
-            new List<string> { "805", "806" },
+            ["805", "806"],
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
 
@@ -33,6 +33,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
+            false,
             new ReportRequestId(Guid.NewGuid().ToString()),
             new MeasurementsReportRequestDto(requestFilterDto));
 
@@ -112,6 +113,7 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
             SystemClock.Instance,
             Guid.NewGuid(),
             Guid.NewGuid(),
+            false,
             new JobRunId(Random.Shared.NextInt64()),
             reportRequestId ?? new ReportRequestId(Guid.NewGuid().ToString()),
             new MeasurementsReportRequestDto(requestFilterDto));

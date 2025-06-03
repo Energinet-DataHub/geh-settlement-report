@@ -40,6 +40,7 @@ limitations under the License.
         <EmbeddedResource Include="Scripts\202412131100_Update_GridAreaOwner_ValidFrom.sql"/>
         <EmbeddedResource Include="Scripts\202501080947_Delete_anything_but_completed_reports.sql"/>
         <EmbeddedResource Include="Scripts\202505271500_Add_MeasurementsReport_table.sql"/>
+        <EmbeddedResource Include="Scripts\202506031000_Add_IsHiddenFromActor_to_MeasurementsReport.sql" />
     </ItemGroup>
 
     <ItemGroup>

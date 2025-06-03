@@ -18,12 +18,14 @@ public sealed class MeasurementsReport
         IClock clock,
         Guid userId,
         Guid actorId,
+        bool isHiddenFromActor,
         ReportRequestId reportRequestId,
         MeasurementsReportRequestDto request)
     {
         RequestId = reportRequestId.Id;
         UserId = userId;
         ActorId = actorId;
+        IsHiddenFromActor = isHiddenFromActor;
         CreatedDateTime = clock.GetCurrentInstant();
         Status = ReportStatus.InProgress;
         PeriodStart = request.Filter.PeriodStart.ToInstant();
@@ -35,6 +37,7 @@ public sealed class MeasurementsReport
         IClock clock,
         Guid userId,
         Guid actorId,
+        bool isHiddenFromActor,
         JobRunId jobRunId,
         ReportRequestId reportRequestId,
         MeasurementsReportRequestDto request)
@@ -42,6 +45,7 @@ public sealed class MeasurementsReport
         RequestId = reportRequestId.Id;
         UserId = userId;
         ActorId = actorId;
+        IsHiddenFromActor = isHiddenFromActor;
         JobRunId = jobRunId.Id;
         CreatedDateTime = clock.GetCurrentInstant();
         Status = ReportStatus.InProgress;
@@ -67,6 +71,12 @@ public sealed class MeasurementsReport
     public string RequestId { get; init; } = null!;
 
     public Guid ActorId { get; init; }
+
+    /// <summary>
+    /// If the report is requested by a system administrator on behalf of an actor (impersonation),
+    /// then the actor must NOT access the report. The report is therefore hidden from the actor.
+    /// </summary>
+    public bool IsHiddenFromActor { get; init; }
 
     public Guid UserId { get; init; }
 

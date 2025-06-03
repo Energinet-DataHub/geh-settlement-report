@@ -105,6 +105,7 @@ public class MeasurementsReportServiceTests
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
+                false,
                 jobRunId,
                 reportRequestId,
                 request)
@@ -112,6 +113,7 @@ public class MeasurementsReportServiceTests
                 clockMock.Object,
                 userId,
                 Guid.NewGuid(),
+                false,
                 reportRequestId,
                 request);
     }
