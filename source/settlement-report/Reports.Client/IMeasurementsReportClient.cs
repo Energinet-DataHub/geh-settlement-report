@@ -18,7 +18,7 @@ public interface IMeasurementsReportClient
     /// Gets a list of all measurements reports visible to the current user.
     /// </summary>
     /// <returns>A list of measurements reports.</returns>
-    Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken);
+    Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Downloads the measurements report with the specified id.

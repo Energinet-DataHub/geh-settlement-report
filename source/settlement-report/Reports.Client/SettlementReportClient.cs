@@ -8,6 +8,7 @@ namespace Energinet.DataHub.Reports.Client;
 
 internal sealed class SettlementReportClient : ISettlementReportClient
 {
+    private const string BaseUrl = "settlement-reports";
     private readonly HttpClient _apiHttpClient;
 
     public SettlementReportClient(HttpClient apiHttpClient)
@@ -20,12 +21,12 @@ internal sealed class SettlementReportClient : ISettlementReportClient
     {
         return IsPeriodAcrossMonths(requestDto.Filter)
             ? throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto))
-            : RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
+            : RequestAsync(requestDto, $"{BaseUrl}/RequestSettlementReport", cancellationToken);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
     {
-        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/list");
 
         using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
@@ -38,7 +39,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public async Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/download");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/download");
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
             Encoding.UTF8,
@@ -53,7 +54,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/cancel");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/cancel");
 
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),

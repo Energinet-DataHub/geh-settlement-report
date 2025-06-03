@@ -8,6 +8,7 @@ namespace Energinet.DataHub.Reports.Client;
 
 internal sealed class MeasurementsReportClient : IMeasurementsReportClient
 {
+    private const string BaseUrl = "measurements-reports";
     private readonly HttpClient _apiHttpClient;
 
     public MeasurementsReportClient(HttpClient apiHttpClient)
@@ -18,12 +19,12 @@ internal sealed class MeasurementsReportClient : IMeasurementsReportClient
 
     public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
     {
-        return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
+        return RequestAsync(requestDto, $"{BaseUrl}/request", cancellationToken);
     }
 
-    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync(CancellationToken cancellationToken)
     {
-        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/list");
 
         using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
@@ -36,7 +37,7 @@ internal sealed class MeasurementsReportClient : IMeasurementsReportClient
 
     public async Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/download");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/download");
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
             Encoding.UTF8,
@@ -51,7 +52,7 @@ internal sealed class MeasurementsReportClient : IMeasurementsReportClient
 
     public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/cancel");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/cancel");
 
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
@@ -71,12 +72,6 @@ internal sealed class MeasurementsReportClient : IMeasurementsReportClient
            "application/json");
 
         using var response = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new HttpRequestException($"Request to {endpoint} failed with status code {response.StatusCode}: {responseText}.");
-        }
 
         response.EnsureSuccessStatusCode();
 

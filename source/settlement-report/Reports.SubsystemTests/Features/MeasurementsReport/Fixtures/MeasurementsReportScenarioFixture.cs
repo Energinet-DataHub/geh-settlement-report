@@ -4,7 +4,6 @@ using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.States;
-using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
@@ -69,7 +68,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
 
     public async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
     {
-        var reportRequests = await MeasurementsReportClient.GetMeasurementsReportAsync(CancellationToken.None);
+        var reportRequests = await MeasurementsReportClient.GetAsync(CancellationToken.None);
         return reportRequests.FirstOrDefault(x => x.JobRunId is not null && x.JobRunId.Id == jobRunId.Id);
     }
 }
