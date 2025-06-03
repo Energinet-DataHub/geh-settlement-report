@@ -1,16 +1,17 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
-using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
-using Energinet.DataHub.SettlementReport.Common.Infrastructure.Security;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Databricks.Client;
 
-namespace SettlementReports.WebAPI.Controllers;
+namespace Energinet.DataHub.Reports.WebAPI.Controllers;
 
 [ApiController]
 [Route("measurements-reports")]
@@ -20,13 +21,20 @@ public class MeasurementsReportsController
     private readonly IMeasurementsReportFileService _fileService;
     private readonly IRequestMeasurementsReportHandler _requestHandler;
     private readonly IListMeasurementsReportService _listMeasurementsReportService;
+    private readonly IMeasurementsReportService _measurementsReportService;
     private readonly IUserContext<FrontendUser> _userContext;
 
-    public MeasurementsReportsController(IRequestMeasurementsReportHandler requestHandler, IMeasurementsReportFileService fileService, IListMeasurementsReportService listMeasurementsReportService, IUserContext<FrontendUser> userContext)
+    public MeasurementsReportsController(
+        IRequestMeasurementsReportHandler requestHandler,
+        IMeasurementsReportFileService fileService,
+        IListMeasurementsReportService listMeasurementsReportService,
+        IMeasurementsReportService measurementsReportService,
+        IUserContext<FrontendUser> userContext)
     {
         _requestHandler = requestHandler;
         _fileService = fileService;
         _listMeasurementsReportService = listMeasurementsReportService;
+        _measurementsReportService = measurementsReportService;
         _userContext = userContext;
     }
 
@@ -34,9 +42,15 @@ public class MeasurementsReportsController
     [Route("request")]
     [Authorize]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
-        [FromBody] MeasurementsReportRequestDto reportRequest)
+        [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        var requestCommand = new RequestMeasurementsReportCommand(reportRequest);
+        var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
+
+        var requestCommand = new RequestMeasurementsReportCommand(
+            measurementsReportRequest,
+            _userContext.CurrentUser.UserId,
+            _userContext.CurrentUser.Actor.ActorId,
+            actorGln);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -46,11 +60,9 @@ public class MeasurementsReportsController
     [HttpGet]
     [Route("list")]
     [Authorize]
-    public IEnumerable<RequestedMeasurementsReportDto> ListMeasurementsReports()
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
     {
-        return new List<RequestedMeasurementsReportDto>();
-
-        // return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
     }
 
     [HttpPost]
@@ -74,8 +86,19 @@ public class MeasurementsReportsController
     [HttpPost]
     [Route("cancel")]
     [Authorize]
-    public ActionResult CancelMeasurementsReport([FromBody] ReportRequestId reportId)
+    public async Task<ActionResult> CancelMeasurementsReport([FromBody] ReportRequestId reportRequestId)
     {
-        return NoContent();
+        try
+        {
+            await _measurementsReportService
+                .CancelAsync(reportRequestId, _userContext.CurrentUser.UserId)
+                .ConfigureAwait(false);
+
+            return NoContent();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ClientApiException)
+        {
+            return BadRequest();
+        }
     }
 }

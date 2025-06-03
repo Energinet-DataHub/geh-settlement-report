@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from geh_common.application import GridAreaCodes
+from geh_common.application import EnergySupplierIds, GridAreaCodes
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,6 +18,8 @@ class MeasurementsReportArgs(BaseSettings):
     period_start: datetime = Field(init=False)
     period_end: datetime = Field(init=False)
     grid_area_codes: GridAreaCodes | None = Field(init=False, default=None)
+    requesting_actor_id: str = Field(init=False)
+    energy_supplier_ids: EnergySupplierIds | None = Field(init=False, default=None)
 
     catalog_name: str = Field(init=False)
     output_path: str = Field(init=False)

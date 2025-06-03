@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Energinet.DataHub.SettlementReport.Application</AssemblyName>
-    <RootNamespace>Energinet.DataHub.SettlementReport.Application</RootNamespace>
+    <AssemblyName>Energinet.DataHub.Reports.Application</AssemblyName>
+    <RootNamespace>Energinet.DataHub.Reports.Application</RootNamespace>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
@@ -9,9 +9,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="12.0.2" />
-    <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.6.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="13.1.1" />
+    <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.8.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />

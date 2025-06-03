@@ -14,11 +14,12 @@
 
 using Energinet.DataHub.Core.Messaging.Communication;
 using Energinet.DataHub.Core.Messaging.Communication.Publisher;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.Contracts;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 using Google.Protobuf.WellKnownTypes;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.Notifications;
+namespace Energinet.DataHub.Reports.Infrastructure.Notifications;
 
 public sealed class IntegrationEventProvider : IIntegrationEventProvider
 {
@@ -54,9 +55,9 @@ public sealed class IntegrationEventProvider : IIntegrationEventProvider
 
         var integrationEvent = new IntegrationEvent(
             Guid.Parse(reportForNotification.RequestId),
-            Contracts.UserNotificationTriggered.EventName,
-            Contracts.UserNotificationTriggered.CurrentMinorVersion,
-            new Contracts.UserNotificationTriggered
+            UserNotificationTriggered.EventName,
+            UserNotificationTriggered.CurrentMinorVersion,
+            new UserNotificationTriggered
             {
                 ReasonIdentifier = status switch
                 {

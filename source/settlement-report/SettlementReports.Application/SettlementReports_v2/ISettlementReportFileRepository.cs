@@ -12,17 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public interface ISettlementReportFileRepository
 {
-    Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName);
-
-    Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName);
-
     Task DeleteAsync(ReportRequestId reportRequestId, string fileName);
-
-    Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream);
 }

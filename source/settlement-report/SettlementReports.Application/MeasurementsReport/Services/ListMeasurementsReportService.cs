@@ -1,10 +1,10 @@
-﻿using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Services;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
 public sealed class ListMeasurementsReportService : IListMeasurementsReportService
 {
@@ -13,7 +13,11 @@ public sealed class ListMeasurementsReportService : IListMeasurementsReportServi
     private readonly IMeasurementsReportRepository _repository;
     private readonly IClock _clock;
 
-    public ListMeasurementsReportService(IMeasurementsReportService measurementsReportService, ISettlementReportDatabricksJobsHelper jobHelper, IMeasurementsReportRepository repository, IClock clock)
+    public ListMeasurementsReportService(
+        IMeasurementsReportService measurementsReportService,
+        ISettlementReportDatabricksJobsHelper jobHelper,
+        IMeasurementsReportRepository repository,
+        IClock clock)
     {
         _measurementsReportService = measurementsReportService;
         _jobHelper = jobHelper;
@@ -21,15 +25,10 @@ public sealed class ListMeasurementsReportService : IListMeasurementsReportServi
         _clock = clock;
     }
 
-    public Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync()
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetAsync(Guid actorId)
     {
-        var settlementReports = await _measurementsReportService.GetReportsAsync(actorId).ConfigureAwait(false);
-        return await GetMeasurementsReportsAsync(settlementReports).ConfigureAwait(false);
+        var measurementsReports = await _measurementsReportService.GetReportsAsync(actorId).ConfigureAwait(false);
+        return await GetMeasurementsReportsAsync(measurementsReports).ConfigureAwait(false);
     }
 
     private async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportsAsync(IEnumerable<RequestedMeasurementsReportDto> measurementsReports)

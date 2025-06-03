@@ -1,16 +1,21 @@
-﻿using Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Commands;
-using Energinet.DataHub.SettlementReport.Interfaces.Helpers;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+﻿using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+using NodaTime;
 
-namespace Energinet.DataHub.SettlementReport.Application.MeasurementsReport.Handlers;
+namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 
 public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsReportHandler
 {
     private readonly IMeasurementsReportDatabricksJobsHelper _jobHelper;
+    private readonly IMeasurementsReportRepository _repository;
 
-    public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper)
+    public RequestMeasurementsReportHandler(IMeasurementsReportDatabricksJobsHelper jobHelper, IMeasurementsReportRepository repository)
     {
         _jobHelper = jobHelper;
+        _repository = repository;
     }
 
     public async Task<JobRunId> HandleAsync(RequestMeasurementsReportCommand request)
@@ -20,11 +25,20 @@ public sealed class RequestMeasurementsReportHandler : IRequestMeasurementsRepor
 
     private async Task<JobRunId> StartReportAsync(RequestMeasurementsReportCommand request)
     {
-        var reportId = new ReportRequestId(Guid.NewGuid().ToString());
+        var reportRequestId = new ReportRequestId(Guid.NewGuid().ToString());
 
-        var runId = await _jobHelper.RunJobAsync(request.RequestDto, reportId).ConfigureAwait(false);
+        var jobRunId = await _jobHelper.RunJobAsync(request.RequestDto, reportRequestId, request.ActorGln).ConfigureAwait(false);
 
-        // Eventually the report will be added to the database here
-        return runId;
+        var measurementsReport = new SettlementReports_v2.MeasurementsReport(
+            clock: SystemClock.Instance,
+            userId: request.UserId,
+            actorId: request.ActorId,
+            jobRunId: jobRunId,
+            reportRequestId: reportRequestId,
+            request: request.RequestDto);
+
+        await _repository.AddOrUpdateAsync(measurementsReport).ConfigureAwait(false);
+
+        return jobRunId;
     }
 }

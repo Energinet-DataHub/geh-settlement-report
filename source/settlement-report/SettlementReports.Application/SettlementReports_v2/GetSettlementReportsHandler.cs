@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Text.Json;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.SettlementReport;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.SettlementReport;
 
-namespace Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Application.SettlementReports_v2;
 
 public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
 {
@@ -30,28 +30,6 @@ public sealed class GetSettlementReportsHandler : IGetSettlementReportsHandler
     {
         _settlementReportRepository = settlementReportRepository;
         _removeExpiredSettlementReports = removeExpiredSettlementReports;
-    }
-
-    public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync()
-    {
-        var settlementReports = (await _settlementReportRepository
-                .GetAsync()
-                .ConfigureAwait(false))
-            .ToList();
-
-        await _removeExpiredSettlementReports.RemoveExpiredAsync(settlementReports).ConfigureAwait(false);
-        return settlementReports.Select(Map);
-    }
-
-    public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(Guid actorId)
-    {
-        var settlementReports = (await _settlementReportRepository
-                .GetAsync(actorId)
-                .ConfigureAwait(false))
-            .ToList();
-
-        await _removeExpiredSettlementReports.RemoveExpiredAsync(settlementReports).ConfigureAwait(false);
-        return settlementReports.Select(Map);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetForJobsAsync()

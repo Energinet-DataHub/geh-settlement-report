@@ -12,30 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.SettlementReport.Interfaces.Models;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SqlStatements.Mappers;
+namespace Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 
 public static class CalculationTypeMapper
 {
-    public static CalculationType FromDeltaTableValue(string calculationType)
-    {
-        return calculationType switch
-        {
-            DeltaTableConstants.DeltaTableCalculationType.BalanceFixing => CalculationType.BalanceFixing,
-            DeltaTableConstants.DeltaTableCalculationType.Aggregation => CalculationType.Aggregation,
-            DeltaTableConstants.DeltaTableCalculationType.WholesaleFixing => CalculationType.WholesaleFixing,
-            DeltaTableConstants.DeltaTableCalculationType.FirstCorrectionSettlement => CalculationType.FirstCorrectionSettlement,
-            DeltaTableConstants.DeltaTableCalculationType.SecondCorrectionSettlement => CalculationType.SecondCorrectionSettlement,
-            DeltaTableConstants.DeltaTableCalculationType.ThirdCorrectionSettlement => CalculationType.ThirdCorrectionSettlement,
-
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(calculationType),
-                actualValue: calculationType,
-                "Value does not contain a valid string representation of a calculation type."),
-        };
-    }
-
     public static string ToDeltaTableValue(CalculationType calculationType)
     {
         return calculationType switch

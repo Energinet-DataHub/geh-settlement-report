@@ -49,6 +49,13 @@ jobs:
     if: ${{ needs.changes.outputs.dotnet == 'true' || needs.changes.outputs.db_migrations == 'true' }}
     uses: ./.github/workflows/ci-dotnet.yml
 
+  ci_nuget:
+    needs: changes
+    if: ${{ needs.changes.outputs.nuget_packages == 'true' }}
+    uses: ./.github/workflows/reports-client-bundle-publish.yml
+    name: Build NuGet packages
+    secrets: inherit
+
   ci_python:
     name: Unit tests and build packages
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
@@ -62,7 +69,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/python-uv-ci.yml@v14
     with:
       packages_directory: source
-      tests_directory: tests/integration_test
+      tests_directory: tests/settlement_reports/integration_test
       create_subsystem_release: true
       environment: AzureAuth
       azure_tenant_id: ${{ vars.integration_test_azure_tenant_id }}
@@ -90,6 +97,7 @@ jobs:
         changes,
         ci_base,
         ci_dotnet,
+        ci_nuget,
         ci_python,
         ci_python_integration,
         render_c4model_views,

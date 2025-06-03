@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
+﻿namespace Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models.MeasurementsReport;
 
 public sealed record RequestedMeasurementsReportDto(
     ReportRequestId RequestId,
@@ -6,6 +6,6 @@ public sealed record RequestedMeasurementsReportDto(
     DateTimeOffset PeriodEnd,
     ReportStatus Status,
     Guid RequestedByActorId,
-    IEnumerable<string> GridAreaCodes,
+    IReadOnlyCollection<string> GridAreaCodes,
     DateTimeOffset CreatedDateTime,
     JobRunId? JobRunId);

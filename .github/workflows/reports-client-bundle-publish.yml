@@ -1,0 +1,132 @@
+name: Publish Reports NuGet bundle(s)
+
+# DESCRIPTION:
+#
+# - Reports.Client depends on
+#     - Reports.Abstractions
+#
+# If dependencies has changed, their consumers must have their versions updated.
+#
+# To ensure the version of Reports.Abstractions is the same for both when changed
+# in the same PR, we must build all using the same workflow.
+#
+# We consider Reports.Client and Reports.Abstractions as a bundle, which means
+# they must use the same version numbers.
+
+on:
+  # Build, test, pack and publish release packages
+  # Only executed if any NuGet packages content or build scripts has changed;
+  # not if solution file, documentation or tests has changed
+  push:
+    branches:
+      - main
+    paths:
+      - source/settlement-report/Reports.Client/**
+      - source/settlement-report/Reports.Abstractions/**
+      - .github/workflows/reports-client-bundle-publish.yml
+  # Build, test, pack
+  # Executed if any NuGet package folder or build scripts has changed;
+  # including if documentation or tests has changed
+  workflow_call: {}
+  # Build, test, pack and publish prerelease packages
+  # Executed if manually triggered
+  workflow_dispatch: {}
+
+env:
+  # TRIGGERED_BY_PR_COMMIT is true if this run is automatically triggered by a commit in a Pull Request (feature branch)
+  TRIGGERED_BY_PR_COMMIT: ${{ github.event_name == 'pull_request' }}
+  # BASE_SHA must be set to 'main' if this run is triggered manually; otherwise file changes will not be detected correctly
+  BASE_SHA: ${{ (github.event_name == 'workflow_dispatch') && 'main' || '' }}
+  # Necessary to manage Azure resources from automated tests
+  AZURE_KEYVAULT_URL: ${{ vars.integration_test_azure_keyvault_url }}
+  # Set value used by 'AzuriteManager'
+  #  Use 'AzuriteBlobFolderPath' for TestCommon version 4.2.0 and lower
+  AzuriteBlobFolderPath: ${{ github.workspace }}\node_modules\.bin\
+  #  Use 'AzuriteFolderPath' for TestCommon version 4.3.0 and higher
+  AzuriteFolderPath: ${{ github.workspace }}\node_modules\.bin\
+  # Overrides settings in 'functionhost.settings.json'
+  FunctionAppHostPath: ${{ github.workspace }}\node_modules\azure-functions-core-tools\bin\func.dll
+
+jobs:
+  build_and_publish:
+    runs-on: windows-2022
+    name: Publish bundle to NuGet.org
+
+    environment: AzureAuth
+
+    # We need to have permissions here to be able to support manually triggering this workflow for releasing a pre-release.
+    permissions:
+      id-token: write # Needed by 'dotnet-solution-build-and-test' to login to Azure
+      contents: read # Needed by https://github.com/EnricoMi/publish-unit-test-result-action
+      issues: read # Needed by https://github.com/EnricoMi/publish-unit-test-result-action
+      checks: write # Needed by https://github.com/EnricoMi/publish-unit-test-result-action
+      pull-requests: write # Needed by https://github.com/EnricoMi/publish-unit-test-result-action
+
+    steps:
+      # See https://stackoverflow.com/a/22575737
+      - name: Enable long filenames
+        shell: pwsh
+        run: |
+          git config --system core.longpaths true
+
+      - name: Checkout repository
+        uses: Energinet-DataHub/.github/.github/actions/nuget-checkout-repository@v14
+
+      - name: Setup dotnet and tools
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-setup-and-tools@v14
+        with:
+          use_azure_functions_tools: "true"
+          azure_functions_core_tools_version: 4.0.5455
+
+      - name: Build and test solution
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v14
+        with:
+          solution_file_path: ./SettlementReport.sln
+          azure_tenant_id: ${{ vars.integration_test_azure_tenant_id }}
+          azure_subscription_id: ${{ vars.integration_test_azure_subscription_id }}
+          azure_spn_id: ${{ vars.integration_test_azure_spn_id_oidc }}
+          publish_test_report: "true"
+
+      - name: Pack Reports.Client project
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v14
+        with:
+          project_path: ./source/settlement-report/Reports.Client/Reports.Client.csproj
+
+      - name: Pack Reports.Abstractions project
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v14
+        with:
+          project_path: ./source/settlement-report/Reports.Abstractions/Reports.Abstractions.csproj
+      - name: Package content or build has changed for Reports.Client or Reports.Abstractions
+        id: changed-content-client
+        uses: tj-actions/changed-files@v45
+        with:
+          base_sha: ${{ env.BASE_SHA }}
+          files: |
+            source/settlement-report/Reports.Client/**/*.*
+            source/settlement-report/Reports.Abstractions/**/*.*
+            .github/workflows/reports-client-bundle-publish.yml
+
+      - name: List all changed files for Reports.Client or Reports.Abstractions
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-content-client.outputs.all_changed_files }}
+        shell: bash
+        run: |
+          for file in "$ALL_CHANGED_FILES"; do
+            echo "$file was changed"
+          done
+
+      - name: Assert version of Reports.Client NuGet package and push it to NuGet.org
+        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v14
+        with:
+          push_packages: ${{ env.TRIGGERED_BY_PR_COMMIT == 'false' && steps.changed-content-client.outputs.any_changed == 'true' }}
+          content_changed: ${{ steps.changed-content-client.outputs.any_changed }}
+          nuget_token: ${{ secrets.nuget_token }}
+          nupkg_recurse_path: source/settlement-report/Reports.Client
+
+      - name: Assert version of Reports.Abstractions NuGet package and push it to NuGet.org
+        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v14
+        with:
+          push_packages: ${{ env.TRIGGERED_BY_PR_COMMIT == 'false' && steps.changed-content-client.outputs.any_changed == 'true' }}
+          content_changed: ${{ steps.changed-content-client.outputs.any_changed }}
+          nuget_token: ${{ secrets.nuget_token }}
+          nupkg_recurse_path: source/settlement-report/Reports.Abstractions

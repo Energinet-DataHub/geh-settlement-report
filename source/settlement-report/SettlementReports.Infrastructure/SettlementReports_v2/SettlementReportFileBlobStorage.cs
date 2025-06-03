@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using Azure.Storage.Blobs;
-using Energinet.DataHub.SettlementReport.Application.SettlementReports_v2;
-using Energinet.DataHub.SettlementReport.Interfaces.SettlementReports_v2.Models;
+using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Interfaces.SettlementReports_v2.Models;
 
-namespace Energinet.DataHub.SettlementReport.Infrastructure.SettlementReports_v2;
+namespace Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
 
 public sealed class SettlementReportFileBlobStorage : ISettlementReportFileRepository
 {
@@ -25,27 +25,6 @@ public sealed class SettlementReportFileBlobStorage : ISettlementReportFileRepos
     public SettlementReportFileBlobStorage(BlobContainerClient blobContainerClient)
     {
         _blobContainerClient = blobContainerClient;
-    }
-
-    public Task<Stream> OpenForReadingAsync(ReportRequestId reportRequestId, string fileName)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.OpenReadAsync(bufferSize: 25 * 1024 * 1024);
-    }
-
-    public async Task DownloadAsync(ReportRequestId reportRequestId, string fileName, Stream downloadStream)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        await blobClient.DownloadToAsync(downloadStream).ConfigureAwait(false);
-    }
-
-    public Task<Stream> OpenForWritingAsync(ReportRequestId reportRequestId, string fileName)
-    {
-        var blobName = GetBlobName(reportRequestId, fileName);
-        var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.OpenWriteAsync(true);
     }
 
     public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
