@@ -3,6 +3,7 @@ import sys
 import uuid
 
 import pytest
+from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.measurements_reports.entry_point import start_measurements_report
@@ -18,6 +19,10 @@ def test_start_measurements_report(
     report_id = uuid.uuid4().hex
     output_path = tmp_path_factory.mktemp("measurements_report_output")
     result_file = output_path / f"{report_id}.zip"
+    monkeypatch.setattr(
+        "geh_settlement_report.measurements_reports.domain.calculation.get_dbutils",
+        lambda _: MockDBUtils(),
+    )
 
     monkeypatch.setattr(
         "geh_settlement_report.measurements_reports.application.tasks.measurements_report_task.initialize_spark",

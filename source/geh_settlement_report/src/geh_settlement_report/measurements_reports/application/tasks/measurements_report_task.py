@@ -30,20 +30,17 @@ def start_measurements_report_with_deps():
 
 @use_span()
 def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSession, logger) -> None:
-    # result_dir = Path(args.output_path) / args.report_id
-    # result_dir.mkdir(parents=True, exist_ok=True)
-    # files = [str(result_dir / "file1.csv"), str(result_dir / "file2.csv"), str(result_dir / "file3.csv")]
-    # for f in files:
-    #     logger.info(f"Processing file: {f}")
-    #     Path(f).write_text('a,b\n1, "a"')
+    logger.info("Creating temporary directory for report output before zipping")
+    result_dir = Path(args.output_path) / args.report_id
+    result_dir.mkdir(parents=True, exist_ok=True)
 
     current_measurements_repository = CurrentMeasurementsRepository(spark, args.catalog_name)
     electricity_market_repository = ElectricityMarketRepository(spark, args.catalog_name)
-    logger.info("Read input data")
+    logger.info("Reading input data")
     current_measurements = current_measurements_repository.read_current_measurements()
     metering_point_periods = electricity_market_repository.read_measurements_report_metering_point_periods()
 
-    logger.info("Starting zip creation")
+    logger.info("Zipping files into report")
     execute(
         spark,
         args,
@@ -51,5 +48,5 @@ def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSessio
         metering_point_periods.df,
     )
 
-    logger.info("Delete temporary folder used for creating the zip")
+    logger.info("Removing the temporary folder")
     shutil.rmtree(Path(args.output_path) / args.report_id)
