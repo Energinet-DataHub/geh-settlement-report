@@ -39,10 +39,11 @@ def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSessio
 
     current_measurements_repository = CurrentMeasurementsRepository(spark, args.catalog_name)
     electricity_market_repository = ElectricityMarketRepository(spark, args.catalog_name)
-
+    logger.info("Read input data")
     current_measurements = current_measurements_repository.read_current_measurements()
     metering_point_periods = electricity_market_repository.read_measurements_report_metering_point_periods()
 
+    logger.info("Starting zip creation")
     execute(
         spark,
         args,
@@ -50,5 +51,5 @@ def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSessio
         metering_point_periods.df,
     )
 
-    logger.info("Delete temporary files for creating the zip")
+    logger.info("Delete temporary folder used for creating the zip")
     shutil.rmtree(Path(args.output_path) / args.report_id)
