@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 
-public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<Application.SettlementReports_v2.SettlementReport>
+public class SettlementReportEntityConfiguration : IEntityTypeConfiguration<SettlementReport>
 {
-    public void Configure(EntityTypeBuilder<Application.SettlementReports_v2.SettlementReport> builder)
+    public void Configure(EntityTypeBuilder<SettlementReport> builder)
     {
         builder.ToTable("SettlementReport");
         builder.HasKey(e => e.Id);

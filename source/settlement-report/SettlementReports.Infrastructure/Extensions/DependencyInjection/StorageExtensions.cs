@@ -14,9 +14,10 @@
 
 using Azure.Identity;
 using Azure.Storage.Blobs;
-using Energinet.DataHub.Reports.Application.SettlementReports_v2;
+using Energinet.DataHub.Reports.Application.Services;
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
-using Energinet.DataHub.Reports.Infrastructure.SettlementReports_v2;
+using Energinet.DataHub.Reports.Infrastructure.Services;
 using HealthChecks.Azure.Storage.Blobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
