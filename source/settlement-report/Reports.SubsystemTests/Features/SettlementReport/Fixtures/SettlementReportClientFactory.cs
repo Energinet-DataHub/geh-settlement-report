@@ -20,7 +20,7 @@ namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fix
 
 public static class SettlementReportClientFactory
 {
-    public static async Task<ISettlementReportClient> CreateSettlementReportClientAsync(ReportsSubsystemTestConfiguration configuration)
+    public static async Task<ISettlementReportClient> CreateAsync(ReportsSubsystemTestConfiguration configuration)
     {
         var httpClient = new HttpClient
         {

@@ -46,7 +46,7 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        SettlementReportClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
+        SettlementReportClient = await SettlementReportClientFactory.CreateAsync(Configuration);
     }
 
     public Task DisposeAsync()

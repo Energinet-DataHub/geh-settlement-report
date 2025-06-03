@@ -24,7 +24,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
     /// <summary>
     /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
     /// </summary>
-    public ISettlementReportClient ReportsClient { get; private set; } = null!;
+    public IMeasurementsReportClient MeasurementsReportClient { get; private set; } = null!;
 
     public MeasurementsReportScenarioState ScenarioState { get; }
 
@@ -34,7 +34,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        ReportsClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
+        MeasurementsReportClient = await MeasurementsReportClientFactory.CreateAsync(Configuration);
     }
 
     public Task DisposeAsync()
@@ -69,7 +69,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
 
     public async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
     {
-        var reportRequests = await ReportsClient.GetMeasurementsReportAsync(CancellationToken.None);
+        var reportRequests = await MeasurementsReportClient.GetMeasurementsReportAsync(CancellationToken.None);
         return reportRequests.FirstOrDefault(x => x.JobRunId is not null && x.JobRunId.Id == jobRunId.Id);
     }
 }

@@ -1,44 +1,42 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
 using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.Client;
 
-internal sealed class SettlementReportClient : ISettlementReportClient
+internal sealed class MeasurementsReportClient : IMeasurementsReportClient
 {
     private readonly HttpClient _apiHttpClient;
 
-    public SettlementReportClient(HttpClient apiHttpClient)
+    public MeasurementsReportClient(HttpClient apiHttpClient)
     {
         ArgumentNullException.ThrowIfNull(apiHttpClient);
         _apiHttpClient = apiHttpClient;
     }
 
-    public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
+    public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
     {
-        return IsPeriodAcrossMonths(requestDto.Filter)
-            ? throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto))
-            : RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
+        return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
     }
 
-    public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken)
     {
-        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
 
         using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedSettlementReportDto>>(cancellationToken).ConfigureAwait(false) ?? [];
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken).ConfigureAwait(false) ?? [];
 
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
 
     public async Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/download");
+        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/download");
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
             Encoding.UTF8,
@@ -53,7 +51,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/cancel");
+        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/cancel");
 
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
@@ -62,14 +60,6 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
         using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         responseMessage.EnsureSuccessStatusCode();
-    }
-
-    private static bool IsPeriodAcrossMonths(SettlementReportRequestFilterDto settlementReportRequestFilter)
-    {
-        var startDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(settlementReportRequestFilter.PeriodStart, "Romance Standard Time");
-        var endDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(settlementReportRequestFilter.PeriodEnd.AddMilliseconds(-1), "Romance Standard Time");
-        return startDate.Month != endDate.Month
-            || startDate.Year != endDate.Year;
     }
 
     private async Task<JobRunId> RequestAsync(object requestDto, string endpoint, CancellationToken cancellationToken)
