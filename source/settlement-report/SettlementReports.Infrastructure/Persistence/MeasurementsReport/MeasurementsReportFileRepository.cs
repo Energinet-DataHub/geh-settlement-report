@@ -13,11 +13,11 @@ public sealed class MeasurementsReportFileRepository : IMeasurementsReportFileRe
         _blobContainerClient = blobContainerClient;
     }
 
-    public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
+    public async Task<bool> DeleteAsync(ReportRequestId reportRequestId, string fileName)
     {
         var blobName = string.Join('/', "measurementsreports", reportRequestId.Id, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
-        return blobClient.DeleteIfExistsAsync();
+        return await blobClient.DeleteIfExistsAsync().ConfigureAwait(false);
     }
 
     public async Task<Stream> DownloadAsync(string fileName)

@@ -34,7 +34,8 @@ public sealed class RemoveExpiredSettlementReports : IRemoveExpiredSettlementRep
                 continue;
             }
 
-            // Delete the blob file if it exists and the job id is null, because on the shared blob storage we use retention to clean-up
+            // Delete the blob file if it exists and the job id is null, because on the shared blob storage
+            // we use retention to clean-up.
             if (settlementReport is { BlobFileName: not null, JobId: null })
             {
                 await _settlementReportFileRepository
