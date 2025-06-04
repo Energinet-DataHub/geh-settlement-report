@@ -1,20 +1,5 @@
-﻿// Copyright 2020 Energinet DataHub A/S
-//
-// Licensed under the Apache License, Version 2.0 (the "License2");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
+﻿using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.Reports.Application;
-using Energinet.DataHub.Reports.Infrastructure.SqlStatements.Mappers;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
@@ -84,7 +69,7 @@ public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJ
         var jobParameters = new List<string>
         {
             $"--report-id={reportId.Id}",
-            $"--calculation-type={CalculationTypeMapper.ToDeltaTableValue(request.Filter.CalculationType)}",
+            $"--calculation-type={MapCalculationType(request.Filter.CalculationType)}",
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-market-role={MapMarketRole(marketRole)}",
@@ -162,6 +147,24 @@ public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJ
             RunStatusState.PENDING or RunStatusState.QUEUED => JobRunStatus.Queued,
             RunStatusState.RUNNING => JobRunStatus.Running,
             _ => JobRunStatus.Queued,
+        };
+    }
+
+    private static string MapCalculationType(CalculationType calculationType)
+    {
+        return calculationType switch
+        {
+            CalculationType.BalanceFixing => "aggregation",
+            CalculationType.Aggregation => "balance_fixing",
+            CalculationType.WholesaleFixing => "wholesale_fixing",
+            CalculationType.FirstCorrectionSettlement => "first_correction_settlement",
+            CalculationType.SecondCorrectionSettlement => "second_correction_settlement",
+            CalculationType.ThirdCorrectionSettlement => "third_correction_settlement",
+
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(calculationType),
+                actualValue: calculationType,
+                "Value cannot be mapped to a string representation of a calculation type."),
         };
     }
 }

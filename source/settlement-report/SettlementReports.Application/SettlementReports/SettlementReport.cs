@@ -1,18 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
-//
-// Licensed under the Apache License, Version 2.0 (the "License2");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using System.Text.Json;
+﻿using System.Text.Json;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using NodaTime;
@@ -125,13 +111,6 @@ public sealed class SettlementReport
     // ReSharper disable once UnusedMember.Local
     private SettlementReport()
     {
-    }
-
-    public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
-    {
-        Status = ReportStatus.Completed;
-        BlobFileName = generatedSettlementReport.ReportFileName;
-        EndedDateTime = clock.GetCurrentInstant();
     }
 
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
