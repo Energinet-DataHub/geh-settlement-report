@@ -18,18 +18,6 @@ public interface ISettlementReportClient
     Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Requests generation of a new settlement report.
-    /// </summary>
-    /// <returns>The job id.</returns>
-    Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Gets a list of all measurements reports visible to the current user.
-    /// </summary>
-    /// <returns>A list of measurements reports.</returns>
-    Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken);
-
-    /// <summary>
     /// Downloads the measurements report with the specified id.
     /// </summary>
     /// <returns>The stream to the report.</returns>

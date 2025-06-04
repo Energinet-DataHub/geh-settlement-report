@@ -32,9 +32,13 @@ internal sealed class SettlementReportClient : ISettlementReportClient
             Encoding.UTF8,
             "application/json");
 
-        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        var response = await _apiHttpClient
+            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+            .ConfigureAwait(false);
 
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+        var responseText = await response.Content
+            .ReadAsStringAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -43,7 +47,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
