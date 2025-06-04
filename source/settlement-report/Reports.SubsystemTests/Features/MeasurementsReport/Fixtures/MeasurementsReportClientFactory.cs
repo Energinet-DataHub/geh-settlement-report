@@ -2,11 +2,11 @@
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures.Identity;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
+namespace Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.Fixtures;
 
-public static class SettlementReportClientFactory
+public static class MeasurementsReportClientFactory
 {
-    public static async Task<ISettlementReportClient> CreateAsync(ReportsSubsystemTestConfiguration configuration)
+    public static async Task<IMeasurementsReportClient> CreateAsync(ReportsSubsystemTestConfiguration configuration)
     {
         var httpClient = new HttpClient
         {
@@ -18,7 +18,7 @@ public static class SettlementReportClientFactory
 
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
 
-        return new SettlementReportClient(
+        return new MeasurementsReportClient(
             httpClient);
     }
 }
