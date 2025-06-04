@@ -27,13 +27,9 @@ public sealed class MeasurementsReportFileRepository : IMeasurementsReportFileRe
     public async Task<Stream> DownloadAsync(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName) || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-            throw new ArgumentException("Invalid file name.", nameof(fileName));
+            throw new ArgumentException("Invalid measurements report file name.", nameof(fileName));
 
         var blobName = string.Join('/', _options.Value.DirectoryPath, fileName);
-
-        if (string.IsNullOrWhiteSpace(blobName))
-            throw new ArgumentException($"Invalid blob name {blobName}.", nameof(blobName));
-
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         return await blobClient.OpenReadAsync().ConfigureAwait(false);
     }

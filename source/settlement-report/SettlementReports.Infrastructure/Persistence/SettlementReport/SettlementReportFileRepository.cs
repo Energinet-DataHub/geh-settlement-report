@@ -26,6 +26,9 @@ public sealed class SettlementReportFileRepository : ISettlementReportFileReposi
 
     public async Task<Stream> DownloadAsync(string fileName)
     {
+        if (string.IsNullOrWhiteSpace(fileName) || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            throw new ArgumentException("Invalid settlement report file name.", nameof(fileName));
+
         var blobName = string.Join('/', _options.Value.DirectoryPath, fileName);
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
         return await blobClient.OpenReadAsync().ConfigureAwait(false);

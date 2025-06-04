@@ -79,8 +79,7 @@ public class MeasurementsReportsController
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
         {
-            throw;
-            //return NotFound();
+            return NotFound();
         }
     }
 
