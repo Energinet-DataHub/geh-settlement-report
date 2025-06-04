@@ -114,13 +114,6 @@ public sealed class SettlementReport
     {
     }
 
-    public void MarkAsCompleted(IClock clock, GeneratedSettlementReportDto generatedSettlementReport)
-    {
-        Status = ReportStatus.Completed;
-        BlobFileName = generatedSettlementReport.ReportFileName;
-        EndedDateTime = clock.GetCurrentInstant();
-    }
-
     public void MarkAsCompleted(IClock clock, ReportRequestId requestId, DateTimeOffset? endTime)
     {
         Status = ReportStatus.Completed;
