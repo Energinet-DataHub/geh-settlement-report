@@ -1,6 +1,4 @@
-﻿using Energinet.DataHub.Reports.Abstractions.Model;
-
-namespace Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 
 public sealed record SettlementReportRequestDto(
     bool SplitReportPerGridArea,

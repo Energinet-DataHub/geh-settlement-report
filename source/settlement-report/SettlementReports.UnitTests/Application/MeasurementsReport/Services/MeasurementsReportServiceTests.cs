@@ -1,8 +1,8 @@
-﻿using Energinet.DataHub.Reports.Application.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using FluentAssertions;
 using Moq;
 using NodaTime;

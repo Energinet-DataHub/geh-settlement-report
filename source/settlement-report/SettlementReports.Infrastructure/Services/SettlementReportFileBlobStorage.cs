@@ -1,6 +1,6 @@
 ﻿using Azure.Storage.Blobs;
+using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Application.SettlementReports;
-using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Services;
 

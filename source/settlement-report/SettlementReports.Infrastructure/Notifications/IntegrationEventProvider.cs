@@ -3,7 +3,6 @@ using Energinet.DataHub.Core.Messaging.Communication.Publisher;
 using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Infrastructure.Contracts;
-using Energinet.DataHub.Reports.Interfaces.Models;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Notifications;
