@@ -31,7 +31,7 @@ public sealed class MeasurementsReportFileRepository : IMeasurementsReportFileRe
 
         var blobName = string.Join('/', _options.Value.DirectoryPath, fileName);
 
-        if (string.IsNullOrWhiteSpace(blobName) || blobName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+        if (string.IsNullOrWhiteSpace(blobName))
             throw new ArgumentException($"Invalid blob name {blobName}.", nameof(blobName));
 
         var blobClient = _blobContainerClient.GetBlobClient(blobName);
