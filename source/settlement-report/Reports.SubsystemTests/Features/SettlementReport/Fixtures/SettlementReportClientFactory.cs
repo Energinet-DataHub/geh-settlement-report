@@ -1,3 +1,4 @@
+using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures.Identity;
 
