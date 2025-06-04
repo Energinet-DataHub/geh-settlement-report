@@ -8,7 +8,7 @@ from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.measurements_reports.entry_point import start_measurements_report
-from tests.measurements_reports.job_tests.seeding import seed
+from tests.measurements_reports.job_tests.seeding import seed_data
 
 
 def test_start_measurements_report(
@@ -36,9 +36,9 @@ def test_start_measurements_report(
         [
             "entry_point.py",
             f"--report-id={report_id}",
-            "--period-start=2025-05-01",
-            "--period-end=2025-05-31",
-            "--grid-area-codes=[800,801]",
+            "--period-start=2016-01-01",
+            "--period-end=2026-01-01",
+            "--grid-area-codes=[800]",
             "--requesting-actor-id=1234567890123",
             "--energy-supplier-ids=[1000000000000]",
         ],
@@ -50,7 +50,8 @@ def test_start_measurements_report(
         "APPLICATIONINSIGHTS_CONNECTION_STRING", "InstrumentationKey=12345678-1234-1234-1234-123456789012"
     )
 
-    seed(spark)
+    # Seed electricity market and gold tables
+    seed_data(spark)
 
     # Act
     start_measurements_report()
