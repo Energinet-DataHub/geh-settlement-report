@@ -1,5 +1,6 @@
 ﻿using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.States;
@@ -31,7 +32,7 @@ public class SettlementReportScenarioFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        SettlementReportClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
+        SettlementReportClient = await SettlementReportClientFactory.CreateAsync(Configuration);
     }
 
     public Task DisposeAsync()

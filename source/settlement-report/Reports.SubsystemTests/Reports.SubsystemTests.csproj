@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Reports.Client\Reports.Client.csproj" />
       <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
     </ItemGroup>
 

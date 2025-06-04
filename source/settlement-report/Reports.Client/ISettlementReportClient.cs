@@ -33,19 +33,13 @@ public interface ISettlementReportClient
     /// Downloads the measurements report with the specified id.
     /// </summary>
     /// <returns>The stream to the report.</returns>
-    Task<Stream> DownloadMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken);
+    Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a list of all settlement reports visible to the current user.
     /// </summary>
     /// <returns>A list of settlement reports.</returns>
     Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Downloads the settlement report with the specified id.
-    /// </summary>
-    /// <returns>The stream to the report.</returns>
-    Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Cancels the settlement report with the specified id.

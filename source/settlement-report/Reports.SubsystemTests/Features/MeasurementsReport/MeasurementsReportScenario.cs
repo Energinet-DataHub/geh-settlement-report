@@ -53,7 +53,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
     public async Task When_ReportRequestIsSent()
     {
         // Act
-        var jobRunId = await _scenarioFixture.ReportsClient.RequestAsync(
+        var jobRunId = await _scenarioFixture.MeasurementsReportClient.RequestAsync(
             _scenarioFixture.ScenarioState.MeasurementsReportRequestDto!,
             CancellationToken.None);
 
@@ -86,7 +86,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.NotNull(reportRequest);
 
         // Act
-        var stream = await _scenarioFixture.ReportsClient.DownloadMeasurementsReportAsync(reportRequest.RequestId, CancellationToken.None);
+        var stream = await _scenarioFixture.MeasurementsReportClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
 
         // Assert
         Assert.NotNull(stream);

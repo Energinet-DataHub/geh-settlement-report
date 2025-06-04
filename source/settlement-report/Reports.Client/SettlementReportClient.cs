@@ -1,15 +1,14 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
 using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Newtonsoft.Json;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
+namespace Energinet.DataHub.Reports.Client;
 
-// TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
 internal sealed class SettlementReportClient : ISettlementReportClient
 {
+    private const string BaseUrl = "settlement-reports";
     private readonly HttpClient _apiHttpClient;
 
     public SettlementReportClient(HttpClient apiHttpClient)
@@ -20,28 +19,9 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken)
     {
-        if (IsPeriodAcrossMonths(requestDto.Filter))
-            throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto));
-
-        return RequestAsync(requestDto, "settlement-reports/RequestSettlementReport", cancellationToken);
-    }
-
-    public Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken)
-    {
-        return RequestAsync(requestDto, "measurements-reports/request", cancellationToken);
-    }
-
-    public async Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken)
-    {
-        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "measurements-reports/list");
-
-        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
-
-        response.EnsureSuccessStatusCode();
-
-        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedMeasurementsReportDto>>(cancellationToken) ?? [];
-
-        return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
+        return IsPeriodAcrossMonths(requestDto.Filter)
+            ? throw new ArgumentException("Invalid period, start date and end date should be within same month", nameof(requestDto))
+            : RequestAsync(requestDto, $"{BaseUrl}/RequestSettlementReport", cancellationToken);
     }
 
     public async Task<Stream> DownloadMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken)
@@ -68,55 +48,42 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
     {
-        using var requestApi = new HttpRequestMessage(HttpMethod.Get, "settlement-reports/list");
+        using var requestApi = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/list");
 
-        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken);
+        using var response = await _apiHttpClient.SendAsync(requestApi, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedSettlementReportDto>>(cancellationToken) ?? [];
+        var responseApiContent = await response.Content.ReadFromJsonAsync<IEnumerable<RequestedSettlementReportDto>>(cancellationToken).ConfigureAwait(false) ?? [];
 
         return responseApiContent.OrderByDescending(x => x.CreatedDateTime);
     }
 
     public async Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/download");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/download");
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
             Encoding.UTF8,
             "application/json");
 
-        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadAsStreamAsync(cancellationToken);
+        return await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task CancelAsync(ReportRequestId requestId, CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "settlement-reports/cancel");
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"{BaseUrl}/cancel");
 
         request.Content = new StringContent(
             JsonConvert.SerializeObject(requestId),
             Encoding.UTF8,
             "application/json");
 
-        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken);
-        responseMessage.EnsureSuccessStatusCode();
-    }
-
-    public async Task CancelMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken)
-    {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/cancel");
-
-        request.Content = new StringContent(
-            JsonConvert.SerializeObject(requestId),
-            Encoding.UTF8,
-            "application/json");
-
-        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken);
+        using var responseMessage = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         responseMessage.EnsureSuccessStatusCode();
     }
 
@@ -136,8 +103,8 @@ internal sealed class SettlementReportClient : ISettlementReportClient
            Encoding.UTF8,
            "application/json");
 
-        using var response = await _apiHttpClient.SendAsync(request, cancellationToken);
-        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+        using var response = await _apiHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var responseText = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -146,7 +113,7 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
         response.EnsureSuccessStatusCode();
 
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jobRunId = JsonConvert.DeserializeObject<long>(responseContent);
         return new JobRunId(jobRunId);
     }
