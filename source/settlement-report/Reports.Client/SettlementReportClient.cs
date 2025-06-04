@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.Client;

@@ -1,7 +1,7 @@
-﻿using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 
-namespace Energinet.DataHub.Reports.Interfaces.Helpers;
+namespace Energinet.DataHub.Reports.Infrastructure.Helpers;
 
 public interface IMeasurementsReportDatabricksJobsHelper
 {
