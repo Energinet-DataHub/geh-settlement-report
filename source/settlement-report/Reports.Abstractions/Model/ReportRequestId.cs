@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model;
 
 /// <summary>
 /// The ReportRequestId is a unique identifier for both a report and the request to create the report.
