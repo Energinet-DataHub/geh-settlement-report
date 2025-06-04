@@ -20,6 +20,10 @@ public static class StorageExtensions
             .BindConfiguration(SettlementReportStorageOptions.SectionName)
             .ValidateDataAnnotations();
 
+        services.AddOptions<MeasurementsReportStorageOptions>()
+            .BindConfiguration(MeasurementsReportStorageOptions.SectionName)
+            .ValidateDataAnnotations();
+
         services.AddScoped<ISettlementReportFileRepository, SettlementReportFileRepository>(serviceProvider =>
         {
             var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
@@ -55,18 +59,17 @@ public static class StorageExtensions
                 },
                 "SettlementReportBlobStorageJobs")
             .AddAzureBlobStorage(
-            serviceProvider =>
-            {
-                var blobSettings = serviceProvider.GetRequiredService<IOptions<MeasurementsReportStorageOptions>>();
-                var blobSettingsReports = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
-                return new BlobServiceClient(blobSettingsReports.Value.StorageAccountForJobsUri, new DefaultAzureCredential());
-            },
-            serviceProvider =>
-            {
-                var blobSettings = serviceProvider.GetRequiredService<IOptions<MeasurementsReportStorageOptions>>();
-                return new AzureBlobStorageHealthCheckOptions { ContainerName = blobSettings.Value.StorageContainerForJobsName };
-            },
-            "MeasurementsReportBlobStorageJobs");
+                serviceProvider =>
+                {
+                    var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>();
+                    return new BlobServiceClient(blobSettings.Value.StorageAccountForJobsUri, new DefaultAzureCredential());
+                },
+                serviceProvider =>
+                {
+                    var blobSettings = serviceProvider.GetRequiredService<IOptions<MeasurementsReportStorageOptions>>();
+                    return new AzureBlobStorageHealthCheckOptions { ContainerName = blobSettings.Value.StorageContainerForJobsName };
+                },
+                "MeasurementsReportBlobStorageJobs");
 
         return services;
     }
