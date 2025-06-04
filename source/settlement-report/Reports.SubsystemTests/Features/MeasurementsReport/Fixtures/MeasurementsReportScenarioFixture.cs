@@ -1,9 +1,9 @@
 ﻿using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.States;
-using Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,7 +23,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
     /// <summary>
     /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
     /// </summary>
-    public ISettlementReportClient ReportsClient { get; private set; } = null!;
+    public IMeasurementsReportClient MeasurementsReportClient { get; private set; } = null!;
 
     public MeasurementsReportScenarioState ScenarioState { get; }
 
@@ -33,7 +33,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        ReportsClient = await SettlementReportClientFactory.CreateSettlementReportClientAsync(Configuration);
+        MeasurementsReportClient = await MeasurementsReportClientFactory.CreateAsync(Configuration);
     }
 
     public Task DisposeAsync()
@@ -68,7 +68,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
 
     public async Task<RequestedMeasurementsReportDto?> GetReportRequestByJobRunIdAsync(JobRunId jobRunId)
     {
-        var reportRequests = await ReportsClient.GetMeasurementsReportAsync(CancellationToken.None);
+        var reportRequests = await MeasurementsReportClient.GetAsync(CancellationToken.None);
         return reportRequests.FirstOrDefault(x => x.JobRunId is not null && x.JobRunId.Id == jobRunId.Id);
     }
 }
