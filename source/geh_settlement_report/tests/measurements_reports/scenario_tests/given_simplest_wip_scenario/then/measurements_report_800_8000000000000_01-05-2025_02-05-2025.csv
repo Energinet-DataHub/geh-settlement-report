@@ -1,3 +1,0 @@
-grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;observation_time;quantity;quantity_quality;unit;#comment
-800;170000000000000201;consumption;P15M;1000000000000;connected;2025-05-01T17:15:00Z;2.125;measured;kWh;Case 0
-800;170000000000000201;consumption;P15M;1000000000000;connected;2025-05-01T17:30:00Z;2.125;measured;kWh;Case 0
