@@ -20,14 +20,14 @@ namespace Energinet.DataHub.Reports.Application.SettlementReports.Services;
 
 public sealed class SettlementReportFileService : ISettlementReportFileService
 {
-    private readonly IReportFileRepository _reportFileRepository;
+    private readonly Application.Services.ISettlementReportFileRepository _settlementReportFileRepository;
     private readonly ISettlementReportRepository _repository;
 
     public SettlementReportFileService(
-        IReportFileRepository reportFileRepository,
+        Application.Services.ISettlementReportFileRepository settlementReportFileRepository,
         ISettlementReportRepository repository)
     {
-        _reportFileRepository = reportFileRepository;
+        _settlementReportFileRepository = settlementReportFileRepository;
         _repository = repository;
     }
 
@@ -48,8 +48,8 @@ public sealed class SettlementReportFileService : ISettlementReportFileService
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a Blob file name.");
 
-        return await _reportFileRepository
-            .DownloadAsync(ReportType.Settlement, report.BlobFileName)
+        return await _settlementReportFileRepository
+            .DownloadAsync(report.BlobFileName)
             .ConfigureAwait(false);
     }
 }

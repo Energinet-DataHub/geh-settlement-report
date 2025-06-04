@@ -54,6 +54,13 @@ internal sealed class SettlementReportClient : ISettlementReportClient
 
         var response = await _apiHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
+        var responseText = await response.Content.ReadAsStringAsync(cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException($"Request to measurements-reports/download failed with status code {response.StatusCode}: {responseText}.");
+        }
+
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStreamAsync(cancellationToken);

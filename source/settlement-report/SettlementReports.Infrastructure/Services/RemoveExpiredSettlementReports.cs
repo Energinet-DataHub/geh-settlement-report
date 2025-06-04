@@ -17,6 +17,7 @@ using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using NodaTime;
 using NodaTime.Extensions;
+using ISettlementReportFileRepository = Energinet.DataHub.Reports.Application.SettlementReports.ISettlementReportFileRepository;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Services;
 

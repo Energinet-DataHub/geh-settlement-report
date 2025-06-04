@@ -21,6 +21,7 @@ using Energinet.DataHub.Reports.Infrastructure.Services;
 using HealthChecks.Azure.Storage.Blobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ISettlementReportFileRepository = Energinet.DataHub.Reports.Application.Services.ISettlementReportFileRepository;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Extensions.DependencyInjection;
 
@@ -33,24 +34,14 @@ public static class StorageExtensions
             .BindConfiguration(SettlementReportStorageOptions.SectionName)
             .ValidateDataAnnotations();
 
-        services.AddScoped<ISettlementReportFileRepository, SettlementReportFileBlobStorage>(serviceProvider =>
-        {
-            var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
-
-            var blobContainerUri = new Uri(blobSettings.StorageAccountUri, blobSettings.StorageContainerName);
-            var blobContainerClient = new BlobContainerClient(blobContainerUri, new DefaultAzureCredential());
-
-            return new SettlementReportFileBlobStorage(blobContainerClient);
-        });
-
-        services.AddScoped<IReportFileRepository, ReportFileRepository>(serviceProvider =>
+        services.AddScoped<ISettlementReportFileRepository, SettlementReportFileRepository>(serviceProvider =>
         {
             var blobSettings = serviceProvider.GetRequiredService<IOptions<SettlementReportStorageOptions>>().Value;
 
             var blobContainerUri = new Uri(blobSettings.StorageAccountForJobsUri, blobSettings.StorageContainerForJobsName);
             var blobContainerClient = new BlobContainerClient(blobContainerUri, new DefaultAzureCredential());
 
-            return new ReportFileRepository(blobContainerClient);
+            return new SettlementReportFileRepository(blobContainerClient);
         });
 
         // Health checks
