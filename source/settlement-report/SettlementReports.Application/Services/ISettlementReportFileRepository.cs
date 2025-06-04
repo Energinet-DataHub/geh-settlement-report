@@ -1,8 +1,6 @@
-﻿using Energinet.DataHub.Reports.Application.Model;
-
-namespace Energinet.DataHub.Reports.Application.Services;
+﻿namespace Energinet.DataHub.Reports.Application.Services;
 
 public interface ISettlementReportFileRepository
 {
-    Task<Stream> DownloadAsync(string blobFileName);
+    Task<Stream> DownloadAsync(string fileName);
 }
