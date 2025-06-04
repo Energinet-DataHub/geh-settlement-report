@@ -1,5 +1,7 @@
 ﻿using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Client;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;

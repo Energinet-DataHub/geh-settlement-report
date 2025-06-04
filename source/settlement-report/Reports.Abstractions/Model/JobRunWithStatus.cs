@@ -1,3 +1,3 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model;
 
 public record JobRunWithStatusAndEndTime(JobRunStatus Status, DateTimeOffset? EndTime);

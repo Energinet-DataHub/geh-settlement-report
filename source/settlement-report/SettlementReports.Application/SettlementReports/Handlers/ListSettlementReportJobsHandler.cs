@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.Reports.Interfaces;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Interfaces;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;

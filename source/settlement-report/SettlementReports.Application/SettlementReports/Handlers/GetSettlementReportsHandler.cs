@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Interfaces;
 using Energinet.DataHub.Reports.Interfaces.Models;

@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.Reports.Infrastructure.Persistence;
+﻿using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;

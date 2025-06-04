@@ -1,6 +1,8 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;

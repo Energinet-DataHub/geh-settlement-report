@@ -1,4 +1,6 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+﻿using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+
+namespace Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 
 public sealed record GeneratedSettlementReportFileDto(
     ReportRequestId RequestId,

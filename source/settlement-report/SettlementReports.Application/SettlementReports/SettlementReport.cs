@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using NodaTime;

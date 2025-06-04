@@ -1,4 +1,6 @@
 ﻿using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Energinet.DataHub.Reports.Interfaces.Models;

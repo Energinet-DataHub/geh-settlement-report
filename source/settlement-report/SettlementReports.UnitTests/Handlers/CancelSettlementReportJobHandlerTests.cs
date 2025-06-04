@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
