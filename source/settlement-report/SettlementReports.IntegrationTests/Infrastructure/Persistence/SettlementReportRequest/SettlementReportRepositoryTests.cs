@@ -303,7 +303,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
+            request.MarkAsCompleted(SystemClock.Instance, new ReportRequestId(request.Id.ToString()), null);
             request.MarkAsNotificationSent();
             return request;
         });
@@ -317,7 +317,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
+            request.MarkAsCompleted(SystemClock.Instance, new ReportRequestId(request.Id.ToString()), null);
             request.MarkAsNotificationSent();
             return request;
         });
@@ -345,7 +345,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
+            request.MarkAsCompleted(SystemClock.Instance, new ReportRequestId(request.Id.ToString()), null);
             return request;
         });
         var alreadySent = await PrepareNewRequestAsync(requestFilterDto =>
@@ -358,7 +358,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
                 new JobRunId(Random.Shared.NextInt64()),
                 new ReportRequestId(Guid.NewGuid().ToString()),
                 new SettlementReportRequestDto(false, false, false, false, requestFilterDto));
-            request.MarkAsCompleted(SystemClock.Instance, new GeneratedSettlementReportDto(new ReportRequestId(request.Id.ToString()), "test.zip", []));
+            request.MarkAsCompleted(SystemClock.Instance, new ReportRequestId(request.Id.ToString()), null);
             request.MarkAsNotificationSent();
             return request;
         });
