@@ -2,7 +2,6 @@
 using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application;
-using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 

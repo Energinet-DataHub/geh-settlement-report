@@ -4,7 +4,7 @@ using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
-using Energinet.DataHub.Reports.Interfaces.Helpers;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
 using Moq;
 using NodaTime;
 using Xunit;

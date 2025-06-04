@@ -16,7 +16,6 @@ using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
 using Energinet.DataHub.Reports.Infrastructure.Services;
 using Energinet.DataHub.Reports.Interfaces;
-using Energinet.DataHub.Reports.Interfaces.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
