@@ -2,18 +2,18 @@
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
 
 public sealed class SettlementReportRepository : ISettlementReportRepository
 {
-    private readonly ISettlementReportDatabaseContext _context;
+    private readonly IReportsDatabaseContext _context;
 
-    public SettlementReportRepository(ISettlementReportDatabaseContext context)
+    public SettlementReportRepository(IReportsDatabaseContext context)
     {
         _context = context;
     }
 
-    public async Task AddOrUpdateAsync(SettlementReport request)
+    public async Task AddOrUpdateAsync(Application.SettlementReports.SettlementReport request)
     {
         if (request.Id == 0)
         {
@@ -23,19 +23,19 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task DeleteAsync(SettlementReport request)
+    public async Task DeleteAsync(Application.SettlementReports.SettlementReport request)
     {
         _context.SettlementReports.Remove(request);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public Task<SettlementReport> GetAsync(string requestId)
+    public Task<Application.SettlementReports.SettlementReport> GetAsync(string requestId)
     {
         return _context.SettlementReports
             .FirstAsync(x => x.RequestId == requestId);
     }
 
-    public async Task<IEnumerable<SettlementReport>> GetAsync()
+    public async Task<IEnumerable<Application.SettlementReports.SettlementReport>> GetAsync()
     {
         return await _context.SettlementReports
             .Where(x => x.JobId == null)
@@ -44,7 +44,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<SettlementReport>> GetAsync(Guid actorId)
+    public async Task<IEnumerable<Application.SettlementReports.SettlementReport>> GetAsync(Guid actorId)
     {
         return await _context.SettlementReports
             .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId == null)
@@ -53,13 +53,13 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public Task<SettlementReport> GetAsync(long jobId)
+    public Task<Application.SettlementReports.SettlementReport> GetAsync(long jobId)
     {
         return _context.SettlementReports
             .FirstAsync(x => x.JobId == jobId);
     }
 
-    public async Task<IEnumerable<SettlementReport>> GetForJobsAsync()
+    public async Task<IEnumerable<Application.SettlementReports.SettlementReport>> GetForJobsAsync()
     {
         return await _context.SettlementReports
             .Where(x => x.JobId != null)
@@ -68,7 +68,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<SettlementReport>> GetForJobsAsync(Guid actorId)
+    public async Task<IEnumerable<Application.SettlementReports.SettlementReport>> GetForJobsAsync(Guid actorId)
     {
         return await _context.SettlementReports
             .Where(x => x.ActorId == actorId && !x.IsHiddenFromActor && x.JobId != null)
@@ -77,7 +77,7 @@ public sealed class SettlementReportRepository : ISettlementReportRepository
             .ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
+    public async Task<IEnumerable<Application.SettlementReports.SettlementReport>> GetPendingNotificationsForCompletedAndFailed()
     {
         return await _context.SettlementReports
             .Where(x => x.IsNotificationSent == false &&

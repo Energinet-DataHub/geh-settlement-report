@@ -12,7 +12,7 @@ using Energinet.DataHub.Reports.Infrastructure.Extensions.DependencyInjection;
 using Energinet.DataHub.Reports.Infrastructure.Helpers;
 using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
 using Energinet.DataHub.Reports.Infrastructure.Services;
 using Energinet.DataHub.Reports.Interfaces;
 using Energinet.DataHub.Reports.Interfaces.Helpers;
@@ -31,7 +31,7 @@ public static class SettlementReportModuleExtensions
 
         // settlement report services
         services.AddScoped<IRequestSettlementReportJobHandler, RequestSettlementReportJobHandler>();
-        services.AddScoped<ISettlementReportDatabaseContext, SettlementReportDatabaseContext>();
+        services.AddScoped<IReportsDatabaseContext, ReportsDatabaseContext>();
         services.AddScoped<ISettlementReportRepository, SettlementReportRepository>();
         services.AddScoped<IGetSettlementReportsHandler, GetSettlementReportsHandler>();
         services.AddScoped<IRemoveExpiredSettlementReports, RemoveExpiredSettlementReports>();
@@ -51,7 +51,7 @@ public static class SettlementReportModuleExtensions
         services.AddScoped<IMeasurementsReportService, MeasurementsReportService>();
 
         // Database Health check
-        services.AddDbContext<SettlementReportDatabaseContext>(options => options.UseSqlServer(
+        services.AddDbContext<ReportsDatabaseContext>(options => options.UseSqlServer(
                 configuration
                     .GetSection(ConnectionStringsOptions.ConnectionStrings)
                     .Get<ConnectionStringsOptions>()!.DB_CONNECTION_STRING,
@@ -65,7 +65,7 @@ public static class SettlementReportModuleExtensions
             registrationKey: HealthCheckNames.SettlementReportDatabase,
             (key, builder) =>
             {
-                builder.AddDbContextCheck<SettlementReportDatabaseContext>(name: key);
+                builder.AddDbContextCheck<ReportsDatabaseContext>(name: key);
             });
 
         AddHealthChecks(services);

@@ -1,5 +1,5 @@
 ﻿using Energinet.DataHub.Reports.Infrastructure.Persistence;
-using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
 using Energinet.DataHub.Reports.Interfaces.Models;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
@@ -9,11 +9,11 @@ using Xunit;
 
 namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.Persistence.SettlementReportRequest;
 
-public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>, IAsyncLifetime
+public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<ReportsDatabaseContext>>, IAsyncLifetime
 {
-    private readonly WholesaleDatabaseManager<SettlementReportDatabaseContext> _databaseManager;
+    private readonly WholesaleDatabaseManager<ReportsDatabaseContext> _databaseManager;
 
-    public SettlementReportRepositoryTests(WholesaleDatabaseFixture<SettlementReportDatabaseContext> fixture)
+    public SettlementReportRepositoryTests(WholesaleDatabaseFixture<ReportsDatabaseContext> fixture)
     {
         _databaseManager = fixture.DatabaseManager;
     }

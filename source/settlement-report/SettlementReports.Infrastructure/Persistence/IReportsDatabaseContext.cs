@@ -1,11 +1,10 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
-public interface ISettlementReportDatabaseContext
+public interface IReportsDatabaseContext
 {
-    DbSet<SettlementReport> SettlementReports { get; }
+    DbSet<Application.SettlementReports.SettlementReport> SettlementReports { get; }
 
     DbSet<Application.MeasurementsReport.MeasurementsReport> MeasurementsReports { get; }
 

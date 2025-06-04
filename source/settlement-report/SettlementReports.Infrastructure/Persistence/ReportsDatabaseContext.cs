@@ -1,22 +1,21 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports;
-using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReportRequest;
+﻿using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence;
 
-public class SettlementReportDatabaseContext : DbContext, ISettlementReportDatabaseContext
+public class ReportsDatabaseContext : DbContext, IReportsDatabaseContext
 {
     private const string Schema = "settlementreports";
 
-    public SettlementReportDatabaseContext(DbContextOptions<SettlementReportDatabaseContext> options)
+    public ReportsDatabaseContext(DbContextOptions<ReportsDatabaseContext> options)
         : base(options)
     {
     }
 
-    public SettlementReportDatabaseContext() { }
+    public ReportsDatabaseContext() { }
 
-    public DbSet<SettlementReport> SettlementReports { get; init; } = null!;
+    public DbSet<Application.SettlementReports.SettlementReport> SettlementReports { get; init; } = null!;
 
     public DbSet<Application.MeasurementsReport.MeasurementsReport> MeasurementsReports { get; init; } = null!;
 

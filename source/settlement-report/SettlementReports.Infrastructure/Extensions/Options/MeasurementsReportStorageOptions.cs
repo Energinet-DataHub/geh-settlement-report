@@ -7,8 +7,8 @@ public class MeasurementsReportStorageOptions
     public const string SectionName = "MeasurementsReportStorage";
 
     [Required]
-    public Uri StorageAccountForJobsUri { get; set; } = null!;
+    public string StorageContainerForJobsName { get; set; } = string.Empty;
 
     [Required]
-    public string StorageContainerForJobsName { get; set; } = string.Empty;
+    public string DirectoryPath { get; set; } = string.Empty;
 }

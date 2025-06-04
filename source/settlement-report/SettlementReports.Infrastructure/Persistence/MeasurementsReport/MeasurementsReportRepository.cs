@@ -5,9 +5,9 @@ namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsRepor
 
 public sealed class MeasurementsReportRepository : IMeasurementsReportRepository
 {
-    private readonly ISettlementReportDatabaseContext _context;
+    private readonly IReportsDatabaseContext _context;
 
-    public MeasurementsReportRepository(ISettlementReportDatabaseContext context)
+    public MeasurementsReportRepository(IReportsDatabaseContext context)
     {
         _context = context;
     }
