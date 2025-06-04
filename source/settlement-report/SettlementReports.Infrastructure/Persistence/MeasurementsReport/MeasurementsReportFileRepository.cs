@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Energinet.DataHub.Reports.Application.MeasurementsReport;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 
@@ -10,6 +11,13 @@ public sealed class MeasurementsReportFileRepository : IMeasurementsReportFileRe
     public MeasurementsReportFileRepository(BlobContainerClient blobContainerClient)
     {
         _blobContainerClient = blobContainerClient;
+    }
+
+    public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
+    {
+        var blobName = string.Join('/', "measurementsreports", reportRequestId.Id, fileName);
+        var blobClient = _blobContainerClient.GetBlobClient(blobName);
+        return blobClient.DeleteIfExistsAsync();
     }
 
     public async Task<Stream> DownloadAsync(string fileName)

@@ -5,4 +5,6 @@ namespace Energinet.DataHub.Reports.Application.SettlementReports;
 public interface ISettlementReportFileRepository
 {
     Task DeleteAsync(ReportRequestId reportRequestId, string fileName);
+
+    Task<Stream> DownloadAsync(string fileName);
 }

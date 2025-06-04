@@ -1,13 +1,13 @@
 ﻿using Azure.Identity;
 using Azure.Storage.Blobs;
 using Energinet.DataHub.Reports.Application.MeasurementsReport;
+using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
 using Energinet.DataHub.Reports.Infrastructure.Services;
 using HealthChecks.Azure.Storage.Blobs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using ISettlementReportFileRepository = Energinet.DataHub.Reports.Application.Services.ISettlementReportFileRepository;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Extensions.DependencyInjection;
 

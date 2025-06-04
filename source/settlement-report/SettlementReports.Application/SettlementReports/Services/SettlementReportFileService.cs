@@ -1,16 +1,14 @@
-﻿using Energinet.DataHub.Reports.Application.Model;
-using Energinet.DataHub.Reports.Application.Services;
-using Energinet.DataHub.Reports.Interfaces.Models;
+﻿using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Services;
 
 public sealed class SettlementReportFileService : ISettlementReportFileService
 {
-    private readonly Application.Services.ISettlementReportFileRepository _settlementReportFileRepository;
+    private readonly ISettlementReportFileRepository _settlementReportFileRepository;
     private readonly ISettlementReportRepository _repository;
 
     public SettlementReportFileService(
-        Application.Services.ISettlementReportFileRepository settlementReportFileRepository,
+        ISettlementReportFileRepository settlementReportFileRepository,
         ISettlementReportRepository repository)
     {
         _settlementReportFileRepository = settlementReportFileRepository;

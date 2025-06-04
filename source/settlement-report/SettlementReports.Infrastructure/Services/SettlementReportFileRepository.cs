@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
-using Energinet.DataHub.Reports.Application.Services;
+using Energinet.DataHub.Reports.Application.SettlementReports;
+using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Services;
 
@@ -10,6 +11,13 @@ public sealed class SettlementReportFileRepository : ISettlementReportFileReposi
     public SettlementReportFileRepository(BlobContainerClient blobContainerClient)
     {
         _blobContainerClient = blobContainerClient;
+    }
+
+    public Task DeleteAsync(ReportRequestId reportRequestId, string fileName)
+    {
+        var blobName = string.Join('/', "settlementreports", reportRequestId.Id, fileName);
+        var blobClient = _blobContainerClient.GetBlobClient(blobName);
+        return blobClient.DeleteIfExistsAsync();
     }
 
     public async Task<Stream> DownloadAsync(string fileName)
