@@ -33,7 +33,3 @@ VALUES
     GETDATE(),
     GETDATE()
 )
-
-metering_point_id;quantity;quality;observation_time;metering_point_type;#comment
-170000000000000201;2.125;measured;2025-05-01T17:15:00Z;consumption;Case 0
-170000000000000201;2.125;measured;2025-05-01T17:30:00Z;consumption;Case 0
