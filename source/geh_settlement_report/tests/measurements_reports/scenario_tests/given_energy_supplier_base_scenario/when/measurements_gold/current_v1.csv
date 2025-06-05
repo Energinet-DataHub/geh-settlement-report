@@ -19,6 +19,7 @@ metering_point_id;quantity;quality;observation_time;metering_point_type;#comment
 000000000000000021;1.234;measured;2024-06-10T22:00:00Z;exchange;
 200000000000000000;1.234;measured;2024-06-10T22:00:00Z;exchange_reactive_energy;
 200000000000000001;1.234;measured;2024-06-10T22:00:00Z;exchange_reactive_energy;
-120000000000000000;10000;calculated;2024-06-10T22:00:00Z;total_consumption;Different grid area, should not be included in report
+120000000000000000;10000;calculated;2024-06-10T22:00:00Z;total_consumption;
 140000000000000000;987.654;calculated;2024-06-09T21:45:00Z;electrical_heating;Outside report period
 140000000000000000;987.654;calculated;2024-06-12T22:00:00Z;electrical_heating;Outside report period
+150000000000000000;10000;estimated;2024-06-10T22:00:00Z;net_consumption;In grid area, but different energy_supplier

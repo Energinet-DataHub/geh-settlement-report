@@ -1,16 +1,10 @@
 "Measurement Reports Tests":
   "Observation time should be converted to local (CET/CEST) time in report": true
+  "Report should only include measurement data for grid area(s) included in report (via job parameters)": true
+  "Report should only include measurement data with observation time => report from date and < report to date (via job parameters)": true
   "Columns should be sorted by GRID AREA ID, then METERING POINT TYPE, then METERING POINT ID": false
   "GIVEN scenario_parameters contains no energy_supplier_id THEN output file contains no ENERGY SUPPLIER column": true
-
-  
-  netoperatør - ikke energy supplier kolonne
-  
-  null quantity
-  filtrering på netområde
-  filtrering på periode (til og fra)
-  DDM must be able to order metering point type “E20 Exchange” and “D20 Reaction Exchange”, for metering point where DDM only is a part “to” and “from”, but not MP owner
-  navngivning
-  målepunkt afsluttet i perioden
-  ingen målepunkter i stamdata
-  ingen måledata i current_v1
+  "GIVEN scenario_parameters contains energy_supplier_id THEN output file contains ENERGY SUPPLIER column AND report should only include measurement data for that energy_supplier_id": true
+  "GIVEN input quantity is null for an observation time THEN the row with that observation time should not be included in report": true
+  "GIVEN metering point type is E20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period": true
+  "GIVEN metering point type is D20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period": true
