@@ -1,10 +1,7 @@
 ﻿using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 
-namespace Energinet.DataHub.Reports.SubsystemTests.Features.SettlementReport.Fixtures;
-
-// TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
+namespace Energinet.DataHub.Reports.Client;
 
 /// <summary>
 /// Interface of client for working with the settlement reports.
@@ -16,18 +13,6 @@ public interface ISettlementReportClient
     /// </summary>
     /// <returns>The job id.</returns>
     Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Requests generation of a new settlement report.
-    /// </summary>
-    /// <returns>The job id.</returns>
-    Task<JobRunId> RequestAsync(MeasurementsReportRequestDto requestDto, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Gets a list of all measurements reports visible to the current user.
-    /// </summary>
-    /// <returns>A list of measurements reports.</returns>
-    Task<IEnumerable<RequestedMeasurementsReportDto>> GetMeasurementsReportAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a list of all settlement reports visible to the current user.
