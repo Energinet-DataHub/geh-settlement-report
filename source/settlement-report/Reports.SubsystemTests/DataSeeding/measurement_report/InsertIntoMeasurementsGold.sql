@@ -18,12 +18,12 @@ VALUES
 (   
     '000000000000000017',
     'consumption',
-    '',
+    'submitted',
     'a810f0d2-352f-4e31-a383-b6b444effc68',
     '2025-12-31T23:00:00Z',
     100,
     'estimated',
-    'kVArh',
+    'kWh',
     'PT1H',
     '3b0e59dc-e4ad-4962-829c-3785947127d4'
     GETDATE(),
