@@ -17,17 +17,17 @@ INSERT INTO {catalog_name}.{database}.{table} (
     modified
 )
 VALUES
-(
-    '{row.metering_point_id}',
-    '{row.metering_point_type.value}',
-    '{row.orchestration_type.value}',
-    '{str(row.orchestration_instance_id)}',
-    '{row.observation_time.strftime("%Y-%m-%d %H:%M:%S")}',
-    '{format(row.quantity, ".3f")}',
-    '{row.quality.value}',
-    '{QuantityUnit.KWH.value}',
-    '{MeteringPointResolution.HOUR.value}',
-    '{str(row.transaction_id)}',
+(   
+    '000000000000000017',
+    'consumption',
+    '',
+    'a810f0d2-352f-4e31-a383-b6b444effc68',
+    '2025-12-31T23:00:00Z',
+    100,
+    'estimated',
+    'kVArh',
+    'PT1H',
+    '3b0e59dc-e4ad-4962-829c-3785947127d4'
     GETDATE(),
     false,
     GETDATE(),
