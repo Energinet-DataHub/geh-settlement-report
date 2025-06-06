@@ -61,8 +61,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
+      <ProjectReference Include="..\Reports.Abstractions\Reports.Abstractions.csproj" />
     </ItemGroup>
-
 
 </Project>

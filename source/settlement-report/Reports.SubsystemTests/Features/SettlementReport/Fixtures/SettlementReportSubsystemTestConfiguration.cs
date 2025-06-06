@@ -1,4 +1,4 @@
-﻿using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+﻿using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.SubsystemTests.Fixtures;
 using Microsoft.Extensions.Configuration;
 

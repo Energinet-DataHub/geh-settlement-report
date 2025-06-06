@@ -1,10 +1,7 @@
-﻿using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 
 namespace Energinet.DataHub.Reports.Client;
-
-// TODO JMG: Make this a real client including nuget, so it can be shared with BFF?
 
 /// <summary>
 /// Interface of client for working with the settlement reports.

@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DatabaseMigration\DatabaseMigration.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
-    <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
     <ProjectReference Include="..\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj" />
     <ProjectReference Include="..\Test.Core\Test.Core.csproj" />
   </ItemGroup>

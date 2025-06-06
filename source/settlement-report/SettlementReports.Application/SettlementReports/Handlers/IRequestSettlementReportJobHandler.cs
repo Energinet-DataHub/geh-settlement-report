@@ -1,5 +1,5 @@
-﻿using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
-using Energinet.DataHub.Reports.Interfaces.Models;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 

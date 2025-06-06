@@ -1,7 +1,7 @@
-﻿using Energinet.DataHub.Reports.Infrastructure.Persistence;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -135,7 +135,7 @@ public class SettlementReportRepositoryTests : IClassFixture<WholesaleDatabaseFi
         var repository = new SettlementReportRepository(context);
 
         // act
-        var actual = await repository.GetAsync(expectedRequest.RequestId!);
+        var actual = await repository.GetAsync(expectedRequest.RequestId);
 
         // assert
         Assert.NotNull(actual);

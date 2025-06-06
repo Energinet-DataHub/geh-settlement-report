@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 
 public sealed record SettlementReportRequestFilterDto(
     IReadOnlyDictionary<string, CalculationId?> GridAreas, // NOTE: Cannot type key to GridAreaCode, as serializer is unable to process the type.

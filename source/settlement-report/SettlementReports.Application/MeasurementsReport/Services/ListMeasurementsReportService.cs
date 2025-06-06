@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
 using NodaTime;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
