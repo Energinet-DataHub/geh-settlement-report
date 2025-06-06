@@ -6,7 +6,10 @@ using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.Client;
 
-internal sealed class MeasurementsReportClient : IMeasurementsReportClient
+// This class should preferably be internal. However, the BFF currently adds authentication headers to the
+// HttpClient, which is required for the client to work. Can we find a way to use dependency injection and make this
+// class internal?
+public sealed class MeasurementsReportClient : IMeasurementsReportClient
 {
     private const string BaseUrl = "measurements-reports";
     private readonly HttpClient _apiHttpClient;
