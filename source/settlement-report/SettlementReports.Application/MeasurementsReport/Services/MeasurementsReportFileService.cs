@@ -1,4 +1,4 @@
-using Energinet.DataHub.Reports.Abstractions.Model;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Application.Services;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
