@@ -1,7 +1,7 @@
 INSERT INTO ctl_shres_d_we_002.electricity_market_internal.measurements_report_metering_point_periods
 VALUES
 (
-  '800',
+  '543',
   '170000000000000201',
   'consumption',
   'P15M',
@@ -10,11 +10,11 @@ VALUES
   'kWh',
   NULL,
   NULL,
-  '2016-01-01T23:00:00Z',
+  '2022-01-11T23:00:00Z',
   NULL
 ),
 (
-  '801',
+  '543',
   '170000000000000202',
   'consumption',
   'P15M',
@@ -23,6 +23,6 @@ VALUES
   'kWh',
   NULL,
   NULL,
-  '2016-01-01T23:00:00Z',
+  '2022-01-12T23:00:00Z',
   NULL
 )

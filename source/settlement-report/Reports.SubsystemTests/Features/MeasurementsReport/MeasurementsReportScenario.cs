@@ -77,7 +77,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 
-    [SubsystemFact(Skip = "Not implemented yet")]
+    [SubsystemFact]
     [ScenarioStep(4)]
     public async Task AndThen_ReportCanBeDownloadedAndIsNotEmpty()
     {
@@ -93,5 +93,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         Assert.True(memoryStream.Length > 0, "The downloaded file is empty.");
+
+        //TODO HENRIK: make extra test that checks that we have a row.
     }
 }

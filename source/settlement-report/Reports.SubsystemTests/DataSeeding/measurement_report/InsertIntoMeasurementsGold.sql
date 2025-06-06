@@ -20,7 +20,7 @@ VALUES
     'consumption',
     'submitted',
     'a810f0d2-352f-4e31-a383-b6b444effc68',
-    '2025-12-31T23:00:00Z',
+    '2022-01-11T23:00:00Z',
     100,
     'estimated',
     'kWh',
