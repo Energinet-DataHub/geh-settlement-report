@@ -25,7 +25,7 @@ VALUES
     'estimated',
     'kWh',
     'PT1H',
-    '3b0e59dc-e4ad-4962-829c-3785947127d4'
+    '3b0e59dc-e4ad-4962-829c-3785947127d4',
     GETDATE(),
     false,
     GETDATE(),
