@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using NodaTime;
 using NodaTime.Extensions;
 

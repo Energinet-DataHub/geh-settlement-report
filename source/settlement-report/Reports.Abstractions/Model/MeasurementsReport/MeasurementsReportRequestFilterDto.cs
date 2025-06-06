@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 
 public sealed record MeasurementsReportRequestFilterDto(
     IReadOnlyCollection<string> GridAreaCodes,

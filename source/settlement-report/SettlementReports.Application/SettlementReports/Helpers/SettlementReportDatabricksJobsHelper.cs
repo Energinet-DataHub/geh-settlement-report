@@ -1,8 +1,7 @@
 ﻿using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application;
-using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 
@@ -154,8 +153,8 @@ public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJ
     {
         return calculationType switch
         {
-            CalculationType.BalanceFixing => "aggregation",
-            CalculationType.Aggregation => "balance_fixing",
+            CalculationType.Aggregation => "aggregation",
+            CalculationType.BalanceFixing => "balance_fixing",
             CalculationType.WholesaleFixing => "wholesale_fixing",
             CalculationType.FirstCorrectionSettlement => "first_correction_settlement",
             CalculationType.SecondCorrectionSettlement => "second_correction_settlement",

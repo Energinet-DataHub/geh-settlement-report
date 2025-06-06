@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model;
 
 public enum JobRunStatus
 {

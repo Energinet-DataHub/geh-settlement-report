@@ -1,12 +1,12 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
 using Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 using Energinet.DataHub.RevisionLog.Integration.WebApi;
 using Microsoft.AspNetCore.Authorization;
