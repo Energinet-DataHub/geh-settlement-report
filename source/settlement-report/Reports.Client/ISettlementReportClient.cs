@@ -18,7 +18,7 @@ public interface ISettlementReportClient
     Task<JobRunId> RequestAsync(SettlementReportRequestDto requestDto, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Downloads the measurements report with the specified id.
+    /// Downloads the settlement report with the specified id.
     /// </summary>
     /// <returns>The stream to the report.</returns>
     Task<Stream> DownloadAsync(ReportRequestId requestId, CancellationToken cancellationToken);
