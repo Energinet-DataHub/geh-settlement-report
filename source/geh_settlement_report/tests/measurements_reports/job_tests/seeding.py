@@ -38,7 +38,7 @@ def _seed_calculated_measurements(spark: SparkSession) -> None:
                 INSERT INTO {SPARK_CATALOG_NAME}.{current_v1.database_name}.{current_v1.view_name}
                 VALUES (
                     '000000000000000017',
-                    '{datetime(2025, 12, 31, 23, tzinfo=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}',
+                    '{datetime(2016, 1, 1, 23, tzinfo=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")}',
                     '{Decimal(100)}',
                     'estimated',
                     'consumption'

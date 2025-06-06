@@ -1,4 +1,3 @@
-import shutil
 import sys
 import uuid
 import zipfile
@@ -37,7 +36,7 @@ def test_start_measurements_report(
             "entry_point.py",
             f"--report-id={report_id}",
             "--period-start=2016-01-01",
-            "--period-end=2026-01-01",
+            "--period-end=2017-01-01",
             "--grid-area-codes=[800]",
             "--requesting-actor-id=1234567890123",
             "--energy-supplier-ids=[1000000000000]",
@@ -64,4 +63,4 @@ def test_start_measurements_report(
     assert df.count() > 0, "The csv file from the zip contains no rows"
 
     # Clean up
-    shutil.rmtree(output_path, ignore_errors=True)
+    # shutil.rmtree(output_path, ignore_errors=True)

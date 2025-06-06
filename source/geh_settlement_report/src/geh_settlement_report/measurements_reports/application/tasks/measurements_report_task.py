@@ -1,4 +1,3 @@
-import shutil
 import sys
 from pathlib import Path
 
@@ -49,4 +48,4 @@ def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSessio
     )
 
     logger.info("Removing the temporary folder")
-    shutil.rmtree(Path(args.output_path) / args.report_id)
+    # shutil.rmtree(Path(args.output_path) / args.report_id)
