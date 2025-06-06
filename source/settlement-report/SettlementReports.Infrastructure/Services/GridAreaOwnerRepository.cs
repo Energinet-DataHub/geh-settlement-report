@@ -9,9 +9,9 @@ namespace Energinet.DataHub.Reports.Infrastructure.Services;
 
 public sealed class GridAreaOwnerRepository : IGridAreaOwnerRepository, IGridAreaOwnershipAssignedEventStore
 {
-    private readonly ISettlementReportDatabaseContext _dbContext;
+    private readonly IReportsDatabaseContext _dbContext;
 
-    public GridAreaOwnerRepository(ISettlementReportDatabaseContext dbContext)
+    public GridAreaOwnerRepository(IReportsDatabaseContext dbContext)
     {
         _dbContext = dbContext;
     }

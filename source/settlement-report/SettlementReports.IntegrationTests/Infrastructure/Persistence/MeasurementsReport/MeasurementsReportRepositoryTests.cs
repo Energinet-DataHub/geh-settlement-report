@@ -9,11 +9,11 @@ using Xunit;
 
 namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.Persistence.MeasurementsReport;
 
-public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
+public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<ReportsDatabaseContext>>
 {
-    private readonly WholesaleDatabaseManager<SettlementReportDatabaseContext> _databaseManager;
+    private readonly WholesaleDatabaseManager<ReportsDatabaseContext> _databaseManager;
 
-    public MeasurementsReportRepositoryTests(WholesaleDatabaseFixture<SettlementReportDatabaseContext> fixture)
+    public MeasurementsReportRepositoryTests(WholesaleDatabaseFixture<ReportsDatabaseContext> fixture)
     {
         _databaseManager = fixture.DatabaseManager;
     }
