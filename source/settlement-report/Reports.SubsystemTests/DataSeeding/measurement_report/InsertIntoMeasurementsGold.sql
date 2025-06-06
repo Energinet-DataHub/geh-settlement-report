@@ -1,5 +1,3 @@
---TODO HENRIK: Fill with correct information. 
-
 INSERT INTO {catalog_name}.{database}.{table} (
     metering_point_id,
     metering_point_type,
