@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatabaseMigration\DatabaseMigration.csproj" />
+    <ProjectReference Include="..\Reports.Abstractions\Reports.Abstractions.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
     <ProjectReference Include="..\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj" />
     <ProjectReference Include="..\Test.Core\Test.Core.csproj" />

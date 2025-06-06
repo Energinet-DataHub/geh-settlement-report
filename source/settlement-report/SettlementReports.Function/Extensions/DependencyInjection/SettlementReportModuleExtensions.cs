@@ -6,6 +6,7 @@ using Energinet.DataHub.Core.Messaging.Communication.Extensions.Options;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Helpers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.Reports.Common.Infrastructure.HealthChecks;

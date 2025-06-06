@@ -1,11 +1,11 @@
 ﻿using Energinet.DataHub.Core.Databricks.Jobs.Abstractions;
 using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
-using Energinet.DataHub.Reports.Application;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
 using Microsoft.Azure.Databricks.Client.Models;
 using NodaTime.Extensions;
 
-namespace Energinet.DataHub.Reports.Infrastructure.Helpers;
+namespace Energinet.DataHub.Reports.Application.SettlementReports.Helpers;
 
 public class SettlementReportDatabricksJobsHelper : ISettlementReportDatabricksJobsHelper
 {

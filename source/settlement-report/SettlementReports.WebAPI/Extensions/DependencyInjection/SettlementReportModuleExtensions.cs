@@ -1,10 +1,12 @@
 ﻿using Energinet.DataHub.Core.App.Common.Extensions.DependencyInjection;
 using Energinet.DataHub.Reports.Application.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
+using Energinet.DataHub.Reports.Application.MeasurementsReport.Helpers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
+using Energinet.DataHub.Reports.Application.SettlementReports.Helpers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Extensions.Options;
 using Energinet.DataHub.Reports.Common.Infrastructure.HealthChecks;
