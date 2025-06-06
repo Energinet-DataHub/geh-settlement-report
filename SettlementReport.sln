@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.IntegrationTests", "source\settlement-report\SettlementReports.IntegrationTests\SettlementReports.IntegrationTests.csproj", "{B9A8CF9A-7B62-481E-A155-DA07CD3172E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Interfaces", "source\settlement-report\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj", "{16B95F69-FEED-4E17-9010-B97C3591CBD5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.UnitTests", "source\settlement-report\SettlementReports.UnitTests\SettlementReports.UnitTests.csproj", "{AC7E764C-12EF-492A-A60D-2E284AF2D31D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementReports.Function", "source\settlement-report\SettlementReports.Function\SettlementReports.Function.csproj", "{323D0FB4-7D5C-4C44-8C52-C629766750F8}"
@@ -74,10 +72,6 @@ Global
 		{B9A8CF9A-7B62-481E-A155-DA07CD3172E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9A8CF9A-7B62-481E-A155-DA07CD3172E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9A8CF9A-7B62-481E-A155-DA07CD3172E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16B95F69-FEED-4E17-9010-B97C3591CBD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16B95F69-FEED-4E17-9010-B97C3591CBD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16B95F69-FEED-4E17-9010-B97C3591CBD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16B95F69-FEED-4E17-9010-B97C3591CBD5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC7E764C-12EF-492A-A60D-2E284AF2D31D}.Release|Any CPU.ActiveCfg = Release|Any CPU

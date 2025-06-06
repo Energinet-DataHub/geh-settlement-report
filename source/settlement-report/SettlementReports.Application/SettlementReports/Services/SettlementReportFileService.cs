@@ -1,6 +1,6 @@
-﻿using Energinet.DataHub.Reports.Application.Model;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Application.Services;
-using Energinet.DataHub.Reports.Interfaces.Models;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Services;
 

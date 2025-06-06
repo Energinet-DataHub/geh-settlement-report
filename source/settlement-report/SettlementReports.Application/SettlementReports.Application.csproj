@@ -12,8 +12,9 @@
     <PackageReference Include="Energinet.DataHub.Core.Databricks.Jobs" Version="13.1.1" />
     <PackageReference Include="Microsoft.Azure.Databricks.Client" Version="2.8.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="NodaTime" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
+    <ProjectReference Include="..\Reports.Abstractions\Reports.Abstractions.csproj" />
   </ItemGroup>
 </Project>

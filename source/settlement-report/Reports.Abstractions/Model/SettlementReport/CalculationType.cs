@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+﻿namespace Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 
 /// <summary>
 /// Defines the wholesale calculation type

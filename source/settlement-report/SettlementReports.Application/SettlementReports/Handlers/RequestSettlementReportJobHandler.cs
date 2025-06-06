@@ -1,10 +1,9 @@
-﻿using Energinet.DataHub.Reports.Application.Model;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Application.Services;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
-using Energinet.DataHub.Reports.Interfaces;
-using Energinet.DataHub.Reports.Interfaces.Helpers;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+using Energinet.DataHub.Reports.Infrastructure.Helpers;
 using NodaTime.Extensions;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
