@@ -1,4 +1,4 @@
-INSERT INTO {catalog_name}.{database}.{table} (
+INSERT INTO ctl_shres_d_we_002.measurements_gold.measurements (
     metering_point_id,
     metering_point_type,
     orchestration_type,
