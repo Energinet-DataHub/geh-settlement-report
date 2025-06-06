@@ -24,32 +24,6 @@ internal sealed class SettlementReportClient : ISettlementReportClient
             : RequestAsync(requestDto, $"{BaseUrl}/RequestSettlementReport", cancellationToken);
     }
 
-    public async Task<Stream> DownloadMeasurementsReportAsync(ReportRequestId requestId, CancellationToken cancellationToken)
-    {
-        using var request = new HttpRequestMessage(HttpMethod.Post, "measurements-reports/download");
-        request.Content = new StringContent(
-            JsonConvert.SerializeObject(requestId),
-            Encoding.UTF8,
-            "application/json");
-
-        var response = await _apiHttpClient
-            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
-            .ConfigureAwait(false);
-
-        var responseText = await response.Content
-            .ReadAsStringAsync(cancellationToken)
-            .ConfigureAwait(false);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new HttpRequestException($"Request to measurements-reports/download failed with status code {response.StatusCode}: {responseText}.");
-        }
-
-        response.EnsureSuccessStatusCode();
-
-        return await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     public async Task<IEnumerable<RequestedSettlementReportDto>> GetAsync(CancellationToken cancellationToken)
     {
         using var requestApi = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}/list");
