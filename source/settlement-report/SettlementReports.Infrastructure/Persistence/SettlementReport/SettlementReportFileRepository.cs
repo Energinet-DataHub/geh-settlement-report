@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Blobs;
+using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Application.SettlementReports;
 using Energinet.DataHub.Reports.Infrastructure.Extensions.Options;
-using Energinet.DataHub.Reports.Interfaces.Models;
 using Microsoft.Extensions.Options;
 
 namespace Energinet.DataHub.Reports.Infrastructure.Persistence.SettlementReport;
