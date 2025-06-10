@@ -37,12 +37,16 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("request")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
         if (!UserHasValidMarketRole())
             return Forbid();
+
+        if (!IsValidRequest(measurementsReportRequest))
+            return BadRequest();
 
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
         var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
@@ -62,7 +66,7 @@ public class MeasurementsReportsController
             measurementsReportRequest,
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
-            actorGln);
+            _userContext.CurrentUser.Actor.ActorNumber);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -71,6 +75,7 @@ public class MeasurementsReportsController
 
     [HttpGet]
     [Route("list")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<IEnumerable<RequestedMeasurementsReportDto>>> ListMeasurementsReports()
     {
@@ -83,6 +88,7 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("download")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
@@ -93,7 +99,7 @@ public class MeasurementsReportsController
 
         try
         {
-            var stream = await _fileService.DownloadAsync(reportId).ConfigureAwait(false);
+            var stream = await _fileService.DownloadAsync(reportId, _userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
             return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
@@ -106,9 +112,24 @@ public class MeasurementsReportsController
     {
         var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
 
-        // Check role
-        if (!new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier, MarketRole.DataHubAdministrator }
-                .Contains(marketRole))
+        // These are the supported market roles for measurements reports
+        var supportedMarketRoles = new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier };
+
+        return supportedMarketRoles.Contains(marketRole);
+    }
+
+    private bool IsValidRequest(MeasurementsReportRequestDto req)
+    {
+        // Validate that the users actor has access to the grid areas specified in the request
+        if (!req.Filter.GridAreaCodes.All(c => _userContext.CurrentUser.Actor.GridAreas.Contains(c)))
+            return false;
+
+        // Reject empty or "negative" periods
+        if (req.Filter.PeriodEnd <= req.Filter.PeriodStart)
+            return false;
+
+        // Period must not exceed one month
+        if (req.Filter.PeriodEnd > req.Filter.PeriodStart.AddMonths(1))
             return false;
 
         return true;
