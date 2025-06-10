@@ -45,6 +45,18 @@ public class MeasurementsReportsController
             return Forbid();
 
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
+        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
+
+        if (marketRole == MarketRole.EnergySupplier && string.IsNullOrWhiteSpace(measurementsReportRequest.Filter.EnergySupplier))
+        {
+            measurementsReportRequest = measurementsReportRequest with
+            {
+                Filter = measurementsReportRequest.Filter with
+                {
+                    EnergySupplier = actorGln,
+                },
+            };
+        }
 
         var requestCommand = new RequestMeasurementsReportCommand(
             measurementsReportRequest,
