@@ -93,6 +93,11 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
         | F.col(MeteringPointPeriodsColumnNames.to_grid_area_code).isin(args.grid_area_codes)
     )
 
+    if args.energy_supplier_ids is not None:
+        df_with_grid_area_codes = df_with_grid_area_codes.filter(
+            F.col(MeteringPointPeriodsColumnNames.energy_supplier_id).isin(args.energy_supplier_ids)
+        )
+
     df_within_period = df_with_grid_area_codes.filter(
         (F.col(MeteringPointPeriodsColumnNames.period_from_date) < F.lit(args.period_end))
         & (
