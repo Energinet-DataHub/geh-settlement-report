@@ -22,7 +22,4 @@
     <ProjectReference Include="..\SettlementReports.Application\SettlementReports.Application.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Infrastructure\SettlementReports\" />
-  </ItemGroup>
 </Project>
