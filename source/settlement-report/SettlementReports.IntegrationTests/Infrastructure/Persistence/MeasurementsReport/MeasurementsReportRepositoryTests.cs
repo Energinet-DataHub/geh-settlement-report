@@ -27,7 +27,8 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
             new List<string> { "805", "806" },
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
-            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
+            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero),
+            null);
 
         var report = new Application.MeasurementsReport.MeasurementsReport(
             SystemClock.Instance,
@@ -106,7 +107,8 @@ public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabase
         var requestFilterDto = new MeasurementsReportRequestFilterDto(
             ["805", "806"],
             new DateTimeOffset(2024, 1, 1, 22, 0, 0, TimeSpan.Zero),
-            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero));
+            new DateTimeOffset(2024, 2, 1, 22, 0, 0, TimeSpan.Zero),
+            null);
 
         var measurementsReportRequest = new Application.MeasurementsReport.MeasurementsReport(
             SystemClock.Instance,

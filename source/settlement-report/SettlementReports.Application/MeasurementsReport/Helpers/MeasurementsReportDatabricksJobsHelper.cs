@@ -57,8 +57,12 @@ public class MeasurementsReportDatabricksJobsHelper : IMeasurementsReportDatabri
             $"--period-start={request.Filter.PeriodStart.ToInstant()}",
             $"--period-end={request.Filter.PeriodEnd.ToInstant()}",
             $"--requesting-actor-id={actorGln}",
-            $"--energy-supplier-ids=[{actorGln}]",
         };
+
+        if (request.Filter.EnergySupplier != null)
+        {
+            jobParameters.Add($"--energy-supplier-ids=[{request.Filter.EnergySupplier}]");
+        }
 
         return RunParameters.CreatePythonParams(jobParameters);
     }
