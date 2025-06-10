@@ -79,7 +79,7 @@ class TimeSeriesPointsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
-            spark=self.spark,
+            dbutils=self.dbutils,
             df=time_series_points_df,
             report_data_type=report_type,
             order_by_columns=order_by_columns(self.args.requesting_actor_market_role),

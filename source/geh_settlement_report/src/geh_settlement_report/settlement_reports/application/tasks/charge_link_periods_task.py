@@ -35,7 +35,7 @@ class ChargeLinkPeriodsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
-            spark=self.spark,
+            dbutils=self.dbutils,
             df=charge_link_periods,
             report_data_type=ReportDataType.ChargeLinks,
             order_by_columns=order_by_columns(self.args.requesting_actor_market_role),
