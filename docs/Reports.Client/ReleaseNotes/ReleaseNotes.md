@@ -1,5 +1,9 @@
 # Reports.Client Release Notes
 
+## Version 1.2.0
+
+- Added energy supplier id to measurements report filter dto
+
 ## Version 1.1.0
 
 - Change client implementation from being internal to public
