@@ -1,6 +1,6 @@
 # Reports.Client Release Notes
 
-## Version 1.3.0
+## Version 2.0.0
 
 - Rename enum: MarketRole -> SettlementReportMarketRole
 
