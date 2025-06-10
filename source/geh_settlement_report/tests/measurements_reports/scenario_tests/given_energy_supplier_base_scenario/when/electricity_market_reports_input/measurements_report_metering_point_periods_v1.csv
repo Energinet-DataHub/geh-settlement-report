@@ -5,9 +5,9 @@ grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_
 900;120000000000000000;total_consumption;PT15M;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Just a regular period
 800;000000000000000018;production;PT15M;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;2024-06-10T22:00:00Z;Energy supplier change - only first period included
 800;000000000000000018;production;PT15M;2000000000000;connected;kWh;;;2024-06-10T22:00:00Z;;Energy supplier change - only first period included
-800;000000000000000020;exchange;PT15M;;connected;kWh;800;;2016-01-01T23:00:00Z;;Exchange - own grid = from grid
-801;000000000000000021;exchange;PT15M;;connected;kWh;801;800;2016-01-01T23:00:00Z;;Exchange - report grid = to grid
-800;200000000000000000;exchange_reactive_energy;PT15M;;connected;kWh;801;800;2016-01-01T23:00:00Z;;Exchange - own grid = to grid
-802;200000000000000001;exchange_reactive_energy;PT15M;;connected;kWh;800;802;2016-01-01T23:00:00Z;;Exchange - report grid = from grid
+800;000000000000000020;exchange;PT15M;;connected;kWh;800;;2016-01-01T23:00:00Z;;Not relevant for energy_supplier
+801;000000000000000021;exchange;PT15M;;connected;kWh;801;800;2016-01-01T23:00:00Z;;Not relevant for energy_supplier
+800;200000000000000000;exchange_reactive_energy;PT15M;;connected;kWh;801;800;2016-01-01T23:00:00Z;;Not relevant for energy_supplier
+802;200000000000000001;exchange_reactive_energy;PT15M;;connected;kWh;800;802;2016-01-01T23:00:00Z;;Not relevant for energy_supplier
 800;140000000000000000;electrical_heating;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;In grid area, but no measurement data in report period
 800;150000000000000000;net_consumption;PT1H;3000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;In grid area, but different energy_supplier
