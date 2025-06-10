@@ -7,4 +7,3 @@ notes: |
 
 cases_tested:
   "Observation time should be converted to local (CET/CEST) time in report"
-  "GIVEN scenario_parameters contains no energy_supplier_id THEN output file contains no ENERGY SUPPLIER column"
