@@ -1,18 +1,18 @@
-﻿using Energinet.DataHub.Reports.Application.Services;
-using Energinet.DataHub.Reports.Interfaces.Models;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Application.Services;
 
 namespace Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 
 public sealed class MeasurementsReportFileService : IMeasurementsReportFileService
 {
-    private readonly IReportFileRepository _reportFileRepository;
+    private readonly IMeasurementsReportFileRepository _measurementsReportFileRepository;
     private readonly IMeasurementsReportRepository _repository;
 
     public MeasurementsReportFileService(
-        IReportFileRepository reportFileRepository,
+        IMeasurementsReportFileRepository measurementsReportFileRepository,
         IMeasurementsReportRepository repository)
     {
-        _reportFileRepository = reportFileRepository;
+        _measurementsReportFileRepository = measurementsReportFileRepository;
         _repository = repository;
     }
 
@@ -23,10 +23,8 @@ public sealed class MeasurementsReportFileService : IMeasurementsReportFileServi
         if (string.IsNullOrEmpty(report.BlobFileName))
             throw new InvalidOperationException("Report does not have a blob file name.");
 
-        // TODO BJM: Replace dummy implementation when stories #784 and #759 are completed
-        return new MemoryStream();
-        // return await _reportFileRepository
-        //     .DownloadAsync(ReportType.Measurements, report.BlobFileName)
-        //     .ConfigureAwait(false);
+        return await _measurementsReportFileRepository
+            .DownloadAsync(report.BlobFileName)
+            .ConfigureAwait(false);
     }
 }

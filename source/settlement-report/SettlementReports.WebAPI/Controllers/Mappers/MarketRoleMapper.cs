@@ -1,5 +1,5 @@
-﻿using Energinet.DataHub.Reports.Common.Infrastructure.Security;
-using Energinet.DataHub.Reports.Interfaces.Models;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Common.Infrastructure.Security;
 
 namespace Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 

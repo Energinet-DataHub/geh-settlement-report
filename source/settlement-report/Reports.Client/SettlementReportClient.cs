@@ -1,12 +1,15 @@
 ﻿using System.Net.Http.Json;
 using System.Text;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.SettlementReport;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
 using Newtonsoft.Json;
 
 namespace Energinet.DataHub.Reports.Client;
 
-internal sealed class SettlementReportClient : ISettlementReportClient
+// This class should preferably be internal. However, the BFF currently adds authentication headers to the
+// HttpClient, which is required for the client to work. Can we find a way to use dependency injection and make this
+// class internal?
+public sealed class SettlementReportClient : ISettlementReportClient
 {
     private const string BaseUrl = "settlement-reports";
     private readonly HttpClient _apiHttpClient;

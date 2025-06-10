@@ -26,8 +26,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common.Infrastructure\Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\Reports.Abstractions\Reports.Abstractions.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
-    <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

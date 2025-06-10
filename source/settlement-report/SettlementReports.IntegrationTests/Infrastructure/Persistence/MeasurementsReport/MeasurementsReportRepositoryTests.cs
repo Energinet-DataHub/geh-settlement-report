@@ -1,7 +1,7 @@
-﻿using Energinet.DataHub.Reports.Infrastructure.Persistence;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
+using Energinet.DataHub.Reports.Infrastructure.Persistence;
 using Energinet.DataHub.Reports.Infrastructure.Persistence.MeasurementsReport;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
 using Energinet.DataHub.Reports.Test.Core.Fixture.Database;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -9,11 +9,11 @@ using Xunit;
 
 namespace Energinet.DataHub.Reports.IntegrationTests.Infrastructure.Persistence.MeasurementsReport;
 
-public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<SettlementReportDatabaseContext>>
+public class MeasurementsReportRepositoryTests : IClassFixture<WholesaleDatabaseFixture<ReportsDatabaseContext>>
 {
-    private readonly WholesaleDatabaseManager<SettlementReportDatabaseContext> _databaseManager;
+    private readonly WholesaleDatabaseManager<ReportsDatabaseContext> _databaseManager;
 
-    public MeasurementsReportRepositoryTests(WholesaleDatabaseFixture<SettlementReportDatabaseContext> fixture)
+    public MeasurementsReportRepositoryTests(WholesaleDatabaseFixture<ReportsDatabaseContext> fixture)
     {
         _databaseManager = fixture.DatabaseManager;
     }

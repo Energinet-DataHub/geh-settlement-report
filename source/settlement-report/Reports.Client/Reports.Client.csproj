@@ -7,7 +7,7 @@
 
     <PropertyGroup>
         <PackageId>Energinet.DataHub.Reports.Client</PackageId>
-        <PackageVersion>0.1.0$(VersionSuffix)</PackageVersion>
+        <PackageVersion>1.1.0$(VersionSuffix)</PackageVersion>
         <Title>DH3 Reports Client library</Title>
         <Company>Energinet-DataHub</Company>
         <Authors>Energinet-DataHub</Authors>
@@ -61,8 +61,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SettlementReports.Interfaces\SettlementReports.Interfaces.csproj" />
+      <ProjectReference Include="..\Reports.Abstractions\Reports.Abstractions.csproj" />
     </ItemGroup>
-
 
 </Project>

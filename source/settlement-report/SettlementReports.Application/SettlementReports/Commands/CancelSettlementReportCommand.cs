@@ -1,4 +1,4 @@
-﻿using Energinet.DataHub.Reports.Interfaces.Models;
+﻿using Energinet.DataHub.Reports.Abstractions.Model;
 
 namespace Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 

@@ -1,7 +1,7 @@
 ﻿using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
 using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport.Fixtures;
 using FluentAssertions.Execution;
 using Xunit;
@@ -77,7 +77,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         Assert.Equal(ReportStatus.Completed, reportRequest.Status);
     }
 
-    [SubsystemFact(Skip = "Not implemented yet")]
+    [SubsystemFact]
     [ScenarioStep(4)]
     public async Task AndThen_ReportCanBeDownloadedAndIsNotEmpty()
     {

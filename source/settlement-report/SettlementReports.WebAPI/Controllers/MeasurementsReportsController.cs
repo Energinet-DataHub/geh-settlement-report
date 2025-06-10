@@ -1,15 +1,15 @@
 ﻿using System.Net.Mime;
 using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
-using Energinet.DataHub.Reports.Interfaces.Models;
-using Energinet.DataHub.Reports.Interfaces.Models.MeasurementsReport;
+using Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Databricks.Client;
 
 namespace Energinet.DataHub.Reports.WebAPI.Controllers;
 
@@ -21,29 +21,29 @@ public class MeasurementsReportsController
     private readonly IMeasurementsReportFileService _fileService;
     private readonly IRequestMeasurementsReportHandler _requestHandler;
     private readonly IListMeasurementsReportService _listMeasurementsReportService;
-    private readonly IMeasurementsReportService _measurementsReportService;
     private readonly IUserContext<FrontendUser> _userContext;
 
     public MeasurementsReportsController(
         IRequestMeasurementsReportHandler requestHandler,
         IMeasurementsReportFileService fileService,
         IListMeasurementsReportService listMeasurementsReportService,
-        IMeasurementsReportService measurementsReportService,
         IUserContext<FrontendUser> userContext)
     {
         _requestHandler = requestHandler;
         _fileService = fileService;
         _listMeasurementsReportService = listMeasurementsReportService;
-        _measurementsReportService = measurementsReportService;
         _userContext = userContext;
     }
 
     [HttpPost]
     [Route("request")]
-    [Authorize]
+    [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
+        if (!UserHasValidMarketRole())
+            return Forbid();
+
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
 
         var requestCommand = new RequestMeasurementsReportCommand(
@@ -59,19 +59,26 @@ public class MeasurementsReportsController
 
     [HttpGet]
     [Route("list")]
-    [Authorize]
-    public async Task<IEnumerable<RequestedMeasurementsReportDto>> ListMeasurementsReports()
+    [Authorize(Roles = "measurements-reports:manage")]
+    public async Task<ActionResult<IEnumerable<RequestedMeasurementsReportDto>>> ListMeasurementsReports()
     {
-        return await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        if (!UserHasValidMarketRole())
+            return Forbid();
+
+        var reports = await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
+        return Ok(reports);
     }
 
     [HttpPost]
     [Route("download")]
-    [Authorize]
+    [Authorize(Roles = "measurements-reports:manage")]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
+        if (!UserHasValidMarketRole())
+            return Forbid();
+
         try
         {
             var stream = await _fileService.DownloadAsync(reportId).ConfigureAwait(false);
@@ -83,22 +90,15 @@ public class MeasurementsReportsController
         }
     }
 
-    [HttpPost]
-    [Route("cancel")]
-    [Authorize]
-    public async Task<ActionResult> CancelMeasurementsReport([FromBody] ReportRequestId reportRequestId)
+    private bool UserHasValidMarketRole()
     {
-        try
-        {
-            await _measurementsReportService
-                .CancelAsync(reportRequestId, _userContext.CurrentUser.UserId)
-                .ConfigureAwait(false);
+        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
 
-            return NoContent();
-        }
-        catch (Exception ex) when (ex is InvalidOperationException or ClientApiException)
-        {
-            return BadRequest();
-        }
+        // Check role
+        if (!new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier, MarketRole.DataHubAdministrator }
+                .Contains(marketRole))
+            return false;
+
+        return true;
     }
 }
