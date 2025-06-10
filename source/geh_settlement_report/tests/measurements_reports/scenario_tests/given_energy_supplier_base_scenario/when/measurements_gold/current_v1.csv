@@ -1,0 +1,25 @@
+metering_point_id;quantity;quality;observation_time;metering_point_type;#comment
+000000000000000017;1.234;measured;2024-06-09T21:45:00Z;consumption;Outside report period
+000000000000000017;1.234;measured;2024-06-09T22:00:00Z;consumption;Inside report period (first quarter)
+000000000000000017;1.234;measured;2024-06-10T22:00:00Z;consumption;Inside report period
+000000000000000017;;missing;2024-06-10T22:15:00Z;consumption;Null quantity test
+000000000000000017;1.234;measured;2024-06-11T22:00:00Z;consumption;Inside report period
+000000000000000017;1.234;measured;2024-06-12T21:45:00Z;consumption;Inside report period (last quarter)
+000000000000000017;1.234;measured;2024-06-12T22:00:00Z;consumption;Outside report period
+000000000000000017;1.234;measured;2024-06-12T22:15:00Z;consumption;Outside report period
+190000000000000000;1.234;calculated;2024-06-09T22:00:00Z;capacity_settlement;
+190000000000000000;1.234;calculated;2024-06-10T21:45:00Z;capacity_settlement;
+190000000000000001;1.234;calculated;2024-06-10T22:00:00Z;capacity_settlement;
+190000000000000001;1.234;calculated;2024-06-11T22:00:00Z;capacity_settlement;
+000000000000000018;1.234;measured;2024-06-09T22:00:00Z;production;
+000000000000000018;1.234;measured;2024-06-10T22:00:00Z;production;
+000000000000000018;1.234;measured;2024-06-11T22:00:00Z;production;
+000000000000000018;1.234;measured;2024-06-12T21:45:00Z;production;
+000000000000000020;1.234;measured;2024-06-10T22:00:00Z;exchange;
+000000000000000021;1.234;measured;2024-06-10T22:00:00Z;exchange;
+200000000000000000;1.234;measured;2024-06-10T22:00:00Z;exchange_reactive_energy;
+200000000000000001;1.234;measured;2024-06-10T22:00:00Z;exchange_reactive_energy;
+120000000000000000;10000;calculated;2024-06-10T22:00:00Z;total_consumption;
+140000000000000000;987.654;calculated;2024-06-09T21:45:00Z;electrical_heating;Outside report period
+140000000000000000;987.654;calculated;2024-06-12T22:00:00Z;electrical_heating;Outside report period
+150000000000000000;10000;estimated;2024-06-10T22:00:00Z;net_consumption;In grid area, but different energy_supplier
