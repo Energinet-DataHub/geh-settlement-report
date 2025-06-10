@@ -54,20 +54,17 @@ def execute(
                 MeasurementsReportColumnNames.metering_point_type
             ),
             F.col(f"p.{MeteringPointPeriodsColumnNames.resolution}").alias(MeasurementsReportColumnNames.resolution),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.energy_supplier_id}").alias(
-                MeasurementsReportColumnNames.energy_supplier_id
-            ),
+            F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
             F.col(f"p.{MeteringPointPeriodsColumnNames.physical_status}").alias(
                 MeasurementsReportColumnNames.physical_status
+            ),
+            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
+                MeasurementsReportColumnNames.quantity_quality
             ),
             F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}").alias(
                 MeasurementsReportColumnNames.observation_time
             ),
             F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quantity}").alias(MeasurementsReportColumnNames.quantity),
-            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
-                MeasurementsReportColumnNames.quantity_quality
-            ),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
         )
     )
 
