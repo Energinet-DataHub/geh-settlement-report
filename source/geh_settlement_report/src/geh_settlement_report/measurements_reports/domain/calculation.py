@@ -92,7 +92,7 @@ def execute(
 
     create_zip_file(
         dbutils,
-        Path(args.output_path) / f"{args.report_id}.zip",
+        report_output_path.with_suffix(".zip").as_posix(),  # Path(args.output_path) / f"{args.report_id}.zip",
         [f.as_posix() for f in files],
     )
 
