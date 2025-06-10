@@ -1,5 +1,9 @@
 # Reports.Client Release Notes
 
+## Version 1.3.0
+
+- Rename enum: MarketRole -> SettlementReportMarketRole
+ 
 ## Version 1.2.0
 
 - Added energy supplier id to measurements report filter dto
