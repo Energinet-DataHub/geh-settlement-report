@@ -6,6 +6,7 @@ using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
 using Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 using Microsoft.AspNetCore.Authorization;
