@@ -1,3 +1,4 @@
+import shutil
 import sys
 import uuid
 import zipfile
@@ -63,4 +64,4 @@ def test_start_measurements_report(
     assert df.count() > 0, "The csv file from the zip contains no rows"
 
     # Clean up
-    # shutil.rmtree(output_path, ignore_errors=True)
+    shutil.rmtree(output_path, ignore_errors=True)
