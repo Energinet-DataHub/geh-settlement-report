@@ -43,7 +43,8 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         var filter = new MeasurementsReportRequestFilterDto(
             new List<string> { "543" },
             new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
-            new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero));
+            new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero),
+            null);
 
         _scenarioFixture.ScenarioState.MeasurementsReportRequestDto = new MeasurementsReportRequestDto(Filter: filter);
     }
