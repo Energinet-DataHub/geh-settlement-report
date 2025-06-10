@@ -30,7 +30,6 @@ class WholesaleResultsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
-            dbutils=self.dbutils,
             df=wholesale_results_df,
             report_data_type=ReportDataType.WholesaleResults,
             order_by_columns=order_by_columns(),

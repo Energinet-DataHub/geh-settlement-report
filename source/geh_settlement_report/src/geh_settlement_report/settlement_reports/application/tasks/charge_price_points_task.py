@@ -35,7 +35,6 @@ class ChargePricePointsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
-            dbutils=self.dbutils,
             df=charge_price_points,
             report_data_type=ReportDataType.ChargePricePoints,
             order_by_columns=order_by_columns(),

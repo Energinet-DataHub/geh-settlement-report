@@ -28,7 +28,6 @@ class TmpFile:
 def write(
     args: SettlementReportArgs,
     df: DataFrame,
-    dbutils,
     report_data_type: ReportDataType,
     order_by_columns: list[str],
     rows_per_file: int = 1_000_000,

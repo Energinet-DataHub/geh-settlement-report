@@ -30,7 +30,6 @@ class MonthlyAmountsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
-            dbutils=self.dbutils,
             df=wholesale_results_df,
             report_data_type=ReportDataType.MonthlyAmounts,
             order_by_columns=order_by_columns(self.args.requesting_actor_market_role),
