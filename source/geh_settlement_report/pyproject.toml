@@ -11,7 +11,7 @@ dependencies = [
     "python-dateutil==2.8.2",
     "azure-monitor-opentelemetry==1.6.7",
     "azure-core==1.30.0",
-    "geh_common @ git+https://git@github.com/Energinet-DataHub/opengeh-python-packages@c2e92668b0768d97a4ea9183ae8f0730f66bc957#subdirectory=source/geh_common",
+    "geh_common @ git+https://git@github.com/Energinet-DataHub/opengeh-python-packages@geh_common_5.10.11#subdirectory=source/geh_common",
 ]
 
 [project.scripts]
