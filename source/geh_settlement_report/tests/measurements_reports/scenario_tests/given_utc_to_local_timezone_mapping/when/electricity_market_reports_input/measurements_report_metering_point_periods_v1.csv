@@ -1,0 +1,2 @@
+grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;unit;from_grid_area_code;to_grid_area_code;period_from_date;period_to_date;#comment
+800;000000000000000017;consumption;PT15M;1000000000000;connected;kWh;;;2008-01-01T23:00:00Z;;

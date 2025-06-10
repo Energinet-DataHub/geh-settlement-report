@@ -1,0 +1,9 @@
+notes: |
+  ## PURPOSE
+  Test utc --> local time mapping, focused around summer/winter time change
+
+  ## DESIGN CONSIDERATIONS
+  Report period is a whole year in order to include both summer and wintertime change. 
+
+cases_tested:
+  "Observation time should be converted to local (CET/CEST) time in report"

@@ -1,7 +1,9 @@
 notes: |
   ## PURPOSE
-  ...
+  The purpose is to test the mapping functionality from input to output values.
 
   ## DESIGN CONSIDERATIONS
+  On the input side, the full scope of possible known variations (at the time of test creation) for each column is represented (both for metering point data and measurement data). 
 
 cases_tested:
+  "Observation time should be converted to local (CET/CEST) time in report"
