@@ -43,7 +43,6 @@ def write(
 
     files_paths = write_csv_files(
         df=df,
-        dbutils=dbutils,
         output_path=report_output_path,
         spark_output_path=f"{report_output_path}/{_get_folder_name(report_data_type)}",
         rows_per_file=rows_per_file if args.prevent_large_text_files else None,

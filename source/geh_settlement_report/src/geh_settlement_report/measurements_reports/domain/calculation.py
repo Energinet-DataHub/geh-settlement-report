@@ -78,7 +78,6 @@ def execute(
 
     files = write_csv_files(
         df=result,
-        dbutils=dbutils,
         output_path=report_output_path.as_posix(),
         tmpdir=tmp_dir.as_posix(),
         file_name_factory=lambda *_: f"{file_name_factory(args)}.csv",
