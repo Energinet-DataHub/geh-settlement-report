@@ -2,27 +2,14 @@ INSERT INTO ctl_shres_d_we_002.electricity_market_internal.measurements_report_m
 VALUES
 (
   '543',
-  '170000000000000201',
+  '000000000000000017',
   'consumption',
-  'P15M',
+  'PT1H',
   '1000000000000',
   'connected',
   'kWh',
   NULL,
   NULL,
   '2022-01-11T23:00:00Z',
-  NULL
-),
-(
-  '543',
-  '170000000000000202',
-  'consumption',
-  'P15M',
-  '1000000000000',
-  'connected',
-  'kWh',
-  NULL,
-  NULL,
-  '2022-01-12T23:00:00Z',
   NULL
 )
