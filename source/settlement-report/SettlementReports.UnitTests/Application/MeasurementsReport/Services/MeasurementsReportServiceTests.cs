@@ -91,7 +91,8 @@ public class MeasurementsReportServiceTests
             new MeasurementsReportRequestFilterDto(
                 gridAreas,
                 DateTimeOffset.Now,
-                DateTimeOffset.Now));
+                DateTimeOffset.Now,
+                null));
         var reportRequestId = new ReportRequestId($"{Random.Shared.NextInt64()}");
         var userId = Guid.NewGuid();
 

@@ -3,4 +3,5 @@
 public sealed record MeasurementsReportRequestFilterDto(
     IReadOnlyCollection<string> GridAreaCodes,
     DateTimeOffset PeriodStart,
-    DateTimeOffset PeriodEnd);
+    DateTimeOffset PeriodEnd,
+    string? EnergySupplier);
