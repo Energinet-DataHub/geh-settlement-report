@@ -1,4 +1,6 @@
 ﻿using Energinet.DataHub.Reports.Abstractions.Model;
+using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
 
 namespace Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
@@ -14,6 +16,18 @@ public static class MarketRoleMapper
             FrontendActorMarketRole.EnergySupplier => MarketRole.EnergySupplier,
             FrontendActorMarketRole.SystemOperator => MarketRole.SystemOperator,
             FrontendActorMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
+            _ => throw new ArgumentOutOfRangeException(nameof(marketRole)),
+        };
+    }
+
+    public static MarketRole MapToMarketRole(SettlementReportMarketRole marketRole)
+    {
+        return marketRole switch
+        {
+            SettlementReportMarketRole.GridAccessProvider => MarketRole.GridAccessProvider,
+            SettlementReportMarketRole.EnergySupplier => MarketRole.EnergySupplier,
+            SettlementReportMarketRole.SystemOperator => MarketRole.SystemOperator,
+            SettlementReportMarketRole.DataHubAdministrator => MarketRole.DataHubAdministrator,
             _ => throw new ArgumentOutOfRangeException(nameof(marketRole)),
         };
     }
