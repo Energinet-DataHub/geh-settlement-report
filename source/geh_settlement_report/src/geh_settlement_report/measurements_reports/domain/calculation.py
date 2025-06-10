@@ -83,12 +83,6 @@ def execute(
         file_name_factory=lambda *_: f"{file_name_factory(args)}.csv",
     )
 
-    # create_zip_file(
-    #     dbutils,
-    #     report_output_path.with_suffix(".zip").as_posix(),
-    #     [f.as_posix() for f in dbutils.fs.ls(report_output_path.as_posix())],
-    # )
-
     create_zip_file(
         dbutils,
         report_output_path.with_suffix(".zip").as_posix(),
