@@ -34,6 +34,7 @@ class EnergyResultsTask(TaskBase):
 
         csv_writer.write(
             args=self.args,
+            spark=self.spark,
             df=energy_results_df,
             report_data_type=ReportDataType.EnergyResults,
             order_by_columns=order_by_columns(self.args.requesting_actor_market_role),

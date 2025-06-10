@@ -77,6 +77,7 @@ def test_write__returns_files_corresponding_to_grid_area_codes(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -107,6 +108,7 @@ def test_write__when_higher_default_parallelism__number_of_files_is_unchanged(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -147,6 +149,7 @@ def test_write__when_prevent_large_files_is_enabled__writes_expected_number_of_f
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -195,6 +198,7 @@ def test_write__files_have_correct_ordering_for_each_file(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=ReportDataType.TimeSeriesHourly,
         order_by_columns=expected_order_by,
@@ -246,6 +250,7 @@ def test_write__files_have_correct_ordering_for_each_grid_area_code_file(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=expected_order_by,
@@ -297,6 +302,7 @@ def test_write__files_have_correct_ordering_for_multiple_metering_point_types(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=expected_order_by,
@@ -352,6 +358,7 @@ def test_write__files_have_correct_sorting_across_multiple_files(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=expected_order_by,
@@ -391,6 +398,7 @@ def test_write__when_prevent_large_files__chunk_index_start_at_1(
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -428,6 +436,7 @@ def test_write__when_prevent_large_files_but_too_few_rows__chunk_index_should_be
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df_prepared_time_series_points,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -466,6 +475,7 @@ def test_write__when_prevent_large_files_and_multiple_grid_areas_but_too_few_row
     # Act
     result_files = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=prepared_time_series_point,
         report_data_type=report_data_type,
         order_by_columns=time_series_points_order_by_columns.order_by_columns(
@@ -526,6 +536,7 @@ def test_write__when_energy_and_split_report_by_grid_area_is_false__returns_expe
     # Act
     actual_file_names = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
         order_by_columns=energy_order_by_columns.order_by_columns(
@@ -587,6 +598,7 @@ def test_write__when_energy_supplier_and_split_per_grid_area_is_false__returns_c
     # Act
     actual_file_names = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
         order_by_columns=energy_order_by_columns.order_by_columns(
@@ -653,6 +665,7 @@ def test_write__when_energy_and_prevent_large_files__returns_expected_number_of_
     # Act
     actual_file_names = csv_writer.write(
         args=standard_wholesale_fixing_scenario_args,
+        spark=spark,
         df=df,
         report_data_type=ReportDataType.EnergyResults,
         order_by_columns=energy_order_by_columns.order_by_columns(
