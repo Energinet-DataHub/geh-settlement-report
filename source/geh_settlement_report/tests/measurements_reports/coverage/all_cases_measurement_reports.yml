@@ -1,19 +1,8 @@
 "Measurement Reports Tests":
-  "GIVEN ... WHEN .. THEN ...": true
-  "Request a report with actual resolution is splits per resolution (hour and 15 min)" ??
-  Sorting by “grid area”, “Metering point type” and thereafter “Metering point ID”
-
-  "Market Actors":
-    "GIVEN ... WHEN .. THEN ...": true
-    "Grid Area Owner": true
-    "Energy supplier": true
-
-  "Speficikt for netoperatører":
-    "For netoperatører, rapport skal indeholde E20, hvor ens netområde indgår i, inkl. både to og from" (hvordan ser man hvem der ejer mp)?
-
-  "Speficikt for eleverandører":
-    "Kan bestille for flere netområder" (hvordan laver vi negativ test for det?)
-
-  "Aggregation Levels":
-    "1 day": true
-    ??
+  "Observation time should be converted to local (CET/CEST) time in report": true
+  "Report should only include measurement data for grid area(s) included in report (via job parameters)": true
+  "Report should only include measurement data with observation time => report from date and < report to date (via job parameters)": true
+  "Columns should be sorted by GRID AREA ID, then METERING POINT TYPE, then METERING POINT ID, then DATE TIME STAMP": true
+  "GIVEN input quantity is null for an observation time THEN that observation time should be included as 0 with quality Missing": true
+  "GIVEN metering point type is E20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period": true
+  "GIVEN metering point type is D20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period": true
