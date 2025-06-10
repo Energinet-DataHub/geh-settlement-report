@@ -1,6 +1,6 @@
 notes: |
   ## PURPOSE
-  The purpose is to test base filtering functionality for a report with no electricity supplier. 
+  The purpose is to test base filtering functionality for a report with no energy supplier. 
 
 cases_tested:
   "Observation time should be converted to local (CET/CEST) time in report"
