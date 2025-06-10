@@ -4,7 +4,7 @@ from pathlib import Path
 
 from geh_common.infrastructure.write_csv import write_csv_files
 from geh_common.telemetry import Logger, use_span
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 
 from geh_settlement_report.settlement_reports.application.job_args.settlement_report_args import (
     SettlementReportArgs,
@@ -28,7 +28,7 @@ class TmpFile:
 def write(
     args: SettlementReportArgs,
     df: DataFrame,
-    spark: SparkSession,
+    dbutils,
     report_data_type: ReportDataType,
     order_by_columns: list[str],
     rows_per_file: int = 1_000_000,
@@ -43,7 +43,7 @@ def write(
 
     files_paths = write_csv_files(
         df=df,
-        spark=spark,
+        dbutils=dbutils,
         output_path=report_output_path,
         spark_output_path=f"{report_output_path}/{_get_folder_name(report_data_type)}",
         rows_per_file=rows_per_file if args.prevent_large_text_files else None,

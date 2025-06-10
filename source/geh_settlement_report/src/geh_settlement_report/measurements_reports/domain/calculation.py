@@ -72,9 +72,9 @@ def execute(
     )
 
     files = write_csv_files(
-        result,
-        spark,
-        args.output_path,
+        df=result,
+        dbutils=get_dbutils(spark),
+        output_path=args.output_path,
         file_name_factory=lambda *_: f"{file_name_factory(args)}.csv",
     )
 
