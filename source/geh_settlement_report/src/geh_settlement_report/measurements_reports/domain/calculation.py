@@ -1,5 +1,5 @@
-from itertools import chain
 import shutil
+from itertools import chain
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -135,6 +135,12 @@ def execute(
 
     # Map the quality values
     result = _map_output_report_column(MeasurementsReportColumnNames.quantity_quality, quality_mapping, result)
+
+    # Format the observation_time column to dd-MM-yyyy HH:mm format
+    result = result.withColumn(
+        MeasurementsReportColumnNames.observation_time,
+        F.date_format(F.col(MeasurementsReportColumnNames.observation_time), "dd-MM-yyyy HH:mm"),
+    )
 
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
