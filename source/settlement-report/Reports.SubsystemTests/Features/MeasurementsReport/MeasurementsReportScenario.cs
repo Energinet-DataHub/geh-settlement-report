@@ -94,5 +94,7 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         Assert.True(memoryStream.Length > 0, "The downloaded file is empty.");
+
+        //TODO HENRIK: make extra test that checks that we have a row.
     }
 }

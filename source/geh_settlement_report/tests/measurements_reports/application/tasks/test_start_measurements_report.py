@@ -13,15 +13,17 @@ def test_start_measurements_report(
     spark: SparkSession,
     monkeypatch: pytest.MonkeyPatch,
     tmp_path_factory: pytest.TempPathFactory,
+    external_dataproducts_created: None,  # Used implicitly
 ):
     # Arrange
     report_id = uuid.uuid4().hex
     output_path = tmp_path_factory.mktemp("measurements_report_output")
     result_file = output_path / f"{report_id}.zip"
     monkeypatch.setattr(
-        "geh_settlement_report.measurements_reports.application.tasks.measurements_report_task.get_dbutils",
+        "geh_settlement_report.measurements_reports.domain.calculation.get_dbutils",
         lambda _: MockDBUtils(),
     )
+
     monkeypatch.setattr(
         "geh_settlement_report.measurements_reports.application.tasks.measurements_report_task.initialize_spark",
         lambda: spark,
