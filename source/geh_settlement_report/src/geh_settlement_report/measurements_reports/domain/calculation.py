@@ -1,9 +1,11 @@
 from itertools import chain
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from geh_common.databricks.get_dbutils import get_dbutils
 from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.infrastructure.write_csv import write_csv_files
+from geh_common.pyspark.transformations import convert_from_utc, convert_to_utc
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
@@ -24,6 +26,9 @@ def execute(
     calculated_measurements: DataFrame,
     metering_point_periods: DataFrame,
 ) -> DataFrame:
+    calculated_measurements = convert_from_utc(calculated_measurements, args.time_zone)
+    metering_point_periods = convert_to_utc(metering_point_periods, args.time_zone)
+
     filtered_measurements = _filter_calculated_measurements(args, calculated_measurements)
     filtered_metering_point_periods = _filter_metering_point_periods(args, metering_point_periods)
 
@@ -154,6 +159,9 @@ def _map_output_report_column(column_name: str, mapping_data: dict, result: Data
 
 
 def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone))
+    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone))
+
     df_with_grid_area_codes = df.filter(
         F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
         | F.col(MeteringPointPeriodsColumnNames.from_grid_area_code).isin(args.grid_area_codes)
@@ -166,13 +174,13 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
         )
 
     df_within_period = df_with_grid_area_codes.filter(
-        (F.col(MeteringPointPeriodsColumnNames.period_from_date) < F.lit(args.period_end))
+        (F.col(MeteringPointPeriodsColumnNames.period_from_date) < F.lit(period_end_local))
         & (
             F.coalesce(
                 F.col(MeteringPointPeriodsColumnNames.period_to_date),
                 F.lit("9999-12-31 23:59:59.999999").cast("timestamp"),
             )
-            > F.lit(args.period_start)
+            > F.lit(period_start_local)
         )
     )
 
@@ -180,7 +188,10 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
 
 
 def _filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
+    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone))
+    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone))
     df_in_period = df.filter(
-        F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time).between(args.period_start, args.period_end)
+        (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) >= period_start_local)
+        & (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) < period_end_local)
     )
     return df_in_period

@@ -3,4 +3,4 @@ period_start: 2024-06-09T22:00:00Z
 period_end: 2024-06-12T22:00:00Z
 grid_area_codes: [800, 900]
 requesting_actor_id: 1000000000000
-energy_supplier_id: 1000000000000
+energy_supplier_ids: [1000000000000]
