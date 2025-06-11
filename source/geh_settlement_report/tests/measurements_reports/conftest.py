@@ -60,6 +60,7 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
             calculated_measurements=measurements_gold_current_v1,
             metering_point_periods=measurements_report_metering_point_periods,
         )
+        result.show(1000, truncate=False)
 
         zip_path = Path(args.output_path) / f"{args.report_id}.zip"
 
@@ -79,7 +80,7 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
         return TestCases(
             [
                 TestCase(
-                    expected_csv_path=f"{scenario_path}/then/measurements_report_800_8000000000000_01-05-2025_02-05-2025.csv",
+                    expected_csv_path=f"{scenario_path}/then/measurements_report_8000000000000_10-06-2024_13-06-2024.csv",
                     actual=result,
                 ),
             ]
