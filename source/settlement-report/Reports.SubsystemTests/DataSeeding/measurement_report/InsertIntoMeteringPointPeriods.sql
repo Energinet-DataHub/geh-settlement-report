@@ -1,4 +1,4 @@
-INSERT INTO ctl_shres_d_we_002.electricity_market_internal.measurements_report_metering_point_periods
+INSERT INTO INSERT_CATALOG_NAME_HERE.electricity_market_internal.measurements_report_metering_point_periods
 VALUES
 (
   '543',
