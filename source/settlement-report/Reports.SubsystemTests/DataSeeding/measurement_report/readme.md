@@ -1,4 +1,5 @@
 # Populating databricks tables
+
 This folder contains two `.sql` scripts intended for populating Databricks development environments with test data.
 
 The procedure is the following:
