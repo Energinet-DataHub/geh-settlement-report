@@ -1,12 +1,14 @@
 import shutil
 import sys
 import uuid
+import zipfile
 
 import pytest
 from geh_common.testing.spark.mocks import MockDBUtils
 from pyspark.sql import SparkSession
 
 from geh_settlement_report.measurements_reports.entry_point import start_measurements_report
+from tests.measurements_reports.job_tests.seeding import seed_data
 
 
 def test_start_measurements_report(
@@ -14,7 +16,7 @@ def test_start_measurements_report(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path_factory: pytest.TempPathFactory,
     external_dataproducts_created: None,  # Used implicitly
-):
+) -> None:
     # Arrange
     report_id = uuid.uuid4().hex
     output_path = tmp_path_factory.mktemp("measurements_report_output")
@@ -34,11 +36,11 @@ def test_start_measurements_report(
         [
             "entry_point.py",
             f"--report-id={report_id}",
-            "--period-start=2025-01-01",
-            "--period-end=2025-01-31",
-            "--grid-area-codes=[123,456]",
+            "--period-start=2016-01-01",
+            "--period-end=2017-01-01",
+            "--grid-area-codes=[800]",
             "--requesting-actor-id=1234567890123",
-            "--energy-supplier-ids=[1234567890123]",
+            "--energy-supplier-ids=[1000000000000]",
         ],
     )
     monkeypatch.setenv("OUTPUT_PATH", str(output_path))
@@ -48,13 +50,18 @@ def test_start_measurements_report(
         "APPLICATIONINSIGHTS_CONNECTION_STRING", "InstrumentationKey=12345678-1234-1234-1234-123456789012"
     )
 
+    # Seed electricity market and gold tables
+    seed_data(spark)
+
     # Act
     start_measurements_report()
 
+    zip_file = zipfile.ZipFile(result_file, "r")
+    zip_file.extractall(output_path / f"{report_id}_extraction")
+
     # Assert
-    assert result_file.exists(), "Report CSV file was not created"
-    assert result_file.is_file(), "Report output is not a file"
-    assert result_file.stat().st_size > 0, "Report CSV file is empty"
+    df = spark.read.csv(f"{output_path}/{report_id}_extraction/{zip_file.namelist()[0]}", header=True)
+    assert df.count() > 0, "The csv file from the zip contains no rows"
 
     # Clean up
     shutil.rmtree(output_path, ignore_errors=True)

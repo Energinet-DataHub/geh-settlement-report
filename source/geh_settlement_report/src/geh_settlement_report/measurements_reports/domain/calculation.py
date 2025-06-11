@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 from geh_common.databricks.get_dbutils import get_dbutils
@@ -71,17 +72,24 @@ def execute(
         )
     )
 
+    report_output_path = Path(args.output_path) / args.report_id
+    tmp_dir = report_output_path / "tmp"
+    dbutils = get_dbutils(spark)
+
     files = write_csv_files(
-        result,
-        args.output_path,
+        df=result,
+        output_path=report_output_path.as_posix(),
+        tmpdir=tmp_dir.as_posix(),
         file_name_factory=lambda *_: f"{file_name_factory(args)}.csv",
     )
 
     create_zip_file(
-        get_dbutils(spark),
-        Path(args.output_path) / f"{args.report_id}.zip",
+        dbutils,
+        report_output_path.with_suffix(".zip").as_posix(),
         [f.as_posix() for f in files],
     )
+
+    shutil.rmtree(report_output_path, ignore_errors=True)
 
     return result
 

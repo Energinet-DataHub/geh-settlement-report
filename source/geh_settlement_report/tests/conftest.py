@@ -8,10 +8,13 @@ from geh_common.telemetry.logging_configuration import (
     configure_logging,
 )
 from geh_common.testing.dataframes import AssertDataframesConfiguration
+from geh_common.testing.delta_lake import create_database
+from geh_common.testing.delta_lake.delta_lake_operations import create_table
 from geh_common.testing.spark.spark_test_session import get_spark_test_session
 from pyspark.sql import SparkSession
 
 from tests.constants import TESTS_PATH
+from tests.external_data_products import ExternalDataProducts
 from tests.testsession_configuration import TestSessionConfiguration
 
 
@@ -71,6 +74,20 @@ def dummy_logging(request, monkeypatch: pytest.MonkeyPatch):
         mp.setattr(geh_common.telemetry.logging_configuration, "get_is_instrumented", lambda *args, **kwargs: False)
         configure_logging(cloud_role_name="test_role", subsystem="test_subsystem")
         yield
+
+
+@pytest.fixture(scope="session")
+def external_dataproducts_created(spark: SparkSession) -> None:
+    for database_name in ExternalDataProducts.get_all_database_names():
+        create_database(spark, database_name)
+
+    for dataproduct in ExternalDataProducts.get_all_data_products():
+        create_table(
+            spark,
+            database_name=dataproduct.database_name,
+            table_name=dataproduct.view_name,
+            schema=dataproduct.schema,
+        )
 
 
 # pytest-xdist plugin does not work with SparkSession as a fixture. The session scope is not supported.
