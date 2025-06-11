@@ -1,0 +1,3 @@
+metering_point_id;quantity;quality;observation_time;metering_point_type;#comment
+000000000000000017;10;measured;2024-06-15T12:00:00Z;consumption;From when in grid area 700
+000000000000000017;10;measured;2024-07-15T12:00:00Z;consumption;From when in grid area 900
