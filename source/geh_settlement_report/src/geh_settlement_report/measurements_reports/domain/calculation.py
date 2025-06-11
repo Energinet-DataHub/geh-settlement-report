@@ -1,3 +1,4 @@
+from itertools import chain
 from pathlib import Path
 
 from geh_common.databricks.get_dbutils import get_dbutils
@@ -68,6 +69,67 @@ def execute(
         )
     )
 
+    # Add metering point type mapping
+    metering_point_type_mapping = {
+        "ve_production": "D01",
+        "analysis": "D02",
+        "net_production": "D05",
+        "supply_to_grid": "D06",
+        "consumption_from_grid": "D07",
+        "wholesale_services_or_information": "D08",
+        "own_production": "D09",
+        "net_from_grid": "D10",
+        "net_to_grid": "D11",
+        "total_consumption": "D12",
+        "electrical_heating": "D14",
+        "net_consumption": "D15",
+        "other_consumption": "D17",
+        "other_production": "D18",
+        "capacity_settlement": "D19",
+        "exchange_reactive_energy": "D20",
+        "collective_net_production": "D21",
+        "collective_net_consumption": "D22",
+        "activated_downregulation": "D23",
+        "activated_upregulation": "D24",
+        "actual_consumption": "D25",
+        "actual_production": "D26",
+        "consumption": "E17",
+        "production": "E18",
+        "exchange": "E20",
+    }
+
+    # Map the metering point type values
+    result = _map_output_report_column(
+        MeasurementsReportColumnNames.metering_point_type, metering_point_type_mapping, result
+    )
+
+    # Add unit mapping
+    unit_mapping = {
+        "kWh": "kWh",
+        "kVArh": "kVArh",
+        "TNE": "Tons",
+    }
+
+    # Map the unit values
+    result = _map_output_report_column(MeasurementsReportColumnNames.unit, unit_mapping, result)
+
+    # Add physical status mapping
+    physical_status_mapping = {"connected": "E22", "disconnected": "E23"}
+
+    # Map the physical status values
+    result = _map_output_report_column(MeasurementsReportColumnNames.physical_status, physical_status_mapping, result)
+
+    # Add quality mapping
+    quality_mapping = {
+        "measured": "Measured",
+        "missing": "Missing",
+        "estimated": "Estimated",
+        "calculated": "Calculated",
+    }
+
+    # Map the quality values
+    result = _map_output_report_column(MeasurementsReportColumnNames.quantity_quality, quality_mapping, result)
+
     files = write_csv_files(
         result,
         args.output_path,
@@ -81,6 +143,14 @@ def execute(
     )
 
     return result
+
+
+def _map_output_report_column(column_name: str, mapping_data: dict, result: DataFrame) -> DataFrame:
+    mapping_expr = F.create_map([F.lit(x) for x in chain(*[(k, v) for k, v in mapping_data.items()])])
+    return result.withColumn(
+        column_name,
+        mapping_expr.getItem(F.col(column_name)),
+    )
 
 
 def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
