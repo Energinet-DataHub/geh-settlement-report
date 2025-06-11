@@ -73,7 +73,7 @@ def execute(
     )
 
     report_output_path = Path(args.output_path) / args.report_id
-    tmp_dir = Path(args.output_path) / "tmp"
+    tmp_dir = report_output_path / "tmp"
     dbutils = get_dbutils(spark)
 
     files = write_csv_files(
@@ -89,7 +89,7 @@ def execute(
         [f.as_posix() for f in files],
     )
 
-    shutil.rmtree(tmp_dir, ignore_errors=True)
+    shutil.rmtree(report_output_path, ignore_errors=True)
 
     return result
 

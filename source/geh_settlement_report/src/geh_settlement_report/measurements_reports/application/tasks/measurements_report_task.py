@@ -1,6 +1,4 @@
-import shutil
 import sys
-from pathlib import Path
 
 from geh_common.telemetry import Logger, use_span
 from geh_common.telemetry.decorators import start_trace
@@ -30,10 +28,6 @@ def start_measurements_report_with_deps():
 
 @use_span()
 def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSession, logger) -> None:
-    logger.info("Creating temporary directory for report output before zipping")
-    result_dir = Path(args.output_path) / args.report_id
-    result_dir.mkdir(parents=True, exist_ok=True)
-
     current_measurements_repository = CurrentMeasurementsRepository(spark, args.catalog_name)
     electricity_market_repository = ElectricityMarketRepository(spark, args.catalog_name)
     logger.info("Reading input data")
@@ -47,6 +41,3 @@ def execute_measurements_report(args: MeasurementsReportArgs, spark: SparkSessio
         current_measurements.df,
         metering_point_periods.df,
     )
-
-    logger.info("Removing the temporary folder")
-    shutil.rmtree(Path(args.output_path) / args.report_id)
