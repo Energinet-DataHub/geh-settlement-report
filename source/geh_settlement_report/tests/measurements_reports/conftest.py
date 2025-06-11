@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 from zipfile import ZipFile
+from zoneinfo import ZoneInfo
 
 import pytest
 import yaml
@@ -76,11 +77,17 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
             expected_csv_name = f"{file_name_factory(args)}.csv"
             assert expected_csv_name in files, f"Expected CSV file {expected_csv_name} not found in zip."
 
+        # Create expected CSV file name
+        timezone_obj = ZoneInfo(args.time_zone)
+        period_start_local_time = scenario_parameters["period_start"].astimezone(timezone_obj).strftime("%d-%m-%Y")
+        period_end_local_time = scenario_parameters["period_end"].astimezone(timezone_obj).strftime("%d-%m-%Y")
+        expected_csv_name = f"measurements_report_{scenario_parameters['requesting_actor_id']}_{period_start_local_time}_{period_end_local_time}.csv"
+
         # Return test cases
         return TestCases(
             [
                 TestCase(
-                    expected_csv_path=f"{scenario_path}/then/measurements_report_8000000000000_10-06-2024_13-06-2024.csv",
+                    expected_csv_path=f"{scenario_path}/then/{expected_csv_name}",
                     actual=result,
                 ),
             ]
