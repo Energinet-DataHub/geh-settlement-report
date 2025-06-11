@@ -3,6 +3,7 @@ using Azure;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Abstractions.Model.SettlementReport;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Application.SettlementReports.Commands;
 using Energinet.DataHub.Reports.Application.SettlementReports.Handlers;
 using Energinet.DataHub.Reports.Application.SettlementReports.Services;
@@ -52,7 +53,7 @@ public class SettlementReportsController
         if (_userContext.CurrentUser is { MultiTenancy: true, Actor.MarketRole: FrontendActorMarketRole.DataHubAdministrator } &&
             settlementReportRequest is { MarketRoleOverride: not null, ActorNumberOverride: not null })
         {
-            marketRole = settlementReportRequest.MarketRoleOverride.Value;
+            marketRole = MarketRoleMapper.MapToMarketRole(settlementReportRequest.MarketRoleOverride.Value);
             actorNumber = settlementReportRequest.ActorNumberOverride;
         }
 
