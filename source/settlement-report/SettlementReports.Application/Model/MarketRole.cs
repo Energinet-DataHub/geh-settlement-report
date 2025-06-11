@@ -1,4 +1,4 @@
-﻿namespace Energinet.DataHub.Reports.Abstractions.Model;
+﻿namespace Energinet.DataHub.Reports.Application.Model;
 
 public enum MarketRole
 {
