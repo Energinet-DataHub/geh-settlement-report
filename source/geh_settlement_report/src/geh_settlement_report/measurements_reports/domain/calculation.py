@@ -112,7 +112,7 @@ def execute(
     unit_mapping = {
         "kWh": "kWh",
         "kVArh": "kVArh",
-        "TNE": "Tons",
+        "TNE": "Tonne",
     }
 
     # Map the unit values
