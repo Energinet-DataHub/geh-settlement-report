@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
+﻿using System.IO.Compression;
+using Energinet.DataHub.Core.TestCommon.Xunit.Attributes;
 using Energinet.DataHub.Core.TestCommon.Xunit.Orderers;
 using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
@@ -94,7 +95,42 @@ public class MeasurementsReportScenario : IClassFixture<MeasurementsReportScenar
         using var memoryStream = new MemoryStream();
         await stream.CopyToAsync(memoryStream);
         Assert.True(memoryStream.Length > 0, "The downloaded file is empty.");
+    }
 
-        //TODO HENRIK: make extra test that checks that we have a row.
+    [SubsystemFact]
+    [ScenarioStep(5)]
+    public async Task AndThen_ReportCanBeDownloadedAndContainsALeastOneRow()
+    {
+        // Arrange
+        var reportRequest = await _scenarioFixture.GetReportRequestByJobRunIdAsync(_scenarioFixture.ScenarioState.JobRunId!);
+        Assert.NotNull(reportRequest);
+
+        // Act
+        var stream = await _scenarioFixture.MeasurementsReportClient.DownloadAsync(reportRequest.RequestId, CancellationToken.None);
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+
+        memoryStream.Position = 0;
+
+        using var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Read);
+
+        // Get the first CSV file from the ZIP
+        var csvEntry = zipArchive.Entries.FirstOrDefault(e => e.FullName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase));
+        Assert.True(csvEntry != null, "No CSV file was found in the ZIP."); // Fails the test if no CSV file is found
+        using var csvStream = csvEntry.Open();
+        using var reader = new StreamReader(csvStream);
+
+        var lines = new List<string>();
+        while (!reader.EndOfStream)
+        {
+            var line = reader.ReadLine();
+            if (!string.IsNullOrWhiteSpace(line))
+            {
+                lines.Add(line);
+            }
+        }
+
+        // Assert
+        Assert.True(lines.Count > 1, "CSV does not contain any data rows."); // assuming first line is header
     }
 }
