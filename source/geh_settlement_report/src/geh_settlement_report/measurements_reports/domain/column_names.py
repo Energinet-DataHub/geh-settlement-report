@@ -1,16 +1,16 @@
 class MeasurementsReportColumnNames:
     """Column names for the MeasurementsReport table."""
 
-    grid_area_code = "grid_area_code"
-    metering_point_id = "metering_point_id"
-    metering_point_type = "metering_point_type"
-    resolution = "resolution"
-    energy_supplier_id = "energy_supplier_id"
-    physical_status = "physical_status"
-    observation_time = "observation_time"
-    quantity = "quantity"
-    quantity_quality = "quantity_quality"
-    unit = "unit"
+    grid_area_code = "GRID AREA ID"
+    metering_point_id = "METERING POINT ID"
+    metering_point_type = "METERING POINT TYPE"
+    resolution = "RESOLUTION"
+    energy_supplier_id = "ENERGY SUPPLIER ID"
+    physical_status = "PHYSICAL STATUS"
+    observation_time = "DATE TIME STAMP"
+    quantity = "QUANTITY"
+    quantity_quality = "QUALITY"
+    unit = "UNIT"
 
 
 class MeteringPointPeriodsColumnNames:

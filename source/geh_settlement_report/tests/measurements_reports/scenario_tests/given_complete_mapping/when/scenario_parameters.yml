@@ -1,6 +1,5 @@
 report_id: 00000000-00c0-000a-a000-abcdefg00000
-period_start_datetime: 2024-12-31T23:00:00Z
-period_end_datetime: 2025-01-01T23:00:00Z
-grid-area_codes: [800]
-energy_supplier_id:
+period_start: 2024-12-31T23:00:00Z
+period_end: 2025-01-01T23:00:00Z
+grid_area_codes: [800]
 requesting_actor_id: 8000000000000

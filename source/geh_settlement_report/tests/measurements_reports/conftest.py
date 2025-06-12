@@ -60,6 +60,7 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
             calculated_measurements=measurements_gold_current_v1,
             metering_point_periods=measurements_report_metering_point_periods,
         )
+        result.show(1000, truncate=False)
 
         zip_path = Path(args.output_path) / f"{args.report_id}.zip"
 
@@ -67,20 +68,22 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
         assert zip_path.is_file(), f"Expected {zip_path} to be a file."
         assert zip_path.stat().st_size > 0, f"Zip file {zip_path} is empty."
 
+        expected_csv_name = f"{file_name_factory(args)}.csv"
+
         with ZipFile(zip_path, "r") as zip_file:
             # Check if the expected CSV file is in the zip
             files = [Path(f).name for f in zip_file.namelist()]
             assert len(files) == 1, f"Expected exactly one file in zip, found {len(files)} files: {files}"
 
-            expected_csv_name = f"{file_name_factory(args)}.csv"
             assert expected_csv_name in files, f"Expected CSV file {expected_csv_name} not found in zip."
 
         # Return test cases
         return TestCases(
             [
                 TestCase(
-                    expected_csv_path=f"{scenario_path}/then/measurements_report_800_8000000000000_01-05-2025_02-05-2025.csv",
+                    expected_csv_path=f"{scenario_path}/then/{expected_csv_name}",
                     actual=result,
+                    sep=",",
                 ),
             ]
         )
