@@ -83,6 +83,7 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
                 TestCase(
                     expected_csv_path=f"{scenario_path}/then/{expected_csv_name}",
                     actual=result,
+                    sep=",",
                 ),
             ]
         )

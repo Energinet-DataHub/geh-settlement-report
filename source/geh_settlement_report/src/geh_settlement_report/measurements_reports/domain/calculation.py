@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from geh_common.databricks.get_dbutils import get_dbutils
 from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.infrastructure.write_csv import write_csv_files
-from geh_common.pyspark.transformations import convert_from_utc, convert_to_utc
+from geh_common.pyspark.transformations import convert_from_utc
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
@@ -28,7 +28,7 @@ def execute(
     metering_point_periods: DataFrame,
 ) -> DataFrame:
     calculated_measurements = convert_from_utc(calculated_measurements, args.time_zone)
-    metering_point_periods = convert_to_utc(metering_point_periods, args.time_zone)
+    metering_point_periods = convert_from_utc(metering_point_periods, args.time_zone)
 
     filtered_measurements = _filter_calculated_measurements(args, calculated_measurements)
     filtered_metering_point_periods = _filter_metering_point_periods(args, metering_point_periods)
