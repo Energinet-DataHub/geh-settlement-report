@@ -60,7 +60,6 @@ def test_cases(spark: SparkSession, request: pytest.FixtureRequest, tmp_path_fac
             calculated_measurements=measurements_gold_current_v1,
             metering_point_periods=measurements_report_metering_point_periods,
         )
-        result.show(1000, truncate=False)
 
         zip_path = Path(args.output_path) / f"{args.report_id}.zip"
 

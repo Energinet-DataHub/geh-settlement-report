@@ -142,6 +142,11 @@ def execute(
         F.date_format(F.col(MeasurementsReportColumnNames.observation_time), "dd-MM-yyyy HH:mm"),
     )
 
+    # Replace null values in quantity column with 0.000
+    result = result.withColumn(
+        MeasurementsReportColumnNames.quantity, F.coalesce(F.col(MeasurementsReportColumnNames.quantity), F.lit(0.000))
+    )
+
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
     dbutils = get_dbutils(spark)
@@ -173,8 +178,8 @@ def _map_output_report_column(column_name: str, mapping_data: dict, result: Data
 
 
 def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
-    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone))
-    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone))
+    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone)).strftime("%Y-%m-%d %H:%M:%S.%f")
+    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone)).strftime("%Y-%m-%d %H:%M:%S.%f")
 
     df_with_grid_area_codes = df.filter(
         F.col(MeteringPointPeriodsColumnNames.grid_area_code).isin(args.grid_area_codes)
@@ -202,8 +207,8 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
 
 
 def _filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
-    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone))
-    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone))
+    period_start_local = args.period_start.astimezone(ZoneInfo(args.time_zone)).strftime("%Y-%m-%d %H:%M:%S.%f")
+    period_end_local = args.period_end.astimezone(ZoneInfo(args.time_zone)).strftime("%Y-%m-%d %H:%M:%S.%f")
     df_in_period = df.filter(
         (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) >= period_start_local)
         & (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) < period_end_local)
