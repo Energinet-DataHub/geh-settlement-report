@@ -147,6 +147,13 @@ def execute(
         MeasurementsReportColumnNames.quantity, F.coalesce(F.col(MeasurementsReportColumnNames.quantity), F.lit(0.000))
     )
 
+    result = result.orderBy(
+        MeasurementsReportColumnNames.grid_area_code,
+        MeasurementsReportColumnNames.metering_point_type,
+        MeasurementsReportColumnNames.metering_point_id,
+        MeasurementsReportColumnNames.observation_time,
+    )
+
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
     dbutils = get_dbutils(spark)
