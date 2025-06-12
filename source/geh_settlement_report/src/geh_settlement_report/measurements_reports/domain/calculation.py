@@ -29,46 +29,50 @@ def execute(
     filtered_measurements = _filter_calculated_measurements(args, calculated_measurements)
     filtered_metering_point_periods = _filter_metering_point_periods(args, metering_point_periods)
 
-    result = (
-        filtered_measurements.alias("m")
-        .join(
-            filtered_metering_point_periods.alias("p"),
-            on=[
-                F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.metering_point_id}")
-                == F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_id}"),
-                F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}")
-                >= F.col(f"p.{MeteringPointPeriodsColumnNames.period_from_date}"),
-                F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}")
-                < F.coalesce(
-                    F.col(f"p.{MeteringPointPeriodsColumnNames.period_to_date}"),
-                    F.lit("9999-12-31 23:59:59.999999").cast("timestamp"),
-                ),
-            ],
-            how="inner",
+    result = filtered_measurements.alias("m").join(
+        filtered_metering_point_periods.alias("p"),
+        on=[
+            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.metering_point_id}")
+            == F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_id}"),
+            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}")
+            >= F.col(f"p.{MeteringPointPeriodsColumnNames.period_from_date}"),
+            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}")
+            < F.coalesce(
+                F.col(f"p.{MeteringPointPeriodsColumnNames.period_to_date}"),
+                F.lit("9999-12-31 23:59:59.999999").cast("timestamp"),
+            ),
+        ],
+        how="inner",
+    )
+
+    # Apply metering_point_types filtering
+    if args.metering_point_types is not None:
+        result = result.where(
+            F.col(f"m.{MeasurementsReportColumnNames.metering_point_type}").isin(args.metering_point_types)
         )
-        .select(
-            F.col(f"p.{MeteringPointPeriodsColumnNames.grid_area_code}").alias(
-                MeasurementsReportColumnNames.grid_area_code
-            ),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_id}").alias(
-                MeasurementsReportColumnNames.metering_point_id
-            ),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_type}").alias(
-                MeasurementsReportColumnNames.metering_point_type
-            ),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.resolution}").alias(MeasurementsReportColumnNames.resolution),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.physical_status}").alias(
-                MeasurementsReportColumnNames.physical_status
-            ),
-            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
-                MeasurementsReportColumnNames.quantity_quality
-            ),
-            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}").alias(
-                MeasurementsReportColumnNames.observation_time
-            ),
-            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quantity}").alias(MeasurementsReportColumnNames.quantity),
-        )
+
+    result = result.select(
+        F.col(f"p.{MeteringPointPeriodsColumnNames.grid_area_code}").alias(
+            MeasurementsReportColumnNames.grid_area_code
+        ),
+        F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_id}").alias(
+            MeasurementsReportColumnNames.metering_point_id
+        ),
+        F.col(f"p.{MeteringPointPeriodsColumnNames.metering_point_type}").alias(
+            MeasurementsReportColumnNames.metering_point_type
+        ),
+        F.col(f"p.{MeteringPointPeriodsColumnNames.resolution}").alias(MeasurementsReportColumnNames.resolution),
+        F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
+        F.col(f"p.{MeteringPointPeriodsColumnNames.physical_status}").alias(
+            MeasurementsReportColumnNames.physical_status
+        ),
+        F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
+            MeasurementsReportColumnNames.quantity_quality
+        ),
+        F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}").alias(
+            MeasurementsReportColumnNames.observation_time
+        ),
+        F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quantity}").alias(MeasurementsReportColumnNames.quantity),
     )
 
     # Add metering point type mapping
