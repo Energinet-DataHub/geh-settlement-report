@@ -1,0 +1,5 @@
+grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;quantity_unit;from_grid_area_code;to_grid_area_code;period_from_date;period_to_date;#comment800;010000000000000000;ve_production;P1M;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;
+800;060000000000000000;supply_to_grid;PT1H;1000000000000;disconnected;kWh;;;2016-01-01T23:00:00Z;; not included in metering point type
+800;070000000000000000;consumption_from_grid;PT15M;1000000000000;connected;kVArh;;;2016-01-01T23:00:00Z;; not included in metering point type
+800;140000000000000000;electrical_heating;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Within metering point types 
+800;150000000000000000;net_consumption;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Within metering point types

@@ -6,7 +6,6 @@ from geh_common.databricks.get_dbutils import get_dbutils
 from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.infrastructure.write_csv import write_csv_files
 from geh_common.pyspark.transformations import convert_from_utc
-from geh_common.telemetry import Logger
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
@@ -161,8 +160,6 @@ def execute(
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
     dbutils = get_dbutils(spark)
-    logger = Logger(__name__)
-    logger.info("ACUTAL", str(result.take(10)))
     files = write_csv_files(
         df=result,
         output_path=report_output_path.as_posix(),

@@ -1,3 +1,4 @@
 metering_point_id;quantity;quality;observation_time;metering_point_type;#comment
-140000000000000000;987.654;calculated;2024-06-12T22:00:00Z;electrical_heating;Outside report period
-150000000000000000;10000;estimated;2024-06-10T22:00:00Z;net_consumption;In grid area, but different energy_supplier
+140000000000000000;987.654;calculated;2024-06-10T22:00:00Z;electrical_heating;
+140000000000000001;987.654;calculated;2024-06-10T22:00:00Z;electrical_heating;Correct metering point type, but in other grid area
+150000000000000000;10000;calculated;2024-06-11T22:00:00Z;net_consumption;
