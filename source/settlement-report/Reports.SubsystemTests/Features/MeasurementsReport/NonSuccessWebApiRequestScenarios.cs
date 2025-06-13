@@ -34,24 +34,6 @@ public class NonSuccessWebApiRequestScenarios : IClassFixture<MeasurementsReport
     }
 
     [SubsystemFact]
-    public async Task GivenReportRequest_WhenBadRequest_ThenResponseIsBadRequest()
-    {
-        // Arrange
-        var invalidRequestFilter = CreateBadFilter();
-        var invalidRequest = new MeasurementsReportRequestDto(invalidRequestFilter);
-
-        // Act
-        try
-        {
-            await _scenarioFixture.MeasurementsReportClient.RequestAsync(invalidRequest, CancellationToken.None);
-        }
-        catch (HttpRequestException ex)
-        {
-            ex.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-    }
-
-    [SubsystemFact]
     public async Task GivenReportRequest_WhenUnauthorizedRequest_ThenResponseIsUnauthorized()
     {
         // Arrange

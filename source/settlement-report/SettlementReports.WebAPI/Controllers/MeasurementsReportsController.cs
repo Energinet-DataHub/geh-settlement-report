@@ -42,10 +42,10 @@ public class MeasurementsReportsController
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        if (!UserHasValidMarketRole())
+        if (IsForbiddenRequest(measurementsReportRequest.Filter.GridAreaCodes))
             return Forbid();
 
-        if (!IsValidRequest(measurementsReportRequest))
+        if (IsBadRequest(measurementsReportRequest))
             return BadRequest();
 
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
@@ -79,7 +79,7 @@ public class MeasurementsReportsController
     [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<IEnumerable<RequestedMeasurementsReportDto>>> ListMeasurementsReports()
     {
-        if (!UserHasValidMarketRole())
+        if (IsForbiddenRequest())
             return Forbid();
 
         var reports = await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
@@ -94,7 +94,7 @@ public class MeasurementsReportsController
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
     public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
-        if (!UserHasValidMarketRole())
+        if (!IsForbiddenRequest())
             return Forbid();
 
         try
@@ -108,30 +108,33 @@ public class MeasurementsReportsController
         }
     }
 
-    private bool UserHasValidMarketRole()
+    private bool IsForbiddenRequest(IEnumerable<string>? requestedGridAreaCodes = null)
     {
         var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
 
         // These are the supported market roles for measurements reports
         var supportedMarketRoles = new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier };
 
-        return supportedMarketRoles.Contains(marketRole);
+        if (!supportedMarketRoles.Contains(marketRole))
+            return true;
+
+        // Validate that the users actor has access to the grid areas specified in the request
+        if (requestedGridAreaCodes != null && requestedGridAreaCodes.Any(c => !_userContext.CurrentUser.Actor.GridAreas.Contains(c)))
+            return true;
+
+        return false;
     }
 
-    private bool IsValidRequest(MeasurementsReportRequestDto req)
+    private bool IsBadRequest(MeasurementsReportRequestDto request)
     {
-        // Validate that the users actor has access to the grid areas specified in the request
-        if (!req.Filter.GridAreaCodes.All(c => _userContext.CurrentUser.Actor.GridAreas.Contains(c)))
-            return false;
-
         // Reject empty or "negative" periods
-        if (req.Filter.PeriodEnd <= req.Filter.PeriodStart)
-            return false;
+        if (request.Filter.PeriodEnd <= request.Filter.PeriodStart)
+            return true;
 
         // Period must not exceed one month
-        if (req.Filter.PeriodEnd > req.Filter.PeriodStart.AddMonths(1))
-            return false;
+        if (request.Filter.PeriodEnd > request.Filter.PeriodStart.AddMonths(1))
+            return true;
 
-        return true;
+        return false;
     }
 }
