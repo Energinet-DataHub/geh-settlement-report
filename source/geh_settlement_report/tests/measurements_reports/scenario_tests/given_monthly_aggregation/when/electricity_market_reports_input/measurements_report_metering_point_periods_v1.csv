@@ -1,0 +1,7 @@
+grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;quantity_unit;from_grid_area_code;to_grid_area_code;period_from_date;period_to_date;#comment
+800;170000000000000000;consumption;PT15M;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;No irregularities
+800;140000000000000000;electrical_heating;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;2025-02-14T23:00:00;Changes resolution in aggregation period
+800;140000000000000000;electrical_heating;PT15M;1000000000000;connected;kWh;;;2025-02-14T23:00:00;;Changes resolution in aggregation period
+800;180000000000000000;production;PT1H;2000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Only missing qualities
+800;150000000000000000;net_consumption;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Qualities: Estimated + missing
+800;150000000000000001;net_consumption;PT1H;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;Qualities: Estimated + missing

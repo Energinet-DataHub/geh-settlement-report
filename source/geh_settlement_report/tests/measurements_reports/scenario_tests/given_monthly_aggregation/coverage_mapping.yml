@@ -1,0 +1,18 @@
+notes: |
+  ## PURPOSE
+  
+
+  ## DESIGN CONSIDERATIONS
+  hirarki:
+  
+  Measured
+  Calculated
+  Estimated
+  Missing
+
+  skift opløsning
+  
+  Skift physical status
+
+cases_tested:
+  "Observation time should be converted to local (CET/CEST) time in report"
