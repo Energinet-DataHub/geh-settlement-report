@@ -93,9 +93,9 @@ public class MeasurementsReportsController
     [Authorize(Roles = "measurements-reports:manage")]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
-    public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId reportId)
+    public async Task<ActionResult<FileStream>> DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
-        if (!IsForbiddenRequest())
+        if (IsForbiddenRequest())
             return Forbid();
 
         try

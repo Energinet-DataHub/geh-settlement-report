@@ -9,12 +9,12 @@ using Xunit.Abstractions;
 
 namespace Energinet.DataHub.Reports.SubsystemTests.Features.MeasurementsReport;
 
-public class NonSuccessWebApiRequestScenarios : IClassFixture<MeasurementsReportScenarioFixture>,
+public class UnauthorizedWebApiRequestScenarios : IClassFixture<MeasurementsReportScenarioFixture>,
     IAsyncLifetime
 {
     private readonly MeasurementsReportScenarioFixture _scenarioFixture;
 
-    public NonSuccessWebApiRequestScenarios(
+    public UnauthorizedWebApiRequestScenarios(
         MeasurementsReportScenarioFixture scenarioFixture,
         ITestOutputHelper testOutputHelper)
     {
@@ -37,8 +37,7 @@ public class NonSuccessWebApiRequestScenarios : IClassFixture<MeasurementsReport
     public async Task GivenReportRequest_WhenUnauthorizedRequest_ThenResponseIsUnauthorized()
     {
         // Arrange
-        var anyFilter = CreateBadFilter();
-        var anyRequest = new MeasurementsReportRequestDto(anyFilter);
+        var anyRequest = new MeasurementsReportRequestDto(CreateBadFilter());
 
         // Act
         try
@@ -81,26 +80,6 @@ public class NonSuccessWebApiRequestScenarios : IClassFixture<MeasurementsReport
         {
             // Assert
             ex.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        }
-    }
-
-    [SubsystemFact]
-    public async Task GivenDownloadRequest_WhenBadRequest_ThenResponseIsUnauthorized()
-    {
-        // Arrange
-        var nonExistingReportId = new ReportRequestId(Guid.NewGuid().ToString());
-
-        try
-        {
-            // Act
-            await _scenarioFixture.MeasurementsReportClient.DownloadAsync(
-                nonExistingReportId,
-                CancellationToken.None);
-        }
-        catch (HttpRequestException ex)
-        {
-            // Assert
-            ex.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 

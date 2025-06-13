@@ -1,4 +1,5 @@
 ﻿using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Reports.Abstractions.Model;
 using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
@@ -27,13 +28,38 @@ public class MeasurementsReportsControllerTests : IClassFixture<WebApplicationFa
             [_accessibleGridAreaCode]));
 
     [Theory]
-    [MemberData(nameof(GetForbiddenFrontendUsers))]
-    public async Task GivenReportRequest_WhenForbiddenRequest_ThenResponseIsForbiddenRequest(
-        FrontendUser unsupportedFrontendUser)
+    [MemberData(nameof(GetUsersWithUnsupportedRole))]
+    public async Task GivenReportRequest_WhenRoleNotAllowed_ThenResponseIsForbiddenRequest(
+        FrontendUser forbiddenFrontendUser)
     {
         // Arrange
         var userContextMock = new Mock<IUserContext<FrontendUser>>();
-        userContextMock.Setup(x => x.CurrentUser).Returns(unsupportedFrontendUser);
+        userContextMock.Setup(x => x.CurrentUser).Returns(forbiddenFrontendUser);
+
+        // TODO BJM: Introduce a builder
+        var anyRequest = new MeasurementsReportRequestDto(new MeasurementsReportRequestFilterDto(
+            [],
+            new DateTimeOffset(2022, 1, 11, 23, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2022, 1, 12, 23, 0, 0, TimeSpan.Zero),
+            null));
+
+        var sut = CreateSut(userContextMock: userContextMock);
+
+        // Act
+        var actual = await sut.RequestMeasurementsReport(anyRequest);
+
+        // Assert
+        actual.Result.Should().BeOfType<ForbidResult>();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetUsersWithoutGridAreaAllowance))]
+    public async Task GivenReportRequest_WhenForbiddenRequest_ThenResponseIsForbiddenRequest(
+        FrontendUser forbiddenFrontendUser)
+    {
+        // Arrange
+        var userContextMock = new Mock<IUserContext<FrontendUser>>();
+        userContextMock.Setup(x => x.CurrentUser).Returns(forbiddenFrontendUser);
         var forbiddenRequest = new MeasurementsReportRequestDto(
             new MeasurementsReportRequestFilterDto(
                 new List<string> { "123" }, // Forbidden grid area code
@@ -68,6 +94,42 @@ public class MeasurementsReportsControllerTests : IClassFixture<WebApplicationFa
         actual.Result.Should().BeOfType<BadRequestResult>();
     }
 
+    [Theory]
+    [MemberData(nameof(GetUsersWithUnsupportedRole))]
+    public async Task GivenListRequest_WhenRoleNotAllowed_ThenResponseIsForbiddenRequest(
+        FrontendUser invalidRoleUser)
+    {
+        // Arrange
+        var userContextMock = new Mock<IUserContext<FrontendUser>>();
+        userContextMock.Setup(x => x.CurrentUser).Returns(invalidRoleUser);
+
+        var sut = CreateSut(userContextMock: userContextMock);
+
+        // Act
+        var actual = await sut.ListMeasurementsReports();
+
+        // Assert
+        actual.Result.Should().BeOfType<ForbidResult>();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetUsersWithUnsupportedRole))]
+    public async Task GivenDownloadRequest_WhenRoleNotAllowed_ThenResponseIsForbiddenRequest(
+        FrontendUser invalidRoleUser)
+    {
+        // Arrange
+        var userContextMock = new Mock<IUserContext<FrontendUser>>();
+        userContextMock.Setup(x => x.CurrentUser).Returns(invalidRoleUser);
+
+        var sut = CreateSut(userContextMock: userContextMock);
+
+        // Act
+        var actual = await sut.DownloadFileAsync(new ReportRequestId("any-id"));
+
+        // Assert
+        actual.Result.Should().BeOfType<ForbidResult>();
+    }
+
     public static MeasurementsReportsController CreateSut(
         Mock<IRequestMeasurementsReportHandler>? requestMeasurementsReportHandlerMock = null,
         Mock<IMeasurementsReportFileService>? measurementsReportFileServiceMock = null,
@@ -86,16 +148,11 @@ public class MeasurementsReportsControllerTests : IClassFixture<WebApplicationFa
             userContextMock.Object);
     }
 
-    public static IEnumerable<object[]> GetForbiddenFrontendUsers()
+    public static IEnumerable<object[]> GetUsersWithUnsupportedRole()
     {
         // Forbidden actor role
         foreach (var unsupportedActorRole in
-                 new[]
-                 {
-                     FrontendActorMarketRole.DataHubAdministrator,
-                     FrontendActorMarketRole.SystemOperator,
-                     FrontendActorMarketRole.Other,
-                 })
+                 new[] { FrontendActorMarketRole.SystemOperator, FrontendActorMarketRole.Other, })
         {
             yield return
             [
@@ -105,10 +162,18 @@ public class MeasurementsReportsControllerTests : IClassFixture<WebApplicationFa
                     new FrontendActor(Guid.NewGuid(), "actor-number", unsupportedActorRole, [_accessibleGridAreaCode])),
             ];
         }
+    }
 
+    public static IEnumerable<object[]> GetUsersWithoutGridAreaAllowance()
+    {
         // No access to requested grid area
         foreach (var supportedActorRole in
-                 new[] { FrontendActorMarketRole.EnergySupplier, FrontendActorMarketRole.GridAccessProvider })
+                 new[]
+                 {
+                     FrontendActorMarketRole.EnergySupplier,
+                     FrontendActorMarketRole.GridAccessProvider,
+                     FrontendActorMarketRole.DataHubAdministrator,
+                 })
         {
             yield return
             [
