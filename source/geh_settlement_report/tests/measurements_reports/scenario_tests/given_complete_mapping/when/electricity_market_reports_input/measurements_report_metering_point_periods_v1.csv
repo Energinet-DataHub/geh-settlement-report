@@ -1,4 +1,4 @@
-grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;unit;from_grid_area_code;to_grid_area_code;period_from_date;period_to_date;#comment
+grid_area_code;metering_point_id;metering_point_type;resolution;energy_supplier_id;physical_status;quantity_unit;from_grid_area_code;to_grid_area_code;period_from_date;period_to_date;#comment
 800;010000000000000000;ve_production;P1M;1000000000000;connected;kWh;;;2016-01-01T23:00:00Z;;
 800;020000000000000000;analysis;P1M;1000000000000;disconnected;kVArh;;;2016-01-01T23:00:00Z;;
 800;050000000000000000;net_production;PT15M;1000000000000;connected;TNE;;;2016-01-01T23:00:00Z;;
