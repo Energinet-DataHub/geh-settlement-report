@@ -16,6 +16,7 @@ from geh_settlement_report.measurements_reports.domain.column_names import (
     MeteringPointPeriodsColumnNames,
 )
 from geh_settlement_report.measurements_reports.domain.file_name_factory import file_name_factory
+from geh_settlement_report.measurements_reports.domain.output_mapper import map_to_output
 
 
 def execute(
@@ -55,22 +56,21 @@ def execute(
                 MeasurementsReportColumnNames.metering_point_type
             ),
             F.col(f"p.{MeteringPointPeriodsColumnNames.resolution}").alias(MeasurementsReportColumnNames.resolution),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.energy_supplier_id}").alias(
-                MeasurementsReportColumnNames.energy_supplier_id
-            ),
+            F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
             F.col(f"p.{MeteringPointPeriodsColumnNames.physical_status}").alias(
                 MeasurementsReportColumnNames.physical_status
+            ),
+            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
+                MeasurementsReportColumnNames.quantity_quality
             ),
             F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.observation_time}").alias(
                 MeasurementsReportColumnNames.observation_time
             ),
             F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quantity}").alias(MeasurementsReportColumnNames.quantity),
-            F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quality}").alias(
-                MeasurementsReportColumnNames.quantity_quality
-            ),
-            F.col(f"p.{MeteringPointPeriodsColumnNames.quantity_unit}").alias(MeasurementsReportColumnNames.unit),
         )
     )
+
+    result = map_to_output(args, result)
 
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
@@ -122,6 +122,7 @@ def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) 
 
 def _filter_calculated_measurements(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
     df_in_period = df.filter(
-        F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time).between(args.period_start, args.period_end)
+        (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) >= args.period_start)
+        & (F.col(MeasurementsGoldCurrentV1ColumnNames.observation_time) < args.period_end)
     )
     return df_in_period

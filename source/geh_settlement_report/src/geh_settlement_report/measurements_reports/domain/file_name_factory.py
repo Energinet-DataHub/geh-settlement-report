@@ -11,7 +11,6 @@ def file_name_factory(args: MeasurementsReportArgs) -> str:
     return "_".join(
         [
             "measurements_report",
-            "_".join(args.grid_area_codes or ["all"]),
             args.requesting_actor_id,
             _convert_date(args.period_start, args.time_zone),
             _convert_date(args.period_end, args.time_zone),

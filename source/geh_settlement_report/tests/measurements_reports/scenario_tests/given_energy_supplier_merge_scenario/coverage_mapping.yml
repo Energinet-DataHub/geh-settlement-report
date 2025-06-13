@@ -1,0 +1,12 @@
+notes: |
+  ## PURPOSE
+  The purpose is to test base filtering functionality for a report with energy supplier. 
+
+cases_tested:
+  "Observation time should be converted to local (CET/CEST) time in report"
+  "Report should only include measurement data for grid area(s) included in report (via job parameters)"
+  "Report should only include measurement data with observation time => report from date and < report to date (via job parameters)"
+  "Columns should be sorted by GRID AREA ID, then METERING POINT TYPE, then METERING POINT ID, then DATE TIME STAMP"
+  "GIVEN input quantity is null for an observation time THEN that observation time should be included as 0 with quality Missing"
+  "GIVEN metering point type is E20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period"
+  "GIVEN metering point type is D20 WHEN (grid area owner id != grid_area_code AND (grid area owner id = from_grid_area OR grid area owner id = to_grid_area)) THEN measurement data for this metering point should be included in report for requested period"
