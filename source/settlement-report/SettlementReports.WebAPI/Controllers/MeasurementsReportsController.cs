@@ -111,12 +111,15 @@ public class MeasurementsReportsController
 
     private bool IsForbiddenRequest(IEnumerable<string>? requestedGridAreaCodes = null)
     {
-        var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
-
         // These are the supported market roles for measurements reports
-        var supportedMarketRoles = new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier, FrontendActorMarketRole.DataHubAdministrator };
+        var supportedMarketRoles = new[]
+        {
+            FrontendActorMarketRole.GridAccessProvider,
+            FrontendActorMarketRole.EnergySupplier,
+            FrontendActorMarketRole.DataHubAdministrator,
+        };
 
-        if (!supportedMarketRoles.Contains(marketRole))
+        if (!supportedMarketRoles.Contains(_userContext.CurrentUser.Actor.MarketRole))
             return true;
 
         // Validate that the users actor has access to the grid areas specified in the request
