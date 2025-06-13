@@ -1,11 +1,9 @@
 import shutil
-from itertools import chain
 from pathlib import Path
 
 from geh_common.databricks.get_dbutils import get_dbutils
 from geh_common.infrastructure.create_zip import create_zip_file
 from geh_common.infrastructure.write_csv import write_csv_files
-from geh_common.pyspark.transformations import convert_from_utc
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql import functions as F
 
@@ -18,6 +16,7 @@ from geh_settlement_report.measurements_reports.domain.column_names import (
     MeteringPointPeriodsColumnNames,
 )
 from geh_settlement_report.measurements_reports.domain.file_name_factory import file_name_factory
+from geh_settlement_report.measurements_reports.domain.output_mapper import map_to_output
 
 
 def execute(
@@ -75,87 +74,7 @@ def execute(
         F.col(f"m.{MeasurementsGoldCurrentV1ColumnNames.quantity}").alias(MeasurementsReportColumnNames.quantity),
     )
 
-    # Add metering point type mapping
-    metering_point_type_mapping = {
-        "ve_production": "D01",
-        "analysis": "D02",
-        "net_production": "D05",
-        "supply_to_grid": "D06",
-        "consumption_from_grid": "D07",
-        "wholesale_services_or_information": "D08",
-        "own_production": "D09",
-        "net_from_grid": "D10",
-        "net_to_grid": "D11",
-        "total_consumption": "D12",
-        "electrical_heating": "D14",
-        "net_consumption": "D15",
-        "other_consumption": "D17",
-        "other_production": "D18",
-        "capacity_settlement": "D19",
-        "exchange_reactive_energy": "D20",
-        "collective_net_production": "D21",
-        "collective_net_consumption": "D22",
-        "activated_downregulation": "D23",
-        "activated_upregulation": "D24",
-        "actual_consumption": "D25",
-        "actual_production": "D26",
-        "consumption": "E17",
-        "production": "E18",
-        "exchange": "E20",
-    }
-
-    # Map the metering point type values
-    result = _map_output_report_column(
-        MeasurementsReportColumnNames.metering_point_type, metering_point_type_mapping, result
-    )
-
-    # Add unit mapping
-    unit_mapping = {
-        "kWh": "kWh",
-        "kVArh": "kVArh",
-        "TNE": "Tonne",
-    }
-
-    # Map the unit values
-    result = _map_output_report_column(MeasurementsReportColumnNames.unit, unit_mapping, result)
-
-    # Add physical status mapping
-    physical_status_mapping = {"connected": "E22", "disconnected": "E23"}
-
-    # Map the physical status values
-    result = _map_output_report_column(MeasurementsReportColumnNames.physical_status, physical_status_mapping, result)
-
-    # Add quality mapping
-    quality_mapping = {
-        "measured": "Measured",
-        "missing": "Missing",
-        "estimated": "Estimated",
-        "calculated": "Calculated",
-    }
-
-    # Map the quality values
-    result = _map_output_report_column(MeasurementsReportColumnNames.quantity_quality, quality_mapping, result)
-
-    # Convert observation_time from UTC to the specified time zone
-    result = convert_from_utc(result, args.time_zone)
-
-    # Format the observation_time column to dd-MM-yyyy HH:mm format
-    result = result.withColumn(
-        MeasurementsReportColumnNames.observation_time,
-        F.date_format(F.col(MeasurementsReportColumnNames.observation_time), "dd-MM-yyyy HH:mm"),
-    )
-
-    # Replace null values in quantity column with 0.000
-    result = result.withColumn(
-        MeasurementsReportColumnNames.quantity, F.coalesce(F.col(MeasurementsReportColumnNames.quantity), F.lit(0.000))
-    )
-
-    result = result.orderBy(
-        MeasurementsReportColumnNames.grid_area_code,
-        MeasurementsReportColumnNames.metering_point_type,
-        MeasurementsReportColumnNames.metering_point_id,
-        MeasurementsReportColumnNames.observation_time,
-    )
+    result = map_to_output(args, result)
 
     report_output_path = Path(args.output_path) / args.report_id
     tmp_dir = report_output_path / "tmp"
@@ -176,14 +95,6 @@ def execute(
     shutil.rmtree(report_output_path, ignore_errors=True)
 
     return result
-
-
-def _map_output_report_column(column_name: str, mapping_data: dict, result: DataFrame) -> DataFrame:
-    mapping_expr = F.create_map([F.lit(x) for x in chain(*[(k, v) for k, v in mapping_data.items()])])
-    return result.withColumn(
-        column_name,
-        mapping_expr.getItem(F.col(column_name)),
-    )
 
 
 def _filter_metering_point_periods(args: MeasurementsReportArgs, df: DataFrame) -> DataFrame:
