@@ -4,17 +4,15 @@ using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
-using Energinet.DataHub.Reports.WebAPI;
 using Energinet.DataHub.Reports.WebAPI.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
 using Xunit;
 
-namespace Energinet.DataHub.Reports.IntegrationTests.WebAPI.Controllers;
+namespace Energinet.DataHub.Reports.UnitTests.WebAPI.Controllers;
 
-public class MeasurementsReportsControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class MeasurementsReportsControllerTests
 {
     private static readonly string _accessibleGridAreaCode = "803";
 
