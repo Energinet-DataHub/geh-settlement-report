@@ -25,6 +25,11 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
     /// </summary>
     public IMeasurementsReportClient MeasurementsReportClient { get; private set; } = null!;
 
+    /// <summary>
+    /// The actual client is not created until <see cref="InitializeAsync"/> has been called by the base class.
+    /// </summary>
+    public IMeasurementsReportClient UnauthorizedMeasurementsReportClient { get; private set; } = null!;
+
     public MeasurementsReportScenarioState ScenarioState { get; }
 
     public ReportsSubsystemTestConfiguration Configuration { get; }
@@ -34,6 +39,7 @@ public class MeasurementsReportScenarioFixture : IAsyncLifetime
     public async Task InitializeAsync()
     {
         MeasurementsReportClient = await MeasurementsReportClientFactory.CreateAsync(Configuration);
+        UnauthorizedMeasurementsReportClient = MeasurementsReportClientFactory.CreateUnauthorized(Configuration);
     }
 
     public Task DisposeAsync()

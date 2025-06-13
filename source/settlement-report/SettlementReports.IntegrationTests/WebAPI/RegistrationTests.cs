@@ -1,4 +1,5 @@
 ﻿using Energinet.DataHub.Core.App.Common.Extensions.Options;
+using Energinet.DataHub.Reports.WebAPI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ public class RegistrationTests
                 })
             .Build();
 
-        using var application = new WebApplicationFactory<global::Energinet.DataHub.Reports.WebAPI.Program>()
+        using var application = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(
                 webBuilder =>
                 {

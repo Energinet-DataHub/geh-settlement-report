@@ -38,12 +38,16 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("request")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<long>> RequestMeasurementsReport(
         [FromBody] MeasurementsReportRequestDto measurementsReportRequest)
     {
-        if (!UserHasValidMarketRole())
+        if (IsForbiddenRequest(measurementsReportRequest.Filter.GridAreaCodes))
             return Forbid();
+
+        if (IsBadRequest(measurementsReportRequest))
+            return BadRequest();
 
         var actorGln = _userContext.CurrentUser.Actor.ActorNumber;
         var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
@@ -63,7 +67,7 @@ public class MeasurementsReportsController
             measurementsReportRequest,
             _userContext.CurrentUser.UserId,
             _userContext.CurrentUser.Actor.ActorId,
-            actorGln);
+            _userContext.CurrentUser.Actor.ActorNumber);
 
         var result = await _requestHandler.HandleAsync(requestCommand).ConfigureAwait(false);
 
@@ -72,10 +76,11 @@ public class MeasurementsReportsController
 
     [HttpGet]
     [Route("list")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     public async Task<ActionResult<IEnumerable<RequestedMeasurementsReportDto>>> ListMeasurementsReports()
     {
-        if (!UserHasValidMarketRole())
+        if (IsForbiddenRequest())
             return Forbid();
 
         var reports = await _listMeasurementsReportService.GetAsync(_userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
@@ -84,17 +89,18 @@ public class MeasurementsReportsController
 
     [HttpPost]
     [Route("download")]
+    // Authorization roles correspond to the permissions (of a user role) as defined in the frontend.
     [Authorize(Roles = "measurements-reports:manage")]
     [Produces("application/octet-stream")]
     [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
-    public async Task<ActionResult> DownloadFileAsync([FromBody] ReportRequestId reportId)
+    public async Task<ActionResult<FileStream>> DownloadFileAsync([FromBody] ReportRequestId reportId)
     {
-        if (!UserHasValidMarketRole())
+        if (IsForbiddenRequest())
             return Forbid();
 
         try
         {
-            var stream = await _fileService.DownloadAsync(reportId).ConfigureAwait(false);
+            var stream = await _fileService.DownloadAsync(reportId, _userContext.CurrentUser.Actor.ActorId).ConfigureAwait(false);
             return new FileStreamResult(stream, MediaTypeNames.Application.Octet);
         }
         catch (Exception ex) when (ex is InvalidOperationException or RequestFailedException)
@@ -103,10 +109,36 @@ public class MeasurementsReportsController
         }
     }
 
-    private bool UserHasValidMarketRole()
+    private bool IsForbiddenRequest(IEnumerable<string>? requestedGridAreaCodes = null)
     {
-        // Check role
-        return new[] { FrontendActorMarketRole.GridAccessProvider, FrontendActorMarketRole.EnergySupplier, FrontendActorMarketRole.DataHubAdministrator }
-            .Contains(_userContext.CurrentUser.Actor.MarketRole);
+        // These are the supported market roles for measurements reports
+        var supportedMarketRoles = new[]
+        {
+            FrontendActorMarketRole.GridAccessProvider,
+            FrontendActorMarketRole.EnergySupplier,
+            FrontendActorMarketRole.DataHubAdministrator,
+        };
+
+        if (!supportedMarketRoles.Contains(_userContext.CurrentUser.Actor.MarketRole))
+            return true;
+
+        // Validate that the users actor has access to the grid areas specified in the request
+        if (requestedGridAreaCodes != null && requestedGridAreaCodes.Any(c => !_userContext.CurrentUser.Actor.GridAreas.Contains(c)))
+            return true;
+
+        return false;
+    }
+
+    private bool IsBadRequest(MeasurementsReportRequestDto request)
+    {
+        // Reject empty or "negative" periods
+        if (request.Filter.PeriodEnd <= request.Filter.PeriodStart)
+            return true;
+
+        // Period must not exceed one month
+        if (request.Filter.PeriodEnd > request.Filter.PeriodStart.AddMonths(1))
+            return true;
+
+        return false;
     }
 }

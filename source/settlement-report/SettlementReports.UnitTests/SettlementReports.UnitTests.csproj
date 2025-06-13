@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
@@ -18,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SettlementReports.WebAPI\SettlementReports.WebAPI.csproj" />
     <ProjectReference Include="..\Test.Core\Test.Core.csproj" />
     <ProjectReference Include="..\SettlementReports.Application\SettlementReports.Application.csproj" />
     <ProjectReference Include="..\SettlementReports.Infrastructure\SettlementReports.Infrastructure.csproj" />
