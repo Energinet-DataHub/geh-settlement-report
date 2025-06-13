@@ -3,6 +3,7 @@ from itertools import chain
 from geh_common.pyspark.transformations import convert_from_utc
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
+from pyspark.sql.window import Window
 
 from geh_settlement_report.measurements_reports.domain.calculation import MeasurementsReportArgs
 from geh_settlement_report.measurements_reports.domain.column_names import MeasurementsReportColumnNames
@@ -69,6 +70,10 @@ def map_to_output(
     for col, expr in mapping_exprs.items():
         result = result.withColumn(col, expr.getItem(F.col(col)))
 
+    # Map quality values to their standardized codes
+    # TODO: Uncomment until scenario tests are updated to handle quality mapping
+    # result = quality_mapping(result)
+
     # Convert observation timestamps from UTC to the specified timezone
     # Then format the timestamp into a standardized date-time string (dd-MM-yyyy HH:mm)
     result = convert_from_utc(result, args.time_zone)
@@ -91,3 +96,34 @@ def map_to_output(
     )
 
     return result
+
+
+def quality_mapping(df: DataFrame) -> DataFrame:
+    # Group by the specified columns to find rows with the same grid_area, metering_point_id and type
+    window_spec = Window.partitionBy(
+        MeasurementsReportColumnNames.grid_area_code,
+        MeasurementsReportColumnNames.metering_point_id,
+        MeasurementsReportColumnNames.metering_point_type,
+    )
+
+    # Check if any row in each group has "missing" quality
+    has_missing = F.max(
+        F.when(F.col(MeasurementsReportColumnNames.quantity_quality) == "Missing", 1).otherwise(0)
+    ).over(window_spec)
+
+    # Check if any row in each group has "estimated" quality
+    has_estimated = F.max(
+        F.when(F.col(MeasurementsReportColumnNames.quantity_quality) == "Estimated", 1).otherwise(0)
+    ).over(window_spec)
+
+    # Apply mapping logic:
+    # 1. If any row has "missing" quality, all rows in that group become "Missing"
+    # 2. If any row has "estimated" quality (and no "missing"), all rows become "Estimated"
+    # 3. Otherwise, keep the original quality
+    df = df.withColumn(
+        MeasurementsReportColumnNames.quantity_quality,
+        F.when(has_missing > 0, "Missing")
+        .when(has_estimated > 0, "Estimated")
+        .otherwise(F.col(MeasurementsReportColumnNames.quantity_quality)),
+    )
+    return df
