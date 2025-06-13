@@ -1,1 +1,0 @@
-TODO HENRIK: describe what the insert scripts are for and how to use them
