@@ -1,0 +1,6 @@
+report_id: 00000000-00c0-000a-a000-abcdefg00000
+period_start: 2024-05-31T22:00:00Z
+period_end: 2024-07-31T22:00:00Z
+grid_area_codes: [900]
+requesting_actor_id: 1000000000000
+energy_supplier_ids: [1000000000000]

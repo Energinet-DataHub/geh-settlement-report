@@ -6,6 +6,7 @@ using Energinet.DataHub.Reports.Abstractions.Model.MeasurementsReport;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Commands;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Handlers;
 using Energinet.DataHub.Reports.Application.MeasurementsReport.Services;
+using Energinet.DataHub.Reports.Application.Model;
 using Energinet.DataHub.Reports.Common.Infrastructure.Security;
 using Energinet.DataHub.Reports.WebAPI.Controllers.Mappers;
 using Microsoft.AspNetCore.Authorization;
@@ -113,7 +114,7 @@ public class MeasurementsReportsController
         var marketRole = MarketRoleMapper.MapToMarketRole(_userContext.CurrentUser.Actor.MarketRole);
 
         // These are the supported market roles for measurements reports
-        var supportedMarketRoles = new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier };
+        var supportedMarketRoles = new[] { MarketRole.GridAccessProvider, MarketRole.EnergySupplier, FrontendActorMarketRole.DataHubAdministrator };
 
         if (!supportedMarketRoles.Contains(marketRole))
             return true;

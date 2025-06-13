@@ -1,0 +1,5 @@
+notes: |
+  ## PURPOSE
+  This test verifies that when a list containing a single metering point type is provided, it filters out rows that are not included in the list.
+
+cases_tested: "The report should exclusively include rows with the specified metering point type."

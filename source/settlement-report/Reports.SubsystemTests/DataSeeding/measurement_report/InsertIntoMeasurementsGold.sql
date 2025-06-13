@@ -1,0 +1,33 @@
+INSERT INTO INSERT_CATALOG_NAME_HERE.measurements_gold.measurements (
+    metering_point_id,
+    metering_point_type,
+    orchestration_type,
+    orchestration_instance_id,
+    observation_time,
+    quantity,
+    quality,
+    unit, 
+    resolution,
+    transaction_id,
+    transaction_creation_datetime,
+    is_cancelled,
+    created,
+    modified
+)
+VALUES
+(   
+    '000000000000000017',
+    'consumption',
+    'submitted',
+    'a810f0d2-352f-4e31-a383-b6b444effc68',
+    '2022-01-11T23:00:00Z',
+    100,
+    'estimated',
+    'kWh',
+    'PT1H',
+    '3b0e59dc-e4ad-4962-829c-3785947127d4',
+    GETDATE(),
+    false,
+    GETDATE(),
+    GETDATE()
+)
